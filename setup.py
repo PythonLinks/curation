@@ -27,8 +27,9 @@ install_requires = [
     'zope.interface',
     'zope.lifecycleevent',
     'zope.location',
+    'zope.password',    
     'zope.schema',
-    
+    'restrictedpython',    
     ]
 
 tests_require = [
