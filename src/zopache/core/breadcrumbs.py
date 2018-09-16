@@ -232,7 +232,7 @@ class Breadcrumbs(object):
     def divBreadcrumbs(self, node):     
         items=list(parents(node))
         items.reverse()
-        result= '<div style = "text-align:left; ">'
+        result= '<br><div style = "text-align:left; ">'
         step = -1
         for item in items:
                    step += 1

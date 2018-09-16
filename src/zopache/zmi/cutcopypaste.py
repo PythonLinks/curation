@@ -15,38 +15,31 @@
 """
 __docformat__ = 'restructuredtext'
 
+import transaction
 import crom
 from zope.interface import implementer, Invalid
-from zopache.copy import copy
+from dolmen.container.interfaces import IBTreeContainer#, IOrderedContainer
 from zope.interface import implementer
 from zope.interface import Interface
+
+from zopache.core.transactionnote import TransactionNote
+from zopache.copy import copy
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.crud.interfaces import IMoveable 
+from zopache.crud.utilities import uniqueName
 from zopache.zmi.interfaces import IObjectCutter
 from zopache.zmi.interfaces import IObjectDeleter
 from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 
-from dolmen.container.interfaces import IBTreeContainer#, IOrderedContainer
 from .utilities import pasteFolder
-from zopache.crud.utilities import uniqueName
-import transaction
 
-class BaseClass(object):
+class BaseClass(TransactionNote):
     def __init__(self, object):
         self.context = object
         self.__parent__ = object # TODO: see if we can automate this
 
-    def describeTransaction(self,type, item):        
-         note = type + ' ' + item.__name__ + " "
-         #try:
-         #    note +=item.title
-         #except:
-         #    pass
-         note += "<br>"
-         transaction.get().note(note)
-    
     def uniqueName(self,target, new_name):
         return uniqueName(target, new_name)
 
@@ -54,6 +47,30 @@ class BaseClass(object):
         obj=firstFolder[firstName]
         del firstFolder [firstName]
         secondFolder[secondName] = obj
+
+@crom.adapter
+@crom.sources(Interface)
+@crom.target(IObjectRenamer)
+class Renamer(BaseClass):
+    def __init__(self, object):
+        self.context = object.__parent__
+        self.__parent__ = object.__parent__ # TODO: see if we can automate this
+        
+    def renameItem(self, oldName, newName,view):
+        self.view = view
+        container=self.context
+        obj = container.get(oldName)
+        if obj is None:
+            raise ItemNotFoundError(self.container, oldName)
+        if not self.allowed():
+                     return
+        new_name=self.uniqueName(container,newName)
+        self.moveFrom(container,oldName, container, newName)                
+
+    def allowed(self):
+        if  IRenameable.providedBy(self.context):
+                return True
+        return False
 
 @crom.adapter
 @crom.sources(Interface)
@@ -66,6 +83,7 @@ class Cutter(BaseClass):
         self.view = view        
         """ Move the object to the pastefolder"""
         if not self.allowed():
+                self.view.error +=orig_name + " WAS NOT CUT <br>"            
                 return
         obj=self.context
         oldName=obj.__name__
@@ -90,13 +108,14 @@ class Copier(BaseClass):
         """ Move the object to the pastefolder"""
         obj=self.context
         if not self.allowed():
+                self.view.error +=orig_name + " WAS NOT COPIED <br>"
                 return
         toFolder=pasteFolder(self)
         oldName=obj.__name__
         newName=self.uniqueName(toFolder,oldName)
         toFolder[newName]= copy(obj)
-
-        
+        self.describeTransaction(" Copy ", obj)
+         
     def allowed(self):
         obj=self.context
         if  ICopyable.providedBy(obj):
@@ -124,38 +143,16 @@ class Paster(BaseClass):
            orig_name = item.__name__
            new_name=self.uniqueName(toContainer,orig_name)
            if not self.allowed(item):
-               self.view.error +=orig_name + " NOT PASTED"
+               self.view.error +=orig_name + " WAS NOT PASTED <br>"
                continue 
            self.moveFrom(fromFolder, orig_name, toContainer, new_name)
-
+           self.describeTransaction(" Paste ", toContainer[new_name])
+           
     def allowed(self,obj):
         if  ICopyable.providedBy(obj):
                 return True
         return False
 
-@crom.adapter
-@crom.sources(Interface)
-@crom.target(IObjectRenamer)
-class Renamer(BaseClass):
-    def __init__(self, object):
-        self.context = object.__parent__
-        self.__parent__ = object.__parent__ # TODO: see if we can automate this
-        
-    def renameItem(self, oldName, newName,view):
-        self.view = view
-        container=self.context
-        obj = container.get(oldName)
-        if obj is None:
-            raise ItemNotFoundError(self.container, oldName)
-        if not self.allowed():
-                     return
-        new_name=self.uniqueName(container,newName)
-        self.moveFrom(container,oldName, container, newName)                
-
-    def allowed(self):
-        if  IRenameable.providedBy(self.context):
-                return True
-        return False
 
 #THIS IS THE GENERIC DELETER
 # JUST DELETE THE OBJECT
@@ -167,12 +164,16 @@ class Deleter(BaseClass):
         self.view = view
         obj=self.context
         container=obj.__parent__
+        name=obj.__name__
         if not self.allowed():
             self.view.error +=  name + " was not deleted. <br>"
             return
-        name=obj.__name__
+        
+        # HAVE TO DESCRIE BEFORE DELETING OTHERWISE NO NAME AVAILABLE
+        self.describeTransaction(" Deleted ", obj)        
         del container[name]
 
+        
     def allowed(self):
         if  IDeletable.providedBy(self.context):
                 return True

@@ -1,7 +1,7 @@
 
 import transaction
 
-class TransactinNote(object):
+class TransactionNote(object):
     def describeTransactionWithText(self,text):
         transaction.get().note(text)
 

@@ -41,6 +41,9 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def postProcess(self):
          pass
 
+    def postAddProcess(self):
+         pass     
+
     def breadcrumbs(self):     
         return self.breadcrumbsManage()
 
@@ -48,5 +51,3 @@ class Form(BaseForm,Scripts,Breadcrumbs):
          import pdb; pdb.set_trace()
          pass
 
-    def url(self):
-        return get_absolute_url(self.context, self.request)     

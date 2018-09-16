@@ -40,5 +40,8 @@ class IObjectDeleter(Interface):
 class IObjectRenamer(Interface):
      pass
 
+class IObjectRetitler(Interface):
+     pass 
+
 class IObjectPaster(Interface):
      pass

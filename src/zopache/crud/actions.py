@@ -54,6 +54,7 @@ class Add(Action):
         self.new=form.new=obj
         url=self.newURL(baseURL)
         form.new.postProcess()
+        form.postAddProcess()        
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newURL(self,baseURL):

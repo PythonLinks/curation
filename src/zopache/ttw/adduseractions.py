@@ -39,7 +39,7 @@ class Add(Action):
         self.factory = factory
 
     def __call__(self, form):
-
+        self.form = form
         data, errors = form.extractData()
         if errors:
             form.submissionError = errors
@@ -58,5 +58,6 @@ class Add(Action):
         people[newName]=obj
         people.authenticate (data)
         message(_(u"You are Registered"))
-        raise HTTPFound('/' + form.context.__name__)
+        newURL = self.form.url(self.new) + '/permissions'
+        raise HTTPFound(newURL)
     

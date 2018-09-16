@@ -1,28 +1,19 @@
+#Subject to the Non Compete MIT license
 # -*- coding: utf-8 -*-
 
+from zope.cachedescriptors.property import CachedProperty
+from dolmen.forms.base import Actions
+from zopache.core.viewdecorators import *
 #This software is subject to the CV and Zope Public Licenses.
-from zope.interface import Interface
-from dolmen.forms.base import DISPLAY
 from .gloginactions  import GoogleRegisterAction
 from zopache.crud.utils import getFactoryFields, getAllFields
-from cromlech.i18n import translate
 
-from cromlech.security import getSecurityGuards, permissions
-
-from zope.cachedescriptors.property import CachedProperty
 from .interfaces import IName, IContainer, ILeaf, IGRegister
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
 
-from dolmen.forms.base import Actions
-from dolmen.forms.base import Fields
-from dolmen.forms.base import action, name, context, form_component
+from zopache.crud.forms import AddForm
 
-from zopache.crud.utilities import title_or_name    
-from cromlech.webob import Response
-from zopache.core.baseform import Form
-
-from cromlech.browser.directives import title
 from .interfaces import IRegister
 from .principalfolder import InternalPrincipal
 from . import tal_template
@@ -31,7 +22,7 @@ from . import tal_template
 @name (u'gregister')
 @context(Interface)
 @title("Google Register")
-class GoogleRegister(Form):
+class GoogleRegister(AddForm):
     factory = InternalPrincipal
     title='PythonLinks.info'
     subTitle='Register'
@@ -55,11 +46,10 @@ class GoogleRegister(Form):
     def actions(self):
         return Actions(GoogleRegisterAction("Add", self))
 
-    def updateWidgets(self):
-        return Form.updateWidgets(self)
 
     def nextURL(self):
-        return "."        
+
+        return self.url(self.context) + '/gdpr-permissions'        
         if (self.context.hiringPermissions == True):
            return "./submitJob"
        

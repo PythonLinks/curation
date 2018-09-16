@@ -10,7 +10,7 @@
       <li> <span tal:replace="error.title" /> </li>
     </ul>
     </span>
-    <h3>One Last Question</h3
+    <h3>One Last Question</h3>
 <p> Because of my work, I get to personally know a
 number of very senior developers, data scientists, and the interesting work
 that they are doing.  I really enjoy making matches between the people  and
@@ -30,11 +30,6 @@ I woudl be most grateful.  </p>
 	  tal:define="widgets view.widgetDictionary()"
 	  >
 
-<textarea style="display:none;" id="form-field-idtoken" name="form.field.idtoken"  >${view.request.form["form.field.idtoken"]}</textarea>
-
-    <input id="form-field-chatPermission-present"
-    name="form.field.chatPermission.present"
-    class="field form-control form-control form-control form-control form-control form-control form-control form-control"  checked="checked" value="True" type="hidden" required="required" />
 
     <p> I give permission to process my professional information for the following purposes:</p>
 
@@ -74,7 +69,8 @@ To help me hire a good developer.</label>
 	 </div>
 </div>
 
-<button type="submit" class="btn btn-primary"
-    id="form-action-add" name="form.action.add" value="Add"
-    >Submit</button>
+<tal:actions tal:condition="view.actionWidgets">
+    <tal:widget tal:content="structure widget.render()"
+		tal:repeat="widget view.actionWidgets" />
+  </tal:actions>
 </form>

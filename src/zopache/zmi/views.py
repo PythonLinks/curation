@@ -27,6 +27,7 @@ class Manage(Page,Contents):
     label=''
     subTitle='Manage Container'
     template = tal_template('zmi.pt')
+
     def getManageURL(self,item):
         url = self.url(item)
         segment =  IURLSegment(item).getSegment()
@@ -53,10 +54,11 @@ class Manage(Page,Contents):
 @permissions('Manage')
 @context(IBTreeContainer)
 class Fix(Manage):
+
        def update(self):
           item=self.context
           import pdb; pdb.set_trace()
-          from zopache.categories.data.youtube.createFromPlayList import createVideos
+          #from zopache.categories.data.youtube.createFromPlayList import createVideos
 #          createVideos(item) 
 #          doit(item,self)
           fred = 1

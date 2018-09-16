@@ -1,27 +1,18 @@
 from zopache.core.viewdecorators import *
-from zopache.crud.forms import EditForm
-from .interfaces import IInternalPrincipal
-from .interfaces import IPermissions
-
-
+import crom
+from zopache.crud.forms import  EditForm
+from zope.cachedescriptors.property import CachedProperty
+from dolmen.forms.base import Actions
+from cromdemo.interfaces import ITab
 @form_component
-@name (u'permissions')
-@context(IInternalPrincipal)
-@title("GDPR Permissions")
-class Permissions(EditForm):
-    """ Recruiting Permissions
-    """
-    title='PythonLinks.info'
-    subTitle=''
-    fields = Fields(IPermissions)
-    ignoreContent = True
-    submissionError = []
-
-    def nextURL(self):
-        return "."            
-
-
-
-
-
- 
+@context(Interface)
+@crom.target(ITab)
+@title("Edit Permissions")
+@name("permissions2")
+@permissions('Manage')
+class EditPermissions(EditForm):
+    @CachedProperty
+    def actions(self):
+        return Actions(formactions.SaveAndView("Save  and View",
+                                               "Save -> View"))
+	      

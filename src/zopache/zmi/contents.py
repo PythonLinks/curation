@@ -11,7 +11,7 @@ import arrow
 from .interfaces import IObjectCutter, IObjectCopier, IObjectRenamer
 from .interfaces import IObjectPaster, IObjectDeleter
 from zopache.crud.utilities import title_or_name
-from .cutcopypaste import Cutter, Paster, Copier,Renamer, Deleter
+
 
 class Contents(object):
     error = ''
