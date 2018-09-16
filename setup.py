@@ -21,6 +21,7 @@ install_requires = [
     'fanstatic',
     'setuptools',
     'zope.cachedescriptors',
+    'z3c.schema',
     'zopache.copy',
     'zope.event',
     'zope.interface',
