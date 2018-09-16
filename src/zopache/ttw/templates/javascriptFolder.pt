@@ -1,0 +1,21 @@
+
+<a tal:attributes="href view.url(view.context) + '/aceedit'"
+   tal:content="view.context.title"></a> 
+<ul>
+<span tal:repeat="item view.context.values()">
+<li><a tal:attributes="href view.url(item) + '/aceedit'"
+   tal:content="item.title"></a> </li>
+</span>
+</ul>
+<table >
+
+<tr tal:repeat="item view.context.flatten(view)" >
+      <td tal:content="structure:item.count"> </td>
+      <td tal:content="structure: u'&nbsp;&nbsp;' + item.line"></td> 
+</tr>
+</table>
+
+
+
+
+

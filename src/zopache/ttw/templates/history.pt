@@ -1,0 +1,39 @@
+<style>
+td,th {padding-left: 20px; padding-right:20 px;}
+</style>
+
+<p>
+Modified:  ${structure: view.results()[0]['time'].hour()} :
+    ${structure: view.results()[0]['time'].minute()} :
+  ${structure: int(view.results()[0]['time'].second())}   
+</p>
+<table>
+<tr>
+  <th></th>
+  <th>View</th>
+  <th>Restore</th>
+  <th>Titile</th>
+  <th>Age</th>
+</tr>
+<tr  tal:repeat="result view.results()" >
+    <td tal:content=" repeat.result.length-repeat.result.index" >0, 1, 2 </td>
+<td>
+<a tal:attributes="href python: view.url(context) + 
+'/++history++'+str(repeat['result'].index())+
+'/historicindex'">Source</a>
+</td>
+<td>
+<a tal:attributes="href python: view.url(context) + 
+'/++history++'+str(repeat['result'].index())+
+'/restore'">Restore</a>
+</td>
+
+    <td>
+     ${ result['obj'].title if  hasattr(result['obj'],'title')  else ''   }
+    </td>
+    <td>
+ <span  tal:content="python: view.humanizeTime(result['time'])">
+2 hrs ago</span>
+</td>
+     </tr>
+   </table>

@@ -1,0 +1,54 @@
+  <p class="form-status"
+     tal:condition="view.status"
+     tal:content="view.status">Status</p>
+
+  <span tal:condition="not 'fromGLogin' in view.request.form">
+  <div class="form-error"
+       tal:condition="view.errors">
+    <ul tal:condition="view.formErrors"
+        tal:repeat="error view.formErrors">
+      <li> <span tal:replace="error.title" /> </li>
+    </ul>
+    </span>
+
+<form action="." tal:attributes="action view.action_url;
+                                 id view.htmlId();
+                                 method view.formMethod;
+                                 enctype view.enctype"
+	  tal:define="widgets view.widgetDictionary()"
+	  >
+
+
+<textarea style="display:none;" id="form-field-idtoken" name="form.field.idtoken"  >${view.request.form["form.field.idtoken"]}</textarea>
+
+
+
+
+    <input id="form-field-chatPermission-present"
+    name="form.field.chatPermission.present"
+    class="field form-control form-control form-control form-control form-control form-control form-control form-control"  checked="checked" value="True" type="hidden" required="required" />
+
+    <p> I give permission to process my professional information for the following purpose:</p>
+    
+<div class="form-check required"
+   tal:define="widget widgets['form-field-chatPermission']">
+
+<input type="checkbox" class="form-check-input required"
+id="form-field-chatPermission" name="form.field.chatPermission"
+value="${widget.value['form.field.chatPermission']}"  required="required" />
+
+<label class="form-check-label required" for="form-field-chatPermission">
+To manage the video, vote and chat servers.</label>
+<div tal:condition="view.fieldWidgets"  >
+       <p class="field-error"
+	 tal:define="error view.fieldWidgets['form.field.chatPermission'].error"
+	 tal:condition="error"
+	 tal:content="error.title" />
+	 </div>
+</div>
+
+
+<button type="submit" class="btn btn-primary"
+    id="form-action-add" name="form.action.add" value="Add"
+    >Submit</button>
+</form>
