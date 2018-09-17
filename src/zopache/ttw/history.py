@@ -76,7 +76,6 @@ class HistoricIndex(Page):
 @implementer (IHistoricDetails)
 class HistoricView (Page):
        def render(self ):
-           import pdb; pdb.set_trace()   
            item=self.context.item['obj']           
            return item(self)
 

@@ -35,9 +35,6 @@ class GoogleRegister(AddForm):
     def breadcrumbs(self):
         return ''
     
-    def debug(self,widget):
-        import pdb; pdb.set_trace()
-        pass
     
     def acquireTitle(self):
         return 'GDPR Permissions'
@@ -49,7 +46,7 @@ class GoogleRegister(AddForm):
 
     def nextURL(self):
 
-        return self.url(self.context) + '/gdpr-permissions'        
+        return self.url(self.new) + '/permissions2'        
         if (self.context.hiringPermissions == True):
            return "./submitJob"
        

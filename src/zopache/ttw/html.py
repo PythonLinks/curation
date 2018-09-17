@@ -207,9 +207,6 @@ class Index(View,Breadcrumbs):
     def setDisplayObject(self,item):
         self.zopacheTemplate=item
 
-    def debug(self):
-        import pdb; pdb.set_trace()
-        pass
         
     def render(self):
         #In the case of /index/index

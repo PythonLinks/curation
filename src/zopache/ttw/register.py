@@ -43,10 +43,6 @@ class Register(Form):
     def acquireTitle(self):
         return 'Sign Up'
     
-    def debug(self,widget):
-        import pdb; pdb.set_trace()
-        pass
-
     def widgetDictionary(self):
         return {c.htmlId():c for c in self.bootstrap_widgets()}
 
@@ -55,7 +51,7 @@ class Register(Form):
 
     @CachedProperty
     def actions(self):
-        return Actions(Add("Add", self.factory))
+        return Actions(Add("Add",self))
 
     def updateWidgets(self):
         return Form.updateWidgets(self)

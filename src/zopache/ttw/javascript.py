@@ -231,7 +231,6 @@ class JavascriptIndex(Page):
     make_response = make_javascript_response
         
     def render(self):
-               import pdb; pdb.set_trace()
                return self.context.getSource()
 
     def render(self ):

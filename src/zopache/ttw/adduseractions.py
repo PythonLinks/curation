@@ -34,10 +34,11 @@ class Add(Action):
     """Add action for an IAdding context.
     """
 
-    def __init__(self, title, factory):
+    def __init__(self, title, view):
         super(Add, self).__init__(title)
-        self.factory = factory
-
+        self.factory = view.factory
+        self.view = view
+        
     def __call__(self, form):
         self.form = form
         data, errors = form.extractData()
@@ -58,6 +59,6 @@ class Add(Action):
         people[newName]=obj
         people.authenticate (data)
         message(_(u"You are Registered"))
-        newURL = self.form.url(self.new) + '/permissions'
+        newURL = self.form.url(obj) + '/permissions2'
         raise HTTPFound(newURL)
     

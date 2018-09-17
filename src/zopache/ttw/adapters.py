@@ -2,6 +2,7 @@ import crom
 from zopache.zmi.interfaces import IURLSegment
 from .interfaces import IAceHTML, IHTML, IHTMLContainer
 from .css import ICSS
+from .json import IJSON
 from .javascript import IJavascriptFolder, IJavascript
 from .interfaces import IHTMLClass
 from .python import IPython
@@ -51,6 +52,15 @@ class ICSSAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'aceedit'
+
+@crom.adapter
+@crom.sources(IJSON)
+@crom.target(IURLSegment)
+class ICSSAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'aceedit'    
 
 
 @crom.adapter

@@ -58,7 +58,7 @@ class IGRegister (IShared):
                  description= "A Google Login Token",
                  required = True)
 
-class IPermissions(Interface):    
+class IRecruitPermissions(Interface):    
     recruitPermission = Bool(
         title = "Recruit Permission"  ,
         required = False,

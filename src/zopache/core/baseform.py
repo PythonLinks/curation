@@ -26,7 +26,6 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def fieldDictionary(self):
         return {c.__name__:c for c in self.fields}    
 
-
     def bootstrap_widgets(self):
         """Adds the needed css classes for bootstrap styles.
         """

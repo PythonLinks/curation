@@ -131,7 +131,6 @@ class ValidatePython(object):
              new.arguments=form.request.POST.get('form.field.arguments')
              result=new.compile()
              if len(new._v_errors) != 0:
-                 import pdb; pdb.set_trace()
                  self.errors="Failed"
                  raise ValidationError()
              if len(new._v_warnings) != 0:

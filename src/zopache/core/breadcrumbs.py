@@ -96,6 +96,10 @@ def nameAndTitle(item,showTitles):
 from pydoc import locate
 class Breadcrumbs(object):
 
+    def getRoot(self):
+           return (self.request.environ['zodb.connection'].root()
+                   ['applicationRoot'])
+
     def implements (self,dottedName):
         myInterface = locate(dottedName)
         if myInterface == None:

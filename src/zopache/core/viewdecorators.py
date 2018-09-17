@@ -5,7 +5,10 @@
 from zope.interface import implementer
 from zope.interface import Interface
 import crom
-from dolmen.forms.base import  action, name, context, form_component
+from dolmen.forms.base import  (action, name, context,
+                        form_component )
+from dolmen.view import view_component
+
 from cromlech.security import permissions
 from cromlech.browser.directives import title
 from zopache.crud import actions as formactions, i18n as _
@@ -13,5 +16,5 @@ from zopache.crud import actions as formactions, i18n as _
 from dolmen.forms.base import Fields
 
 __all__ =['implementer','crom','name','context','Interface',
-          'form_component','permissions','title','Fields',
+          'form_component','view_component','permissions','title','Fields',
           'formactions','action']

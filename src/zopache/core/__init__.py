@@ -13,12 +13,14 @@ from cromlech.container.contained import Contained
 from persistent import Persistent
 class Leaf(Contained, Persistent):
     icon=''
-    pass
+    def postProcess(self):
+        pass
 
 from dolmen.container import BTreeContainer
 class Container(BTreeContainer):
     icon=''
-    pass
+    def postProcess(self):
+        pass
 
 class RootContainer (BTreeContainer):
     def __init__(self):

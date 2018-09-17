@@ -40,10 +40,6 @@ class GoogleLogin(Form):
     igrnoreRequest = False
     loggedIn = False
     
-    def debug(self,widget):
-        import pdb; pdb.set_trace()
-        pass
-
 
     @CachedProperty
     def actions(self):
