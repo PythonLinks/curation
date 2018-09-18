@@ -33,9 +33,10 @@ class Manage(Page,Contents):
                    ['applicationRoot'])
 
     def renameAll(self):
-        ids = self.request.form['ids_list']
-        titles = self.request.form ['newTitleValue:list']
+        ids = self.request.POST.getall('ids_list')
+        titles = self.request.POST.getall('newTitleValue:list')
         for id , title in zip (ids, titles):
+
             item = self.context[id]
             IObjectRetitler(item).retitleItem(item,title,self)
 

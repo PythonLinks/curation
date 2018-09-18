@@ -58,15 +58,12 @@ class Fix(Manage):
        def update(self):
           item=self.context
           import pdb; pdb.set_trace()
-          #from zopache.categories.data.youtube.createFromPlayList import createVideos
-#          createVideos(item) 
-#          doit(item,self)
+
+
+          from zopache.categories.data.readConference.importData import importData
+          importData(item)
+          
           fred = 1
-
-          #  from zopache.categories.youtube.createFromPlayList import createVideos
-   #       createVideos(item)
-
-  #       self.request.environ['zodb.connection'].db().pack()
 
 
 
