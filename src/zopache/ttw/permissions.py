@@ -31,7 +31,7 @@ class Permissions(EditForm):
 
     def update(self):
         root = self.getRoot()
-        self.template = root['Products']['Templates']['RecruitPermissinos']
+        self.template = root['Products']['Templates']['RecruitingPermissions']
         
     @CachedProperty
     def actions(self):
