@@ -100,6 +100,10 @@ class Breadcrumbs(object):
            return (self.request.environ['zodb.connection'].root()
                    ['applicationRoot'])
 
+    def debug(self):
+        import pdb;pdb.set_trace()
+        pass
+      
     def implements (self,dottedName):
         myInterface = locate(dottedName)
         if myInterface == None:

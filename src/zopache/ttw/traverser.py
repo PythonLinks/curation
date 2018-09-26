@@ -23,9 +23,16 @@ class Traverser(object):
             return context, None
         #FIRST, IF YOU HAVE A TEMPLATE, SEE THE VIEW
         if self.zopacheTemplate != None :
-           zopacheTemplate = self.zopacheTemplate 
-           view = self.view_lookup(request, zopacheTemplate, name)
+           zopacheTemplate = self.zopacheTemplate
+           try: 
+              view = self.view_lookup(request, zopacheTemplate, name)
+           except ComponentLookupError:
 
+
+              #This allows us to pass arguments in the URL after
+              # the template name
+              view = self.view_lookup(request, zopacheTemplate, 'index')
+           
            if view == None :
               raise NotFound(zopacheTemplate, name, request)              
 

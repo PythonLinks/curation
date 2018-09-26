@@ -28,13 +28,13 @@ from .principalfolder import InternalPrincipal
 from . import tal_template
 
 @form_component
-@name (u'register')
+@name (u'signup')
 @context(Interface)
 @title("Register")
 class Register(Form):
     factory = InternalPrincipal
     title='PythonLinks.info'
-    subTitle='Please Register to Vote or Chat'
+    subTitle='Register Locally'
     fields = Fields(IRegister)
     ignoreContent = True
     igrnoreRequest = False
