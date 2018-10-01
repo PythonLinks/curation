@@ -21,17 +21,29 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     make_response = make_layout_response
     template = tal_template('form.pt')
     def widgetDictionary(self):
-        return {c.htmlId():c for c in self.bootstrap_widgets()}
+        return {c.htmlId():c for c in self.bootstrapWidgets()}
 
     def fieldDictionary(self):
         return {c.__name__:c for c in self.fields}    
 
+    def isBool(self,widget):
+        return widget.component._field._type==type(True)
+
     def bootstrap_widgets(self):
+        return self.bootstrapWidgets()
+    
+    def bootstrapWidgets(self):
         """Adds the needed css classes for bootstrap styles.
         """
+        result = []
         for widget in self.fieldWidgets:
-            widget.defaultHtmlClass.append('form-control')
-            yield widget
+            
+            if  self.isBool(widget):
+               widget.defaultHtmlClass.append('form-check-input')
+            else:
+               widget.defaultHtmlClass.append('form-control')                
+            result.append (widget)
+        return result
 
     def isBTreeContainer(self):
          return  IBTreeContainer.providedBy(self.context)

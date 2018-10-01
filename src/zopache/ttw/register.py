@@ -55,3 +55,5 @@ class Register(Form):
 
     def updateWidgets(self):
         return Form.updateWidgets(self)
+
+    

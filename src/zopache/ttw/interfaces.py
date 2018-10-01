@@ -4,7 +4,7 @@ from zope import interface
 from zope.interface import Interface
 from zope import schema
 from zope.schema import Password, TextLine
-from zope.schema import Text, TextLine, Password, Choice, Bool, Text
+from zope.schema import Text, TextLine, Choice, Bool
 from z3c.schema.email  import RFC822MailAddress as Email
 
 from dolmen.container import IBTreeContainer
@@ -58,18 +58,6 @@ class IGRegister (IShared):
                  description= "A Google Login Token",
                  required = True)
 
-class IRecruitPermissions(Interface):    
-    recruitPermission = Bool(
-        title = "Recruit Permission"  ,
-        required = False,
-        default = False)
-    
-    hirePermission = Bool(
-        title = "Hire Permission",
-        required = False,
-        default = False)                         
-
-        
 
 
 

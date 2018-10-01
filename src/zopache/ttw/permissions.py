@@ -6,10 +6,23 @@ from zope.cachedescriptors.property import CachedProperty
 from dolmen.forms.base import Actions
 from cromdemo.interfaces import ITab
 from .interfaces import IInternalPrincipal
-from .interfaces import IRecruitPermissions
 from . import tal_template
 from zopache.crud.actions import Update
 from dolmen.forms.base import Actions
+from zope.schema import Bool
+
+class IRecruitPermissions(Interface):    
+    recruitPermission = Bool(
+        title = "Recruit Permission"  ,
+        required = False,
+        default = False)
+    
+    hirePermission = Bool(
+        title = "Hire Permission",
+        required = False,
+        default = False)                         
+
+
 
 class DoneAction (Update):
     def newURL(self,arg):
@@ -27,7 +40,6 @@ class Permissions(EditForm):
     subTitle='One Last Question'
     fields = Fields(IRecruitPermissions)
     submissionError = []
-    template = tal_template('permissions.pt')
 
     def update(self):
         root = self.getRoot()

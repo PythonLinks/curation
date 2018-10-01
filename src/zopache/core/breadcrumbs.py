@@ -104,6 +104,10 @@ class Breadcrumbs(object):
         import pdb;pdb.set_trace()
         pass
       
+    def debugArg(self,arg):
+        import pdb;pdb.set_trace()
+        pass      
+      
     def implements (self,dottedName):
         myInterface = locate(dottedName)
         if myInterface == None:

@@ -46,7 +46,7 @@ class GoogleRegister(AddForm):
 
     def nextURL(self):
 
-        return self.url(self.new) + '/permissions2'        
+        return self.url(self.new) + '/meetupspeaker'        
         if (self.context.hiringPermissions == True):
            return "./submitJob"
        

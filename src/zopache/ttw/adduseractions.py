@@ -59,6 +59,6 @@ class Add(Action):
         people[newName]=obj
         people.authenticate (data)
         message(_(u"You are Registered"))
-        newURL = self.form.url(obj) + '/permissions2'
+        newURL = self.form.url(obj) + '/meetupspeaker'
         raise HTTPFound(newURL)
     

@@ -69,7 +69,7 @@ class Update(Action):
     """
 
     def __call__(self, form):
-
+        import pdb; pdb.set_trace()
         self.form=form
         data, errors = form.extractData()
         if errors:
