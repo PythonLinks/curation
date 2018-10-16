@@ -227,7 +227,6 @@ class Contents(object):
         for id in ids:
             contained = container [id]
             deleter = IObjectDeleter(contained)
-            import pdb; pdb.set_trace()
             deleter.deleteItem(self)
 
     def copyObjects(self):
