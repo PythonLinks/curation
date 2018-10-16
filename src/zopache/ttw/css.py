@@ -17,8 +17,9 @@ from zopache.ttw.interfaces import ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw.acescripts import AceScripts
 
+from zopache.ttw.interfaces import ISourceLeaf
 
-class ICSS(Interface):
+class ICSS(ISourceLeaf):
     """Basic CSS CRUD"""
 
     title = schema.TextLine(

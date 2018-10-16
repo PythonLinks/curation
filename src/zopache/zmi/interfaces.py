@@ -5,7 +5,7 @@ from dolmen.container import IBTreeContainer
 class IURLSegment(Interface):
     pass
 
-
+"""
 @crom.adapter
 @crom.sources(Interface)
 @crom.target(IURLSegment)
@@ -14,7 +14,7 @@ class IEditAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'edit'
-
+"""
 
     
 @crom.adapter

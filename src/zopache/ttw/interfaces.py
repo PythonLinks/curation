@@ -129,7 +129,7 @@ class IWebClass(Interface,IRenameable, IBTreeContainer):
 class IImutableWebClass(Interface, IBTreeContainer):
     pass
 
-class ISource(Interface):      
+class ISource(ILeaf):      
 
     title = schema.TextLine(
         title = u'Version Name:',

@@ -200,7 +200,8 @@ class PrincipalFolder(Container):
         if not internal.checkPassword(credentials["password"]):
             return None
         session = getSession()
-        session['user'] = credentials['email']            
+        session['user'] = credentials['email']
+        session['time'] = time.time() + 60 * 60 * 24 # 24 hr login
         return internal
 
     def loginUser(self,user): 

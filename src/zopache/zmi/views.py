@@ -61,7 +61,7 @@ class Fix(Manage):
 
 
           from zopache.categories.data.readConference.importData import importData
-          importData(item)
+          #importData(item)
           
           fred = 1
 

@@ -1,8 +1,8 @@
 import crom
 from zopache.zmi.interfaces import IURLSegment
 from .interfaces import IAceHTML, IHTML, IHTMLContainer
-from .css import ICSS
-from .json import IJSON
+from zopache.ttw.css import ICSS
+#from .json import IJSON
 from .javascript import IJavascriptFolder, IJavascript
 from .interfaces import IHTMLClass
 from .python import IPython
@@ -18,15 +18,6 @@ class IHTMLContainerAdaptor(object):
 
 
 @crom.adapter
-@crom.sources(IPython)
-@crom.target(IURLSegment)
-class IPythonAdaptor(object):
-    def __init__(self,context):
-        self.context=context   
-    def getSegment(self):
-        return 'aceedit'    
-
-@crom.adapter
 @crom.sources(IAceHTML)
 @crom.target(IURLSegment)
 class IAceHTMLAdaptor(object):
@@ -34,15 +25,6 @@ class IAceHTMLAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'aceedit'
-
-@crom.adapter
-@crom.sources(IJavascript)
-@crom.target(IURLSegment)
-class IAceJavascriptAdaptor(object):
-    def __init__(self,context):
-        self.context=context   
-    def getSegment(self):
-        return 'aceedit'        
 
 @crom.adapter
 @crom.sources(ICSS)
@@ -53,6 +35,17 @@ class ICSSAdaptor(object):
     def getSegment(self):
         return 'aceedit'
 
+    
+@crom.adapter
+@crom.sources(IJavascript)
+@crom.target(IURLSegment)
+class IAceJavascriptAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'aceedit'        
+
+"""
 @crom.adapter
 @crom.sources(IJSON)
 @crom.target(IURLSegment)
@@ -61,7 +54,7 @@ class ICSSAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'aceedit'    
-
+"""
 
 @crom.adapter
 @crom.sources(IJavascriptFolder)
@@ -71,7 +64,16 @@ class IJavascriptFolderAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'search'    
-    
+
+@crom.adapter
+@crom.sources(IPython)    
+@crom.target(IURLSegment)
+class IPythonAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'aceedit'    
+
 
 
 @crom.adapter
