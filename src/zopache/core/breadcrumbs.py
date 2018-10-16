@@ -10,6 +10,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 
 
+from zopache.ttw.acquisition import Acquire,ParentalAcquire
 
 from zopache.zmi.interfaces import IURLSegment
 try:
@@ -77,7 +78,8 @@ def parentalMethod(self,method):
        if hasattr(item,method):
           return item.__getattr__(method)
    raise Exception("NO SUCH METHOD FOUND")
-                                   
+
+        
 
 def nameAndTitle(item,showTitles):
         """Choose a display name for the current context.
@@ -96,6 +98,9 @@ def nameAndTitle(item,showTitles):
 from pydoc import locate
 class Breadcrumbs(object):
 
+    def parentalAcquire(self,id):
+          return ParentalAcquire(self.context)[id]
+  
     def getRoot(self):
            return (self.request.environ['zodb.connection'].root()
                    ['applicationRoot'])
