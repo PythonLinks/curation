@@ -206,6 +206,7 @@ class PrincipalFolder(Container):
 
     def loginUser(self,user): 
         session = getSession()
+        session['time'] = time.time() + 60 * 60 * 24 # 24 hr login        
         session['user'] =getattr(user,'email')
 
     def getIdByEmail(self, email):

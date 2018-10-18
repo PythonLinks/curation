@@ -1,3 +1,4 @@
+from jsmin import jsmin
 from . import tal_template
 from html import escape
 from zope import interface
@@ -163,7 +164,7 @@ class JavascriptFolder(Javascript,BTreeContainer):
 
              for line in anObject.getLines():
                  o=Record()
-                 o.line=line
+                 o.line=line.replace(' ','&nbsp;')
                  o.count=view.href(view.url(anObject)+'/aceedit', str(count))
                  count=count+1
                  result.append(o)
@@ -231,8 +232,8 @@ class JavascriptIndex(Page):
     make_response = make_javascript_response
         
     def render(self):
-               return self.context.getSource()
-
+               source = self.context.getSource()
+               return minify (source)
     def render(self ):
             if IJavascriptFolder.providedBy(self.context):
                    return self.context.sourceCache

@@ -10,6 +10,7 @@ history = open(join('docs', 'HISTORY.txt')).read()
 
 install_requires = [
     'arrow',
+    'jsmin',
     'crom',
     'cromlech.browser >= 0.5',
     'cromlech.content',
