@@ -95,7 +95,12 @@ class Edit(Update):
 class SaveAndView(Update):
         def newURL(self,baseURL):
                return baseURL
-    
+
+class SaveAndTest(Update):
+        def newURL(self,baseURL):
+               return self.form.context.testURL
+
+           
 class Delete(Action):
     """Delete action for any locatable context.
     """

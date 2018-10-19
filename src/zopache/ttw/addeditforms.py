@@ -25,5 +25,6 @@ class AceEditForm(EditForm):
         return Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
               formactions.SaveAndView(_("Save  and View","Save -> View")),
+              formactions.SaveAndTest(_("Save  and Test","Save -> Test")),     
               formactions.Cancel(_("Cancel","Cancel")))
 	      

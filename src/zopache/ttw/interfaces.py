@@ -19,6 +19,14 @@ asking you to vote on the best talks. """
 oneString = """Permission to process your professional information to 
 run a chat and voting server"""
 
+class ITestURL(Interface):    
+    testURL = schema.TextLine(
+        title = u'Test URL',
+        description = u'URL To Visit to test this script',
+        required = False,
+        default='/',            
+    )
+
 class IGLogin(Interface):
         idtoken= Text(
         title="Token",
@@ -129,7 +137,7 @@ class IWebClass(Interface,IRenameable, IBTreeContainer):
 class IImutableWebClass(Interface, IBTreeContainer):
     pass
 
-class ISource(ILeaf):      
+class ISource(ILeaf,ITestURL):      
 
     title = schema.TextLine(
         title = u'Version Name:',
@@ -146,7 +154,7 @@ class ISource(ILeaf):
 class IIndexHTML(Interface):
       pass
   
-class ICkHTML (ISource):
+class ICkHTML (ISource, ITestURL):
      pass
 
 class IAceHTML(ISource): 
@@ -162,13 +170,6 @@ class IHTML (ICkHTML,IAceHTML,ISource):
 class IWeb(Interface):
       pass
 
-class ITestURL(Interface):    
-    testURL = schema.TextLine(
-        title = u'Test URL',
-        description = u'URL To Visit to test this script',
-        required = False,
-        default='/',            
-    )
 
 #Views that are in the web menu. 
 class IWeb(Interface):

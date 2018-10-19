@@ -90,7 +90,7 @@ class Javascript(Leaf):
 
         # YOU MAY WANT TO IMPROVE THIS BY USING THE JSMIN LIBRARY
         for folder in parentJavascriptFolders:
-             folder.sourceCache=folder.getSource()
+             folder.sourceCache=jsmin(folder.getSource())
 
     def parentsWhichImplement(self,interface):
            item=self
@@ -231,9 +231,6 @@ class JavascriptIndex(Page):
     responseFactory = Response
     make_response = make_javascript_response
         
-    def render(self):
-               source = self.context.getSource()
-               return minify (source)
     def render(self ):
             if IJavascriptFolder.providedBy(self.context):
                    return self.context.sourceCache

@@ -246,11 +246,14 @@ class AceEditHTML(AceScripts,EditForm):
 
         action3=ttwactions.SaveAndCkEdit(
                 "Save and CkEdit","Save -> ckEdit")
+        
+        action4=formactions.SaveAndTest(
+                "Save and Test","Save -> Test")        
 
-        action4=formactions.Cancel("Cancel","Cancel")
+        action5=formactions.Cancel("Cancel","Cancel")
         if ICkHTML.providedBy(self.context):
-                return Actions(action1,action2,action3,action4)
-        return Actions(action1,action2,action4)        
+                return Actions(action1,action2,action3,action4,action5)
+        return Actions(action1,action2,action4,action5)        
 
 
 @form_component
@@ -277,7 +280,7 @@ class CkEditHTML(CkScripts,EditForm):
               formactions.SaveAndView(_("Save  and View","Save -> View")),
               ttwactions.SaveAndCkEdit(_("Save","Save")),
               ttwactions.SaveAndAceEdit(_("Save  and AceEdit","Save -> AceEdit")),
-              formactions.Cancel(_("Cancel","Cancel")))
+              formactions.SaveAndTest(_("Save  and Test","Save -> Test")),                   formactions.Cancel(_("Cancel","Cancel")))
 
 """    
 @form_component

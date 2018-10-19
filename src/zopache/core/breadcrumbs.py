@@ -1,5 +1,6 @@
 #Subject to ZPL and CV Licenses
 # -*- coding: utf-8 -*-
+import urllib.parse
 
 from cromlech.browser import IPublicationRoot
 from cromlech.location import lineage_chain
@@ -98,6 +99,10 @@ def nameAndTitle(item,showTitles):
 from pydoc import locate
 class Breadcrumbs(object):
 
+
+    def urlEncode(self,str):
+        return urllib.parse.quote(str)
+  
     def parentalAcquire(self,id):
           return ParentalAcquire(self.context)[id]
   
@@ -105,6 +110,12 @@ class Breadcrumbs(object):
            return (self.request.environ['zodb.connection'].root()
                    ['applicationRoot'])
 
+    def hasTrueAttribute(self,attribute):
+        if (hasattr(self.context, attribute) and
+            getattr(self.context,attribute)):
+            return True
+        return False
+      
     def debug(self):
         import pdb;pdb.set_trace()
         pass
@@ -221,9 +232,18 @@ class Breadcrumbs(object):
         result = self.url(container)+ '/' + item.__name__
         return result
 
+
+
+    def secureShortURL(self):
+        result = 'https://'
+        result += self.getDomain()
+        result += '/'
+        result += self.context.__name__
+        return result
+      
     def getDomain(self):
         return self.domain(self.context)
-      
+
     def domain(self,item):
         if IPublicationRoot.providedBy(item):
            result = self.request.application_url[8:]
