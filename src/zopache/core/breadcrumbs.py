@@ -104,8 +104,21 @@ class Breadcrumbs(object):
         return urllib.parse.quote(str)
   
     def parentalAcquire(self,id):
-          return ParentalAcquire(self.context)[id]
-  
+          context = self.context
+          name = self.context.__name__
+
+          result = ParentalAcquire(context) [id]
+          if result == None:
+             return ("ERROR: " + id +
+                     "DOES NOT EXIST IN THE PARENTS OF" +
+                     self.href(self.url(context), name))
+          try:
+              result = result (self)
+              return result
+          except error:
+            return str(error)
+
+            
     def getRoot(self):
            return (self.request.environ['zodb.connection'].root()
                    ['applicationRoot'])
