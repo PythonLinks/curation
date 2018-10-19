@@ -1,4 +1,4 @@
-#Subject to ZPL and CV Licenses
+shel#Subject to ZPL and CV Licenses
 # -*- coding: utf-8 -*-
 import urllib.parse
 
