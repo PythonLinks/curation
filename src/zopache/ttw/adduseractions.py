@@ -15,6 +15,7 @@ from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
 from zopache.core import getRoot
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
+from zopache.pages.interfaces import INotPage
 
 def message(message):
     send(message)
@@ -59,6 +60,9 @@ class Add(Action):
         people[newName]=obj
         people.authenticate (data)
         message(_(u"You are Registered"))
-        newURL = self.form.url(obj) + '/meetupspeaker'
+        if INotPage.providedBy(self.form.context):
+            newURL = self.form.url(obj) + '/meetupspeaker'
+        else:
+            newURL = '.'            
         raise HTTPFound(newURL)
     

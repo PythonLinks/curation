@@ -6,7 +6,7 @@ from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from zopache.ttw.interfaces import ISource
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm
+from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
 from dolmen.container import IBTreeContainer
 
 from zope.interface import implementer
@@ -236,14 +236,8 @@ class JavascriptIndex(Page):
                    return self.context.sourceCache
             else: 
                    return self.context.source
-               
-@form_component
-@context(IJavascript)
-@target(ITab)
-@title("AceEdit")
-@name("aceedit")
-@permissions('Manage')
-class AceEditJavascript(AceScripts,AceEditForm):
+
+class BaseJavascript(AceScripts):
     subTitle='Ace Edit this  Javascript'
     label=''
     def breadcrumbs(self):
@@ -257,6 +251,25 @@ class AceEditJavascript(AceScripts,AceEditForm):
 
     def headerScripts(self):
           return AceScripts.headerScripts(self)    
+               
+#HERE WE HAVE THE ACE EDIT FORM               
+@form_component
+@context(IJavascript)
+@target(ITab)
+@title("AceEdit")
+@name("aceedit")
+@permissions('Manage')
+class AceEditJavascript(BaseJavascript,AceEditForm):
+    pass
+
+#AND HERE WE HAVE THE ACE DEMO FORM               
+@form_component
+@context(IJavascript)
+@target(ITab)
+@title("Ace Demo")
+@name("acedemo")
+class AceDemoJavascript(BaseJavascript,AceDemoForm):
+      pass
 
 
         

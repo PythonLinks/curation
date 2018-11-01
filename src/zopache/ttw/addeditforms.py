@@ -19,6 +19,8 @@ class AceAddForm (AddForm):
                                         self.factory),
               formactions.Cancel(_("Cancel","Cancel")))
 
+
+
 class AceEditForm(EditForm):
     @CachedProperty
     def actions(self):
@@ -27,4 +29,10 @@ class AceEditForm(EditForm):
               formactions.SaveAndView(_("Save  and View","Save -> View")),
               formactions.SaveAndTest(_("Save  and Test","Save -> Test")),     
               formactions.Cancel(_("Cancel","Cancel")))
-	      
+
+
+class AceDemoForm(EditForm):
+    @CachedProperty
+    def actions(self):
+        return Actions()
+    

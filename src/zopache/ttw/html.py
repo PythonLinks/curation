@@ -15,7 +15,7 @@ from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from .interfaces import ISource,IHTML, IAceHTML,ICkHTML, ISecureHTML
-from zopache.crud.forms import AddForm, EditForm
+from zopache.crud.forms import AddForm, EditForm, DemoForm
 from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer, BTreeContainer
@@ -219,15 +219,7 @@ class Index(View,Breadcrumbs):
                return ('Your templates recursion exceeded 50 calls'+
                       self.zopacheTemplate.source)               
 
-
-
-@form_component
-@context(IAceHTML)
-@target(ITab)
-@title("AceEdit")
-@name("aceedit")
-@permissions('Manage')
-class AceEditHTML(AceScripts,EditForm):
+class BaseAceEdit(AceScripts):
     subTitle="Ace Edit this object"
     def footerScripts(self):
         return AceScripts.footerScripts(self)
@@ -238,6 +230,15 @@ class AceEditHTML(AceScripts,EditForm):
     def postProcess(self):
         self.context.postProcess()
 
+        
+#HERE IS THE ACE EDIT FORM
+@form_component
+@context(IAceHTML)
+@target(ITab)
+@title("AceEdit")
+@name("aceedit")
+@permissions('Manage')
+class AceEditHTML(BaseAceEdit,EditForm):
     @CachedProperty
     def actions(self):
 
@@ -255,14 +256,19 @@ class AceEditHTML(AceScripts,EditForm):
                 return Actions(action1,action2,action3,action4,action5)
         return Actions(action1,action2,action4,action5)        
 
-
+#AND HERE IS THE DEMO ACE EDIT FORM
 @form_component
-@context(ICkHTML)
+@context(IAceHTML)
 @target(ITab)
-@name('ckedit')
-@title("CkEdit")
-@permissions('Manage')
-class CkEditHTML(CkScripts,EditForm):
+@title("Ace Demo")
+@name("acedemo")
+class AceDemoHTML(BaseAceEdit,EditForm):
+    @CachedProperty
+    def actions(self):
+        return Actions()
+
+
+class BaseCkEdit(CkScripts):
     subTitle="CkEdit this object"
     
     def footerScripts(self):
@@ -274,6 +280,15 @@ class CkEditHTML(CkScripts,EditForm):
     def postProcess(self):
         self.context.postProcess()
 
+        
+#HERE IS THE CKEDIT FORM
+@form_component
+@context(ICkHTML)
+@target(ITab)
+@name('ckedit')
+@title("CkEdit")
+@permissions('Manage')
+class CkEditHTML(BaseCkEdit,EditForm):
     @CachedProperty
     def actions(self):
         return Actions(
@@ -281,6 +296,18 @@ class CkEditHTML(CkScripts,EditForm):
               ttwactions.SaveAndCkEdit(_("Save","Save")),
               ttwactions.SaveAndAceEdit(_("Save  and AceEdit","Save -> AceEdit")),
               formactions.SaveAndTest(_("Save  and Test","Save -> Test")),                   formactions.Cancel(_("Cancel","Cancel")))
+
+
+#AND HERE IS THE CkDemo Form
+@form_component
+@context(ICkHTML)
+@target(ITab)
+@name('ckdemo')
+@title("CkEdit")
+class CkEditHTML(BaseCkEdit,EditForm):
+    @CachedProperty
+    def actions(self):
+        return Actions()
 
 """    
 @form_component

@@ -82,6 +82,10 @@ class EditForm(Form):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
 
+class DemoForm(EditForm):
+    @CachedProperty
+    def actions(self):
+        return Actions()    
 
 
 @form_component

@@ -48,6 +48,7 @@ class Publisher (DawnlightPublisher):
         #IF A VIEW WAS FOUND, RETURN IT 
         if (view is  not None):
                     factory = IResponseFactory(view)
-                    return factory()
+                    response = factory()
+                    return response
 
         raise PublicationError('%r can not be rendered.' % context)                

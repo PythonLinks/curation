@@ -1,12 +1,9 @@
 #This software is subject to the No Compete MIT license License Agreement.
 
 from zopache.core.viewdecorators import *
-from cromdemo.interfaces import ITab
 from zope import schema
-from zope.interface import implementer
-
-from dolmen.view import View
 from cromlech.webob.response import Response
+
 from dolmen.view import View, make_view_response
 
 from dolmen.container import IBTreeContainer
@@ -14,10 +11,10 @@ from dolmen.container import IBTreeContainer
 from zopache.core import Leaf
 from zopache.ttw.interfaces import ISourceLeaf
 from zopache.ttw.interfaces import ISource
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm
+from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
 from zopache.ttw.acescripts import AceScripts
+from cromdemo.interfaces import ITab
 
-from zopache.ttw.interfaces import ISourceLeaf
 
 class ICSS(ISourceLeaf):
     """Basic CSS CRUD"""
@@ -78,7 +75,7 @@ class Index(View):
     def render(self):
                return self.context.source
 
-
+#HERE IS THE ACE EDIT FORM
 @form_component
 @context(ICSS)
 @crom.target(ITab)
@@ -88,9 +85,18 @@ class Index(View):
 class AceEditCSS(AceScripts,AceEditForm):
     subTitle='Edit a CSS Object'
 
-    def postProcess(self):
-        pass
 
+#AND HERE IS THE ACE DEMO FORM
+@form_component
+@context(ICSS)
+@crom.target(ITab)
+@title("Ace Demo")
+@name("acedemo")
+class AceDemoCSS(AceScripts,AceDemoForm):
+    subTitle='Edit a CSS Object'
+
+
+    
 
 
 

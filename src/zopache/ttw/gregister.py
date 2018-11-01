@@ -7,6 +7,7 @@ from zopache.core.viewdecorators import *
 #This software is subject to the CV and Zope Public Licenses.
 from .gloginactions  import GoogleRegisterAction
 from zopache.crud.utils import getFactoryFields, getAllFields
+from zopache.pages.interfaces import INotPage
 
 from .interfaces import IName, IContainer, ILeaf, IGRegister
 from dolmen.container import BTreeContainer, IBTreeContainer
@@ -45,6 +46,8 @@ class GoogleRegister(AddForm):
 
 
     def nextURL(self):
+        if not INotPage.provideBy(self.context):
+           return '.'
 
         return self.url(self.new) + '/meetupspeaker'        
         if (self.context.hiringPermissions == True):

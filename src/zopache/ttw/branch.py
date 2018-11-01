@@ -3,6 +3,7 @@ from zope import interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
 from BTrees.OOBTree import OOBTree
+from cromlech.browser.interfaces import IPublicationRoot
 
 from dolmen.container import IBTreeContainer
 
@@ -17,7 +18,6 @@ class Branch(object):
     def __init__(self):
        self.valuesByToken = OOBTree()
        #self.tokensByValue = {}
-
 
     def indexTree(self):
         self.valuesByToken=OOBTree()
@@ -121,9 +121,7 @@ class Branch(object):
         except(KeyError):
            return self.valuesByToken[name]
 
-       
 
-
-
-
-
+@implementer(IPublicationRoot)       
+class Root (Branch):
+   pass

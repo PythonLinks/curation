@@ -220,13 +220,16 @@ class Breadcrumbs(object):
     def acquire(self,name):
             return Acquire(self)[name]
 
+
     def acquireTitle(self):
+        return self.acquireAttribute ( 'title')
+
+    def acquireAttribute(self, attribute):      
         parents = lineage_chain(self.context)
-        #parents.reverse()
         for item in parents:
-            if (hasattr(item,'title') and
-               item.title!=''):
-               return item.title
+            result = getattr(item,attribute,'')
+            if result:
+               return result
         return ''
 
              
