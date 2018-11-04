@@ -15,7 +15,7 @@ from zopache.ttw.html import HTML
 from zopache.ttw.javascript import Javascript
 from zopache.ttw.css import CSS
 from zopache.ttw.json import JSON
-from zopache.ttw.file import File
+from zopache.ttw  import File, Image
 from ZODB.blob import Blob
 
 def message(message):
@@ -107,11 +107,14 @@ class AddImageAction(Action):
         
     def createFile(self,formData):
         self.nextView = '/manage'
-        fileUpload = formData ['data']        
+        fileUpload = formData ['data']
+        contenttype= fileUpload.type
+        fileName = fileUpload.filename        
         if fileUpload and fileUpload.filename:
-            file=Image(fileName,'w',Blob())
+            image=Image()
+            image.__name__ = fileName            
             data = formData['data']                        
-            file.data = data
-            self.saveDetails(file,fuleUpLoad)
-            return file
+            image.data = data
+            self.saveDetails(image,fuleUpLoad)
+            return image
         

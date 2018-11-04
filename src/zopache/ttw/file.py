@@ -1,3 +1,5 @@
+from PIL import Image
+
 from ZODB.blob import Blob, BlobFile
 
 from zope.interface import Interface, implementer
@@ -16,23 +18,35 @@ class File(Leaf):
     def size(self):
         return self.blob.getSize()
 
+    def isImage(self):
+        return False
+    
     def setData(self, data):
         blobFile = BlobFile(self.__name__, 'w', self.blob)
         with self.blob.open(mode ="w") as f:
            f.write(data)
         f.close()
+        if self.isImage():
+            image = PIL.Image.fromarray(data)
+            self.width = image.width
+            self.height = image.height
         
     def getData(self):
         with  self.blob.open(mode='r') as f:
            return f.read()
-        
+       
+    data = property(getData,setData)
+    
     def postProcess(self):
         pass
 
     def postAddProcess(self):
         pass
 
-    data = property(getData,setData)
+
+class Image (File):
+    def isImage(self):
+        return True
     
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()

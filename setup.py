@@ -22,6 +22,7 @@ install_requires = [
     'dolmen.forms.base >= 2.0',
     'dolmen.message',
     'fanstatic',
+    'pillow',
     'setuptools',
     'zope.cachedescriptors',
     'z3c.schema',
