@@ -1,41 +1,65 @@
-from zopache.core.viewdecorators import *
-from cromlech.file import  IFile
-from zope.interface import implementer
 from ZODB.blob import Blob, BlobFile
 
-@implementer(IFile)
-class File(BlobFile):
+from zope.interface import Interface, implementer
+from dolmen.container import OrderedBTreeContainer
+from cromlech.file import FileField, IFile
 
-   def __init__(self, filename=None, ct=None, data=None):
-     self.filename = filename
-     self.content_type = ct
-     self.blob = Blob(data)
+class IMyFile(Interface):
+         data = FileField(title=u'Upload a File')
+          
+@implementer(IMyFile)
+class File(OrderedBTreeContainer):
 
-   @property
-   def size(self):
-      return self.blob.getSize()
+    def __init__(self):
+        OrderedBTreeContainer.__init__(self)
+        self.blob = Blob()
+        
+    @property
+    def size(self):
+        return self.blob.getSize()
 
-   def setData(self, data):
-      import pdb; pdb.set_trace()
-      with blob.open('w') as f:
+    def setData(self, data):
+        blobFile = BlobFile(self.__name__, 'w', self.blob)
+        with self.blob.open(mode ="w") as f:
            f.write(data)
+        f.close()
+        
+    def getData(self):
+        with  self.blob.open(mode='r') as f:
+           return f.read()
+        
+    def postProcess(self):
+        pass
 
-   def getData():
-      with blob.open('r') as f:
-           return f.read(data)
+    def postAddProcess(self):
+        pass
 
+    data = property(getData,setData)
+    
+def make_file_response(view, result, *args, **kwargs):
+        response = view.responseFactory()
+        response.write(result or u'')
+        response.content_type=view.context.contentType
+        return response
 
-   data = property(getData,setData)
+from cromlech.webob.response import Response
+from dolmen.view import View, make_view_response
+from zopache.core.viewdecorators import *
+@view_component
+@name('index')
+@context(IMyFile)
+@title("View File")
+class Index(View):
+    responseFactory = Response
+    make_response = make_file_response
+        
+    def render(self):
+               return self.context.data
 
-   
-@form_component
-@name('addFile')
-@context(IBTreeContainer)
-#@target(ITab)
-@title("Add File")
-@permissions('Manage')
-class AddCSS(AddForm):
-    subTitle='Add a File'
-    interface = IFile
-    ignoreContent = True
-    factory=File
+@view_component
+@context(IMyFile)
+@name('manage')
+class ManageFile(Index):    
+   pass
+                
+                         

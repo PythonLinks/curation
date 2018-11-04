@@ -10,9 +10,18 @@ recruiting. Basically if you are smart enough to understand
 why this software is so good, you are a very valuable developer.
 
 Onto the specifics.  Primarily this software is subject to the Zope
-PUblic License.  WHile the Zope corporation is no more, the ZPL lets you do whatever you want with the software just include their licesne, and give them credit.
+PUblic License.  WHile the Zope corporation is no more, the ZPL lets you do
+whatever you want with the software just include their licesne, and give
+them credit.
 
-I added three clauses to the ZPL. The CV License.  If you use the software, send me
-a copy of your CV, and say that you give me permission to process your professional
-information for recruiting purposes.  Include the CV Licesne with the distriuted software.
+I added two clauses to the ZPL. The CV License.  If you use the software,
+send me a copy of your CV, and say that you give me permission to process
+your professional
+information for recruiting purposes.  Include the CV Licesne with the
+distriuted software.
 and give credit to Cromlech as well as Zope.
+
+The second clause is to not compete with what I am doing.
+I am publishing this software.  I am recruiting.
+I run PythonLinks.info.  I am about to release a
+Simple Wiki, a single-page-wiki and an encrypted-wiki. 

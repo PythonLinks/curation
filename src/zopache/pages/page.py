@@ -1,14 +1,16 @@
 import time
-import osfrom dolmen.container import BTreeContainer
+import os
+from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import IPage
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from zopache.core.breadcrumbs import parentWhichImplements
-
+from cromlech.container.contained import Contained
+from zope.interface import implementer
 
                       
-class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,JsonObject,Contained):
+class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     title = ''
     branchSize=1
 
