@@ -19,6 +19,12 @@ asking you to vote on the best talks. """
 oneString = """Permission to process your professional information to 
 run a chat and voting server"""
 
+from cromlech.file import FileField
+
+class IFile(Interface):
+         data = FileField(title=u'Upload a File')
+
+
 class ITestURL(Interface):    
     testURL = schema.TextLine(
         title = u'Test URL',

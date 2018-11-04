@@ -2,16 +2,14 @@ from ZODB.blob import Blob, BlobFile
 
 from zope.interface import Interface, implementer
 from dolmen.container import OrderedBTreeContainer
-from cromlech.file import FileField, IFile
+from zopache.core import Leaf
+from zopache.ttw.interfaces import IFile
 
-class IMyFile(Interface):
-         data = FileField(title=u'Upload a File')
           
-@implementer(IMyFile)
-class File(OrderedBTreeContainer):
+@implementer(IFile)
+class File(Leaf):
 
     def __init__(self):
-        OrderedBTreeContainer.__init__(self)
         self.blob = Blob()
         
     @property
@@ -47,7 +45,7 @@ from dolmen.view import View, make_view_response
 from zopache.core.viewdecorators import *
 @view_component
 @name('index')
-@context(IMyFile)
+@context(IFile)
 @title("View File")
 class Index(View):
     responseFactory = Response
@@ -57,7 +55,7 @@ class Index(View):
                return self.context.data
 
 @view_component
-@context(IMyFile)
+@context(IFile)
 @name('manage')
 class ManageFile(Index):    
    pass

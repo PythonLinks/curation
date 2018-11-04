@@ -6,6 +6,7 @@ from zopache.ttw.css import ICSS
 from .javascript import IJavascriptFolder, IJavascript
 from .interfaces import IHTMLClass
 from .python import IPython
+from zopache.ttw.interfaces import IFile
 
 @crom.adapter
 @crom.sources(IHTMLContainer)
@@ -15,6 +16,15 @@ class IHTMLContainerAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'manage'
+
+@crom.adapter
+@crom.sources(IFile)
+@crom.target(IURLSegment)
+class IHTMLContainerAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'index'    
 
 
 @crom.adapter

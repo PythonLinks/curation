@@ -11,7 +11,7 @@ from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions
 from zopache.ttw.fileaction  import AddFileAction
 from dolmen.container import IBTreeContainer
-from zopache.ttw.file import IMyFile
+from zopache.ttw.interfaces import IFile
 
 @form_component
 @name('addFile')
@@ -21,24 +21,20 @@ from zopache.ttw.file import IMyFile
 @permissions('Manage')
 class AddFile(AddForm):
     subTitle='Add a File'
-    interface = IMyFile
+    interface = IFile
     ignoreContent = True
 
 
-    def update (self):
-        AddForm.update(self)
+#    def updateWidgets(self):
+#        self.fieldWidgets.extend(self.fields)
+#        self.fieldWidgets = self.fieldWidgets.select('form.field.__name__')
+#        new = FileWidget( self.fields['data'],self,self.request)
+#        self.fieldWidgets.append(new)
+#        
+#        self.actionWidgets.extend(self.actions)#
 
-    def updateWidgets(self):
-        import pdb; pdb.set_trace()     
-        self.fieldWidgets.extend(self.fields)
-        self.fieldWidgets = self.fieldWidgets.select('form.field.__name__')
-        new = FileWidget( self.fields['data'],self,self.request)
-        self.fieldWidgets.append(new)
-        
-        self.actionWidgets.extend(self.actions)
-
-        self.fieldWidgets.update()
-        self.actionWidgets.update()        
+#        self.fieldWidgets.update()
+#        self.actionWidgets.update()        
 
 
     @CachedProperty

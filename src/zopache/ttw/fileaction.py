@@ -43,7 +43,6 @@ class AddFileAction(Action):
         return SuccessMarker('Added', True, url=url,code=307)
 
     def saveFile(self,file,formData):
-        import pdb; pdb.set_trace()
         name=formData['__name__']
         context = self.form.context
         newName=self.form.uniqueName(context,name)        
