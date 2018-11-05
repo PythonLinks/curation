@@ -2,7 +2,6 @@ from zopache.core.viewdecorators import *
 from zopache.ttw.html import CkScripts
 from zopache.ttw.html import AddCkHTML, AddAceHTML
 from .interfaces import IPage
-from cromdemo.interfaces import ITab
 from zopache.pages.page import Page
 
 

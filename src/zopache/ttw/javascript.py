@@ -13,7 +13,7 @@ from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer,BTreeContainer
 from crom import target, order
-from cromdemo.interfaces import ITab
+from zopache.application.interfaces import ITab
 from cromlech.browser.directives import title
 from cromlech.security import permissions
 from zopache.core import Leaf
@@ -84,11 +84,12 @@ class Javascript(Leaf):
 
     def postProcess(self):
         self.createJavascriptCaches()
-        
+
+    def postAddProcess(self):
+        self.postProcess()
+
     def createJavascriptCaches(self):
         parentJavascriptFolders=self.parentsWhichImplement(IJavascriptFolder)
-
-        # YOU MAY WANT TO IMPROVE THIS BY USING THE JSMIN LIBRARY
         for folder in parentJavascriptFolders:
              folder.sourceCache=jsmin(folder.getSource())
 
@@ -138,6 +139,7 @@ class JavascriptFolder(Javascript,BTreeContainer):
           result=u' '  
         for item in self.values():
             result +=item.getSource()
+            result += '\n'
         return result
 
     def getJavascriptObjects(self):

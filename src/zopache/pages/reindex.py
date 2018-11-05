@@ -1,11 +1,10 @@
-from cromdemo.interfaces import ITab
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IBranch
 from zopache.core.baseform import Form
 
 @form_component
 @context(IBranch)
-@crom.target(ITab)
+@crom.target(IView)
 @title("reIndex")
 @crom.name("reIndex")
 @permissions('Manage')

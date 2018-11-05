@@ -18,18 +18,11 @@ class File(Leaf):
     def size(self):
         return self.blob.getSize()
 
-    def isImage(self):
-        return False
-    
     def setData(self, data):
         blobFile = BlobFile(self.__name__, 'w', self.blob)
         with self.blob.open(mode ="w") as f:
            f.write(data)
         f.close()
-        if self.isImage():
-            image = PIL.Image.fromarray(data)
-            self.width = image.width
-            self.height = image.height
         
     def getData(self):
         with  self.blob.open(mode='r') as f:
@@ -45,8 +38,14 @@ class File(Leaf):
 
 
 class Image (File):
-    def isImage(self):
-        return True
+
+    def postProcess(self):
+            image = PIL.Image.fromarray(self.data)
+            self.width = image.width
+            self.height = image.height
+
+    def postAddProcess(self):
+           self.postProcess()
     
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()

@@ -3,16 +3,13 @@ from zope import schema
 from zope import interface
 from cromlech.container.interfaces import IBTreeContainer
 from zopache.zmi.contents import Contents
-try: 
-    from zopache.core.page  import  Page
-except ImportError:
-    from cromdemo.browser import Page
+from zopache.core.page  import  Page
 from . import tal_template
 from crom import target, order
 from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from dolmen.container import IBTreeContainer
-from cromdemo.interfaces import ITab
+from zopache.application.interfaces import ITab
 from .contents import Contents
 from cromlech.security import permissions
 from zopache.zmi.interfaces import IURLSegment

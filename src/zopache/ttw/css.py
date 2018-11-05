@@ -13,7 +13,7 @@ from zopache.ttw.interfaces import ISourceLeaf
 from zopache.ttw.interfaces import ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
 from zopache.ttw.acescripts import AceScripts
-from cromdemo.interfaces import ITab
+from zopache.application.interfaces import ITab
 
 
 class ICSS(ISourceLeaf):

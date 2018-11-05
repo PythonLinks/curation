@@ -67,10 +67,9 @@ class AddFileAction(Action):
     def createFile(self,formData):
         nextView ='/'
         fileUpload =  formData ['data']
-        contenttype= fileUpload.type
-        fileName = fileUpload.filename
         if True:
-            data = formData['data']
+            data = fileUpload.file.read()
+            
             if contenttype=='txt/html':
                file=HTML()
                file.source=data
@@ -90,10 +89,7 @@ class AddFileAction(Action):
                nextView  +=  newName+'/aceedit'               
 
             else:
-
-               data = formData['data'].file.read()
                file = File()
-               file.__name__ = fileName
                file.data = data
                nextView = '/manage'
 
@@ -107,13 +103,10 @@ class AddImageAction(Action):
         
     def createFile(self,formData):
         self.nextView = '/manage'
-        fileUpload = formData ['data']
-        contenttype= fileUpload.type
-        fileName = fileUpload.filename        
+        fileUpload =  formData ['data']
+        data = fileUpload.file.read()        
         if fileUpload and fileUpload.filename:
             image=Image()
-            image.__name__ = fileName            
-            data = formData['data']                        
             image.data = data
             self.saveDetails(image,fuleUpLoad)
             return image

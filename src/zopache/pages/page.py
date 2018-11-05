@@ -13,6 +13,7 @@ from zope.interface import implementer
 class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     title = ''
     branchSize=1
+    description = ''
 
     def __init__(self):
          OrderedBTreeContainer.__init__(self)

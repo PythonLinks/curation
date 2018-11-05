@@ -1,7 +1,7 @@
 #This software is subject to the No Compete MIT license License Agreement.
 
 from zopache.core.viewdecorators import *
-from cromdemo.interfaces import ITab
+from zopache.application.interfaces import ITab
 from zope import schema
 from zope.interface import implementer
 

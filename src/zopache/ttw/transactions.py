@@ -14,7 +14,7 @@ from zopache.core.page  import  Page
 from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from crom import target, order
-from cromdemo.interfaces import ITab
+from zopache.application.interfaces import ITab
 from zope.interface import implementer
 from zopache.ttw.interfaces import IHistoricDetails
 from cromlech import browser

@@ -24,6 +24,9 @@ from cromlech.file import FileField
 class IFile(Interface):
          data = FileField(title=u'Upload a File')
 
+class IImage(Interface):
+         data = FileField(title=u'Upload an Image')         
+
 
 class ITestURL(Interface):    
     testURL = schema.TextLine(

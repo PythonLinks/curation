@@ -15,7 +15,7 @@ from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer
 from crom import target, order
-from cromdemo.interfaces import ITab
+from zopache.application.interfaces import ITab
 from cromlech.browser.directives import title
 from cromlech.security import permissions
 from zopache.core import Leaf
