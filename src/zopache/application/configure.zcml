@@ -16,7 +16,6 @@
     <grok:grok package="zopache.zmi" />
     <grok:grok package="zopache.copy" />    
     <grok:grok package="zopache.blogs" />
-    <grok:grok package="zopache.categories" />
     <grok:grok package="dolmen.widget.file" />
     <grok:grok package="cromlech.file" />    
 

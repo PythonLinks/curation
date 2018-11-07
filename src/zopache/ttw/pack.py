@@ -1,7 +1,6 @@
 from cromlech.security import permissions
 from zopache.core.viewdecorators import *
 from .interfaces import IBranch
-from zopache.categories.data.youtube.getvotes import recordAllVotes
 from zopache.core.baseform import Form
 
 

@@ -11,7 +11,7 @@ from dolmen.container import BTreeContainer
 
 from .interfaces import IBranch
 from zopache.core.breadcrumbs import Breadcrumbs
-from zopache.categories.interfaces import ICategory
+
 
 @implementer (IBranch)
 class Branch(object):
@@ -34,7 +34,7 @@ class Branch(object):
         for item in branch.values():
                #allow any zclass object
                # and item.__ZClass__.__name__=='Skill':
-               if ICategory.providedBy(item):
+               if item.isPage():
                    #self.tokensByValue[item]=item.__name__
                    self.valuesByToken[item.__name__]=item
                    self.indexBranch(tree,item)

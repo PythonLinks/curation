@@ -32,7 +32,7 @@ Content <span class="caret"></span></a>
 
 <li tal:condition="view.safeMethod('isConference')"><a href="./addVideo">Add Video</a></li>
 
-<li tal:condition="not view.implements('zopache.categories.interfaces.IConference')"><a href="/manual/addVideo">Add Video</a></li>
+<li tal:condition="view.safeMethod('isConference') ><a href="/manual/addVideo">Add Video</a></li>
 
 <li><a href="./addConference">Add Conference</a></li>
 <li><a href="./addPlayList">Add PlayList</a></li>

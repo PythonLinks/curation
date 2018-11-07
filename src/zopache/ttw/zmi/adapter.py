@@ -6,7 +6,7 @@ from zope.interface import Interface
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.zmi.interfaces import IObjectRetitler
 from zopache.pages.zmiadapter  import LocalBase as BaseClass
-from zopache.categories.interfaces import IConferenceVideo
+
 
 #GENERIC RETITLER
 #IF STATEMENT FOR CONFERENCE VIDEOS
@@ -30,7 +30,7 @@ class ReTitler(BaseClass):
         self.describeTransactionWithTitle ("Retitle",obj)
         obj.title = newTitle
         
-        if IConferenceVideo.providedBy (obj):
+        if obj.isVideo():
            oldName = obj.__name__
            newName = slugify (newTitle)
            newName=self.uniqueName(container,newName)

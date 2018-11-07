@@ -36,7 +36,6 @@ install_requires = [
     'python-slugify',
     'setuptools',
     'zopache',
-    'zopache.categories',                    
     'zopache.copy',
     'zope.interface',
     'zope.location',
