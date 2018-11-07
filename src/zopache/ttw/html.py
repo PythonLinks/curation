@@ -304,7 +304,7 @@ class CkEditHTML(BaseCkEdit,EditForm):
 @target(ITab)
 @name('ckdemo')
 @title("CkEdit")
-class CkEditHTML(BaseCkEdit,EditForm):
+class CkDemoHTML(BaseCkEdit,EditForm):
     @CachedProperty
     def actions(self):
         return Actions()
