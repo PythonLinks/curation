@@ -8,7 +8,7 @@ from zopache.pages.page import Page
 @view_component
 @name('addpage')
 @title("Add Page")
-@target(ITab)
+@target(IView)
 @permissions('AddContent')
 @context(IPage)    
 class AddPage(AddAceHTML):

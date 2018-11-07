@@ -14,7 +14,7 @@ class Access(object):
 
       def get(self, key, extraArgument):
           if key ==  'lozinski@PythonLinks.info':
-             return  frozenset(('View', 'Manage','Vote','Edit'))
+             return  frozenset(('View', 'EditContent','Manage','Vote','Edit'))
           if key != "Anonymous":
              return  frozenset(('Vote','Extra','third','Edit'))
           return frozenset(())

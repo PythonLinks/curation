@@ -17,7 +17,6 @@ from ..interfaces import ITab,IContent
 
 
 from zopache.core.page  import  Page
-from ..models import TreeRoot
 from ..auth import logout
 from dolmen.breadcrumbs import BreadcrumbsRenderer
 from . import tal_template

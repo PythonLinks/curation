@@ -6,7 +6,8 @@ from zope.interface import implementer
 from zope.interface import Interface
 import crom
 from dolmen.forms.base import  (action, name, context,
-from cromlech.browser import IView                        form_component )
+                                form_component )
+from cromlech.browser import IView
 from dolmen.view import view_component
 
 from cromlech.security import permissions

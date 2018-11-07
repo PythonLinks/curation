@@ -188,7 +188,6 @@ class PrincipalFolder(Container):
     def authenticate(self, credentials):
         """Return principal info if credentials can be authenticated
         """
-        import pdb; pdb.set_trace()
         if not ('email' in credentials and 'password' in credentials):
             return None
         id = self.idByEmail.get(credentials['email'])

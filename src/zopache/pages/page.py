@@ -8,7 +8,7 @@ from dolmen.container import OrderedBTreeContainer
 from zopache.core.breadcrumbs import parentWhichImplements
 from cromlech.container.contained import Contained
 from zope.interface import implementer
-
+from zopache.ttw.interfaces import IBranch
                       
 class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     title = ''

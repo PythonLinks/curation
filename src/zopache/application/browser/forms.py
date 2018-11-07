@@ -22,11 +22,12 @@ from ..interfaces import ITab
 
 from ..auth import Auth
 from ..interfaces import  IContent, IContentContainer, ILogin
-from ..models import  Content, ContentContainer
+#from ..models import  Content, ContentContainer
 from dolmen.container import IBTreeContainer, BTreeContainer
 from dolmen.template import TALTemplate
 from zopache.crud.interfaces import IApp
 
+"""
 @form_component
 @name('addContent')
 @context(IBTreeContainer)
@@ -55,7 +56,7 @@ class AddContentContainer(ContainerAddForm):
     interface = Interface
     ignoreContent = True
     factory=ContentContainer
-
+"""
 
 #No longer used
 #@form_component
