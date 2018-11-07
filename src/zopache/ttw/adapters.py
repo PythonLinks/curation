@@ -5,7 +5,7 @@ from zopache.ttw.css import ICSS
 #from .json import IJSON
 from .javascript import IJavascriptFolder, IJavascript
 from .interfaces import IHTMLClass
-from .python import IPython
+#from .python import IPython
 from zopache.ttw.interfaces import IFile
 
 @crom.adapter
@@ -74,7 +74,7 @@ class IJavascriptFolderAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'search'    
-
+"""
 @crom.adapter
 @crom.sources(IPython)    
 @crom.target(IURLSegment)
@@ -83,7 +83,7 @@ class IPythonAdaptor(object):
         self.context=context   
     def getSegment(self):
         return 'aceedit'    
-
+"""
 
 
 @crom.adapter
