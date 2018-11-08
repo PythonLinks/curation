@@ -4,7 +4,7 @@ from zope.schema.interfaces import IField
 from zope.interface import implementer
 from BTrees.OOBTree import OOBTree
 from cromlech.browser.interfaces import IPublicationRoot
-
+from zopache.pages.interfaces import IPage
 from dolmen.container import IBTreeContainer
 
 from dolmen.container import BTreeContainer
@@ -34,7 +34,7 @@ class Branch(object):
         for item in branch.values():
                #allow any zclass object
                # and item.__ZClass__.__name__=='Skill':
-               if item.isPage():
+               if IPage.providedBy(item):
                    #self.tokensByValue[item]=item.__name__
                    self.valuesByToken[item.__name__]=item
                    self.indexBranch(tree,item)
