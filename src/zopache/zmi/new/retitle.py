@@ -2,7 +2,7 @@ import crom
 from zope import schema
 from zope import interface
 from cromlech.container.interfaces import IBTreeContainer
-from zopache.zmi.contents import Contents
+from zopache.zmi.new.contents import Contents
 from zopache.core.page  import  Page
 
 from . import tal_template
@@ -11,7 +11,6 @@ from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from dolmen.container import IBTreeContainer
 from zopache.application.interfaces import ITab
-from .contents import Contents
 from cromlech.security import permissions
 from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IObjectRetitler
@@ -24,8 +23,9 @@ from zopache.zmi.interfaces import IObjectRetitler
 @context(IBTreeContainer)
 class Manage(Page,Contents):
     label=''
-    subTitle='Rename Videos'
-    #template = tal_template('zmi.pt')
+    subTitle='Rename Videos '
+    # TEMPLATE IS IN THE ZODB
+    
     def getRoot(self):
            return (self.request.environ['zodb.connection'].root()
                    ['applicationRoot'])
@@ -44,6 +44,8 @@ class Manage(Page,Contents):
         self.template = root['Products']['Templates']['EditTitles']
         if 'container_rename_button' in self.request.form:
              self.renameAll()
+        elif 'container_cut_button' in self.request.form:
+             self.cutObjects()             
 
     def getManageURL(self,item):
         url = self.url(item)

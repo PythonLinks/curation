@@ -2,14 +2,15 @@ import time
 import os
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage , IRootPage
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from zopache.core.breadcrumbs import parentWhichImplements
 from cromlech.container.contained import Contained
 from zope.interface import implementer
 from zopache.ttw.interfaces import IBranch
-                      
+from zopache.ttw.branch import Branch
+
 class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     title = ''
     branchSize=1
@@ -105,10 +106,13 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
 class Page(PageBase):
     webClass='Page'        
 
-@implementer (IPage)     
-class Page(PageBase):
-    webClass='Page'        
 
+@implementer(IRootPage)
+class RootPage(Branch,PageBase):
+    webClass='Page'
+    def __init__(self):
+       Branch.__init__(self)
+       PageBase.__init__(self)
 
     
 

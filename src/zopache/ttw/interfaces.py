@@ -146,7 +146,7 @@ class IWebClass(Interface,IRenameable, IBTreeContainer):
 class IImutableWebClass(Interface, IBTreeContainer):
     pass
 
-class ISource(ILeaf,ITestURL):      
+class ISource(ILeaf):      
 
     title = schema.TextLine(
         title = u'Version Name:',
@@ -160,16 +160,20 @@ class ISource(ILeaf,ITestURL):
         required = False,
         default = u'',
     )
+    
+class ITestSource (ISource, ITestURL):
+   pass
+
 class IIndexHTML(Interface):
       pass
   
-class ICkHTML (ISource, ITestURL):
+class ICkHTML (ISource):
      pass
 
-class IAceHTML(ISource): 
+class IAceHTML(ISource, ITestURL): 
     pass
 
-class ISecureHTML(IAceHTML):
+class ISecureHTML(IAceHTML,ITestURL):
     pass
 
 class IHTML (ICkHTML,IAceHTML,ISource):

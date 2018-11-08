@@ -5,7 +5,7 @@ from zope import interface
 from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
-from zopache.ttw.interfaces import ISource
+from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
 from dolmen.container import IBTreeContainer
 

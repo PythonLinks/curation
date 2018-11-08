@@ -104,7 +104,7 @@ class Contents(object):
     def cutObjects(self): 
         """move objects specified in a list of object ids"""
         request = self.request
-        ids = request.POST.getall('ids:list')
+        ids = request.POST.getall('ids_list')
         if not ids or (len(ids)==0):
             self.error = ("You didn't specify any ids to cut.")
             return
