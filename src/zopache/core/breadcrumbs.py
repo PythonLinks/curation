@@ -294,6 +294,8 @@ class Breadcrumbs(object):
         items.reverse()
         result= '<br><div style = "text-align:left; ">'
         step = -1
+        if len(items) > 50:
+          return "ERROR IN DIV BREADCRUMBS"
         for item in items:
                    step += 1
                    result += '<div style = "margin-left:' 
