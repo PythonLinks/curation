@@ -31,7 +31,6 @@ class IPage(IContainer,IOrdered ,IUntrustedHTML):
     )
 
     
-
 class IRootPage(IPublicationRoot,IPage):
     pass
 

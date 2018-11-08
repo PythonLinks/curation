@@ -1,9 +1,12 @@
+
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IBranch
 from zopache.core.baseform import Form
+from zopache.pages.interfaces import IRootPage
+#from zopache.categories.interfaces import IRootCategory
 
 @form_component
-@context(IBranch)
+@context(IRootPage)
 @crom.target(IView)
 @title("reIndex")
 @crom.name("reIndex")

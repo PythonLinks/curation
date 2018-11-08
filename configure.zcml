@@ -13,11 +13,12 @@
   <grok:grok package="dolmen.forms.ztk" />
   <grok:grok package="zopache.core" />
   <grok:grok package="zopache.crud" />
+  <grok:grok package="zopache.pages" />
     <grok:grok package="zopache.ttw" />
     <grok:grok package="zopache.zmi" />
     <grok:grok package="zopache.copy" />    
     <grok:grok package="zopache.blogs" />
     <grok:grok package="dolmen.widget.file" />
     <grok:grok package="cromlech.file" />    
-
+    <include package="zopache.categories" />    
 </configure>
