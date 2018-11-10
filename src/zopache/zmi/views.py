@@ -15,7 +15,7 @@ from cromlech.security import permissions
 from zopache.zmi.interfaces import IURLSegment
 
 @view_component
-@name('manage')
+@name('manage2')
 @title("Manage")
 @target(ITab)
 @permissions('Manage')
