@@ -11,7 +11,6 @@ from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from dolmen.container import IBTreeContainer
 from zopache.application.interfaces import ITab
-from cromlech.security import permissions
 from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IObjectRetitler
 from zopache.categories.baseedit import BaseEdit
@@ -70,7 +69,6 @@ class Manage(BaseEdit,Page,Contents):
 @name('fix2')
 @title("Fix")
 @target(ITab)
-@permissions('Manage')
 @context(IBTreeContainer)
 class Fix(Manage):
        def update(self):
