@@ -16,7 +16,7 @@ from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IObjectRetitler
 
 @view_component
-@name('retitle')
+@name('manage')
 @title("Edit Titles")
 @target(ITab)
 @permissions('Manage')
