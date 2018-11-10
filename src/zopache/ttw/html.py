@@ -149,7 +149,7 @@ class AddHTMLBase(AddForm):
 @title("Add CkHTML.")
 @permissions('Manage')
 @implementer(IWeb)
-class AddCkHTML(AddHTMLBase,CkScripts):
+class AddCkHTML(AddHTMLBase):#,CkScripts):
     subTitle="Add an HTML Object"
     factory=HTML
 

@@ -5,17 +5,7 @@ from .interfaces import IPage
 from zopache.pages.page import Page
 
 
-@view_component
-@name('addpage')
-@title("Add Page")
-@target(IView)
-@permissions('AddContent')
-@context(IPage)    
-class AddPage(AddAceHTML):
-    interface = IPage
-    label="Add a Wiki Page"
-    factory = Page
-    
+class AddPageBase(object):
     def getSubTitle(self):
         return (
                 "To " +  
@@ -29,6 +19,18 @@ class AddPage(AddAceHTML):
         parentBranch=self.context.parentBranch()
         name=parentBranch.chooseName(name,theObject)
         return name
+    
+@view_component
+@name('addpage')
+@title("Add Page")
+@target(IView)
+@permissions('AddContent')
+@context(IPage)    
+class AddPage(AddPageBase,AddCkHTML):
+    interface = IPage
+    label="Add a Wiki Page"
+    factory = Page
+    
 
 
     
