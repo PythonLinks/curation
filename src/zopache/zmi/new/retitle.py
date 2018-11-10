@@ -10,6 +10,7 @@ from crom import target, order
 from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from dolmen.container import IBTreeContainer
+from cromlech.security import permissions
 from zopache.application.interfaces import ITab
 from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IObjectRetitler
@@ -19,6 +20,7 @@ from zopache.categories.baseedit import BaseEdit
 @name('manage')
 @title("Manage")
 @target(ITab)
+@permissions ('EditContent')
 @context(IBTreeContainer)
 class Manage(BaseEdit,Page,Contents):
     label=''
@@ -39,6 +41,7 @@ class Manage(BaseEdit,Page,Contents):
 
             
     def update(self):
+        BaseEdit.update(self)
         root = self.getRoot()
         self.template = root['Products']['Templates']['EditTitles']
         if 'container_rename_button' in self.request.form:
@@ -69,6 +72,7 @@ class Manage(BaseEdit,Page,Contents):
 @name('fix2')
 @title("Fix")
 @target(ITab)
+@permissions ('Manage')
 @context(IBTreeContainer)
 class Fix(Manage):
        def update(self):

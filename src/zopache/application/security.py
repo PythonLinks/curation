@@ -13,10 +13,13 @@ class Access(object):
       """Custom Rules for Permissions """
 
       def get(self, key, extraArgument):
+
           if key ==  'lozinski@PythonLinks.info':
-             return  frozenset(('View', 'EditContent','Manage','Vote','Edit'))
-          if key != "Anonymous":
-             return  frozenset(('Vote','Extra','third','Edit'))
+             return  frozenset(('AddContent','EditContent',
+                                'Manage','Vote','Edit','Add'))
+          if key != 'user.unauthenticated':
+             return  frozenset(('Vote','AddContent',
+                                'EditContent','Manage'))
           return frozenset(())
 
 accesses = Access()
@@ -40,7 +43,6 @@ def security_predicate(component, interaction):
 
 
 def secure_query_view(request, context, name=""):
-
     check, predict = getSecurityGuards()
     factory = IView.component(context, request, name=name)
     if predict is not None:
