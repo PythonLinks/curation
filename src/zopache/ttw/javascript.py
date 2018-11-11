@@ -9,25 +9,16 @@ from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
 from dolmen.container import IBTreeContainer
 
-from zope.interface import implementer
-from dolmen.forms.base import action, name, context, form_component
+from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
-from crom import target, order
-from zopache.application.interfaces import ITab
-from cromlech.browser.directives import title
-from cromlech.security import permissions
 from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts
 from .interfaces import ISourceContainer
-from dolmen.view import name, context, view_component
-from cromlech.webob.response import Response
-from dolmen.view import View, make_layout_response
-from zope.cachedescriptors.property import CachedProperty
 from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
 from zopache.ttw.interfaces import IWeb
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
-
+from cromlech.webob.response import Response
 class IJavascript(ISourceLeaf,ITestURL):
     "Basic Javascript Form"
 
@@ -49,18 +40,9 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer):
         pass
         
 
-@implementer(IJavascript)      
-class Javascript(Leaf):
-    icon="ttwicons/Javascript.svg"    
-    source =u''
-    title=u''
-    className='Javascript'
-
+class JavascriptBase(object):
     def getSource(self):
         return self.source
-
-    def getTitle(self):
-        return self.__name__
 
     def getJavascriptObjects(self):
          return [self]
@@ -68,19 +50,13 @@ class Javascript(Leaf):
     def getLines(self):
          #NOT QUITE SURE WHAT THE FOLLOWING LINE WAS THERE.
          #result=self.source.replace(' ','mynbsp')
-         result=self.source
+         result=self.getSource()
          result=escape(result)
          #result=result.replace('mynbsp','&nbsp')
          return result.split("\n")
-
-    def commands(self,view):
-        manual=view.liHref(
-            'http://www.zopache.com/baseicwebobjects/javascript',
-             'Javascript Manual')
-        return view.beginMenu('Javascript') + index  + edit + history + manual+ view.end 
-                
-    def __call__(self,view,**args):
-            return self.getSource()
+    
+    def getTitle(self):
+        return self.__name__
 
     def postProcess(self):
         self.createJavascriptCaches()
@@ -101,33 +77,22 @@ class Javascript(Leaf):
                        result.append(item)
              item=item.__parent__
            return result
-                                        
+
+    def __call__(self,view,**args):
+            return self.getSource()       
+    
+@implementer(IJavascript)      
+class Javascript(JavascriptBase,Leaf):
+    icon="ttwicons/Javascript.svg"    
+    source =u''
+    title=u''
+    className='Javascript'
+                
 @implementer(IJavascriptFolder)
 class JavascriptFolder(Javascript,BTreeContainer):
     source =u''
     sourceCache=u''
     className='Javascript Folder'
-
-    def commands(self,view):
-        url=view.url(self)
-        index=view.liHref(url+'/index','View')
-        rawindex=view.liHref(url+'/rawindex','Raw')
-        edit=view.liHref(url+'/edit','Edit')
-        history=view.liHref(url+'/history','History')
-        manage=view.liHref(url+'/list','Manage')
-        search=view.liHref(url+'/manage','Search')
-        addJavascriptFolder=view.liHref(url+'/addJavascriptFolder','Add Javascript Folder')
-        addJavascript=view.liHref(url+'/addJavascript','Add Javascript')
-        jsFolderCommands=(view.beginMenu('JSFolder') + 
-                          index +
-                          rawindex +
-                          edit +
-                          manage + 
-                          search  + 
-                          addJavascript +  
-                          addJavascriptFolder +
-                          view.end)
-        return  jsFolderCommands
 
     def cacheSource(self):
         self.sourceCache=self.getSource()
@@ -188,7 +153,7 @@ class  AceScripts(AceScripts):
 @form_component
 @name('addJavascript')
 @context(IBTreeContainer)
-@target(ITab)
+@target(IView)
 @title("Add Javascript")
 @permissions('Manage')
 @implementer(IWeb)
@@ -206,7 +171,7 @@ class AddJavascript(AceScripts,AceAddForm):
 @form_component
 @name('addJavascriptFolder')
 @context(IBTreeContainer)
-@target(ITab)
+@target(IView)
 @title("Add JavascriptFolder")
 @permissions('Manage')
 @implementer(IWeb)
@@ -257,7 +222,7 @@ class BaseJavascript(AceScripts):
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
 @context(IJavascript)
-@target(ITab)
+@target(IView)
 @title("AceEdit")
 @name("aceedit")
 @permissions('Manage')
@@ -267,7 +232,7 @@ class AceEditJavascript(BaseJavascript,AceEditForm):
 #AND HERE WE HAVE THE ACE DEMO FORM               
 @form_component
 @context(IJavascript)
-@target(ITab)
+@target(IView)
 @title("Ace Demo")
 @name("acedemo")
 class AceDemoJavascript(BaseJavascript,AceDemoForm):
@@ -278,7 +243,7 @@ class AceDemoJavascript(BaseJavascript,AceDemoForm):
 @view_component
 @name('search')
 @title("Search")
-@target(ITab)
+@target(IView)
 @context(IJavascriptFolder)
 class Search(Page):
     subTitle=u'Search The Javascript'
