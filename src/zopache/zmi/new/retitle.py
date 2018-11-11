@@ -5,6 +5,7 @@ from cromlech.container.interfaces import IBTreeContainer
 from zopache.zmi.new.contents import Contents
 from zopache.core.page  import  Page
 
+from zopache.zmi.cutfolder import cutFolder
 from . import tal_template
 from crom import target, order
 from dolmen.view import name, context, view_component
@@ -23,14 +24,11 @@ from zopache.categories.baseedit import BaseEdit
 @permissions ('EditContent')
 @context(IBTreeContainer)
 class Manage(BaseEdit,Page,Contents):
+    supportsPaste = True
     label=''
     subTitle='Rename Videos. Cut and Paste them.  '
     # TEMPLATE IS IN THE ZODB
     
-    def getRoot(self):
-           return (self.request.environ['zodb.connection'].root()
-                   ['applicationRoot'])
-
     def renameAll(self):
         ids = self.request.POST.getall('ids_list')
         titles = self.request.POST.getall('newTitleValue:list')
@@ -47,7 +45,9 @@ class Manage(BaseEdit,Page,Contents):
         if 'container_rename_button' in self.request.form:
              self.renameAll()
         elif 'container_cut_button' in self.request.form:
-             self.cutObjects()             
+             self.cutObjects()
+        elif 'container_paste_button' in self.request.form:
+             self.pasteObjects()                          
 
     def getManageURL(self,item):
         url = self.url(item)
@@ -66,6 +66,15 @@ class Manage(BaseEdit,Page,Contents):
            return self.iconTag("/fanstatic/"+item.icon) 
         else:
            return ''
+    """
+    def  hasClipboardContents(self):
+        if not self.supportsPaste:
+            return False
+        # touch at least one item to in clipboard confirm contents
+        if len(cutFolder(self))> 0:
+             return True
+        return False
+    """
        
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @view_component
@@ -75,13 +84,14 @@ class Manage(BaseEdit,Page,Contents):
 @permissions ('Manage')
 @context(IBTreeContainer)
 class Fix(Manage):
-       def update(self):
+    def update(self):
           item=self.context
           import pdb; pdb.set_trace()
           fred = 1
 
-
-
+    def update(self):
+        root = self.getRoot()
+        self.template = root['Products']['Templates']['EditTitles']
 
 
 

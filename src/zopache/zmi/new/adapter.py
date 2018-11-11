@@ -1,3 +1,6 @@
+# THIS CLASS ADAPTS THE CONTEXTS
+# TO DISPALY THE STUFF THE MENU NEEDS
+
 import arrow
 import crom
 import transaction
@@ -99,7 +102,7 @@ class ZMIAdapter(object):
           return self.view.url(self.context)
     
       def manageLink(self):
-           return self.objectHref(self.url()+'/manage',self.context.title)
+           return self.objectHref(self.url()+'/manage2',self.context.title)
        
       def contextClass(self):
             return self.context.__class__.__name__

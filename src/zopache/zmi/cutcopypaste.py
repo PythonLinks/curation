@@ -33,7 +33,7 @@ from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 
-from .utilities import pasteFolder
+from .cutfolder import cutFolder
 
 class BaseClass(TransactionNote):
     def __init__(self, object):
@@ -87,7 +87,7 @@ class Cutter(BaseClass):
                 return
         obj=self.context
         oldName=obj.__name__
-        toFolder=pasteFolder(self)
+        toFolder=cutFolder(view)
 
         newName=self.uniqueName(toFolder,oldName)
         container = obj.__parent__
@@ -110,7 +110,7 @@ class Copier(BaseClass):
         if not self.allowed():
                 self.view.error +=orig_name + " WAS NOT COPIED <br>"
                 return
-        toFolder=pasteFolder(self)
+        toFolder=cutFolder(view)
         oldName=obj.__name__
         newName=self.uniqueName(toFolder,oldName)
         toFolder[newName]= copy(obj)
@@ -133,7 +133,7 @@ class Paster(BaseClass):
         """Copy this object to the `target` given.
         """
         toContainer = self.context
-        fromFolder=pasteFolder(self)
+        fromFolder=cutFolder(view)
         
         #Modifying a BTree while iterating over it does not work. 
         items=[]

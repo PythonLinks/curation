@@ -1,8 +1,7 @@
 #subject to the ZPL and CV Licenses
 
 __docformat__ = 'restructuredtext'
-from zopache.zmi.utilities import getRoot
-from zopache.zmi.utilities import pasteFolder
+from zopache.zmi.cutfolder import cutFolder
 from . import tal_template
 from zopache.zmi.utilities import size
 import arrow
@@ -127,7 +126,7 @@ class Contents(object):
     def pasteable(self):
         """Decide if there is anything to paste
         """
-        folder = pasteFolder(self)        
+        folder = cutFolder(self)        
         if (len(folder)> 0):
                  return True
         return False
@@ -136,7 +135,7 @@ class Contents(object):
         target = self.context
         items=[]
         #BECAUSE YOU CANNOT MODIFY WHILE ITERATING OVER
-        for item in pasteFolder(self).values():
+        for item in cutFolder(self).values():
             items.append(item)
         for item in items:
            paster = IObjectPaster(target)
@@ -147,7 +146,7 @@ class Contents(object):
         if not self.supportsPaste:
             return False
         # touch at least one item to in clipboard confirm contents
-        if len(pasteFolder(self))> 0:
+        if len(cutFolder(self))> 0:
              return True
         return False
 
