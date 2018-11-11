@@ -19,7 +19,7 @@ class Access(object):
                                 'Manage','Vote','Edit','Add'))
           if key != 'user.unauthenticated':
              return  frozenset(('Vote','AddContent',
-                                'EditContent','Manage'))
+                                'EditContent'))
           return frozenset(())
 
 accesses = Access()
