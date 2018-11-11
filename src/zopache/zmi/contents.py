@@ -254,7 +254,6 @@ class Contents(object):
 
 
     def cutObjects(self):
-        import pdb; pdb.set_trace()
         
         """move objects specified in a list of object ids"""
         request = self.request
