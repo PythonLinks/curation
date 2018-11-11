@@ -8,7 +8,7 @@ from zopache.zmi.cutcopypaste import Paster, Renamer
 from zopache.pages.interfaces import IPage
 
 from zopache.zmi.interfaces import IObjectDeleter
-from zopache.zmi.utilities import pasteFolder
+from zopache.zmi.cutfolder import cutFolder
 
 from zopache.core import getRoot
 from zopache.zmi.interfaces import IObjectCutter
@@ -92,7 +92,7 @@ class CategoryCutter(LocalBase,Cutter):
             self.view.error = obj.__name__ + " CUT IN NOT ALLOWED"
             return
         self.deleteToken(obj)
-        super().cut(self) 
+        super().cut(view) 
 
 @crom.adapter
 @crom.sources(IPage)
@@ -104,7 +104,7 @@ class CategoryPaster(LocalBase,Paster):
         """Copy this object to the `target` given.
         """
         toContainer = self.context
-        fromFolder=pasteFolder(self)
+        fromFolder=cutFolder(view)
         #Modifying a BTree while iterating over it does not work. 
         items=[]
         root = getRoot(self)

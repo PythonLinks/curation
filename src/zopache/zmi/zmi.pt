@@ -13,9 +13,7 @@ btn-primary{
     padding-bottom: 2px;    
     }
 </style>
-    <form name="containerContentsForm" method="post" action="."
-          tal:attributes=
-	  "action view.url()+('/manage')"
+    <form name="containerContentsForm" method="post" action="${view.url()}"
           tal:define="container_contents view.listContentInfo()">
       <input type="hidden" name="type_name" value=""
              tal:attributes="value request.type_name"
