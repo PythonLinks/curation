@@ -42,6 +42,8 @@ class IGLogin(Interface):
         description= "A Google Login Token",
         required = True)
 
+class IDemo(Interface):
+         pass
 
 class IShared(Interface):        
 
