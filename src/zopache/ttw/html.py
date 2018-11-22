@@ -15,7 +15,7 @@ from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from .interfaces import ISource,IHTML, IAceHTML,ICkHTML, ISecureHTML
-from zopache.crud.forms import AddForm, EditForm, DemoForm
+from zopache.crud.forms import AddForm, BaseEditForm, DemoForm
 from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer, BTreeContainer
@@ -78,12 +78,18 @@ class TrustedHTML(HTMLBase):
 
     #So here we pass the context into the template    
     def __call__(self,view,**args):
+        try:
             view.count+= 1
             if view.count>50:
                 raise HTMLRecursionError()
             context=view.context
             return self.callWithContext(view,context,**args)
-
+        except AttributeError as error:
+            result =  """COULD NOT DISPLAY THAT PAGE.
+                      HERE IS THE ERROR MESSAGE:\n<br>"""
+            result += str(error)
+            return result
+    
     def render(self,extraArg,**args):
 
             self.setTemplate()
@@ -143,13 +149,8 @@ class AddHTMLBase(AddForm):
     interface = IHTML
     ignoreContent = True
 
-@form_component
-@name (u'addHTML')
-@context(IBTreeContainer)
-@title("Add CkHTML.")
-@permissions('Manage')
-@implementer(IWeb)
-class AddCkHTML(AddHTMLBase):#,CkScripts):
+
+class AddCkHTMLBase(AddHTMLBase,CkScripts):
     subTitle="Add an HTML Object"
     factory=HTML
 
@@ -170,13 +171,18 @@ class AddCkHTML(AddHTMLBase):#,CkScripts):
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),
               formactions.Cancel(_("Cancel","Cancel")))
 
+
 @form_component
-@name (u'addAceHTML')
+@name (u'addHTML')
 @context(IBTreeContainer)
-@title("Add Ace HTML")
+@title("Add CkHTML.")
 @permissions('Manage')
-@implementer(IWeb)  
-class AddAceHTML(AddHTMLBase,AceScripts):
+@implementer(IWeb)
+class AddCkHTML(AddCkHTMLBase):
+    pass
+
+
+class AddAceHTMLBase(AddHTMLBase,AceScripts):        
     subTitle="Add an Ace HTML Object"
     factory=AceHTML
 
@@ -194,6 +200,15 @@ class AddAceHTML(AddHTMLBase,AceScripts):
 
     def postProcess(self):
         self.new.postProcess()                    
+
+@form_component
+@name (u'addAceHTML')
+@context(IBTreeContainer)
+@title("Add Ace HTML")
+@permissions('Manage')
+@implementer(IWeb)  
+class AddAceHTML (AddAceHTMLBase):
+    pass
 
 
 @view_component
@@ -219,7 +234,7 @@ class Index(View,Breadcrumbs):
                return ('Your templates recursion exceeded 50 calls'+
                       self.zopacheTemplate.source)               
 
-class BaseAceEdit(AceScripts):
+class BaseAceEdit(AceScripts,BaseEditForm):
     subTitle="Ace Edit this object"
     def footerScripts(self):
         return AceScripts.footerScripts(self)
@@ -230,15 +245,7 @@ class BaseAceEdit(AceScripts):
     def postProcess(self):
         self.context.postProcess()
 
-        
-#HERE IS THE ACE EDIT FORM
-@form_component
-@context(IAceHTML)
-@target(ITab)
-@title("AceEdit")
-@name("aceedit")
-@permissions('Manage')
-class AceEditHTML(BaseAceEdit,EditForm):
+class AceEdit(BaseAceEdit):
     @CachedProperty
     def actions(self):
 
@@ -254,7 +261,17 @@ class AceEditHTML(BaseAceEdit,EditForm):
         action5=formactions.Cancel("Cancel","Cancel")
         if ICkHTML.providedBy(self.context):
                 return Actions(action1,action2,action3,action4,action5)
-        return Actions(action1,action2,action4,action5)        
+        return Actions(action1,action2,action4,action5)                
+        
+#HERE IS THE ACE EDIT FORM
+@form_component
+@context(IAceHTML)
+@target(ITab)
+@title("AceEdit")
+@name("aceedit")
+@permissions('Manage')
+class AceEditForm(AceEdit):
+    pass
 
 #AND HERE IS THE DEMO ACE EDIT FORM
 @form_component
@@ -262,14 +279,14 @@ class AceEditHTML(BaseAceEdit,EditForm):
 @target(ITab)
 @title("Ace Demo")
 @name("acedemo")
-class AceDemoHTML(BaseAceEdit,EditForm):
+class AceDemoHTML(BaseAceEdit):
     @CachedProperty
     def actions(self):
         return Actions()
 
 
-class BaseCkEdit(CkScripts):
-    subTitle="CkEdit this object"
+class BaseCkEdit(CkScripts,BaseEditForm):
+    subTitle="CkEdit this object"        
     
     def footerScripts(self):
         return CkScripts.footerScripts(self)
@@ -280,15 +297,7 @@ class BaseCkEdit(CkScripts):
     def postProcess(self):
         self.context.postProcess()
 
-        
-#HERE IS THE CKEDIT FORM
-@form_component
-@context(ICkHTML)
-@target(ITab)
-@name('ckedit')
-@title("CkEdit")
-@permissions('Manage')
-class CkEditHTML(BaseCkEdit,EditForm):
+class CkEdit(BaseCkEdit):
     @CachedProperty
     def actions(self):
         return Actions(
@@ -298,13 +307,26 @@ class CkEditHTML(BaseCkEdit,EditForm):
               formactions.SaveAndTest(_("Save  and Test","Save -> Test")),                   formactions.Cancel(_("Cancel","Cancel")))
 
 
+        
+        
+#HERE IS THE CKEDIT FORM
+@form_component
+@context(ICkHTML)
+@target(ITab)
+@name('ckedit')
+@title("CkEdit")
+@permissions('Manage')
+class CkEditForm(CkEdit):
+    pass    
+
+
 #AND HERE IS THE CkDemo Form
 @form_component
 @context(ICkHTML)
 @target(ITab)
 @name('ckdemo')
 @title("CkEdit")
-class CkDemoHTML(BaseCkEdit,EditForm):
+class CkDemoHTML(BaseCkEdit):
     @CachedProperty
     def actions(self):
         return Actions()

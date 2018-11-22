@@ -1,4 +1,5 @@
 import crom
+from zope.interface import implementer
 from zope import schema
 from zope import interface
 from cromlech.container.interfaces import IBTreeContainer
@@ -15,7 +16,7 @@ from cromlech.security import permissions
 from zopache.application.interfaces import ITab
 from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IObjectRetitler
-from zopache.categories.baseedit import BaseEdit
+from zopache.core.interfaces import ITreeSecurity
 
 @view_component
 @name('manage')
@@ -23,7 +24,8 @@ from zopache.categories.baseedit import BaseEdit
 @target(ITab)
 @permissions ('EditContent')
 @context(IBTreeContainer)
-class Manage(BaseEdit,Page,Contents):
+@implementer (ITreeSecurity)
+class Manage(Page,Contents):
     supportsPaste = True
     label=''
     subTitle='Rename Videos. Cut and Paste them.  '
@@ -39,7 +41,6 @@ class Manage(BaseEdit,Page,Contents):
 
             
     def update(self):
-        BaseEdit.update(self)
         root = self.getRoot()
         self.template = root['Products']['Templates']['EditTitles']
         if 'container_rename_button' in self.request.form:

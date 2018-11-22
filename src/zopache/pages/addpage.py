@@ -1,11 +1,11 @@
 from zopache.core.viewdecorators import *
 from zopache.ttw.html import CkScripts
-from zopache.ttw.html import AddCkHTML, AddAceHTML
+from zopache.ttw.html import AddCkHTMLBase
 from .interfaces import IPage
 from zopache.pages.page import Page
 
 
-class AddPageBase(object):
+class AddPageBase(AddCkHTMLBase):
     def getSubTitle(self):
         return (
                 "To " +  
@@ -26,7 +26,7 @@ class AddPageBase(object):
 @target(IView)
 @permissions('AddContent')
 @context(IPage)    
-class AddPage(AddPageBase,AddCkHTML):
+class AddPage(AddPageBase):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
