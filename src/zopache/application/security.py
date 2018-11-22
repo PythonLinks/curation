@@ -8,6 +8,7 @@ from cromlech.security import getSecurityGuards
 from cromlech.security.interfaces import ISecurityPredicate
 from cromlech.security.meta import permissions
 from zope.interface import Interface
+from zopache.core.interfaces import ITreeSecurity
 
 class Access(object):
       """Custom Rules for Permissions """
@@ -47,10 +48,12 @@ def secure_query_view(request, context, name=""):
     factory = IView.component(context, request, name=name)
     if predict is not None:
         factory = predict(factory)  # raises if security fails.
-
     view = factory(context, request)
+    check (view)
+    from zopache.application.treesecurity import TreeSecurity    
 
 
-    if check is not None:
-        check(view)  # raises if security fails.
+    if ITreeSecurity.providedBy(view):
+        TreeSecurity(view).check()  
+
     return view

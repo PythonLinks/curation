@@ -48,14 +48,7 @@ class AddForm(Form):
               formactions.Cancel(_("Cancel","Cancel")))
 
 
-        
-@form_component
-@name (u'edit')
-@context(IEditable)
-@permissions('Manage')    
-@title("Edit")
-@permissions('Manage')
-class EditForm(Form):
+class BaseEditForm(Form):    
     """
     """
     subTitle='Edit This Object'
@@ -81,6 +74,16 @@ class EditForm(Form):
     def fields(self):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
+
+
+@form_component
+@name (u'edit')
+@context(IEditable)
+@permissions('Manage')    
+@title("Edit")
+@permissions('Manage')
+class EditForm(BaseEditForm):
+    pass
 
 class DemoForm(EditForm):
     @CachedProperty

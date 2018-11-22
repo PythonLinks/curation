@@ -1,4 +1,4 @@
-from PIL import Image
+
 
 from ZODB.blob import Blob, BlobFile
 
@@ -39,10 +39,6 @@ class File(Leaf):
 
 class Image (File):
 
-    def postProcess(self):
-            image = PIL.Image.fromarray(self.data)
-            self.width = image.width
-            self.height = image.height
 
     def postAddProcess(self):
            self.postProcess()

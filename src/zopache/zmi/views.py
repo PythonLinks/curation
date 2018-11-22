@@ -57,9 +57,9 @@ class Fix(Manage):
           import pdb; pdb.set_trace()
 
 
-          #from zopache.categories.data.readConference.conferences.OpenStack.createdata import createData
-          #createData(item)
-          
+          from  zopache.categories.data.readConference.importData import importData
+          #
+          #importData(item, True)
           fred = 1
 
 

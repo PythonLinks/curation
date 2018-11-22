@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
-
+from PIL import Image as PilImage
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
@@ -58,7 +58,6 @@ class AddFileAction(Action):
         message(u"File Uplaoded")        
 
     def upload(self, formData):
-
         file = self.createFile(formData) 
         self.saveFile(file,formData)
         self.new = file
@@ -67,20 +66,22 @@ class AddFileAction(Action):
     def createFile(self,formData):
         nextView ='/'
         fileUpload =  formData ['data']
+        contentType = formData ['data'].headers.get_content_type()
+        fileName = fileUpload.filename        
         if True:
             data = fileUpload.file.read()
             
-            if contenttype=='txt/html':
+            if contentType=='txt/html':
                file=HTML()
                file.source=data
                nextView +=  newName+'/ckedit'
 
-            elif contenttype=='txt/css':
+            elif contentType=='txt/css':
                file=CSS()
                file.source=data
                nextView +=  newName+'/aceedit'
                
-            elif (contenttype.lower() in
+            elif (contentType.lower() in
                    ['txt/json',
                     'application/json']): 
                file=JSON()
@@ -90,6 +91,7 @@ class AddFileAction(Action):
 
             else:
                file = File()
+               file.__name__ = fileName
                file.data = data
                nextView = '/manage'
 
@@ -97,17 +99,31 @@ class AddFileAction(Action):
             self.nextView=nextView
             return file
 
-class AddImageAction(Action):
+class AddImageAction(AddFileAction):
     def message(self):    
         message(u"Image Uploaded")
-        
+
+
     def createFile(self,formData):
-        self.nextView = '/manage'
-        fileUpload =  formData ['data']
-        data = fileUpload.file.read()        
-        if fileUpload and fileUpload.filename:
-            image=Image()
-            image.data = data
-            self.saveDetails(image,fuleUpLoad)
-            return image
+         nextView ='/'
+         fileUpload =  formData ['data']
+         contentType = formData ['data'].headers.get_content_type()
+         fileName = fileUpload.filename        
+
+         data = fileUpload.file.read()
+         file = Image()
+         file.__name__ = fileName
+         file.data = data
+         nextView = '/manage'
+
+         self.saveDetails(file,fileUpload)
+         self.nextView=nextView
+
+         import pdb; pdb.set_trace()
+         image = PilImage.open(fileUpload.file, mode = 'r')
+         self.width = image.width
+         self.height = image.height
+         
+         return file
+
         
