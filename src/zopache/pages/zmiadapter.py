@@ -6,6 +6,7 @@ from zopache.pages.interfaces import IPage
 from zopache.zmi.cutcopypaste import BaseClass, Cutter, Copier, Deleter
 from zopache.zmi.cutcopypaste import Paster, Renamer
 from zopache.pages.interfaces import IPage
+from zopache.pages.uniquename import UniquePageName
 
 from zopache.zmi.interfaces import IObjectDeleter
 from zopache.zmi.cutfolder import cutFolder
@@ -57,18 +58,7 @@ class LocalBase(TransactionNote):
         
         valuesByToken[name] = item
 
-        
-    def uniqueName(self,container,newName):
-        root = getRoot(self.context)
-        valuesByToken = root.valuesByToken
-        oldName =""
-        while (newName!=oldName):
-            oldName = newName
-            newName = Copier.uniqueName(self,container,newName);
-            newName = Copier.uniqueName(self,valuesByToken,newName);
-        return newName            
-
-        
+                
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectCopier)
@@ -97,7 +87,7 @@ class CategoryCutter(LocalBase,Cutter):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectPaster)
-class CategoryPaster(LocalBase,Paster):
+class CategoryPaster(LocalBase,Paster,UniquePageName):
                            
     def paste(self,view):
         self.view = view        
@@ -114,7 +104,7 @@ class CategoryPaster(LocalBase,Paster):
                  self.view.error = "Not Pasted"
                  continue
             orig_name = item.__name__
-            new_name=self.uniqueName(toContainer,orig_name)
+            new_name=self.uniqueName(toContainer,orig_name,ofType="Copy")
             self.moveFrom(fromFolder, orig_name, toContainer, new_name)
             #self.addToken(item)  
 
@@ -123,7 +113,7 @@ class CategoryPaster(LocalBase,Paster):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectRenamer)
-class CategoryRenamer(LocalBase,Renamer):
+class CategoryRenamer(LocalBase,Renamer,UniquePageName):
     def renameItem(self, oldName, newName,view):
         self.view = view        
         if not self.allowed():

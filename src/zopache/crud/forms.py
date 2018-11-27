@@ -36,17 +36,25 @@ class AddForm(Form):
 
     @CachedProperty
     def fields(self):
-        if hasattr(self,'interface'):
-            return  Fields(IName,self.interface).omit("__parent__")
-        return Fields()
+        return  Fields(IName,self.interface).omit("__parent__")
+
+    @CachedProperty
+    def actions(self):
+        return Actions(
+            formactions.AddByTitle(_("Add","Add"), self.factory),
+            formactions.Cancel(_("Cancel","Cancel")))
+
+class AddByTitleForm(AddForm):
+    @CachedProperty
+    def fields(self):
+        return  Fields(self.interface)
 
 
     @CachedProperty
     def actions(self):
         return Actions(
-              formactions.Add(_("Add","Add"), self.factory),
-              formactions.Cancel(_("Cancel","Cancel")))
-
+              formactions.Add("Add", self.factory),
+              formactions.Cancel("Cancel"))    
 
 class BaseEditForm(Form):    
     """

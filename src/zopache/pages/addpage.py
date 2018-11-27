@@ -1,11 +1,18 @@
+
+from zope.cachedescriptors.property import CachedProperty
+from dolmen.forms.base import Actions
+from zopache.pages.pageactions import *
+from zopache.crud import actions as formactions
+from zopache.pages.pageactions import *
 from zopache.core.viewdecorators import *
 from zopache.ttw.html import CkScripts
 from zopache.ttw.html import AddCkHTMLBase
 from .interfaces import IPage
 from zopache.pages.page import Page
+from zopache.core.uniquename import UniqueName
+from zopache.crud.forms import AddByTitleForm
 
-
-class AddPageBase(AddCkHTMLBase):
+class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
     def getSubTitle(self):
         return (
                 "To " +  
@@ -13,12 +20,16 @@ class AddPageBase(AddCkHTMLBase):
                 u' called: ' +
                 self.context.getTitle()
                )
+
+    @CachedProperty
+    def actions(self):
+        return Actions(
+              AddAndView("Add and View", self.factory),
+              AddAndCkEdit("Add and ckEdit", self.factory),
+              AddAndAceEdit("Add and AceEdit", self.factory),
+              formactions.Cancel("Cancel","Cancel"))
     
-    # LET THE BRANCH CHOOSE THE NAME
-    def chooseName(self,name,theObject):
-        parentBranch=self.context.parentBranch()
-        name=parentBranch.chooseName(name,theObject)
-        return name
+
     
 @view_component
 @name('addpage')

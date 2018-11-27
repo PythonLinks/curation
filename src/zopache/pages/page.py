@@ -13,6 +13,7 @@ from zopache.ttw.branch import Branch
 
 class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     title = ''
+    url = ''
     branchSize=1
     description = ''
 

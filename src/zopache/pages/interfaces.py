@@ -12,8 +12,14 @@ class IPage(IContainer,IOrdered ,IUntrustedHTML):
     title = schema.TextLine(
         title = u'Page Name',
         description = u'Describe this page.',
-        required = False,
+        required = True,
     )
+
+    url = schema.URI(
+        title = u'URL (Optional)',
+        description = u'A URL That this page refers to.',
+        required = False,
+    )    
 
     description= schema.Text(
         title = u'Description',

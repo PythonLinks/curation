@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
+from slugify import slugify
+from zope.event import notify
+from zope.location import ILocation
+from zope.lifecycleevent import ObjectCreatedEvent
 
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
-from zopache.crud import i18n as _
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
-from zope.event import notify
-from zope.location import ILocation
-from zope.lifecycleevent import ObjectCreatedEvent
-from .utilities import uniqueName
+
+from zopache.crud import i18n as _
+from zopache.core.uniquename import UniqueName
 
 def message(message):
     send(message)
@@ -27,12 +29,12 @@ class Cancel(Action):
         return SuccessMarker('Aborted', True, url=url)
 
 
-class Add(Action):
+class Add(Action, UniqueName):
     """Add action for an IAdding context.
     """
 
     def __init__(self, title, factory):
-        super(Add, self).__init__(title)
+        Action.__init__(self,title)
         self.factory = factory
 
     def __call__(self, form):
@@ -42,24 +44,38 @@ class Add(Action):
             form.submissionError = errors
             return FAILURE
         obj= form.factory()
-        form.new=obj
+        self.new=form.new=obj
         context=form.context
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
-        name=data['__name__']
-        newName=uniqueName(context,name,ofType="#")
+        newName = self.newName(data)
         context[newName]=obj
         message(_(u"Content created"))
         baseURL = str(IURL(obj, form.request))    
-        self.new=form.new=obj
         url=self.newURL(baseURL)
         form.new.postProcess()
         form.postAddProcess()        
         return SuccessMarker('Added', True, url=url,code=307)
 
+    def newName(self,data):    
+        name =  data['__name__']
+        name = slugify(name)
+        context = self.form.context
+        newName=self.uniqueName(context,name,ofType="#")
+        return newName
+    
     def newURL(self,baseURL):
         return baseURL
 
+class AddByTitle (Add):
+    def newName(self,data):    
+        name =  data['title']
+        name = slugify(name)
+        context = self.form.context
+        newName=self.uniqueName(context,name,ofType="#")
+        return newName
+    
+    
 class AddAndView(Add):
     def newURL(self,baseURL):
         return baseURL + '/index'        
