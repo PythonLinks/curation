@@ -19,8 +19,16 @@ class AddAndManage(Add):
 class SaveAndCkEdit(Update):
     def newURL(self,baseURL):
         return baseURL + '/ckedit'
+
+fred = """
+
+
+
+"""    
     
 class SaveAndAceEdit(Update):
     def newURL(self,baseURL):
         return baseURL + '/aceedit'                
 
+
+    

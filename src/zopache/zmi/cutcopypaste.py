@@ -26,7 +26,7 @@ from zopache.core.transactionnote import TransactionNote
 from zopache.copy import copy
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.crud.interfaces import IMoveable 
-from zopache.crud.utilities import uniqueName
+from zopache.core.uniquename import UniqueName
 from zopache.zmi.interfaces import IObjectCutter
 from zopache.zmi.interfaces import IObjectDeleter
 from zopache.zmi.interfaces import IObjectCopier
@@ -35,13 +35,11 @@ from zopache.zmi.interfaces import IObjectPaster
 
 from .cutfolder import cutFolder
 
-class BaseClass(TransactionNote):
+class BaseClass(TransactionNote,UniqueName):
     def __init__(self, object):
         self.context = object
         self.__parent__ = object # TODO: see if we can automate this
 
-    def uniqueName(self,target, new_name):
-        return uniqueName(target, new_name)
 
     def moveFrom(self,firstFolder,firstName, secondFolder, secondName):
         obj=firstFolder[firstName]

@@ -172,10 +172,10 @@ class IIndexHTML(Interface):
 class ICkHTML (ISource):
      pass
 
-class IAceHTML(ISource, ITestURL): 
+class IAceHTML(ISource): 
     pass
 
-class ISecureHTML(IAceHTML,ITestURL):
+class ISecureHTML(IAceHTML):
     pass
 
 class IHTML (ICkHTML,IAceHTML,ISource):

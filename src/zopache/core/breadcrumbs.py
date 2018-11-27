@@ -9,7 +9,7 @@ from cromlech.location import get_absolute_url
 from dolmen.container import IBTreeContainer
 from cromlech.browser.interfaces import IPublicationRoot
 from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
-from zopache.crud.utilities import uniqueName
+from zopache.core.uniquename import UniqueName
 
 from zopache.ttw.acquisition import Acquire,ParentalAcquire
 
@@ -97,9 +97,7 @@ def nameAndTitle(item,showTitles):
         return name, name
 
 from pydoc import locate
-class Breadcrumbs(object):
-    def uniqueName(self,context,name):
-        return uniqueName(context,name)
+class Breadcrumbs(UniqueName):
         
     def safeMethod(self,attribute):
        result = getattr(self.context, attribute,None)

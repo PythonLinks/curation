@@ -145,7 +145,7 @@ class CkScripts(object):
         """ 
 
 
-class AddHTMLBase(AddForm):
+class AddHTMLBase(object):
     interface = IHTML
     ignoreContent = True
 
@@ -178,11 +178,11 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 @title("Add CkHTML.")
 @permissions('Manage')
 @implementer(IWeb)
-class AddCkHTML(AddCkHTMLBase):
+class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 
 
-class AddAceHTMLBase(AddHTMLBase,AceScripts):        
+class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):        
     subTitle="Add an Ace HTML Object"
     factory=AceHTML
 
@@ -207,7 +207,7 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts):
 @title("Add Ace HTML")
 @permissions('Manage')
 @implementer(IWeb)  
-class AddAceHTML (AddAceHTMLBase):
+class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
 
