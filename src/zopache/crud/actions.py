@@ -72,7 +72,7 @@ class AddByTitle (Add):
         name =  data['title']
         name = slugify(name)
         context = self.form.context
-        newName=self.uniqueName(context,name,ofType="#")
+        newName=self.uniqueName(context,name,ofType="-")
         return newName
     
     
