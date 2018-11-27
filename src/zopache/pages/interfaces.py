@@ -15,11 +15,11 @@ class IPage(IContainer,IOrdered ,IUntrustedHTML):
         required = True,
     )
 
-    url = schema.URI(
-        title = u'URL (Optional)',
-        description = u'A URL That this page refers to.',
-        required = False,
-    )    
+#    url = schema.URI(
+#        title = u'URL (Optional)',
+#        description = u'A URL That this page refers to.',
+#        required = False,
+#    )    
 
     description= schema.Text(
         title = u'Description',
