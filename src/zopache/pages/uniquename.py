@@ -7,8 +7,8 @@ class UniquePageName (UniqueName):
         oldName =""
         while (newName!=oldName):
             oldName = newName
-            newName = self.uniqueContainerName(self,
+            newName = self.uniqueContainerName(
                             container,newName,ofType);
-            newName = self.uniqueContainerName(self,
+            newName = self.uniqueContainerName(
                             valuesByToken,newName,ofType);
         return newName            
