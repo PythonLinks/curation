@@ -1,6 +1,6 @@
 
 class UniqueName(object):
-    def uniqueContainerName(self, container, new_name,ofType="#"):
+    def uniqueContainerName(self, container, new_name,ofType="-"):
         count=0
         copyName=new_name+ofType
         while container.has_key(new_name):

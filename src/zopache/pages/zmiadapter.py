@@ -104,7 +104,7 @@ class CategoryPaster(LocalBase,Paster,UniquePageName):
                  self.view.error = "Not Pasted"
                  continue
             orig_name = item.__name__
-            new_name=self.uniqueName(toContainer,orig_name,ofType="Copy")
+            new_name=self.uniqueName(toContainer,orig_name,"Copy")
             self.moveFrom(fromFolder, orig_name, toContainer, new_name)
             #self.addToken(item)  
 
