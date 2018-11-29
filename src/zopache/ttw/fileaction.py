@@ -119,7 +119,6 @@ class AddImageAction(AddFileAction):
          self.saveDetails(file,fileUpload)
          self.nextView=nextView
 
-         import pdb; pdb.set_trace()
          image = PilImage.open(fileUpload.file, mode = 'r')
          self.width = image.width
          self.height = image.height
