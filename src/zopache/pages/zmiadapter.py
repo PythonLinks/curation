@@ -19,7 +19,7 @@ from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 from zopache.core.transactionnote import TransactionNote
 
-class LocalBase(TransactionNote):
+class LocalBase(BaseClass):
     def printToken(self,obj, message):
         root = getRoot(obj)
         valuesByToken = root.valuesByToken

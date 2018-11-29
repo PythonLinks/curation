@@ -33,11 +33,13 @@ class ReTitler(BaseClass):
         self.describeTransactionWithTitle ("Retitle",obj)
         obj.title = newTitle
         
-        if obj.isVideo():
-           oldName = obj.__name__
-           newName = slugify (newTitle)
-           newName=self.uniqueName(container,newName)
-           self.moveFrom(container,oldName, container, newName)                
+
+        oldName = obj.__name__
+        newName = slugify (newTitle)
+        newName=view.uniqueName(container,newName)
+        self.moveFrom(container,oldName, container, newName)
+
+        if hasattr(obj,'isVideo') and obj.isVideo():           
            conference = obj.conference
            del conference.talks[oldName]
            conference.talks [newName] = obj

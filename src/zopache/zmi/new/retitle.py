@@ -32,6 +32,7 @@ class Manage(Page,Contents):
     # TEMPLATE IS IN THE ZODB
     
     def renameAll(self):
+        import pdb; pdb.set_trace()
         ids = self.request.POST.getall('ids_list')
         titles = self.request.POST.getall('newTitleValue:list')
         for id , title in zip (ids, titles):
