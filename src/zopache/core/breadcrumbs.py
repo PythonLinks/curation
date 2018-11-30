@@ -290,7 +290,7 @@ class Breadcrumbs(UniqueName):
     def divBreadcrumbs(self, node):     
         items=list(parents(node))
         items.reverse()
-        result= '<br><div style = "text-align:left; ">'
+        result= '<div style = "text-align:left; ">'
         step = -1
         if len(items) > 50:
           return "ERROR IN DIV BREADCRUMBS"
