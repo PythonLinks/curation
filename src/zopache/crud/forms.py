@@ -36,12 +36,12 @@ class AddForm(Form):
 
     @CachedProperty
     def fields(self):
-        return  Fields(IName,self.interface).omit("__parent__")
+        return  Fields(IName,self.interface)
 
     @CachedProperty
     def actions(self):
         return Actions(
-            formactions.AddByTitle(_("Add","Add"), self.factory),
+            formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
 
 class AddByTitleForm(AddForm):
@@ -53,7 +53,7 @@ class AddByTitleForm(AddForm):
     @CachedProperty
     def actions(self):
         return Actions(
-              formactions.Add("Add", self.factory),
+              formactions.AddByTitle("Add", self.factory),
               formactions.Cancel("Cancel"))    
 
 class BaseEditForm(Form):    
