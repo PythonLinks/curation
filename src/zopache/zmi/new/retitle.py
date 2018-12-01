@@ -34,7 +34,6 @@ class Manage(Page,Contents):
     def renameAll(self):
         ids = self.request.POST.getall('ids_list')
         titles = self.request.POST.getall('newTitleValue:list')
-        import pdb; pdb.set_trace()
         for id , title in zip (ids, titles):
 
             item = self.context[id]
