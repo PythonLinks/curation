@@ -82,7 +82,7 @@ def publish(environ, start_response, principal):
     # ContextualSecurityGuards context manager, in the `demo_application`
     # function.
     with ContextualInteraction(principal):
-
+        #import pdb; pdb.set_trace()
         if principal is anonymous:
             # This is a simple usecase of "members-only" for the demo :
             # We do not want anonymous users.

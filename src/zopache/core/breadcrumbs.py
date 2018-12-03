@@ -159,6 +159,7 @@ class Breadcrumbs(UniqueName):
         return self.breadcrumbsView(self.context,viewName='manage',showTitles=False)
     
     def breadcrumbs(self):
+            import pdb ;pdb.set_trace()
             return self.breadcrumbsIndex(self.context)
 
     def breadcrumbsParent(self):
@@ -191,17 +192,18 @@ class Breadcrumbs(UniqueName):
         result=[]
         if parents:
             parents.reverse()
-
             for ancestor in parents:
                 name, title = resolver(ancestor,showTitles)
                 slashViewName = self.slashViewName(ancestor,viewName)
-                if IPublicationRoot.providedBy(ancestor):
+                isRoot =IPublicationRoot.providedBy(ancestor)
+                if isRoot:
                    base_url=resolve_url(ancestor,self.request)
                 else:
                     base_url += '/'
                     base_url+=quote(name.encode('utf-8'), _safe)
-                newURL= base_url + slashViewName
-                result.append( self.href(newURL,title))
+                if  not (isRoot and viewName ==''):    
+                    newURL= base_url + slashViewName
+                    result.append( self.href(newURL,title))
         return ' / '+' / '.join(result)
 
     
@@ -290,6 +292,7 @@ class Breadcrumbs(UniqueName):
     def divBreadcrumbs(self, node):     
         items=list(parents(node))
         items.reverse()
+        items = items [1:]
         result= '<div style = "text-align:left; ">'
         step = -1
         if len(items) > 50:

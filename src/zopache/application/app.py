@@ -56,6 +56,7 @@ def publish(environ, start_response, principal):
     request = Request(environ)
     conn = environ["zodb.connection"]
     root=conn.root()
+
     root=root["applicationRoot"]
     request.principal = principal
     request.root = root    
