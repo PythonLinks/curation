@@ -53,7 +53,6 @@ class Register(Form):
     def actions(self):
         return Actions(Add("Add",self))
 
-    def updateWidgets(self):
-        return Form.updateWidgets(self)
+
 
     

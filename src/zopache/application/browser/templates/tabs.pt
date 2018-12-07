@@ -10,7 +10,7 @@ Add  <span class="caret"></span></a>
 
 <ul class="dropdown-menu">
 
-<li tal:condition="view.safeMethod(isPage)"><a href="./addVideo">Page</a></li>
+<li tal:condition="view.safeMethod('isPage')"><a href="./addVideo">Page</a></li>
 <li><a href="./addCSS">CSS</a></li>
 <li><a href="./addContainer">Container</a></li>
 <li><a href="./addHTML">HTML</a></li>

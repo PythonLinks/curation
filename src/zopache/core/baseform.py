@@ -58,7 +58,4 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def breadcrumbs(self):     
         return self.breadcrumbsManage()
 
-    def debug(self):
-         import pdb; pdb.set_trace()
-         pass
 

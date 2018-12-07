@@ -100,9 +100,12 @@ from pydoc import locate
 class Breadcrumbs(UniqueName):
         
     def safeMethod(self,attribute):
-       result = getattr(self.context, attribute,None)
+       result = getattr(self, attribute,None)
        if result:
           return result()
+       result = getattr(self.context, attribute,None)
+       if result:
+          return result()        
        return None 
 
     def urlEncode(self,str):
@@ -134,13 +137,9 @@ class Breadcrumbs(UniqueName):
             return True
         return False
       
-    def debug(self):
+    def debug(self, *args):
         import pdb;pdb.set_trace()
         pass
-      
-    def debugArg(self,arg):
-        import pdb;pdb.set_trace()
-        pass      
       
     def implements (self,dottedName):
         myInterface = locate(dottedName)
@@ -151,38 +150,42 @@ class Breadcrumbs(UniqueName):
 
     def isAuthenticated(self):
        return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
- 
+
+    #RETURNS THE TAIL END OF THE URL 
+    def slashViewName(self,item, viewName):      
+            if viewName == '':
+                   return ''
+            elif viewName=='manage':
+                  viewName=IURLSegment(item).getSegment()                
+            return '/' + viewName
+
+     
     def breadcrumbsIndex(self,item):
         return self.breadcrumbsView(item,viewName='',showTitles=True)
-    
+
+    #THE DEFAULT BREADCRUMBS
+    def breadcrumbs(self):
+            return self.breadcrumbsIndex(self.context)
+          
+    #FOR MANAGEMENT VIEWS  
     def breadcrumbsManage(self):
         return self.breadcrumbsView(self.context,viewName='manage',showTitles=False)
-    
-    def breadcrumbs(self):
-            import pdb ;pdb.set_trace()
-            return self.breadcrumbsIndex(self.context)
 
+    #SKIP THE CURRENT OBJECT, IF POSSIBLE
     def breadcrumbsParent(self):
         if IPublicationRoot.providedBy(self.context):
             return self.breadcrumbsIndex(self.context)
         else:
             return self.breadcrumbsIndex(self.context.__parent__)          
-            
+
+    #LEGACY VERSION,
+    #COULD BE RETIRED
     def breadcrumbsView(self,item, viewName='',showTitles=True):
         return  self.breadcrumbsCore(item,
                                      viewName=viewName,
                                      showTitles=showTitles)
     
-    def slashViewName(self,item, viewName):      
-            slashViewName =''
-
-            if viewName == '':
-                   return ''
-            elif viewName=='manage':
-                  viewName=IURLSegment(item).getSegment()                
-
-            return '/' + viewName
-                
+    #AND HERE WE HAVE THE WORKHORSE                
     def breadcrumbsCore(self,item,
                         viewName='',
                         showTitles=True,
@@ -215,15 +218,6 @@ class Breadcrumbs(UniqueName):
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
     
-    def href(self,url,name):
-           result ='<a href=\"'
-           result += url
-           result+='\">'
-           if name != None:
-              result += name
-           result +='</a>'
-           return result
-
     def acquire(self,name):
             return Acquire(self)[name]
 
@@ -257,7 +251,7 @@ class Breadcrumbs(UniqueName):
 
 
 
-    def secureShortURL(self):
+    def secureShortURL(self,extra=""):
         result = 'https://'
         result += self.getDomain()
         result += '/'
@@ -280,29 +274,50 @@ class Breadcrumbs(UniqueName):
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
     
-    def href(self,url,name):
+    def href(self,url,name,target=False):  
            result ='<a href=\"'
            result += url
-           result+='\">'
+           result += '"'
+           if target:
+             result += ' target="_blank" '
+           result+='>'
            if name != None:
               result += name
            result +='</a>'
            return result
 
-    def divBreadcrumbs(self, node):     
+    def divBreadcrumbs(self, node,viewName ='',widget= False):     
         items=list(parents(node))
         items.reverse()
         items = items [1:]
+        length = len(items)
+        if length > 50:
+            return "ERROR IN DIV BREADCRUMBS"
         result= '<div style = "text-align:left; ">'
-        step = -1
-        if len(items) > 50:
-          return "ERROR IN DIV BREADCRUMBS"
-        for item in items:
-                   step += 1
+        target = False
+        indent = -1
+        for step,item in enumerate(items):
+                   if widget and step > 0 and (step < length -3):
+                       continue
+                   if widget and (step == length -2):
+                       continue                     
+                   indent += 1
                    result += '<div style = "margin-left:' 
-                   result +=  str(step) + 'em">'
-                   result += self.href(('/' + item.__name__),item.title)
-                   result +=  ' &nbsp;(' + str(item.branchSize) + ')' 
+                   result +=  str(indent) + 'em">'
+                   target = False
+                   if widget:
+                     if step == 0:
+                         viewName = ''
+                         target = True                        
+                     if step == length -1:
+                        viewName = 'showvideo'
+                     if step == length -3:
+                        viewName = 'videos'                        
+                   slashViewName = self.slashViewName(item,viewName)
+                   result += self.href(('/' + item.__name__ + slashViewName),
+                                           item.title,
+                                           target=target)
+                   result +=  ' &nbsp;(' + str(item.branchSize) + ')'
                    result +=  '</div>'
         result += "</div>"
         return result
