@@ -46,7 +46,7 @@ class GoogleLoginAction(Action):
         elif (domain == 'climatevideos.info'):
             clientId = '333894959182-po208k9rnk7cvm6g87ksih5fu9r351g1.apps.googleusercontent.com'
         elif (domain == 'golangvideos.pl'):
-            clientId = '333894959182-e60sdcu6eaj99huvpugd1nr72iat76qn.apps.googleusercontent.com'
+            clientId = '333894959182-47b2vl06t1es006spak42gk7lvig490v.apps.googleusercontent.com'
         else:
             raise ValueError('Bad Domain')
         return clientId
@@ -100,7 +100,7 @@ class GoogleRegisterAction(GoogleLoginAction):
            self.createUser(self.form, self.data, people)
 
 
-    def createUser(self,form, data, people):        
+    def createUser(self,form, data, people):
         obj=person= form.factory()
         form.new=obj
         newName = data ['sub']
