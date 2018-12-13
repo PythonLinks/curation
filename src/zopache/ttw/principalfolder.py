@@ -36,6 +36,7 @@ class InternalPrincipal(Container):
     _email = ''
     _password = ''
     title = "Your Profile"
+    talkURL =""
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()

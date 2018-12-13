@@ -46,10 +46,12 @@ class GoogleRegister(AddForm):
 
 
     def nextURL(self):
+        import pdb; pdb.set_trace()
         if not INotPage.provideBy(self.context):
            return '.'
 
-        return self.url(self.new) + '/meetupspeaker'        
+        return self.url(self.new) + '/speakerregistration'
+        """
         if (self.context.hiringPermissions == True):
            return "./submitJob"
        
@@ -57,4 +59,4 @@ class GoogleRegister(AddForm):
            return "./submitResume"        
         else:
             return "."
-
+        """
