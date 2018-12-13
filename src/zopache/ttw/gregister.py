@@ -46,10 +46,11 @@ class GoogleRegister(AddForm):
 
 
     def nextURL(self):
-        if not INotPage.provideBy(self.context):
+        if not INotPage.providedBy(self.context):
            return '.'
-
+       
         return self.url(self.new) + '/meetupspeaker'        
+
         if (self.context.hiringPermissions == True):
            return "./submitJob"
        
