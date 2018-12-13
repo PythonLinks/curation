@@ -46,7 +46,6 @@ class GoogleRegister(AddForm):
 
 
     def nextURL(self):
-        import pdb; pdb.set_trace()
         if not INotPage.provideBy(self.context):
            return '.'
 
