@@ -43,6 +43,10 @@ class GoogleLoginAction(Action):
             clientId= '901181416018-8c8n8knds3b6koqkottchj7ivpncf409.apps.googleusercontent.com'
         elif (domain == 'dev.pythonlinks.info'):
             clientId = '461800128463-7s2kmmm3h7npkvu14lltv8dp1c58p3ie.apps.googleusercontent.com'
+        elif (domain == 'climatevideos.info'):
+            clientId = '333894959182-po208k9rnk7cvm6g87ksih5fu9r351g1.apps.googleusercontent.com'
+        elif (domain == 'golangvideos.pl'):
+            clientId = '333894959182-e60sdcu6eaj99huvpugd1nr72iat76qn.apps.googleusercontent.com'
         else:
             raise ValueError('Bad Domain')
         return clientId
