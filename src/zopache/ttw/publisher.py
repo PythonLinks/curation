@@ -24,6 +24,8 @@ class Publisher (DawnlightPublisher):
 
         while crumbs:
            aType, name=crumbs.popleft()
+           #print (name)
+           #import pdb; pdb.set_trace()           
            if (aType =='history'):
               # CALL THE HISTORY TRAVERSER
               historyTraverser=HistoryTraverser(context,None)
