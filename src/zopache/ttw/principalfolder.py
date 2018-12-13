@@ -35,7 +35,6 @@ class InternalPrincipal(Container):
     _handle  = ''
     _email = ''
     _password = ''
-    webClass = ''
     title = "Your Profile"
     talkURL =""
     def __init__(self):
