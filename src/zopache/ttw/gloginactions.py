@@ -44,7 +44,7 @@ class GoogleLoginAction(Action):
         elif (domain == 'dev.pythonlinks.info'):
             clientId = '461800128463-7s2kmmm3h7npkvu14lltv8dp1c58p3ie.apps.googleusercontent.com'
         elif (domain == 'climatevideos.info'):
-            clientId = '333894959182-po208k9rnk7cvm6g87ksih5fu9r351g1.apps.googleusercontent.com'
+            clientId = '982806744490-cvmnqkl4ovn9550sk56a1i6qjcean489.apps.googleusercontent.com'
         elif (domain == 'golangvideos.pl'):
             clientId = '333894959182-47b2vl06t1es006spak42gk7lvig490v.apps.googleusercontent.com'
         else:
