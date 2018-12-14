@@ -61,7 +61,7 @@ class Add(Action):
         people.authenticate (data)
         message(_(u"You are Registered"))
         if INotPage.providedBy(self.form.context):
-            newURL = self.form.url(obj) + '/speakerregistratin'
+            newURL = self.form.url(obj) + '/speakerregistration'
         else:
             newURL = '.'            
         raise HTTPFound(newURL)
