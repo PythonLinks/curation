@@ -6,9 +6,9 @@ from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from zopache.ttw.interfaces import ITestSource as ISource
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
+from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from dolmen.container import IBTreeContainer
-
+from zopache.crud.forms import EditDemoForm
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
@@ -235,7 +235,7 @@ class AceEditJavascript(BaseJavascript,AceEditForm):
 @target(IView)
 @title("Ace Demo")
 @name("acedemo")
-class AceDemoJavascript(BaseJavascript,AceDemoForm):
+class AceDemoJavascript(BaseJavascript,EditDemoForm):
       pass
 
 

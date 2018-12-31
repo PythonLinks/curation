@@ -84,6 +84,11 @@ class BaseEditForm(Form):
         return getAllFields(edited, '__parent__', '__name__')
 
 
+class EditDemoForm(BaseEditForm):
+    @CachedProperty
+    def actions(self):
+        return Actions()
+    
 @form_component
 @name (u'edit')
 @context(IEditable)
@@ -93,10 +98,6 @@ class BaseEditForm(Form):
 class EditForm(BaseEditForm):
     pass
 
-class DemoForm(EditForm):
-    @CachedProperty
-    def actions(self):
-        return Actions()    
 
 
 @form_component

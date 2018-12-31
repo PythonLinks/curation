@@ -31,8 +31,4 @@ class AceEditForm(EditForm):
               formactions.Cancel(_("Cancel","Cancel")))
 
 
-class AceDemoForm(EditForm):
-    @CachedProperty
-    def actions(self):
-        return Actions()
     

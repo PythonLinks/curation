@@ -11,10 +11,10 @@ from dolmen.container import IBTreeContainer
 from zopache.core import Leaf
 from zopache.ttw.interfaces import ISourceLeaf
 from zopache.ttw.interfaces import ITestSource as ISource
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
+from zopache.ttw.addeditforms import AceAddForm, AceEditForm
+from zopache.crud.forms import EditDemoForm
 from zopache.ttw.acescripts import AceScripts
 from zopache.application.interfaces import ITab
-from zopache.ttw.interfaces import IDemo
 
 class ICSS(ISourceLeaf):
     """Basic CSS CRUD"""
@@ -92,13 +92,8 @@ class AceEditCSS(AceScripts,AceEditForm):
 @crom.target(ITab)
 @title("Ace Demo")
 @name("acedemo")
-@implementer (IDemo)
-class AceDemoCSS(AceScripts,AceDemoForm):
+class AceDemoCSS(AceScripts,EditDemoForm):
     subTitle='Edit a CSS Object'
-
-
-    
-
 
 
 @form_component

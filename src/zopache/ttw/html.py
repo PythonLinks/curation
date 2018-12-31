@@ -15,7 +15,7 @@ from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from .interfaces import ISource,IHTML, IAceHTML,ICkHTML, ISecureHTML
-from zopache.crud.forms import AddForm, BaseEditForm, DemoForm
+from zopache.crud.forms import AddForm, BaseEditForm, EditDemoForm
 from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer, BTreeContainer
