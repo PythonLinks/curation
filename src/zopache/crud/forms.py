@@ -56,15 +56,15 @@ class AddByTitleForm(AddForm):
               formactions.AddByTitle("Add", self.factory),
               formactions.Cancel("Cancel"))    
 
-class BaseEditForm(Form):    
-    """
-    """
+class EditDemoForm(BaseEditForm):
     subTitle='Edit This Object'
     ignoreContent = False
     ignoreRequest = False
-    actions = Actions(formactions.Edit(_("Edit","Save")),
-                      formactions.SaveAndView(_("SaveAndView","Save And View")),
-                      formactions.Cancel(_("Cancel","Cancel")))
+
+    @CachedProperty
+    def actions(self):
+        return Actions()
+
     @CachedProperty
     def fields(self):
         if hasattr(self,'interface'):
@@ -83,6 +83,10 @@ class BaseEditForm(Form):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
 
+class BaseEditForm(Form):
+    actions = Actions(formactions.Edit(_("Edit","Save")),
+                      formactions.SaveAndView(_("SaveAndView","Save And View")),
+                      formactions.Cancel(_("Cancel","Cancel")))    
 
 @form_component
 @name (u'edit')
@@ -93,10 +97,7 @@ class BaseEditForm(Form):
 class EditForm(BaseEditForm):
     pass
 
-class DemoForm(EditForm):
-    @CachedProperty
-    def actions(self):
-        return Actions()    
+
 
 
 @form_component
