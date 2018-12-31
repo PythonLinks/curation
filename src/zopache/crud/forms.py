@@ -88,6 +88,11 @@ class BaseEditForm(Form):
                       formactions.SaveAndView(_("SaveAndView","Save And View")),
                       formactions.Cancel(_("Cancel","Cancel")))    
 
+class EditDemoForm(BaseEditForm):
+    @CachedProperty
+    def actions(self):
+        return Actions()
+    
 @form_component
 @name (u'edit')
 @context(IEditable)
@@ -96,7 +101,6 @@ class BaseEditForm(Form):
 @permissions('Manage')
 class EditForm(BaseEditForm):
     pass
-
 
 
 
