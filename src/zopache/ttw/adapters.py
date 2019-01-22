@@ -4,6 +4,7 @@ from .interfaces import IAceHTML, IHTML, IHTMLContainer
 from zopache.ttw.css import ICSS
 #from .json import IJSON
 from .javascript import IJavascriptFolder, IJavascript
+from .pug import IPug
 from .interfaces import IHTMLClass
 #from .python import IPython
 from zopache.ttw.interfaces import IFile
@@ -17,10 +18,20 @@ class IHTMLContainerAdaptor(object):
     def getSegment(self):
         return 'manage'
 
+from .coffeescript import ICoffeeScript    
+@crom.adapter
+@crom.sources(ICoffeeScript)
+@crom.target(IURLSegment)
+class ICoffeeScriptAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'aceedit'    
+
 @crom.adapter
 @crom.sources(IFile)
 @crom.target(IURLSegment)
-class IHTMLContainerAdaptor(object):
+class IFileAdaptor(object):
     def __init__(self,context):
         self.context=context   
     def getSegment(self):
@@ -31,6 +42,17 @@ class IHTMLContainerAdaptor(object):
 @crom.sources(IAceHTML)
 @crom.target(IURLSegment)
 class IAceHTMLAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'aceedit'
+
+
+#FOR Pug
+@crom.adapter
+@crom.sources(IPug)
+@crom.target(IURLSegment)
+class IPugAdaptor(object):
     def __init__(self,context):
         self.context=context   
     def getSegment(self):
