@@ -41,18 +41,13 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer):
         
 
 class JavascriptBase(object):
-    def getSource(self):
-        return self.source
-
     def getJavascriptObjects(self):
          return [self]
 
     def getLines(self):
-         #NOT QUITE SURE WHAT THE FOLLOWING LINE WAS THERE.
-         #result=self.source.replace(' ','mynbsp')
          result=self.getSource()
          result=escape(result)
-         #result=result.replace('mynbsp','&nbsp')
+         result=result.replace(' ','&nbsp')
          return result.split("\n")
     
     def getTitle(self):
@@ -67,7 +62,7 @@ class JavascriptBase(object):
     def createJavascriptCaches(self):
         parentJavascriptFolders=self.parentsWhichImplement(IJavascriptFolder)
         for folder in parentJavascriptFolders:
-             folder.sourceCache=jsmin(folder.getSource())
+             folder.sourceCache=jsmin(folder.getJavascript())
 
     def parentsWhichImplement(self,interface):
            item=self
@@ -79,7 +74,7 @@ class JavascriptBase(object):
            return result
 
     def __call__(self,view,**args):
-            return self.getSource()       
+            return self.getJavascript()       
     
 @implementer(IJavascript)      
 class Javascript(JavascriptBase,Leaf):
@@ -87,6 +82,12 @@ class Javascript(JavascriptBase,Leaf):
     source =u''
     title=u''
     className='Javascript'
+    def getJavascript(self):
+        return self.source
+
+    def getSource(self):
+        return self.source    
+
                 
 @implementer(IJavascriptFolder)
 class JavascriptFolder(Javascript,BTreeContainer):
@@ -95,13 +96,17 @@ class JavascriptFolder(Javascript,BTreeContainer):
     className='Javascript Folder'
 
     def cacheSource(self):
-        self.sourceCache=self.getSource()
+        self.sourceCache=self.getJavascript()
+
+    def getJavascript(self):
+        result = self.source or ' '
+        for item in self.values():
+            result +=item.getJavascript()
+            result += '\n'
+        return result
 
     def getSource(self):
-        if self.source!=None:
-          result=self.source
-        else:
-          result=u' '  
+        result = self.source or ' '
         for item in self.values():
             result +=item.getSource()
             result += '\n'
@@ -202,7 +207,7 @@ class JavascriptIndex(Page):
             if IJavascriptFolder.providedBy(self.context):
                    return self.context.sourceCache
             else: 
-                   return self.context.source
+                   return self.context.getJavascript()
 
 class BaseJavascript(AceScripts):
     subTitle='Ace Edit this  Javascript'

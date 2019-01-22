@@ -137,9 +137,11 @@ class Breadcrumbs(UniqueName):
             return True
         return False
       
-    def debug(self, *args):
+    def debug(self,*args):
         import pdb;pdb.set_trace()
-        pass
+        fred = 1
+        fred = args
+        item = args [0]
       
     def implements (self,dottedName):
         myInterface = locate(dottedName)
@@ -165,7 +167,7 @@ class Breadcrumbs(UniqueName):
 
     #THE DEFAULT BREADCRUMBS
     def breadcrumbs(self):
-            return self.breadcrumbsIndex(self.context)
+        return self.breadcrumbsIndex(self.context)
           
     #FOR MANAGEMENT VIEWS  
     def breadcrumbsManage(self):
