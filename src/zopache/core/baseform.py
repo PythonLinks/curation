@@ -1,4 +1,4 @@
-b# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
 
 from cromlech.webob.response import Response
