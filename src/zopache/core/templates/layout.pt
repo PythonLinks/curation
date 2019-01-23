@@ -36,7 +36,7 @@
     <div class="container">
     <div class="img-fluid" style="float:left; margin:20px">
       <img src="/fanstatic/ttwicons/PythonLinks.png" width="87"
-	   height="95" ></img>
+	   height="95" >
 	 </div>
       <h1>${view.acquireTitle()}</h1>
             <h2>${view.subTitle}</h2>
