@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+b# -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
 
 from cromlech.webob.response import Response
@@ -35,7 +35,6 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def bootstrapWidgets(self):
         """Adds the needed css classes for bootstrap styles.
         """
-        import pdb; pdb.set_trace() 
         
         result = []
         for widget in self.fieldWidgets:
