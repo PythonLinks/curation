@@ -135,7 +135,8 @@ class BaseCoffeeScriptForm(AceScripts):
 @name("aceedit")
 @permissions('Manage')
 class AceEditCoffeeScript(BaseCoffeeScriptForm,AceEditForm):
-    pass
+    subTitle = "Ace Edit a Coffescript Object."
+    title = "CoffeeScript Editor"
 
 #AND HERE WE HAVE THE ACE DEMO FORM               
 @form_component
@@ -144,5 +145,4 @@ class AceEditCoffeeScript(BaseCoffeeScriptForm,AceEditForm):
 @title("Ace Demo")
 @name("acedemo")
 class AceDemoCoffeecript(BaseCoffeeScriptForm,EditDemoForm):
-      pass
-        
+    subTitle = "Ace Edit Coffescript Demo."        

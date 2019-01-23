@@ -35,13 +35,17 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def bootstrapWidgets(self):
         """Adds the needed css classes for bootstrap styles.
         """
+        import pdb; pdb.set_trace() 
+        
         result = []
         for widget in self.fieldWidgets:
-            
+            defaultHtmlClass = widget.defaultHtmlClass
             if  self.isBool(widget):
-               widget.defaultHtmlClass.append('form-check-input')
+               if not 'form-check-input' in defaultHtmlClass: 
+                   widget.defaultHtmlClass.append('form-check-input')
             else:
-               widget.defaultHtmlClass.append('form-control')                
+                if not ('form-control' in defaultHtmlClass):                 
+                   widget.defaultHtmlClass.append('form-control')
             result.append (widget)
         return result
 

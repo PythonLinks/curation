@@ -103,6 +103,16 @@ class  AceScripts(AceScriptsBase):
         result += "</script>"
         return result
 
+            
+
+class BasePugForm(AceScripts):
+    label=''
+    def breadcrumbs(self):
+        return self.breadcrumbsManage()
+    
+    def postProcess(self):
+        self.context.postProcess()
+
 @form_component
 @name('addPug')
 @context(IBTreeContainer)
@@ -111,7 +121,7 @@ class  AceScripts(AceScriptsBase):
 @permissions('Manage')
 @implementer(IWeb)
 class AddPug(AceScripts,AceAddForm):
-    subTitle='Add a Pug  Object'
+    subTitle='Add a Pug Object'
     interface = IPug
     ignoreContent = True
     factory=Pug
@@ -119,35 +129,8 @@ class AddPug(AceScripts,AceAddForm):
     def postProcess(self):
         self.new.postProcess()
 
-            
-from .javascript import make_javascript_response, JavascriptBase
 
-@view_component
-@name('javascript')
-@context(IPug)
-@title("View Pug")
-class PugJavascipt(Page):
-    responseFactory = Response
-    make_response = make_javascript_response
         
-    def render(self ):
-        return self.context.javascript
-
-class BasePugForm(AceScripts):
-    subTitle='Ace Edit this Pug Template.'
-    label=''
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
-    
-    def postProcess(self):
-        self.context.postProcess()
-
-    #def footerScripts(self):
-    #    return AceScriptsBase.footerScripts(self)
-
-    #def headerScripts(self):
-    #      return AceScripts.headerScripts(self)    
-               
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
 @context(IPug)
@@ -156,6 +139,7 @@ class BasePugForm(AceScripts):
 @name("aceedit")
 @permissions('Manage')
 class AceEditPug(BasePugForm,PugEditForm):
+    subTitle='Ace Edit this Pug Template.'
     pass
 
 #AND HERE WE HAVE THE ACE DEMO FORM               
@@ -183,3 +167,15 @@ class PugIndexHTML(View):
     def render(self):
                return self.context.html
 
+from .javascript import make_javascript_response, JavascriptBase
+
+@view_component
+@name('javascript')
+@context(IPug)
+@title("View Pug")
+class PugJavascipt(Page):
+    responseFactory = Response
+    make_response = make_javascript_response
+        
+    def render(self ):
+        return self.context.javascript
