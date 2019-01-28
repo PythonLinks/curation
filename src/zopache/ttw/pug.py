@@ -15,6 +15,7 @@ from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts as AceScriptsBase
 from .interfaces import ISourceContainer
+from .interfaces import IJavascript
 from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
 from zopache.ttw.interfaces import IWeb
 from zopache.core.page  import  Page
@@ -23,7 +24,7 @@ from cromlech.webob.response import Response
 from .javascript import JavascriptBase
 from dolmen.view import View, make_view_response
 
-class IPugBase(ISourceLeaf):
+class IPugBase(ISourceLeaf,IJavascript):
     pass
   
 class IPug(IPugBase):    

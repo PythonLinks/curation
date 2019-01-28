@@ -6,7 +6,6 @@ from zope import schema
 from zope.schema import Password, TextLine
 from zope.schema import Text, TextLine, Choice, Bool
 from z3c.schema.email  import RFC822MailAddress as Email
-
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal as ICromlechPrincipal
 
@@ -27,7 +26,7 @@ class IFile(Interface):
 class IImage(Interface):
          data = FileField(title=u'Upload an Image')         
 
-
+    
 class ITestURL(Interface):    
     testURL = schema.TextLine(
         title = u'Test URL',
@@ -36,6 +35,10 @@ class ITestURL(Interface):
         default='/',            
     )
 
+
+
+
+    
 class IGLogin(Interface):
         idtoken= Text(
         title="Token",
@@ -159,7 +162,29 @@ class ISource(ILeaf):
         required = False,
         default = u'',
     )
-    
+
+
+#NO DISPLAYALE, IT RETURNS SOME VERSION OF SOURCE
+class ISourceLeaf(ISource,ILeaf):
+      pass
+
+class IJavascript(ISourceLeaf,ITestURL):
+    "Basic Javascript Form"
+
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'Describe this Javascript Object.',
+        required = False,
+    )
+
+    source= schema.Text(
+        title = u'Javascript Source Code',
+        description = u'The Javascript code goes here.',
+        required = False,
+        default = u' ',
+    )
+
+
 class ITestSource (ISource, ITestURL):
    pass
 
@@ -194,9 +219,7 @@ class IHistoricDetails(Interface):
       pass
 
 
-#NO DISPLAYALE, IT RETURNS SOME VERSION OF SOURCE
-class ISourceLeaf(ISource,ILeaf):
-      pass
+
 
 class IIndexHTML(Interface):
       pass

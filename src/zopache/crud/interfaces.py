@@ -14,6 +14,7 @@ class IApp(Interface):
 class IName(Interface):
       __name__ = TextLine(
            title=(u"URL Segment Name (required)"),
+           description = "Will be made web-safe.", 
            required=True,
            default=None)
 
