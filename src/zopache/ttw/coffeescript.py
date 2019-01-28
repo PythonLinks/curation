@@ -9,7 +9,7 @@ from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.crud.forms import EditDemoForm
 from dolmen.container import IBTreeContainer
-
+from .interfaces import IJavascript
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
@@ -22,7 +22,7 @@ from .interfaces import ITestURL
 from cromlech.webob.response import Response
 from .javascript import JavascriptBase
 
-class ICoffeeScript(ISourceLeaf,ITestURL):
+class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
     "Basic CoffeeScript Form"
 
     title = schema.TextLine(

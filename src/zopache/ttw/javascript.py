@@ -19,21 +19,8 @@ from zopache.ttw.interfaces import IWeb
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
 from cromlech.webob.response import Response
-class IJavascript(ISourceLeaf,ITestURL):
-    "Basic Javascript Form"
+from .interfaces import IJavascript
 
-    title = schema.TextLine(
-        title = u'Title',
-        description = u'Describe this Javascript Object.',
-        required = False,
-    )
-
-    source= schema.Text(
-        title = u'Javascript Source Code',
-        description = u'The Javascript code goes here.',
-        required = False,
-        default = u' ',
-    )
 
 class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer):
         "Basic Javascript Folder Form"
