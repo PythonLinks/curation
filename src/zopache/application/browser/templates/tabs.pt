@@ -17,8 +17,8 @@ Add  <span class="caret"></span></a>
 <li><a href="./addAceHTML">Ace HTML</a></li>
 <li><a href="./addSecureHTML">Secure HTML</a></li>
 <li><a href="./addJavascript">JavaScript</a></li>
-<li><a href="./addCoffeescript">CoffeeScript</a></li>
-<li><a href="./addPug">Jade / Pug</a></li>
+<li><a href="./addCoffeeScript">CoffeeScript</a></li>
+<li><a href="./addPug">Pug</a></li>
 <li><a href="./addJavascriptFolder">Javascript Folder</a></li>
 <li><a href="./addJSON">JSON</a></li>
 </ul>

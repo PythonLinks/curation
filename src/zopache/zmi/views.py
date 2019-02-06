@@ -13,14 +13,9 @@ from zopache.application.interfaces import ITab
 from .contents import Contents
 from cromlech.security import permissions
 from zopache.zmi.interfaces import IURLSegment
+from zopache.pages.interfaces import IPage
 
-@view_component
-@name('manage2')
-@title("Manage")
-@target(ITab)
-@permissions('Manage')
-@context(IBTreeContainer)
-class Manage(Page,Contents):
+class ManageBase(Page,Contents):
     label=''
     subTitle='Manage Container'
     template = tal_template('zmi.pt')
@@ -42,6 +37,24 @@ class Manage(Page,Contents):
            return self.iconTag("/fanstatic/"+item.icon) 
         else:
            return ''
+
+@view_component
+@name('manage2')
+@title("Manage")
+@target(ITab)
+@permissions('Manage')
+@context(IPage)
+class PageManage(ManageBase):
+    pass
+
+@view_component
+@name('manage')
+@title("Manage")
+@target(ITab)
+@permissions('Manage')
+@context(IBTreeContainer)
+class BTreeManage(ManageBase):
+    pass
        
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @view_component
@@ -50,12 +63,14 @@ class Manage(Page,Contents):
 @target(ITab)
 @permissions('Manage')
 @context(IBTreeContainer)
-class Fix(Manage):
+class Fix(BTreeManage):
 
        def update(self):
           item=self.context
           import pdb; pdb.set_trace()
-
+# #         container = item['container']
+ #         del item['container']
+ #         item['Container'] = container
 
           from  zopache.categories.data.readConference.importData import importData
           #

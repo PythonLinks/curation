@@ -23,11 +23,12 @@ from .interfaces import ITestURL
 from cromlech.webob.response import Response
 from .javascript import JavascriptBase
 from dolmen.view import View, make_view_response
+from .html import TrustedHTML
 
 class IPugBase(ISourceLeaf,IJavascript):
     pass
   
-class IPug(IPugBase):    
+class IPug(IPugBase,IJavascript):    
     "Basic Pug Form"
 
     title = schema.TextLine(
@@ -36,11 +37,17 @@ class IPug(IPugBase):
         required = False,
     )
 
+    functionName = schema.TextLine(
+        title = u'Function Name',
+        description = 'What is this functin called',
+        required = False,
+    )
+    
     globals = schema.TextLine(
         title = u'Globals',
         description = u'Which Global Variables are Accessible',
         required = False,
-    )    
+    )        
 
     source= schema.Text(
         title = u'Pug Source Code',
@@ -62,15 +69,55 @@ class IPug(IPugBase):
         required = False,
         default = u'',
     )
-    
+
+    compileDebug= schema.Bool(
+        title = 'Compile Debug',
+        description = 'Include Debugging Info in JS.',
+        required = False,
+        default = False,
+    )
+
+    sideBySide = schema.Bool(
+        title = 'Side By Side',
+        description = 'Show Text Areas Side By Side?',
+        required = False,
+        default = True,
+    )    
+
+
+    showJavascript = schema.Bool(
+        title = 'Show Javascript',
+        description = 'Show the Javascript or Not',
+        required = False,
+        default = True,
+    )    
+
+    showHTML = schema.Bool(
+        title = 'Show HTML',
+        description = 'Show the HTML Text Area?',
+        required = False,
+        default = True,
+    )
+    showIFrame    = schema.Bool(
+        title = 'Show the IFrame?',
+        description = 'Show the Iframe or Not?',
+        required = False,
+        default = True,
+    )    
+
+
+
 from .javascript import JavascriptBase    
 @implementer(IPug)      
-class Pug(JavascriptBase,Leaf):
+class Pug(TrustedHTML,JavascriptBase,Leaf):
     icon="ttwicons/Javascript.svg"    
     source =u''
     title=u''
     className='Pug'
 
+    def getHTML(self):
+        return self.html
+    
     def getJavascript(self):
         return self.javascript
 
@@ -162,11 +209,13 @@ from .html import make_view_response
 @context(IPug)
 @title("View Pug  HTML")
 class PugIndexHTML(View):
+    count=0    
     responseFactory = Response
     make_response = make_view_response
         
     def render(self):
-               return self.context.html
+               import pdb; pdb.set_trace()
+               return self.context(self)
 
 from .javascript import make_javascript_response, JavascriptBase
 

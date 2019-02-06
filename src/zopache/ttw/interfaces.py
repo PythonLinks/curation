@@ -168,7 +168,7 @@ class ISource(ILeaf):
 class ISourceLeaf(ISource,ILeaf):
       pass
 
-class IJavascript(ISourceLeaf,ITestURL):
+class IJavascript(ISourceLeaf):
     "Basic Javascript Form"
 
     title = schema.TextLine(
