@@ -214,7 +214,6 @@ class PugIndexHTML(View):
     make_response = make_view_response
         
     def render(self):
-               import pdb; pdb.set_trace()
                return self.context(self)
 
 from .javascript import make_javascript_response, JavascriptBase
