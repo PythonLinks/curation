@@ -6,9 +6,9 @@ from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from zopache.ttw.interfaces import ITestSource as ISource
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm, AceDemoForm
+from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from dolmen.container import IBTreeContainer
-
+from zopache.crud.forms import EditDemoForm
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
@@ -19,21 +19,8 @@ from zopache.ttw.interfaces import IWeb
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
 from cromlech.webob.response import Response
-class IJavascript(ISourceLeaf,ITestURL):
-    "Basic Javascript Form"
+from .interfaces import IJavascript
 
-    title = schema.TextLine(
-        title = u'Title',
-        description = u'Describe this Javascript Object.',
-        required = False,
-    )
-
-    source= schema.Text(
-        title = u'Javascript Source Code',
-        description = u'The Javascript code goes here.',
-        required = False,
-        default = u' ',
-    )
 
 class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer):
         "Basic Javascript Folder Form"
@@ -41,18 +28,13 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer):
         
 
 class JavascriptBase(object):
-    def getSource(self):
-        return self.source
-
     def getJavascriptObjects(self):
          return [self]
 
     def getLines(self):
-         #NOT QUITE SURE WHAT THE FOLLOWING LINE WAS THERE.
-         #result=self.source.replace(' ','mynbsp')
          result=self.getSource()
          result=escape(result)
-         #result=result.replace('mynbsp','&nbsp')
+         result=result.replace(' ','&nbsp')
          return result.split("\n")
     
     def getTitle(self):
@@ -67,7 +49,7 @@ class JavascriptBase(object):
     def createJavascriptCaches(self):
         parentJavascriptFolders=self.parentsWhichImplement(IJavascriptFolder)
         for folder in parentJavascriptFolders:
-             folder.sourceCache=jsmin(folder.getSource())
+             folder.sourceCache=jsmin(folder.getJavascript())
 
     def parentsWhichImplement(self,interface):
            item=self
@@ -79,7 +61,7 @@ class JavascriptBase(object):
            return result
 
     def __call__(self,view,**args):
-            return self.getSource()       
+            return self.getJavascript()       
     
 @implementer(IJavascript)      
 class Javascript(JavascriptBase,Leaf):
@@ -87,6 +69,12 @@ class Javascript(JavascriptBase,Leaf):
     source =u''
     title=u''
     className='Javascript'
+    def getJavascript(self):
+        return self.source
+
+    def getSource(self):
+        return self.source    
+
                 
 @implementer(IJavascriptFolder)
 class JavascriptFolder(Javascript,BTreeContainer):
@@ -95,13 +83,17 @@ class JavascriptFolder(Javascript,BTreeContainer):
     className='Javascript Folder'
 
     def cacheSource(self):
-        self.sourceCache=self.getSource()
+        self.sourceCache=self.getJavascript()
+
+    def getJavascript(self):
+        result = self.source or ' '
+        for item in self.values():
+            result +=item.getJavascript()
+            result += '\n'
+        return result
 
     def getSource(self):
-        if self.source!=None:
-          result=self.source
-        else:
-          result=u' '  
+        result = self.source or ' '
         for item in self.values():
             result +=item.getSource()
             result += '\n'
@@ -202,7 +194,7 @@ class JavascriptIndex(Page):
             if IJavascriptFolder.providedBy(self.context):
                    return self.context.sourceCache
             else: 
-                   return self.context.source
+                   return self.context.getJavascript()
 
 class BaseJavascript(AceScripts):
     subTitle='Ace Edit this  Javascript'
@@ -235,7 +227,7 @@ class AceEditJavascript(BaseJavascript,AceEditForm):
 @target(IView)
 @title("Ace Demo")
 @name("acedemo")
-class AceDemoJavascript(BaseJavascript,AceDemoForm):
+class AceDemoJavascript(BaseJavascript,EditDemoForm):
       pass
 
 

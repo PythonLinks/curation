@@ -105,12 +105,12 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
 
 @implementer (IPage)     
 class Page(PageBase):
-    webClass='Page'        
+    webClass='WikiPage'        
 
 
 @implementer(IRootPage)
 class RootPage(Branch,PageBase):
-    webClass='Page'
+    webClass='HomePage'
     def __init__(self):
        Branch.__init__(self)
        PageBase.__init__(self)

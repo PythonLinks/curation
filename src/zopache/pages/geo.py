@@ -1,0 +1,32 @@
+from zope import schema
+from zope.schema import ValidationError
+    
+class GeoCode(object):
+   lastAddress = None
+   lat = 0 
+   long = 0
+ 
+
+    # Geocoding an address    
+   def geoCode(self,address):
+        
+        if address == self.lastAddress:
+          return self.lat, self.long 
+        self.lastAddress = address        
+        gmaps = googlemaps.Client(
+              key='AIzaSyDDaUjNtOIKx8B0WaXFypAWZo1x7m2avPQ')
+
+        geocode_result = gmaps.geocode(self.address)
+        result=geocode_result[0][u'geometry'] [u'location']
+        self.lat=float(result [u'lat'])
+        self. long=float(result [u'lng'])
+        return self.lat, self.long
+
+geoCache = GeoCode()    
+class Address (schema.Text):
+    def validate(self,value):
+        try:
+            geoCache.geocode(address)
+        except:
+            raise ValidationError('THat is not a good address')   
+    

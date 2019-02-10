@@ -11,6 +11,8 @@ from .interfaces import IPage
 from zopache.pages.page import Page
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
+from .interfaces import IMap, ILocation
+from .location import Map, Location
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
     def getSubTitle(self):
@@ -41,6 +43,32 @@ class AddPage(AddPageBase):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
+
+#LOCAION
+@view_component
+@name('addLocation')
+@title("Add Location")
+@target(IView)
+@permissions('AddContent')
+@context(IMap)    
+class AddLocation(AddPageBase):
+    interface = ILocation
+    label="Add a Location"
+    subTitle = 'Add a point on a map'
+    factory = Location
+
+#MAP
+@view_component
+@name('addMap')
+@title("Add Map")
+@target(IView)
+@permissions('AddContent')
+@context(IPage)    
+class AddMap(AddPageBase):
+    subTitle = 'Add a map'
+    interface = IMap
+    label="Add a Map"
+    factory = Map
     
 
 

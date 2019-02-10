@@ -11,20 +11,15 @@ from cromlech.browser.interfaces import IPublicationRoot
 from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.core.uniquename import UniqueName
 
-from zopache.ttw.acquisition import Acquire,ParentalAcquire
+from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 from zopache.zmi.interfaces import IURLSegment
-try:
-  from zopache.ttw.acquisition import Acquire
-except ImportError:
-  Acquire=lambda x : x      
 
-try:
-        from urllib import quote  # Python 2.X
-except ImportError:
-        from urllib.parse import quote  # Python 3+
+from urllib.parse import quote  # Python 3+
 
 _safe = '@+'  # Characters that we don't want to have quoted
+
+
 def parents(item):
     return lineage_chain(item)
             
@@ -98,25 +93,34 @@ def nameAndTitle(item,showTitles):
 
 from pydoc import locate
 class Breadcrumbs(UniqueName):
-        
+    def parents(self, item=None):
+        if item == None:
+           item = self.context
+        result  = parents(item)
+        result.reverse()
+        return result
+    
     def safeMethod(self,attribute):
-       result = getattr(self.context, attribute,None)
+       result = getattr(self, attribute,None)
        if result:
           return result()
+       result = getattr(self.context, attribute,None)
+       if result:
+          return result()        
        return None 
 
     def urlEncode(self,str):
         return urllib.parse.quote(str)
   
-    def parentalAcquire(self,id):
-          context = self.context
-          name = self.context.__name__
+    def safeParentalAcquire(self,name,context=None):
+          if context==None:
+             context = self.context
 
-          result = ParentalAcquire(context) [id]
+          result = ParentalAcquire(context) [name]
           if result == None:
-             return ("ERROR: " + id +
+             return ("ERROR: " + name +
                      "DOES NOT EXIST IN THE PARENTS OF" +
-                     self.href(self.url(context), name))
+                     self.href(self.url(context), context.name))
           try:
               result = result (self)
               return result
@@ -134,13 +138,11 @@ class Breadcrumbs(UniqueName):
             return True
         return False
       
-    def debug(self):
+    def debug(self,*args):
         import pdb;pdb.set_trace()
-        pass
-      
-    def debugArg(self,arg):
-        import pdb;pdb.set_trace()
-        pass      
+        fred = 1
+        fred = args
+        item = args [0]
       
     def implements (self,dottedName):
         myInterface = locate(dottedName)
@@ -151,37 +153,42 @@ class Breadcrumbs(UniqueName):
 
     def isAuthenticated(self):
        return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
- 
+
+    #RETURNS THE TAIL END OF THE URL 
+    def slashViewName(self,item, viewName):      
+            if viewName == '':
+                   return ''
+            elif viewName=='manage':
+                  viewName=IURLSegment(item).getSegment()                
+            return '/' + viewName
+
+     
     def breadcrumbsIndex(self,item):
         return self.breadcrumbsView(item,viewName='',showTitles=True)
-    
+
+    #THE DEFAULT BREADCRUMBS
+    def breadcrumbs(self):
+        return self.breadcrumbsIndex(self.context)
+          
+    #FOR MANAGEMENT VIEWS  
     def breadcrumbsManage(self):
         return self.breadcrumbsView(self.context,viewName='manage',showTitles=False)
-    
-    def breadcrumbs(self):
-            return self.breadcrumbsIndex(self.context)
 
+    #SKIP THE CURRENT OBJECT, IF POSSIBLE
     def breadcrumbsParent(self):
         if IPublicationRoot.providedBy(self.context):
             return self.breadcrumbsIndex(self.context)
         else:
             return self.breadcrumbsIndex(self.context.__parent__)          
-            
+
+    #LEGACY VERSION,
+    #COULD BE RETIRED
     def breadcrumbsView(self,item, viewName='',showTitles=True):
         return  self.breadcrumbsCore(item,
                                      viewName=viewName,
                                      showTitles=showTitles)
     
-    def slashViewName(self,item, viewName):      
-            slashViewName =''
-            import pdb; pdb.set_trace()
-            if viewName == '':
-                   return ''
-            elif viewName=='manage':
-                  viewName=IURLSegment(item).getSegment()                
-
-            return '/' + viewName
-                
+    #AND HERE WE HAVE THE WORKHORSE                
     def breadcrumbsCore(self,item,
                         viewName='',
                         showTitles=True,
@@ -191,17 +198,18 @@ class Breadcrumbs(UniqueName):
         result=[]
         if parents:
             parents.reverse()
-
             for ancestor in parents:
                 name, title = resolver(ancestor,showTitles)
                 slashViewName = self.slashViewName(ancestor,viewName)
-                if IPublicationRoot.providedBy(ancestor):
+                isRoot =IPublicationRoot.providedBy(ancestor)
+                if isRoot:
                    base_url=resolve_url(ancestor,self.request)
                 else:
                     base_url += '/'
                     base_url+=quote(name.encode('utf-8'), _safe)
-                newURL= base_url + slashViewName
-                result.append( self.href(newURL,title))
+                if  not (isRoot and viewName ==''):    
+                    newURL= base_url + slashViewName
+                    result.append( self.href(newURL,title))
         return ' / '+' / '.join(result)
 
     
@@ -212,19 +220,21 @@ class Breadcrumbs(UniqueName):
 
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
-    
-    def href(self,url,name):
-           result ='<a href=\"'
-           result += url
-           result+='\">'
-           if name != None:
-              result += name
-           result +='</a>'
-           return result
 
-    def acquire(self,name):
-            return Acquire(self)[name]
-
+    #THIS ONE IS BEING DEPRECATED
+    #NOT QUITE CLEAR WHAT IT DOES
+    def acquire(self,name, context=None):
+        return self.parentalAcquire(name,context)
+      
+    def parentalAcquire (self,name,context=None):  
+            if (context == None):
+               context = self
+            return ParentalAcquire(context)[name]
+          
+    def webClassAcquire(self,name,context=None):
+        if context == None:
+           context = self.context
+        return webClassAcquire(context,name)   
 
     def acquireTitle(self):
         return self.acquireAttribute ( 'title')
@@ -255,7 +265,7 @@ class Breadcrumbs(UniqueName):
 
 
 
-    def secureShortURL(self):
+    def secureShortURL(self,extra=""):
         result = 'https://'
         result += self.getDomain()
         result += '/'
@@ -278,28 +288,50 @@ class Breadcrumbs(UniqueName):
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
     
-    def href(self,url,name):
+    def href(self,url,name,target=False):  
            result ='<a href=\"'
            result += url
-           result+='\">'
+           result += '"'
+           if target:
+             result += ' target="_blank" '
+           result+='>'
            if name != None:
               result += name
            result +='</a>'
            return result
 
-    def divBreadcrumbs(self, node):     
+    def divBreadcrumbs(self, node,viewName ='',widget= False):     
         items=list(parents(node))
         items.reverse()
+        items = items [1:]
+        length = len(items)
+        if length > 50:
+            return "ERROR IN DIV BREADCRUMBS"
         result= '<div style = "text-align:left; ">'
-        step = -1
-        if len(items) > 50:
-          return "ERROR IN DIV BREADCRUMBS"
-        for item in items:
-                   step += 1
+        target = False
+        indent = -1
+        for step,item in enumerate(items):
+                   if widget and step > 0 and (step < length -3):
+                       continue
+                   if widget and (step == length -2):
+                       continue                     
+                   indent += 1
                    result += '<div style = "margin-left:' 
-                   result +=  str(step) + 'em">'
-                   result += self.href(('/' + item.__name__),item.title)
-                   result +=  ' &nbsp;(' + str(item.branchSize) + ')' 
+                   result +=  str(indent) + 'em">'
+                   target = False
+                   if widget:
+                     if step == 0:
+                         viewName = ''
+                         target = True                        
+                     if step == length -1:
+                        viewName = 'showvideo'
+                     if step == length -3:
+                        viewName = 'videos'                        
+                   slashViewName = self.slashViewName(item,viewName)
+                   result += self.href(('/' + item.__name__ + slashViewName),
+                                           item.title,
+                                           target=target)
+                   result +=  ' &nbsp;(' + str(item.branchSize) + ')'
                    result +=  '</div>'
         result += "</div>"
         return result

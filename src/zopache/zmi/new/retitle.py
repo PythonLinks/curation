@@ -5,7 +5,7 @@ from zope import interface
 from cromlech.container.interfaces import IBTreeContainer
 from zopache.zmi.new.contents import Contents
 from zopache.core.page  import  Page
-
+from zopache.categories.interfaces import ICategory
 from zopache.zmi.cutfolder import cutFolder
 from . import tal_template
 from crom import target, order
@@ -18,38 +18,13 @@ from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IObjectRetitler
 from zopache.core.interfaces import ITreeSecurity
 
-@view_component
-@name('manage')
-@title("Manage")
-@target(ITab)
-@permissions ('EditContent')
-@context(IBTreeContainer)
-@implementer (ITreeSecurity)
-class Manage(Page,Contents):
+class ManageBase(Page,Contents):
     supportsPaste = True
     label=''
     subTitle='Rename Videos. Cut and Paste them.  '
     # TEMPLATE IS IN THE ZODB
     
-    def renameAll(self):
-        ids = self.request.POST.getall('ids_list')
-        titles = self.request.POST.getall('newTitleValue:list')
-        for id , title in zip (ids, titles):
-
-            item = self.context[id]
-            IObjectRetitler(item).retitleItem(item,title,self)
-
-            
-    def update(self):
-        root = self.getRoot()
-        self.template = root['Products']['Templates']['EditTitles']
-        if 'container_rename_button' in self.request.form:
-             self.renameAll()
-        elif 'container_cut_button' in self.request.form:
-             self.cutObjects()
-        elif 'container_paste_button' in self.request.form:
-             self.pasteObjects()                          
-
+ 
     def getManageURL(self,item):
         url = self.url(item)
         segment =  IURLSegment(item).getSegment()
@@ -76,7 +51,49 @@ class Manage(Page,Contents):
              return True
         return False
     """
-       
+    def update(self):
+          root = self.getRoot()
+          self.template = root['Products']['Templates']['EditTitles']
+    
+#THE MANAGE DEMO
+@view_component
+@name('managedemo')
+@title("Manage")
+@target(ITab)
+@context(IBTreeContainer)
+@implementer (ITreeSecurity)
+class Demo(ManageBase):
+    def breadcrumbs(self):
+        return self.breadcrumbsIndex(self.context)    
+    
+#THE REAL MANAGE
+@view_component
+@name('manage')
+@title("Manage")
+@target(ITab)
+@permissions ('EditContent')
+@context(ICategory)
+@implementer (ITreeSecurity)
+class Manage (ManageBase):
+    def renameAll(self):
+        ids = self.request.POST.getall('ids_list')
+        titles = self.request.POST.getall('newTitleValue:list')
+        for id , title in zip (ids, titles):
+
+            item = self.context[id]
+            IObjectRetitler(item).retitleItem(item,title,self)
+
+            
+    def update(self):
+        ManageBase.update(self)
+        if 'container_rename_button' in self.request.form:
+             self.renameAll()
+        elif 'container_cut_button' in self.request.form:
+             self.cutObjects()
+        elif 'container_paste_button' in self.request.form:
+             self.pasteObjects()                          
+
+
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @view_component
 @name('fix2')

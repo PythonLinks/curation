@@ -15,7 +15,7 @@ from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from .interfaces import ISource,IHTML, IAceHTML,ICkHTML, ISecureHTML
-from zopache.crud.forms import AddForm, BaseEditForm, DemoForm
+from zopache.crud.forms import AddForm, BaseEditForm, EditDemoForm
 from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer, BTreeContainer
@@ -51,7 +51,7 @@ from zopache.ttw.interfaces import ICkHTML
 
 class HTMLBase(object):
     icon="ttwicons/HTML.svg"
-    title=u'Original Version'
+    title=u'HTML Page'
     source=''
 
 
@@ -68,8 +68,11 @@ class TrustedHTML(HTMLBase):
                self.compileTemplate()
             return self._v_compiledTemplate 
 
+    def getHTML(self):
+        return self.source
+
     def compileTemplate(self):
-                 source=self.source
+                 source=self.getHTML()
                  self._v_compiledTemplate = PageTemplate(source)
                  return self._v_compiledTemplate
 
@@ -78,6 +81,8 @@ class TrustedHTML(HTMLBase):
 
     #So here we pass the context into the template    
     def __call__(self,view,**args):
+       # return self.callCore(self,view,**args)
+       #def callCore(self,view,**args):
         try:
             view.count+= 1
             if view.count>50:

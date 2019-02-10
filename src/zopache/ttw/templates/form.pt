@@ -29,9 +29,9 @@
     </ul>
   </div>
 
-    <input id="form-field-chatPermission-present" name="form.field.chatPermission.present" class="field form-control form-control form-control form-control form-control form-control form-control form-control"  checked="checked" value="True" type="hidden" required="required" />
+    <input id="form-field-chatPermission-present" name="form.field.chatPermission.present" class="field form-control form-control "  checked="checked" value="True" type="hidden" required="required" />
 
-    <input id="form-field-votePermission-present" name="form.field.votePermission.present" class="field form-control form-control form-control form-control form-control form-control form-control form-control"  checked="checked" value="True" type="hidden" required="required" />
+    <input id="form-field-votePermission-present" name="form.field.votePermission.present" class="field form-control"  checked="checked" value="True" type="hidden" required="required" />
 
 
 

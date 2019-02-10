@@ -45,6 +45,20 @@ class Session(object):
         self.session = None  # Remove the reference.
         setSession()
 
+def makeWiki(connRoot):
+     import pdb; pdb.set_trace()     
+     from zopache.pages.page  import RootPage
+     new = RootPage()
+
+     root = connRoot['applicationRoot'] 
+     person = root [ 'person']
+     products  = root [ 'Products']
+     new ['person'] = person
+     new ['Products']=products
+     #new.valuesByToken = root.valuesByToken
+     connRoot['applicationRoot'] = new
+     new.__name__ = 'root'
+     
 @secured
 def publish(environ, start_response, principal):
 
@@ -58,7 +72,8 @@ def publish(environ, start_response, principal):
     root=conn.root()
     root=root["applicationRoot"]
     request.principal = principal
-    request.root = root    
+    request.root = root
+    
     # The `Interaction` serves as the "who" in the security model.
     # The security model relies on 2 elements : the "who" and the "how".
     # The "how" is provided by the security guards declared with the
