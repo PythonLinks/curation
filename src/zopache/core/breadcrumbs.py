@@ -174,7 +174,7 @@ class Breadcrumbs(UniqueName):
     
     def slashViewName(self,item, viewName):      
             slashViewName =''
-
+            import pdb; pdb.set_trace()
             if viewName == '':
                    return ''
             elif viewName=='manage':

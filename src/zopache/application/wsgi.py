@@ -63,8 +63,7 @@ def publish(environ, start_response, principal):
     request = Request(environ)
     conn = environ["zodb.connection"]
     root=conn.root()
-    root=root.appRoot
-
+    root=root['applicationRoot']
     #When serving behind a web server, we need to fix up the application_url
     if 'Host' in request.headers:
         request.host=request.headers['Host']
