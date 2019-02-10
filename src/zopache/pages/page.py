@@ -10,18 +10,32 @@ from cromlech.container.contained import Contained
 from zope.interface import implementer
 from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
+from zopache.core.breadcrumbs import parentWhichImplements
+from zopache.core.breadcrumbs import parentsUpTo
+
 
 class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     title = ''
     url = ''
     branchSize=1
     description = ''
+    
+    # NOT YET SERVING JSON
+    def recalculateRootJSON(self):
+        pass
 
     def __init__(self):
          OrderedBTreeContainer.__init__(self)
          self.creationTime=time.time()
          self.modificationTime=time.time()
 
+    def getRoot(self):
+         return parentWhichImplements(self,IRootPage)
+     
+    def blogParents(self):
+         return parentsUpTo(self,IRootPage)
+
+         
     def isCategory (self):
         return False
     

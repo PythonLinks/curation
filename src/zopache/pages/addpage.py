@@ -12,7 +12,7 @@ from zopache.pages.page import Page
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
 from .interfaces import IMap, ILocation
-from .location import Map, Location
+from zopache.pages import Map, Location
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
     def getSubTitle(self):

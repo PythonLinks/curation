@@ -23,16 +23,19 @@ class Location (Page):
                      result +=','
                   firstItem=False      
                   result+='\n'
-                  result += u'['
+                  result += '['
                   result +='\'' +  self.__name__ + '\''
-                  result += ','    
-                  result +=  str(self.lattitude).decode('utf8')  
+                  result += ','
+                  result +='\'' +  self.title + '\''
+                  result += ','                      
+                  result +=  str(self.lattitude)  
                   result += u','    
-                  result += str(self.longitude).decode('utf8')
+                  result += str(self.longitude)
                   result += ']'
                   return result, firstItem
 
-import googlemaps            
+import googlemaps
+@implementer (IMap)
 class Map(Location):
     zoomLevel=5.
     mapHeight=0.
@@ -63,7 +66,7 @@ class Map(Location):
 
             #IF IF IS A MAP SHOW IT
             #OR SHOW A SINGLETON CHILD
-             if ( item.weClass=='Map'): 
+             if ( item.webClass=='Map'): 
                   location=item.onlyOneLocationIn()
                   if (location!=None):
                      item = location
@@ -84,7 +87,7 @@ class Map(Location):
                     company=item
          return company          
     
-
+    """
     #NOT USED, BUT POTENTIALLY USEFUL
     def getLocations(self):
         values=self.values()
@@ -94,6 +97,6 @@ class Map(Location):
                 item.webApproved):
                 result.append(item)
         return result
-
+     """
     
         

@@ -11,20 +11,15 @@ from cromlech.browser.interfaces import IPublicationRoot
 from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.core.uniquename import UniqueName
 
-from zopache.ttw.acquisition import Acquire,ParentalAcquire
+from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 from zopache.zmi.interfaces import IURLSegment
-try:
-  from zopache.ttw.acquisition import Acquire
-except ImportError:
-  Acquire=lambda x : x      
 
-try:
-        from urllib import quote  # Python 2.X
-except ImportError:
-        from urllib.parse import quote  # Python 3+
+from urllib.parse import quote  # Python 3+
 
 _safe = '@+'  # Characters that we don't want to have quoted
+
+
 def parents(item):
     return lineage_chain(item)
             
@@ -98,7 +93,13 @@ def nameAndTitle(item,showTitles):
 
 from pydoc import locate
 class Breadcrumbs(UniqueName):
-        
+    def parents(self, item=None):
+        if item == None:
+           item = self.context
+        result  = parents(item)
+        result.reverse()
+        return result
+    
     def safeMethod(self,attribute):
        result = getattr(self, attribute,None)
        if result:
@@ -111,15 +112,15 @@ class Breadcrumbs(UniqueName):
     def urlEncode(self,str):
         return urllib.parse.quote(str)
   
-    def parentalAcquire(self,id):
-          context = self.context
-          name = self.context.__name__
+    def safeParentalAcquire(self,name,context=None):
+          if context==None:
+             context = self.context
 
-          result = ParentalAcquire(context) [id]
+          result = ParentalAcquire(context) [name]
           if result == None:
-             return ("ERROR: " + id +
+             return ("ERROR: " + name +
                      "DOES NOT EXIST IN THE PARENTS OF" +
-                     self.href(self.url(context), name))
+                     self.href(self.url(context), context.name))
           try:
               result = result (self)
               return result
@@ -219,10 +220,21 @@ class Breadcrumbs(UniqueName):
 
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
-    
-    def acquire(self,name):
-            return Acquire(self)[name]
 
+    #THIS ONE IS BEING DEPRECATED
+    #NOT QUITE CLEAR WHAT IT DOES
+    def acquire(self,name, context=None):
+        return self.parentalAcquire(name,context)
+      
+    def parentalAcquire (self,name,context=None):  
+            if (context == None):
+               context = self
+            return ParentalAcquire(context)[name]
+          
+    def webClassAcquire(self,name,context=None):
+        if context == None:
+           context = self.context
+        return webClassAcquire(context,name)   
 
     def acquireTitle(self):
         return self.acquireAttribute ( 'title')

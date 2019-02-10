@@ -73,7 +73,7 @@ class IMap(ILocation):
         default = 5., 
         required = True,
     )
-    """
+    
     mapWidth = schema.Float(
         title = u'Map Width',
         description = u'Map Width ',
@@ -89,7 +89,7 @@ class IMap(ILocation):
         max=20000.,
         required = True,
     )    
-   
+    """
     address= Address(
         title = u'Address (For the map)',
         description = u'Where is the main office for this company?',

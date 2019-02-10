@@ -1,6 +1,6 @@
 from zope import schema
 from zope.schema import ValidationError
-    
+import googlemaps    
 class GeoCode(object):
    lastAddress = None
    lat = 0 
