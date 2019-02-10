@@ -21,7 +21,6 @@ class Publisher (DawnlightPublisher):
         crumbs = dawnlight.parse_path(path, shortcuts)
         traverser=Traverser(self.view_locator)
         context=root
-
         while crumbs:
            aType, name=crumbs.popleft()
            #print (name)

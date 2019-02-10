@@ -2,7 +2,10 @@ from zope.location.location import LocationIterator
 from zope.interface import Interface
 from dolmen.container import IBTreeContainer
 
-def getFromWebClass(aClass, name, marker):
+
+
+#THESE ARE PRODUCTS, THE WEBCLASS IS A POINTER
+def getFromWebClass(aClass, name, marker=None):
     #COUNTER TO CATCH INEVITABLE INFINITE LOOP
     counter=1
 
@@ -26,6 +29,19 @@ def getFromWebClass(aClass, name, marker):
 
        #AND NOW REPEAT THE LOOP WITH THE PARENT WEBCLASS
        aClass=aClass.webClass
+
+#MAYBE THE WEBCLASS IS A STRING OR A POINTER       
+def webClassAcquire(context,name):
+    if hasattr(context, "webClass"):
+        if context.webClass != None:
+               webClass =  context.webClass
+               if isinstance(webClass, str):
+                    root =context.getRoot()
+                    products = root["Products"]
+                    webClass = products[webClass]
+               item = getFromWebClass (webClass,name)
+               return item
+    return None       
 
 
 # JUST  PARENTAL (NO ZCLASS) ACQUISITION OF OBJECTS IN CONTAINERS
