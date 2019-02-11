@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "differences...."
+
+
+for f in *.py; do
+  echo $f
+  diff $f  /home/lozinski/code/cromlech/pl2/src/zopache/src/zopache/application/$f
+
+
+done

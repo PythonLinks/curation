@@ -50,7 +50,7 @@
 	    <div tal:condition="hasattr(view,'error')"
 		 style="color:red;">${view.error} </div>  
 	    <div tal:replace="structure slot:contextualactions" />
-${structure: view.breadcrumbs()}
+	    ${structure: view.breadcrumbs()}
 <br><br>
          
 	  <div tal:replace="structure content" />
