@@ -155,7 +155,9 @@ class Breadcrumbs(UniqueName):
        return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
 
     #RETURNS THE TAIL END OF THE URL 
-    def slashViewName(self,item, viewName):      
+    def slashViewName(self,item, viewName):
+            import pdb; pdb.set_trace()
+            return ''
             if viewName == '':
                    return ''
             elif viewName=='manage':
