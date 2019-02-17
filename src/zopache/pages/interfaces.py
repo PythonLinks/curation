@@ -7,6 +7,10 @@ from cromlech.browser.interfaces import IPublicationRoot
 from .geo import Address
 from zopache.ttw.interfaces import IUntrustedHTML
 
+# A MARKER TO SHOW THAT THIS IS NEWS
+class IRecent(Interface):
+    pass
+
 class IPage(IContainer,IOrdered ,IUntrustedHTML):
 
     title = schema.TextLine(
@@ -36,7 +40,9 @@ class IPage(IContainer,IOrdered ,IUntrustedHTML):
         default = u'',
     )
 
-    
+class INews (IPage,IRecent):
+    pass
+
 class IRootPage(IPublicationRoot,IPage):
     pass
 
@@ -45,7 +51,7 @@ class INotPage (Interface):
 
 
     
-class ILocation(IPage):
+class ILocation(IPage,IRecent):
     lattitude = schema.Float(
         title = u'Lattitude',
         description = u'Lattitude',
