@@ -12,9 +12,9 @@ from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
 from zopache.core.breadcrumbs import parentWhichImplements
 from zopache.core.breadcrumbs import parentsUpTo
+from zopache.pages.jsonobject import JsonObject
 
-
-class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
+class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     title = ''
     url = ''
     branchSize=1

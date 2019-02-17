@@ -156,14 +156,14 @@ class Breadcrumbs(UniqueName):
 
     #RETURNS THE TAIL END OF THE URL 
     def slashViewName(self,item, viewName):
-            import pdb; pdb.set_trace()
-            return ''
             if viewName == '':
                    return ''
             elif viewName=='manage':
                   viewName=IURLSegment(item).getSegment()                
             return '/' + viewName
 
+    def IURLSegment(self,item):
+        return IURLSegment(item).getSegment()                
      
     def breadcrumbsIndex(self,item):
         return self.breadcrumbsView(item,viewName='',showTitles=True)

@@ -1,7 +1,8 @@
 <style>
 td,th {padding-left: 20px; padding-right:20 px;}
 </style>
-
+<h2> <a href="${view.url(view.context)+'/'+view.IURLSegment(view.context)}">Back</a>
+</h2>
 <p>
 Modified:  ${structure: view.results()[0]['time'].hour()} :
     ${structure: view.results()[0]['time'].minute()} :

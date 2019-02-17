@@ -22,15 +22,12 @@ from cromlech.browser import getSession
 
 from zopache.core import Container
 from zopache.crud.interfaces import IImutable, IContainer
-from .interfaces import IPrincipalFolder, IInternalPrincipal
+from zopache.ttw.interfaces import IPrincipalFolder, IInternalPrincipal
 
 class DuplicateIDError(KeyError):
     pass
 
-
-
-
-@implementer(IInternalPrincipal,IContainer)
+@implementer(IInternalPrincipal)
 class InternalPrincipal(Container):
     _handle  = ''
     _email = ''

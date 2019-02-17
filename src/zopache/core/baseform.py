@@ -29,6 +29,9 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def isBool(self,widget):
         return widget.component._field._type==type(True)
 
+    def isCheckBoxList (self,widget):
+        return  widget.__class__.__name__=='MultiChoiceFieldWidget'
+
     def bootstrap_widgets(self):
         return self.bootstrapWidgets()
     
@@ -39,7 +42,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
         result = []
         for widget in self.fieldWidgets:
             defaultHtmlClass = widget.defaultHtmlClass
-            if  self.isBool(widget):
+            if  self.isBool(widget) or self.isCheckBoxList(widget):
                if not 'form-check-input' in defaultHtmlClass: 
                    widget.defaultHtmlClass.append('form-check-input')
             else:

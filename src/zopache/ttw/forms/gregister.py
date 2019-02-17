@@ -5,19 +5,19 @@ from zope.cachedescriptors.property import CachedProperty
 from dolmen.forms.base import Actions
 from zopache.core.viewdecorators import *
 #This software is subject to the CV and Zope Public Licenses.
-from .gloginactions  import GoogleRegisterAction
+from zopache.ttw.gloginactions  import GoogleRegisterAction
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.pages.interfaces import INotPage
 
-from .interfaces import IName, IContainer, ILeaf, IGRegister
+from zopache.ttw.interfaces import IName, IContainer, ILeaf, IGRegister
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
 
 from zopache.crud.forms import AddForm
 
-from .interfaces import IRegister
-from .principalfolder import InternalPrincipal
-from . import tal_template
+from zopache.ttw.interfaces import IRegister
+from zopache.ttw.principalfolder import InternalPrincipal
+from zopache.ttw import tal_template
 
 @form_component
 @name (u'gregister')

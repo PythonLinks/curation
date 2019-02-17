@@ -17,7 +17,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.ttw.interfaces import IHistoryItem
 from dm.historical import getHistory
 from cromlech.security import permissions
-
+from zopache.core.breadcrumbs import Breadcrumbs
 """
 #Maybe this is a much simpler versin for more recent zodb. 
 def getHistory(item, size=40):
@@ -35,7 +35,7 @@ def getHistory(item, size=40):
 @target(ITab)
 @permissions('Manage')
 @context(ISource)
-class History(Page):
+class History(Page, Breadcrumbs):
        label=''
        subTitle='Historic Versions'
        def __call__(self ):
