@@ -72,7 +72,7 @@ class Fix(BTreeManage):
  #         del item['container']
  #         item['Container'] = container
 
-          from  zopache.categories.data.readConference.importData import importData
+##          from  zopache.categories.data.readConference.importData import importData
           #
           #importData(item, True)
           fred = 1

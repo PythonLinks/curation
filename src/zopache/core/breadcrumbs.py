@@ -155,13 +155,15 @@ class Breadcrumbs(UniqueName):
        return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
 
     #RETURNS THE TAIL END OF THE URL 
-    def slashViewName(self,item, viewName):      
+    def slashViewName(self,item, viewName):
             if viewName == '':
                    return ''
             elif viewName=='manage':
                   viewName=IURLSegment(item).getSegment()                
             return '/' + viewName
 
+    def IURLSegment(self,item):
+        return IURLSegment(item).getSegment()                
      
     def breadcrumbsIndex(self,item):
         return self.breadcrumbsView(item,viewName='',showTitles=True)
