@@ -7,12 +7,13 @@ from zopache.pages.pageactions import *
 from zopache.core.viewdecorators import *
 from zopache.ttw.html import CkScripts
 from zopache.ttw.html import AddCkHTMLBase
-from .interfaces import IPage
-from zopache.pages.page import Page
+
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from .interfaces import IMap, ILocation
+from zopache.pages.interfaces import IMap, ILocation, INews, IPage
+from zopache.pages.page import Page, News
 from zopache.pages import Map, Location
+
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
     def getSubTitle(self):
@@ -43,6 +44,18 @@ class AddPage(AddPageBase):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
+
+#ADD NEWS
+@view_component
+@name('addNews')
+@title("Add News")
+@target(IView)
+@permissions('AddContent')
+@context(IPage)    
+class AddNews(AddPageBase):
+    interface = INews
+    label="Add a News Item"
+    factory = News    
 
 #LOCAION
 @view_component

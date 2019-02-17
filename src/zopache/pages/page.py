@@ -2,7 +2,7 @@ import time
 import os
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from zopache.pages.interfaces import IPage , IRootPage
+from zopache.pages.interfaces import IPage , IRootPage, INews
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from zopache.core.breadcrumbs import parentWhichImplements
@@ -13,6 +13,7 @@ from zopache.ttw.branch import Branch
 from zopache.core.breadcrumbs import parentWhichImplements
 from zopache.core.breadcrumbs import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
+from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 
 class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     title = ''
@@ -20,6 +21,18 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     branchSize=1
     description = ''
     webApproved = True    
+
+    def postProcess(self):
+        self.description = self.description.replace('"',"'")
+        self.description = self.description.replace('\n'," ")
+        self.description = self.description.replace('\r'," ")                 
+        self.recalculateRootJSON()
+        cache.resetCache()
+        
+    def postAddProcess(self):
+        cache.resetCache()        
+        self.postProcess()
+    
     # NOT YET SERVING JSON
     def recalculateRootJSON(self):
         pass
@@ -118,12 +131,16 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
          return self.__name__
 
 @implementer (IPage)     
-class Page(PageBase):
-    webClass='WikiPage'        
-
+class Page(PageBase, PageMixIn):
+    webClass='WikiPage'
+    
+@implementer (INews)     
+class News (Page,RecentMixIn):
+    webClass = 'News'
+    pass
 
 @implementer(IRootPage)
-class RootPage(Branch,PageBase):
+class RootPage(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     def __init__(self):
        Branch.__init__(self)
