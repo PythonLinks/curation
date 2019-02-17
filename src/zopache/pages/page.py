@@ -19,7 +19,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     url = ''
     branchSize=1
     description = ''
-    
+    webApproved = True    
     # NOT YET SERVING JSON
     def recalculateRootJSON(self):
         pass
