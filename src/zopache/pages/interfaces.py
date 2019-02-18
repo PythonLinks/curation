@@ -51,7 +51,8 @@ class INotPage (Interface):
 
 
     
-class ILocation(IPage,IRecent):
+
+class ILocationBase(IPage):    
     lattitude = schema.Float(
         title = u'Lattitude',
         description = u'Lattitude',
@@ -69,8 +70,11 @@ class ILocation(IPage,IRecent):
         default = 0.,
         required = True,
     )
+    
+class ILocation(ILocationBase, IRecent):
+    pass
 
-class IMap(ILocation):
+class IMap(ILocationBase):
     zoomLevel = schema.Float(
         title = u'Google Maps Zoom Level',
         description = u'Google Maps Zoom Level',

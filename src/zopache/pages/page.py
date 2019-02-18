@@ -103,7 +103,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
          return time.strftime("%Y-%m-%d",time.localtime(self.modificationTime))
 
     def creationDateForHumans(self):
-         return self.creationTime
+         return time.strftime("%Y-%m-%d",time.localtime(self.creationTime))
 
     def editDateForHumans(self):
          return self.creationTime

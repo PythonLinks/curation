@@ -35,7 +35,7 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
 
     
 @view_component
-@name('addpage')
+@name('addPage')
 @title("Add Page")
 @target(IView)
 @permissions('AddContent')

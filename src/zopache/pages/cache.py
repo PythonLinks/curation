@@ -92,8 +92,8 @@ cache = Cache()
 
 
 
-class PageMixIn(object):
-    
+class MixIn(object):
+    """
     #USED TO DISPLAY CHILDREN, BUT NOT HTML OBJECTS
     def childCategories(self):
         result =[]
@@ -101,7 +101,7 @@ class PageMixIn(object):
             if IPage.providedBy (item):
                result.append (item)
         return result
-    
+    """
     #The best caches have to cache __name__
     #So we have to convert back and forth to ids. 
     def convertNamesToObjects(self,list):
@@ -134,12 +134,8 @@ class PageMixIn(object):
     def bestObjects(self,sortKey):
         root = self.getRoot()
         aHeap = []
-        #FOR A CONFERENCE JUST COMPARE THE CONFERENCE TALKS
-        isConference = (self.webClass == 'Conference')       
-        if (isConference):
-            self.bestConferenceObjects(sortKey,root,aHeap)
-        else:
-            self.bestCategoryObjects(sortKey,root,aHeap)
+
+        self.bestCategoryObjects(sortKey,root,aHeap)
         result = []
         while (aHeap):
            result.append(heapq.heappop(aHeap)[2])
@@ -148,14 +144,18 @@ class PageMixIn(object):
 
     #FOR A CATEOGRY
     def bestCategoryObjects(self,sortKey,root,aHeap):
+
        #FOR NON CONFERENCE CALCULATE THE BEST IN THIS BRANCH
        for item in self.values():
+           if not IPage.providedBy (item):
+               continue
+           print ("Iterate", item.__name__)            
            if IRecent.providedBy(item):
               item.addToHeapQ2(aHeap,sortKey)
            if IPage.providedBy (item):
               item.bestCategoryObjects(sortKey,root,aHeap)
-
-    #FOR A CONFERENCE
+    """
+    #FOR LEAF ITEMS.  NO LONGER USED
     def bestConferenceObjects(self,sortKey,root,aHeap):
        #FOR NON CONFERENCE CALCULATE THE BEST IN THIS BRANCH
        items =  list(map(lambda x: x, self.talks.items()))       
@@ -170,15 +170,14 @@ class PageMixIn(object):
               del self.talks [key]
               continue
            if IConferenceVideo.providedBy(item):
-              item.addToHeapQ2(aHeap,sortKey,isConference = True)
-
+              item.addToHeapQ2(aHeap,sortKey)
+     """  
        
-class RecentMixIn(object):
-    publishedAt = 0
-    def addToHeapQ2(self,aHeap,sortKey, isConference = False):
+
+    def addToHeapQ2(self,aHeap,sortKey):
         # For conferences we want to compare all the talks
         # Otherwise just the top 10
-        if ((not isConference) and (len(aHeap)> 9)):
+        if (len(aHeap)> 9):
             heapq.heappushpop(aHeap,(getattr(self,sortKey),self.__name__,self))
         else:
             try:
@@ -215,9 +214,13 @@ class RecentMixIn(object):
     def getMostRecent(self):
         if hasattr(self,'publishedAt'):
            return self.publishedAt
+        if hasattr(self,'creationTime'):
+           return self.creationTime   
         else:
            print (self.title) 
            return 0
+       
+    mostRecent = property (getMostRecent)
        
     def age(self):
        return arrow.get(self.creationTime).humanize()[:-3]
@@ -231,86 +234,9 @@ class RecentMixIn(object):
             return '-'
         return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
 
-    def getDefaultThumbNailURL(self):
-        try:
-            return self.thumbnails.get('default').get('url')
-        except:
-            pass
-        return ""
         
-    def getSrcSet(self):
-        if not hasattr(self,'thumbnails'):
-            return ""
-        values =  self.thumbnails.values()
-        result = []
-        for i in values:
-            try:
-               aString = (i['url'] + ' ' +
-                          str(i['height']) + 'h ' +
-                          str(i['width']) + 'w')
-               result.append(aString)
-            except:
-                pass
-        srcset = ",".join(result)
-        return srcset          
+class RecentMixIn(MixIn):
+   pass
 
-                            
-    mostRecent = property (getMostRecent)
-    wilsonScore = property (getWilsonScore)
-    myScore = property (getMyScore)
-
-
-    
-    def moveTo (self,view):
-        request = view.request
-        principal = request.principal
-        if (principal.__name__ != 'lozinski'):
-           return 'You are not authorized to move Videos'
-        if not 'target' in request.form:
-           return 'You have to define where to move the video.'
-        targetName = request.form ['target']
-        root = self.getRoot()
-        try:
-           newParent = root [targetName]
-        except:
-            return "That is not a valid destination anme for the video"
-        name = self.__name__
-
-        # YOU HAVE ALREACY CHECKED SCRUITY
-        # SO PROCESS IT
-        
-        del self.__parent__ [name]
-        newParent [name] = self
-        raise HTTPFound(location='/' +targetName  + '/manage')
-
-     
-    
-    def upVote(self,principal):
-        self.possiblyCreateVoteCounts()
-        key = principal.__name__
-        if key in self._downVotes:
-            del self._downVotes[key]
-        if key in self._upVotes:
-            del self._upVotes[key]
-            return
-        self._upVotes[key] = time.time()
-
-
-    def downVote(self,principal):
-        self.possiblyCreateVoteCounts()
-        key = principal.__name__
-        if key in self._upVotes:
-            del self._upVotes[key]
-        if key in self._downVotes:
-            del self._downVotes[key]            
-            return
-        self._downVotes[key] = time.time()           
-        
-            
-    def possiblyCreateVoteCounts(self):    
-        if not hasattr(self,"_upVotes"):
-           self._upVotes = OOBTree()
-        if not hasattr(self,"_downVotes"):
-           self._downVotes = OOBTree()           
-        
-        
+class PageMixIn (MixIn):
+   pass    

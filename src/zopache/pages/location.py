@@ -1,11 +1,12 @@
 from .interfaces import ILocation, IMap
-from .page import Page
+from .page import PageBase
 from zopache.pages.interfaces import IPage , IRootPage
 from zope.interface import implementer
 from .geo import geoCache
+from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 
-@implementer (ILocation)
-class Location (Page):
+
+class LocationBase (PageBase):
     lattitude = 45.
     longintude = 0.
     webClass = 'Location'
@@ -34,9 +35,13 @@ class Location (Page):
                   result += ']'
                   return result, firstItem
 
+@implementer (ILocation)
+class Location (LocationBase, RecentMixIn):
+    pass
+              
 import googlemaps
 @implementer (IMap)
-class Map(Location):
+class Map(LocationBase,PageMixIn):
     zoomLevel=5.
     mapHeight=0.
     mapWidth=0.
