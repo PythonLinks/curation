@@ -59,7 +59,7 @@ class Renamer(BaseClass):
         container=self.context
         obj = container.get(oldName)
         if obj is None:
-            raise ItemNotFoundError(self.container, oldName)
+               view.error += oldName + "WAS NOT FOUND <br>"
         if not self.allowed():
                      return
         new_name=self.uniqueName(container,newName)
@@ -81,7 +81,8 @@ class Cutter(BaseClass):
         self.view = view        
         """ Move the object to the pastefolder"""
         if not self.allowed():
-                self.view.error +=orig_name + " WAS NOT CUT <br>"            
+                self.view.error += self.context.__name__  + """" 
+                     IS NOT ALLOWED TO BE CUT <br>"""
                 return
         obj=self.context
         oldName=obj.__name__
@@ -106,7 +107,7 @@ class Copier(BaseClass):
         """ Move the object to the pastefolder"""
         obj=self.context
         if not self.allowed():
-                self.view.error +=orig_name + " WAS NOT COPIED <br>"
+                self.view.error +=self.context.__name__+ " IS  NOT ALLOWED TO BE COPIED <br>"
                 return
         toFolder=cutFolder(view)
         oldName=obj.__name__

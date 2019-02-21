@@ -1,12 +1,23 @@
 # -*- coding: utf-8 -*-
-
+import os
 from os.path import join
+
 from setuptools import setup, find_packages
+from setuptools.extension import Extension
+
+from Cython.Distutils import build_ext
+from Cython.Build import cythonize
+
+
+
+from scandir import extensions
+
 
 name = 'zopache'
-version = '0.7'
+version = '0.1'
 readme = open('README.md').read()
 history = open(join('docs', 'HISTORY.txt')).read()
+
 
 install_requires = [
     'crom',
@@ -65,15 +76,39 @@ tests_require = [
     'dolmen.forms.ztk >= 2.0',
     ]
 
-setup(name=name,
+setup(
+      name=name,
+      setup_requires=[
+                 'cython>=0.x',
+             ],
+
+      ext_modules=cythonize(
+                [
+                 Extension("zopache.application",
+                           ["src/zopache/application/*.py"]),
+                 Extension("zopache.core", ["src/zopache/core/*.py"]),
+                 Extension("zopache.crud", ["src/zopache/crud/*.py"]),
+                 Extension("zopache.pages", ["src/zopache/pages/*.py"]),
+                 Extension("zopache.ttw", ["src/zopache/ttw/*.py"]),
+                 Extension("zopache.zmi", ["src/zopache/zmi/*.py"])
+                 ],
+                #build_dir="src/zopache",
+                compiler_directives=dict(
+                    language_level = "3",
+                    always_allow_keywords=True)
+                ),
+      cmdclass=dict(
+            build_ext=build_ext
+        ),
+
       version=version,
-      description="CRUD forms and actions for Zopache",
+      description="Zopache the core of the JSON Wikie",
       long_description=u"%s\n\n%s" % (readme, history),
-      keywords='Zopache Crud Forms',
-      author='The Dolmen Team + Chrisotpher Lozinski',
+      keywords='JSON NEWS WIKI',
+      author='The Cromlech/Dolmen Team + Chrisotpher Lozinski',
       author_email='lozinski@PythonLinks.info',
-      url='http://www.dolmen-project.org',
-      license='ZPL + CV', 
+      url='http://www.pythonlinks.info/json-wiki',
+      license='Commercial', 
       packages=find_packages('src', exclude=['ez_setup']),
       package_dir={'': 'src'},
       namespace_packages=['zopache'],

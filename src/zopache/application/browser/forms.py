@@ -80,7 +80,7 @@ class Login(Form):
     def login(self):
         data, errors = self.extractData()
         if errors:
-            form.errors = errors
+            self.form.errors = errors
             return FAILURE
         success = self.context.authenticate(data)
        

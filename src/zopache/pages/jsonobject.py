@@ -215,8 +215,9 @@ class MYJSON(View):
         # USED TO HAVE TIGHER SECURITY       
         #if self.context.__name__ in
         #   ['cloud-native','python','climate-change']:
+        #return 'JSON is not available for that object.'
         return self.context.jsonTree(2)
-        return 'JSON is not available for that object.'
+
        
 
 #THIS ONE JUST GETS THE TREE OF CATEGORIES

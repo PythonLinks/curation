@@ -33,7 +33,7 @@ def parentWhichImplements(self,interface):
 
 
 def reversedParents(self):
-    return reversedParentsUpTo(self,IBreadcrumbsRoot)
+    return reversedParentsUpTo(self,IPublicationRoot)
 
 def parentsUpTo(self,anInterface):
     return reversed(reversedParentsUpTo(self,anInterface))
@@ -124,8 +124,8 @@ class Breadcrumbs(UniqueName):
           try:
               result = result (self)
               return result
-          except error:
-            return str(error)
+          except:
+            return "ERROR IN SAFE PARENTAL ACQUIRE"
 
             
     def getRoot(self):

@@ -26,7 +26,7 @@ geoCache = GeoCode()
 class Address (schema.Text):
     def validate(self,value):
         try:
-            geoCache.geocode(address)
+            geoCache.geocode(value)
         except:
             raise ValidationError('THat is not a good address')   
     

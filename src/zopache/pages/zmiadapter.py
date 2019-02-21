@@ -49,7 +49,7 @@ class LocalBase(BaseClass):
     #Add item first, then add token     
     def addToken (self, item):
         if not IPage.providedBy(item.__parent__):
-           self.view.error += name +  "NOT ADDED TO valuesByToken "
+           self.view.error += item.__name__ +  "NOT ADDED TO valuesByToken "
         root = getRoot(item)
         valuesByToken = root.valuesByToken
         name = item.__name__
@@ -109,7 +109,8 @@ class CategoryPaster(LocalBase,Paster,UniquePageName):
             #self.addToken(item)  
 
             
-              
+class ItemNotFoundError(Exception):
+    pass
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectRenamer)

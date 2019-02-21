@@ -119,23 +119,16 @@ class MixIn(object):
                result.append(item.__name__)
        return result
    
-    @cache('wilsonScoreBest')           
-    def bestWilsonScore(self):
-        return self.bestObjects('wilsonScore')
-
-    @cache('myScoreBest')               
-    def bestMyScore(self):
-        return self.bestObjects('myScore')
 
     @cache('mostRecentBest')               
-    def bestMostRecent (self):
-        return self.bestObjects('mostRecent')        
+    def bestMostRecentPage (self):
+        return self.bestObjects('mostRecent',IPage)        
 
-    def bestObjects(self,sortKey):
+    def bestObjects(self,sortKey,whichInterface):
         root = self.getRoot()
         aHeap = []
 
-        self.bestCategoryObjects(sortKey,root,aHeap)
+        self.bestCategoryObjects(sortKey,root,aHeap, whichInterface)
         result = []
         while (aHeap):
            result.append(heapq.heappop(aHeap)[2])
@@ -143,17 +136,16 @@ class MixIn(object):
         return result
 
     #FOR A CATEOGRY
-    def bestCategoryObjects(self,sortKey,root,aHeap):
+    def bestCategoryObjects(self,sortKey,root,aHeap,whichInterface):
 
        #FOR NON CONFERENCE CALCULATE THE BEST IN THIS BRANCH
        for item in self.values():
            if not IPage.providedBy (item):
                continue
-           print ("Iterate", item.__name__)            
-           if IRecent.providedBy(item):
+           if whichInterface.providedBy(item):
               item.addToHeapQ2(aHeap,sortKey)
            if IPage.providedBy (item):
-              item.bestCategoryObjects(sortKey,root,aHeap)
+              item.bestCategoryObjects(sortKey,root,aHeap,whichInterface)
     """
     #FOR LEAF ITEMS.  NO LONGER USED
     def bestConferenceObjects(self,sortKey,root,aHeap):

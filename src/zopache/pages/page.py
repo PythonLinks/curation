@@ -1,5 +1,6 @@
 import time
 import os
+from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import IPage , IRootPage, INews
@@ -20,7 +21,15 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     url = ''
     branchSize=1
     description = ''
-    webApproved = True    
+    webApproved = True
+    
+    def valuesAsList(self):
+        result = []
+        for item in self.values():
+            if IPage.providedBy(item):            
+               result.append (item)
+        return result
+
 
     def postProcess(self):
         self.description = self.description.replace('"',"'")
@@ -60,7 +69,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
 
     def wikiPageChildren(self):
         for item in self.values():
-            if IWikiPage.providedBy(item):
+            if IPage.providedBy(item):
                 yield item                   
 
     def __setitem__(self,  key,item):
@@ -76,10 +85,10 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     def countLeaves(self):
         total=1
         for item in self.values():
-            if IBlogObject.providedBy(item):
+            if IPage.providedBy(item):
                 if not item.webApproved:
                    continue
-                if ICategory.providedBy(item): 
+                if IPage.providedBy(item): 
                     total+=item.countLeaves()
                 else:
                     total+=item.branchSize
@@ -90,7 +99,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
 
                   
     def hasContent(self):
-         if len(self.source)<2 or self.source == NoContentString:
+         if len(self.source)<2:
             return False
          else:
             return True
@@ -111,7 +120,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     def sortedByTitle(self):
            unsortedList=[]
            for item in self.values():
-               if IBlogObject.providedBy(item):
+               if IPage.providedBy(item):
                   unsortedList.append(item)
            aKey=methodcaller('getTitle')
            return sorted(unsortedList, key=aKey)
@@ -122,7 +131,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     def sortedByName(self):
            unsortedList=[]
            for item in self.values():
-               if IBlogObject.providedBy(item):
+               if IPage.providedBy(item):
                   unsortedList.append(item)
            aKey=methodcaller('getName')
            return sorted(unsortedList, key=aKey)

@@ -74,9 +74,9 @@ class BaseEditForm(Form):
     @property
     def label(self):
         return ''
-        label = _(u"Edit this Object", default=u"Edit: $name",
-                  mapping={"name": title_or_name(self.context)})
-        return translate(label)
+        #label = _(u"Edit this Object", default=u"Edit: $name",
+        #          mapping={"name": title_or_name(self.context)})
+        #return translate(label)
 
     @CachedProperty
     def fields(self):
@@ -119,7 +119,7 @@ class DisplayForm(Form):
     @property
     def label(self):
         return ''
-        return title_or_name(self.context)
+        #return title_or_name(self.context)
 
     @CachedProperty
     def fields(self):
@@ -144,7 +144,7 @@ class DeleteForm(Form):
     @property
     def label(self):
         return ''
-        label = u"Delete This Object?" 
-        return translate(label)
+        #label = u"Delete This Object?" 
+        #return translate(label)
 
 

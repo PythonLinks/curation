@@ -160,11 +160,7 @@ class Contents(object):
         return info
 
     def safe_getattr(self, obj, attr, default):
-        """Attempts to read the attr, returning default if Unauthorized."""
-        try:
-            return getattr(obj, attr, default)
-        except Unauthorized:
-            return default
+        return getattr(obj, attr, default)
 
     def renameObjects(self):
         """Given a sequence of tuples of old, new ids we rename"""
@@ -179,39 +175,16 @@ class Contents(object):
     def changeTitle(self):
         """Given a sequence of tuples of old, new ids we rename"""
         request = self.request
+        import pdb; pdb.set_trace()
         id = request.get("retitle_id")
         new = request.get("new_value")
-
         item = self.context[id]
-        dc = IDCDescriptiveProperties(item)
-        dc.title = new
-        notify(ObjectModifiedEvent(item, Attributes(IZopeDublinCore, 'title')))
+        item.title = new
+
 
     def hasAdding(self):
-        return True
-        """Returns true if an adding view is available."""
-        adding = queryMultiAdapter((self.context, self.request), name="+")
-        return (adding is not None)
+        return False
 
-    def addObject(self):
-        request = self.request
-        if IContainerNamesContainer.providedBy(self.context):
-            new = ""
-        else:
-            new = request["new_value"]
-
-        adding = queryMultiAdapter((self.context, self.request), name="+")
-        if adding is None:
-            adding = Adding(self.context, request)
-        else:
-            # Set up context so that the adding can build a url
-            # if the type name names a view.
-            # Note that we can't so this for the "adding is None" case
-            # above, because there is no "+" view.
-            adding.__parent__ = self.context
-            adding.__name__ = '+'
-
-        adding.action(request['type_name'], new)
 
     def removeObjects(self):
         """Remove objects specified in a list of object ids"""

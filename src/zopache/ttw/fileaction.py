@@ -74,12 +74,12 @@ class AddFileAction(Action):
             if contentType=='txt/html':
                file=HTML()
                file.source=data
-               nextView +=  newName+'/ckedit'
+               nextView +=  fileName+'/ckedit'
 
             elif contentType=='txt/css':
                file=CSS()
                file.source=data
-               nextView +=  newName+'/aceedit'
+               nextView +=  fileName+'/aceedit'
                
             elif (contentType.lower() in
                    ['txt/json',
@@ -87,7 +87,7 @@ class AddFileAction(Action):
                file=JSON()
                file.__name__ = fileName
                file.source=data
-               nextView  +=  newName+'/aceedit'               
+               nextView  += fileName+'/aceedit'               
 
             else:
                file = File()

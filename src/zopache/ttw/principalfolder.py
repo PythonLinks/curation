@@ -209,5 +209,6 @@ class PrincipalFolder(Container):
         return self.idByEmail[email]
 
     def getIdByHandle(self, handle):
-        return self.idBySlugifiedHandle[slugiy(handle)]    
+        aSlug = slugify(handle) 
+        return self.idBySlugifiedHandle[aSlug]
 

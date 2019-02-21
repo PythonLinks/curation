@@ -12,6 +12,9 @@ from .interfaces import IAceHTML
 from .acquisition import getFromWebClass
 from zopache.core import getRoot
 
+class NotFound(Exception):
+    pass
+
 class Traverser(object):
     def __init__(self,view_lookup):
         self.view_lookup=view_lookup
