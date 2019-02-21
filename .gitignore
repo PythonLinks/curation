@@ -7,7 +7,7 @@ bin/
 checkouts/
 develop-eggs/
 parts/
-.so
+*.so
 *.c
 # archives
 *.tar

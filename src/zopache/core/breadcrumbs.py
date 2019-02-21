@@ -92,7 +92,12 @@ def nameAndTitle(item,showTitles):
         return name, name
 
 from pydoc import locate
+import cython
+
 class Breadcrumbs(UniqueName):
+    def isCompiledByCython(self):
+        return cython.compiled
+
     def parents(self, item=None):
         if item == None:
            item = self.context
