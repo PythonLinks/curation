@@ -31,7 +31,6 @@ class Traverser(object):
               view = self.view_lookup(request, zopacheTemplate, name)
            except ComponentLookupError:
 
-
               #This allows us to pass arguments in the URL after
               # the template name
               view = self.view_lookup(request, zopacheTemplate, 'index')

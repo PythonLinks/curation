@@ -7,11 +7,18 @@ from setuptools.extension import Extension
 
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
-
-
-
-from scandir import extensions
-
+#from scandir import extensions
+extensions =[
+                 #Extension("zopache.application/*",
+                 #          ["src/zopache/application/*.py"]),
+                 #Extension("zopache.application/browser/*",
+                 #          ["src/zopache/application/browser/*.py"]),    
+                 #Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
+                 #Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
+                 #Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
+                 #Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
+                 Extension("zopache.core/*", ["src/zopache/core/*.py"])
+                 ]
 
 name = 'zopache'
 version = '0.1'
@@ -20,6 +27,8 @@ history = open(join('docs', 'HISTORY.txt')).read()
 
 
 install_requires = [
+    'biscuits',
+    'cryptography',
     'crom',
     'cromlech.auth',
     'cromlech.browser',
@@ -83,15 +92,8 @@ setup(
              ],
 
       ext_modules=cythonize(
-                [
-                 Extension("zopache.application",
-                           ["src/zopache/application/*.py"]),
-                 Extension("zopache.core", ["src/zopache/core/*.py"]),
-                 Extension("zopache.crud", ["src/zopache/crud/*.py"]),
-                 Extension("zopache.pages", ["src/zopache/pages/*.py"]),
-                 Extension("zopache.ttw", ["src/zopache/ttw/*.py"]),
-                 Extension("zopache.zmi", ["src/zopache/zmi/*.py"])
-                 ],
+                [],
+                #extensions,
                 #build_dir="src/zopache",
                 compiler_directives=dict(
                     language_level = "3",

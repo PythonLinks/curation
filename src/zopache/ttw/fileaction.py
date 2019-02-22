@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
-from PIL import Image as PilImage
+#from pillow import Image as PilImage
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
