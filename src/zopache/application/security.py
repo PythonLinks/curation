@@ -10,29 +10,22 @@ from cromlech.security.meta import permissions
 from zope.interface import Interface
 from zopache.core.interfaces import ITreeSecurity
 
-class Access(object):
-      """Custom Rules for Permissions """
 
-      def get(self, key, extraArgument):
-
-          if key ==  'lozinski@PythonLinks.info':
-             return  frozenset(('AddContent','EditContent',
-                                'Manage','Vote','Edit','Add'))
-          if key != 'user.unauthenticated':
-             return  frozenset(('Vote','AddContent',
-                                'EditContent','Edit'))
-          return frozenset(())
-
-accesses = Access()
+def getPermissions(principal):
+          if principal.id == 'user.unauthenticated':
+               return []
+          return principal.permissions
+                
 
 def check_permissions(component, interaction):
     perms = permissions.get(component) or tuple()
     if not perms:
         return
     for principal in interaction.principals:
-        access = accesses.get(principal.id, None)
-        if not access or not frozenset(perms) <= access:
-            return Unauthorized
+        access = getPermissions(principal)
+        for item in perms:
+            if not item  in access:
+               return Unauthorized
     return
 
 

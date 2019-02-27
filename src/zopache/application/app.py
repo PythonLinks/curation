@@ -61,7 +61,6 @@ def makeWiki(connRoot):
      
 @secured
 def publish(environ, start_response, principal):
-
     # We instanciate an IRequest object.
     # Here, we use WebOB but you can implement your own
     # or adapt the one of your liking.

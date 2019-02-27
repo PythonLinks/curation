@@ -22,13 +22,6 @@ class Auth(dict, Location):
         return False
 
 
-def logout(session=None):
-    if session is None:
-        session = getSession()
-    if 'user' in session:
-        session.clear()
-        return True
-    return False
 
 
 def secured(app):

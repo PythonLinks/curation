@@ -1,5 +1,4 @@
 
-from zope.cachedescriptors.property import CachedProperty
 from dolmen.forms.base import Actions
 from zopache.pages.pageactions import *
 from zopache.crud import actions as formactions
@@ -24,7 +23,7 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
                 self.context.getTitle()
                )
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               AddAndView("Add and View", self.factory),

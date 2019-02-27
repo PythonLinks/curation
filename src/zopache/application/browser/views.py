@@ -17,7 +17,7 @@ from ..interfaces import ITab,IContent
 
 
 from zopache.core.page  import  Page
-from ..auth import logout
+
 from dolmen.breadcrumbs import BreadcrumbsRenderer
 from . import tal_template
 
@@ -28,7 +28,7 @@ from . import tal_template
 class Logout(Page):
 
     def update(self):
-        logout()
+        self.request.principal.logout()
 
     def render(self):
         return "You have been logged out"

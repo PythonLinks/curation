@@ -9,7 +9,6 @@ from cromlech.i18n import translate
 
 from cromlech.security import getSecurityGuards, permissions
 
-from zope.cachedescriptors.property import CachedProperty
 from .interfaces import IName, IContainer, ILeaf
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
@@ -34,23 +33,23 @@ class AddForm(Form):
     label= ''
     subTitle='Add an Object'
 
-    @CachedProperty
+    @property
     def fields(self):
         return  Fields(IName,self.interface)
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
 
 class AddByTitleForm(AddForm):
-    @CachedProperty
+    @property
     def fields(self):
         return  Fields(self.interface)
 
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               formactions.AddByTitle("Add", self.factory),
@@ -63,9 +62,9 @@ class BaseEditForm(Form):
     ignoreContent = False
     ignoreRequest = False
     actions = Actions(formactions.Edit(_("Edit","Save")),
-                      formactions.SaveAndView(_("SaveAndView","Save And View")),
-                      formactions.Cancel(_("Cancel","Cancel")))
-    @CachedProperty
+                    formactions.SaveAndView(_("SaveAndView","Save And View")),
+                    formactions.Cancel(_("Cancel","Cancel")))
+    @property
     def fields(self):
         if hasattr(self,'interface'):
             return  Fields(IName,self.interface).omit("__parent__")
@@ -78,7 +77,7 @@ class BaseEditForm(Form):
         #          mapping={"name": title_or_name(self.context)})
         #return translate(label)
 
-    @CachedProperty
+    @property
     def fields(self):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
@@ -86,7 +85,7 @@ class BaseEditForm(Form):
 
     
 class EditDemoForm(BaseEditForm):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions()
     
@@ -121,7 +120,7 @@ class DisplayForm(Form):
         return ''
         #return title_or_name(self.context)
 
-    @CachedProperty
+    @property
     def fields(self):
         displayed = self.getContentData().getContent()
         return getAllFields(displayed, '__parent__', '__name__', 'title')

@@ -9,17 +9,22 @@ from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 #from scandir import extensions
 extensions =[
-                 #Extension("zopache.application/*",
-                 #          ["src/zopache/application/*.py"]),
-                 #Extension("zopache.application/browser/*",
-                 #          ["src/zopache/application/browser/*.py"]),    
-                 #Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
-                 #Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
-                 #Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
-                 #Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
+                 Extension("zopache.application/*",
+                           ["src/zopache/application/*.py"]),
+                 Extension("zopache.application/browser/*",
+                           ["src/zopache/application/browser/*.py"]),    
+                 Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
+                 Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
+                 Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
+                 Extension("zopache.forms/*",
+                            ["src/zopache/forms/*.py"]),
+                 Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
+                 Extension("zopache.ttw/json", ["src/zopache/ttw/json.pyx"]),    
+                 Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
                  Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
+extensions =[]
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()
@@ -92,9 +97,7 @@ setup(
              ],
 
       ext_modules=cythonize(
-                [],
-                #extensions,
-                #build_dir="src/zopache",
+                extensions,
                 compiler_directives=dict(
                     language_level = "3",
                     always_allow_keywords=True)

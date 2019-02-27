@@ -6,6 +6,7 @@ class IURLSegment(Interface):
     pass
 
 """
+# THIS ONE IS FOR EDITING ANY INTERFACE
 @crom.adapter
 @crom.sources(Interface)
 @crom.target(IURLSegment)
@@ -26,6 +27,17 @@ class IManageAdaptor(object):
     def getSegment(self):
         return 'manage'    
 
+# FOR A PRINCIPAL
+from zopache.ttw.interfaces import IInternalPrincipal
+@crom.adapter
+@crom.sources(IInternalPrincipal)
+@crom.target(IURLSegment)
+class IPrincipalAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'permissions'    
+    
 
 
 class IObjectCutter(Interface):

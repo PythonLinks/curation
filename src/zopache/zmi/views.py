@@ -38,6 +38,7 @@ class ManageBase(Page,Contents):
         else:
            return ''
 
+       
 @view_component
 @name('manage2')
 @title("Manage")
@@ -51,6 +52,7 @@ class PageManage(ManageBase):
 @name('manage')
 @title("Manage")
 @target(ITab)
+
 @permissions('Manage')
 @context(IBTreeContainer)
 class BTreeManage(ManageBase):

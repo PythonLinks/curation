@@ -34,6 +34,8 @@ class InternalPrincipal(Container):
     _password = ''
     title = "Your Profile"
     talkURL =""
+    permissions = ['Vote']    
+
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()
@@ -164,11 +166,9 @@ class PrincipalFolder(Container):
         self.idBySlugifiedHandle[slugify(principal.handle)] = principal.__name__        
     def __setitem__(self, id, principal):
         """Add a user """
-
         # A user with the new login or handle  already exists
         if principal.email in self.idByEmail:
             raise DuplicateIDError('That Email address is already taken!')
-
         if slugify(principal.handle) in self.idBySlugifiedHandle:
             raise DuplicateIDError('That Handle is already taken!')        
 
@@ -186,6 +186,7 @@ class PrincipalFolder(Container):
     def authenticate(self, credentials):
         """Return principal info if credentials can be authenticated
         """
+        import pdb;pdb.set_trace()
         if not ('email' in credentials and 'password' in credentials):
             return None
         id = self.idByEmail.get(credentials['email'])
@@ -205,6 +206,14 @@ class PrincipalFolder(Container):
         session = getSession()
         session['user'] =getattr(user,'email')
 
+    def logout(session=None):
+        if session is None:
+            session = getSession()
+        if 'user' in session:
+            session.clear()
+            return True
+        return False
+        
     def getIdByEmail(self, email):
         return self.idByEmail[email]
 

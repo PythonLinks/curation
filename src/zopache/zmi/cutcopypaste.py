@@ -164,6 +164,7 @@ class Deleter(BaseClass):
         obj=self.context
         container=obj.__parent__
         name=obj.__name__
+        import pdb; pdb.set_trace()
         if not self.allowed():
             self.view.error +=  name + " was not deleted. <br>"
             return
@@ -171,6 +172,8 @@ class Deleter(BaseClass):
         # HAVE TO DESCRIE BEFORE DELETING OTHERWISE NO NAME AVAILABLE
         self.describeTransaction(" Deleted ", obj)        
         del container[name]
+        if view.principal == obj:
+           obj.logout()
 
         
     def allowed(self):

@@ -97,7 +97,7 @@ class ISearchSchema(Interface):
 
 
     
-class IInternalPrincipal(Interface, ICromlechPrincipal,IBTreeContainer):
+class IInternalPrincipal(IDeletable,ICromlechPrincipal,IBTreeContainer):
     """Principal information"""
     pass
 

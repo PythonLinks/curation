@@ -8,6 +8,7 @@ checkouts/
 develop-eggs/
 parts/
 *.so
+*.sol
 *.c
 # archives
 *.tar

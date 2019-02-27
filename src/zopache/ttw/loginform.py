@@ -3,8 +3,6 @@
 #This software is subject to the CV and Zope Public Licenses.
 from zope.interface import Interface
 from zope.interface import implementer
-from zope.cachedescriptors.property import CachedProperty
-
 
 from dolmen.forms.base import Actions
 from dolmen.forms.base import Fields

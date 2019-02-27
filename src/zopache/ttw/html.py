@@ -3,7 +3,6 @@ from cromlech.webob.response import Response
 from dolmen.view import  make_view_response
 from zopache.core import View
 from zopache.core.breadcrumbs import Breadcrumbs
-from zope.cachedescriptors.property import CachedProperty
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions, i18n as _
 from . import actions  as ttwactions
@@ -168,7 +167,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
     def postProcess(self):
         self.context.postProcess()
         
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
@@ -196,7 +195,7 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 
     def headerScripts(self):
           return AceScripts.headerScripts(self)      
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
@@ -251,7 +250,7 @@ class BaseAceEdit(AceScripts,BaseEditForm):
         self.context.postProcess()
 
 class AceEdit(BaseAceEdit):
-    @CachedProperty
+    @property
     def actions(self):
 
         action1=ttwactions.SaveAndAceEdit("Save","Save")
@@ -285,7 +284,7 @@ class AceEditForm(AceEdit):
 @title("Ace Demo")
 @name("acedemo")
 class AceDemoHTML(BaseAceEdit):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions()
 
@@ -303,7 +302,7 @@ class BaseCkEdit(CkScripts,BaseEditForm):
         self.context.postProcess()
 
 class CkEdit(BaseCkEdit):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               formactions.SaveAndView(_("Save  and View","Save -> View")),
@@ -332,7 +331,7 @@ class CkEditForm(CkEdit):
 @name('ckdemo')
 @title("CkEdit")
 class CkDemoHTML(BaseCkEdit):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions()
 

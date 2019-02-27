@@ -20,6 +20,11 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')
+
+    @property
+    def action_url(self):
+        return self.request.url
+            
     def widgetDictionary(self):
         return {c.htmlId():c for c in self.bootstrapWidgets()}
 
@@ -61,7 +66,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def postAddProcess(self):
          pass     
 
-    def breadcrumbs(self):     
+    def breadcrumbs(self):
         return self.breadcrumbsManage()
 
 
