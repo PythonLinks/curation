@@ -64,7 +64,8 @@ class Renamer(BaseClass):
                      return
         new_name=self.uniqueName(container,newName)
         self.moveFrom(container,oldName, container, newName)                
-
+        cache.resetCache()
+        
     def allowed(self):
         if  IRenameable.providedBy(self.context):
                 return True
@@ -112,7 +113,10 @@ class Copier(BaseClass):
         toFolder=cutFolder(view)
         oldName=obj.__name__
         newName=self.uniqueName(toFolder,oldName)
+        parent = obj.__parent__
+        obj.__parent__ = None
         toFolder[newName]= copy(obj)
+        obj.__parent__ = parent
         self.describeTransaction(" Copy ", obj)
          
     def allowed(self):

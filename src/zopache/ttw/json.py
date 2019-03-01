@@ -1,4 +1,5 @@
 #This software is subject to the No Compete MIT license License Agreement.
+import json
 
 from zopache.core.viewdecorators import *
 from zopache.application.interfaces import ITab
@@ -39,7 +40,11 @@ class IJSON(Interface):
 class JSON(Leaf):
     # NEEDS AN ICON
     #icon="ttwicons/CSS.svg"
-    pass
+    def asPythonObjects(self):
+        return json.loads(self.source)
+    
+    def fromPythonObjects(self,data):
+        self.source = json.dumps(data)
 
 class  AceScripts(AceScripts):
     def  footerScripts(self):

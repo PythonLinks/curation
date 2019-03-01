@@ -18,6 +18,7 @@ from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 from zopache.core.transactionnote import TransactionNote
+from zopache.pages.cache import cache
 
 class LocalBase(BaseClass):
     def printToken(self,obj, message):
@@ -83,7 +84,8 @@ class CategoryCutter(LocalBase,Cutter):
             return
         self.deleteToken(obj)
         super().cut(view) 
-
+        cache.resetCache()
+        
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectPaster)
@@ -107,7 +109,7 @@ class CategoryPaster(LocalBase,Paster,UniquePageName):
             new_name=self.uniqueName(toContainer,orig_name,"Copy")
             self.moveFrom(fromFolder, orig_name, toContainer, new_name)
             #self.addToken(item)  
-
+        cache.resetCache()
             
 class ItemNotFoundError(Exception):
     pass
@@ -153,7 +155,6 @@ class CategoryDeleter(Deleter,LocalBase):
         # HAVE TO DO THIS FIRST
         self.describeTransaction("Deleted an object with a Canonical URL",contained)        
         self.deleteToken(contained)
-        
         # DELETE THE OBJECT
         container=contained.__parent__
         del container[name]
@@ -167,6 +168,7 @@ class CategoryDeleter(Deleter,LocalBase):
         # THIS SHOULD ALWAYS BE TRUE
         if IPage.providedBy (container):   
            root.recalculateRootJSON()
+        cache.resetCache()        
 
 #THIS IS NEEDED FOR PRIVATE PARTS
 #              if hasattr(item,'privatePart') and item.privatePart!=None:

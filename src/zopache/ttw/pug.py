@@ -116,7 +116,6 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     className='Pug'
 
     def postProcess(self):
-        import pdb; pdb.set_trace()
         TrustedHTML.postProcess(self)
         JavascriptBase.postProcess(self)
         
