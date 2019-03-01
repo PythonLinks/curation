@@ -64,7 +64,7 @@ class Add(Action):
         if INotPage.providedBy(self.form.context):
             newURL = self.form.url(obj) + '/speakerregistration'
         else:
-            newURL = '.'
+            newURL = '/'
         if hasattr(form,'postAddProcess'):      
               form.postAddProcess()    
         raise HTTPFound(newURL)

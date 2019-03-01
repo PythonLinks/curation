@@ -42,7 +42,7 @@ class Logout(Page):
 class Logout2(Page):
 
     def update(self):
-        logout()
+        self.request.principal.logout()
 
     def render(self):
         newURL ='.'

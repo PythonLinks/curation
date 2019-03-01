@@ -115,6 +115,11 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     title=u''
     className='Pug'
 
+    def postProcess(self):
+        import pdb; pdb.set_trace()
+        TrustedHTML.postProcess(self)
+        JavascriptBase.postProcess(self)
+        
     def getHTML(self):
         return self.html
     

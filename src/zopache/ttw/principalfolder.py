@@ -40,7 +40,16 @@ class InternalPrincipal(Container):
         self.creationTime=time.time()
         self.modificationTime=time.time()
         Container.__init__(self)
-                         
+
+    def logout(self,session=None):
+        if session is None:
+            session = getSession()
+        if 'user' in session:
+            session.clear()
+            return True
+        return False
+
+        
     """ Pricipals which are stored in the ZODB Principal Folder"""
     def upVote(self,item):
         self.possiblyCreateVoteCounts()
@@ -186,7 +195,6 @@ class PrincipalFolder(Container):
     def authenticate(self, credentials):
         """Return principal info if credentials can be authenticated
         """
-        import pdb;pdb.set_trace()
         if not ('email' in credentials and 'password' in credentials):
             return None
         id = self.idByEmail.get(credentials['email'])
@@ -206,13 +214,6 @@ class PrincipalFolder(Container):
         session = getSession()
         session['user'] =getattr(user,'email')
 
-    def logout(session=None):
-        if session is None:
-            session = getSession()
-        if 'user' in session:
-            session.clear()
-            return True
-        return False
         
     def getIdByEmail(self, email):
         return self.idByEmail[email]

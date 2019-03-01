@@ -94,7 +94,7 @@ class Restore(Page):
               contextParent.title=item.title
            if hasattr(item,'source'):
               contextParent.source=item.source
-              if hasattr(contextParent,'postProcess'):
+           if hasattr(contextParent,'postProcess'):
                      contextParent.postProcess()
            newURL=self.url(self.context.__parent__)+'/history'
            raise HTTPFound(newURL)
