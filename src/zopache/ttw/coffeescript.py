@@ -39,7 +39,7 @@ class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
     )
     javascript= schema.Text(
         title = u'The Generated CoffeeScript',
-        description = u'This CoffeeScript is generated from the coffeescript',
+        description = u'This Javascript is generated from the CoffeeScript',
         required = False,
         default = u'',
     )    

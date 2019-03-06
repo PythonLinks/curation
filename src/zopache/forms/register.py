@@ -40,7 +40,7 @@ class Register(Form):
     template = tal_template('register.pt')
 
     def postAddProcess(self):
-       if len(self.new.__parent__)==1:
+       if len(self.new.__parent__)==2:
            self.new.permissions = ['AddContent','EditContent',
             'Manage','Vote','Edit','Add']                                      
 

@@ -173,6 +173,7 @@ class PrincipalFolder(Container):
 
         del self.idBySlugifiedHandle[slugify(oldHandle)]
         self.idBySlugifiedHandle[slugify(principal.handle)] = principal.__name__        
+
     def __setitem__(self, id, principal):
         """Add a user """
         # A user with the new login or handle  already exists

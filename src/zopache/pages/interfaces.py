@@ -58,7 +58,7 @@ class ILocationBase(IPage):
         description = u'Lattitude',
         min=-90.,
         max=90.,
-        default = 45.,
+        default = 51.509865,
         required = True,
     )
 
@@ -83,7 +83,7 @@ class IMap(ILocationBase):
         default = 5., 
         required = True,
     )
-    
+    """
     mapWidth = schema.Float(
         title = u'Map Width',
         description = u'Map Width ',
@@ -99,7 +99,7 @@ class IMap(ILocationBase):
         max=20000.,
         required = True,
     )    
-    """
+
     address= Address(
         title = u'Address (For the map)',
         description = u'Where is the main office for this company?',

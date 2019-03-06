@@ -17,23 +17,8 @@ from zopache.ttw.interfaces import ISourceLeaf
 from zopache.ttw.interfaces import ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw.acescripts import AceScripts
+from zopache.ttw.interfaces import IJSON
 
-
-class IJSON(Interface):
-    """Basic JSON CRUD """
-
-    title = schema.TextLine(
-        title = u'Title',
-        description = u'Please Describe this JSON.',
-        required = False,
-    )
-
-    source= schema.Text(
-        title = u'JSON Source',
-        description = u'The JSON  goes here.',
-        required = False,
-        default = u'',
-    )
 
 
 @implementer(IJSON)
@@ -45,7 +30,10 @@ class JSON(Leaf):
     
     def fromPythonObjects(self,data):
         self.source = json.dumps(data)
-
+        
+    def getJavascript (self):
+        return self.source
+    
 class  AceScripts(AceScripts):
     def  footerScripts(self):
         return self.aceEditorFooter + """ 
@@ -60,7 +48,7 @@ class  AceScripts(AceScripts):
 #@target(ITab)
 @title("Add JSON")
 @permissions('Manage')
-class AddCSS(AceScripts,AceAddForm):
+class AddJSON(AceScripts,AceAddForm):
     subTitle='Add a JSON Object'
     interface = IJSON
     ignoreContent = True

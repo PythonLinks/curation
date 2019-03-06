@@ -32,7 +32,7 @@ from zopache.zmi.interfaces import IObjectDeleter
 from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
-
+from zopache.pages.cache import cache
 from .cutfolder import cutFolder
 
 class BaseClass(TransactionNote,UniqueName):

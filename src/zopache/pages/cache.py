@@ -65,10 +65,10 @@ class Cache:
             return False
 
     def __call__(self, name):
-            cache = getattr(self, name)
             def caching(func):
                 @wraps(func)
                 def cached(target,*args, **kwargs):
+                    cache = getattr(self, name)
                     key = target.__name__
                     if key in cache:
                         value = cache.get(key)

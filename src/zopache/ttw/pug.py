@@ -27,7 +27,15 @@ from .html import TrustedHTML
 
 class IPugBase(ISourceLeaf,IJavascript):
     pass
-  
+
+defaultPug = """
+html
+  head
+    title Hello World
+  body
+    h1 Hello World 
+"""
+
 class IPug(IPugBase,IJavascript):    
     "Basic Pug Form"
 
@@ -39,7 +47,7 @@ class IPug(IPugBase,IJavascript):
 
     functionName = schema.TextLine(
         title = u'Function Name',
-        description = 'What is this functin called',
+        description = 'What is this function called',
         required = False,
     )
     
@@ -53,7 +61,7 @@ class IPug(IPugBase,IJavascript):
         title = u'Pug Source Code',
         description = u'The Pug Template:',
         required = False,
-        default = u' ',
+        default = defaultPug,
     )
     
     javascript= schema.Text(
@@ -67,7 +75,7 @@ class IPug(IPugBase,IJavascript):
         title = u'HTML:',
         description = u'The generated HTML:',
         required = False,
-        default = u'',
+        default = '',
     )
 
     compileDebug= schema.Bool(

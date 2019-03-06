@@ -49,6 +49,6 @@
   </tal:fields>
   <tal:actions tal:condition="view.actionWidgets">
     <tal:widget tal:content="structure widget.render()"
-		tal:repeat="widget view.actionWidgets" />
+		tal:repeat="widget view.bootstrapActionWidgets()" />
   </tal:actions>
 </form>

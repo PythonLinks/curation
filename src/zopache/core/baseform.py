@@ -2,7 +2,7 @@
 #This software is subject to the CV and Zope Public Licenses.
 
 from cromlech.webob.response import Response
-
+import dolmen
 from dolmen.template import TALTemplate
 from dolmen.view import View, make_layout_response
 from dolmen.forms.base import Form as BaseForm
@@ -14,6 +14,11 @@ from .scripts import Scripts
 
 from dolmen.container import IBTreeContainer
 from .breadcrumbs import Breadcrumbs
+
+#FOR MONKEY PATCHING ACTION WIDGETS
+def htmlClass(self):
+    return "action btn"
+
 class Form(BaseForm,Scripts,Breadcrumbs):
     title=""
     subTitle=u""
@@ -43,7 +48,8 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def bootstrapWidgets(self):
         """Adds the needed css classes for bootstrap styles.
         """
-        
+        for widget in self.fieldWidgets:
+            pass
         result = []
         for widget in self.fieldWidgets:
             defaultHtmlClass = widget.defaultHtmlClass
@@ -55,6 +61,15 @@ class Form(BaseForm,Scripts,Breadcrumbs):
                    widget.defaultHtmlClass.append('form-control')
             result.append (widget)
         return result
+
+    def bootstrapActionWidgets(self):
+           """Adds the needed css classes for bootstrap styles.
+           """
+           dolmen.forms.base.widgets.ActionWidget.htmlClass = htmlClass
+           result = []
+           for widget in self.actionWidgets:
+               result.append (widget)
+           return result
 
     def isBTreeContainer(self):
          return  IBTreeContainer.providedBy(self.context)

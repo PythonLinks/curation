@@ -7,7 +7,7 @@ from setuptools.extension import Extension
 
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
-#from scandir import extensions
+
 extensions =[
                  Extension("zopache.application/*",
                            ["src/zopache/application/*.py"]),
@@ -58,7 +58,7 @@ install_requires = [
     'dolmen.view',
     'dolmen.viewlet',
     'dolmen.widget.file',
-    'python-slugify',
+    'awesome-slugify',
     'setuptools',
     'zopache',
     'zopache.copy',

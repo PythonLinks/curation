@@ -54,12 +54,14 @@ class Add(Action, UniqueName):
         baseURL = str(IURL(obj, form.request))    
         url=self.newURL(baseURL)
         form.new.postProcess()
-        form.postAddProcess()        
+        if hasattr(form.new,'postAddProcess'):
+            form.new.postAddProcess()
+        form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newName(self,data):    
         name =  data['__name__']
-        name = slugify(name)
+        name = slugify(name, capitalize=True)
         context = self.form.context
         newName=self.uniqueName(context,name,ofType="#")
         return newName
@@ -70,7 +72,7 @@ class Add(Action, UniqueName):
 class AddByTitle (Add):
     def newName(self,data):    
         name =  data['title']
-        name = slugify(name)
+        name = slugify(name,to_lower=True)
         context = self.form.context
         newName=self.uniqueName(context,name,ofType="-")
         return newName

@@ -78,6 +78,9 @@ class TrustedHTML(HTMLBase):
     def postProcess(self):
             self.compileTemplate()
 
+    def postAddProcess(self):
+            self.postProcess()
+            
     #So here we pass the context into the template    
     def __call__(self,view,**args):
        # return self.callCore(self,view,**args)

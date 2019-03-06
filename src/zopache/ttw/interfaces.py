@@ -70,6 +70,21 @@ class IPermissions (IShared):
         description = "Be Strong",
         required = True)
     
+class IJSON(Interface):
+    """Basic JSON CRUD """
+
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'Please Describe this JSON.',
+        required = False,
+    )
+
+    source= schema.Text(
+        title = u'JSON Source',
+        description = u'The JSON  goes here.',
+        required = False,
+        default = u'',
+    )
 
 class IGRegister (IShared):        
     idtoken= Text(

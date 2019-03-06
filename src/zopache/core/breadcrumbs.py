@@ -146,8 +146,9 @@ class Breadcrumbs(UniqueName):
     def debug(self,*args):
         import pdb;pdb.set_trace()
         fred = 1
-        fred = args
-        item = args [0]
+        if args:
+          fred = args
+          item = args [0]
       
     def implements (self,dottedName):
         myInterface = locate(dottedName)
@@ -256,10 +257,17 @@ class Breadcrumbs(UniqueName):
 
              
     def url(self, *args):
+
         if len(args)==0:
-           return get_absolute_url(self, self.request)
+            return self.request.url
         else:
             return  get_absolute_url((args)[0], self.request)
+
+    def contextURL(self, name=''):
+        itemURL = get_absolute_url(self.context, self.request)
+        if name:
+            itemURL += '/' + name
+        return itemURL
            
     #And here is a much simpler implementation of URL.
     #Only good for this zodb application. 
@@ -272,11 +280,11 @@ class Breadcrumbs(UniqueName):
 
 
 
-    def secureShortURL(self,extra=""):
-        result = 'https://'
-        result += self.getDomain()
-        result += '/'
+    def shortURL(self,viewName=""):
+        result = '/'
         result += self.context.__name__
+        if viewName:
+           result += '/' + viewName
         return result
       
     def getDomain(self):

@@ -24,6 +24,32 @@ from dolmen.forms.base.errors import Error
 from cromlech.browser.exceptions import HTTPFound
 from zopache.core import getRoot
 
+  
+class LoginAction(Action):
+
+    def __call__(self,form):
+        data, errors = form.extractData()
+        if errors:
+            form.errors = errors
+            return FAILURE
+        
+        success = self.getContext(form).authenticate(data)
+        if success == None:
+            form.errors.append(Error(
+                title='Login failed',
+                identifier=self.prefix,
+            ))
+            return FAILURE
+        raise HTTPFound(".")
+##
+        #return SuccessMarker('Added', True, url="..",code=307)
+
+        #raise HTTPFound(url)
+
+    def getContext(self,form):
+      root = getRoot(form.context)
+      return root ["person"]
+
 @form_component
 @name (u'login')
 @context(Interface)
@@ -36,28 +62,9 @@ class LoginForm(Form):
     fields = Fields(ILogin)
     ignoreContent = True
     submissionError = []
-    def getContext(self):
-      root = getRoot(self.context)
-      return root ["person"]
-  
-    @action('Log Me In')
-    def login(self):
-        data, errors = self.extractData()
-        if errors:
-            self.form.errors = errors
-            return FAILURE
-        
-        success = self.getContext().authenticate(data)
-        if success == None:
-            self.errors.append(Error(
-                title='Login failed',
-                identifier=self.prefix,
-            ))
-            return FAILURE
-        raise HTTPFound(".")
-##
-        #return SuccessMarker('Added', True, url="..",code=307)
 
-        #raise HTTPFound(url)
-
-
+    @property
+    def actions(self):
+        return Actions(
+            LoginAction("Log In","Log In"))
+            
