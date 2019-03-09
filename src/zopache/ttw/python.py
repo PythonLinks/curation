@@ -28,10 +28,12 @@ from zope.cachedescriptors.property import CachedProperty
 from RestrictedPython import compile_restricted_function
 from RestrictedPython import compile_restricted
 from zopache.ttw.acescripts import AceScripts
-from zopache.ttw.interfaces import ISourceLeaf
 from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 from RestrictedPython import RestrictingNodeTransformer
 from .interfaces import ITestURL
+from zopache.ttw.interfaces import IPython
+from zopache.core import getRoot
+from zopache.core.breadcrumbs import parents
 
 class OwnRestrictingNodeTransformer(RestrictingNodeTransformer):
         pass
@@ -45,33 +47,32 @@ policy_instance = OwnRestrictingNodeTransformer(
         )
 
 
-class IPython(ISourceLeaf,ITestURL):
-    """Basic Python  FORM with CRUD"""
-    arguments = schema.TextLine(
-        title = u'Arguments',
-        description = u'An optional comma separated list of arguments',
-        default='',
-        required = False,
-    )    
-    
-    source= schema.Text(
-        title = u'Python Source Code',
-        description = u'The Python code goes here.',
-        required = False,
-        default = u'',
-    )
-    title = schema.TextLine(
-        title = u'Title',
-        description = u'A short reminder of what this Python code  does or its version name.',
-        default='',            
-        required = False,
-    )
+class  DotAccess(object):
+        
+    def __init__(self, context):
+        self.context = context
+        
+    def __getattr__(self, name):
+        if name in self.context:
+            item =  self.context[name]
+            if IPython.providedBy(item):
+               return item
+            return DotAccess(item)
+        item = object.__getattr__(self, name)
+        return item
 
 
 
 @implementer(IPython)
 class PythonScript(Leaf):
-    icon="ttwicons/Python.svg"    
+    icon="ttwicons/Python.svg"
+    
+    def dotAccessParents(self):
+        theParents = parents (self)
+        result =  dict((node.__name__,DotAccess(node) ) for node in theParents)
+        return result
+
+    
     def commands(self,view):
         url=view.url(self)
         index=view.liHref(url+'/index','View')
@@ -95,24 +96,20 @@ class PythonScript(Leaf):
         self._v_code=compiled.code
         self._v_errors=compiled.errors
         self._v_warnings=compiled.warnings
-        #Not yet needed, but someone may want the following
-        #self._v_used_names=compiled.used_names
+        self._v_used_names=compiled.used_names
+        products = self.dotAccessParents()
         safe_locals = {}
-        #safe_globals = (safe_builtins +
-        #                limited_builtins +
-        #                utility_builtins)
+        safe_globals = {**safe_builtins, 
+                        **limited_builtins, 
+                        **utility_builtins,
+                        **products}
         
-        exec(compiled.code, safe_builtins, safe_locals)
+        exec(compiled.code, safe_globals, safe_locals)
         self._v_compiledFunction = safe_locals[self.__name__]
     
     def __call__(self,*args, **kwargs):
         code=self.getCode()
-        #Apparently templates always add **kwargs
-        numberOfArguments=len(args)
-        if (numberOfArguments ==1):
-                return code()
-        else:
-                return code(args)
+        return code(*args,**kwargs)
 
 
 class  AceScripts(AceScripts):
@@ -125,7 +122,7 @@ class  AceScripts(AceScripts):
 class ValidatePython(object):    
      def validateCore(self,form,name):
              self.parentClass.validate(self,form)
-             new=Pythonscript()
+             new=PythonScript()
              new.__name__=name
              new.source=form.request.POST.get('form.field.source')
              new.arguments=form.request.POST.get('form.field.arguments')
@@ -141,17 +138,17 @@ class ValidatePython(object):
 class AddPythonAndEdit(ValidatePython,Add):
     parentClass=Add
     def newURL(self,baseURL):
-        return baseURL + '/ckedit'
+        return baseURL + '/aceedit'
 
 class AddPythonAndTest(ValidatePython,Add):
     parentClass=Add
     def newURL(self,baseURL):
         return self.form.new.testURL
 
-class EditPython (Edit):
+class EditPython (ValidatePython,Edit):
     parentClass=Edit
     def newURL(self,baseURL):
-        return baseURL + '/ckedit'
+        return baseURL + '/aceedit'
 
     #Validate on Edit        
     def validate(self,form):
@@ -167,12 +164,12 @@ class EditPythonAndTest(EditPython):
         return self.form.context.testURL        
     
 @form_component
-@name('addPythonFunction')
+@name('addPython')
 @context(IBTreeContainer)
 #@target(ITab)
 @title("Add Python")
 @permissions('Manage')
-@implementer(IWeb)
+@implementer(IPython)
 class AddPythonFunction(AceScripts,AceAddForm):
     subTitle = "Add  a Python  Script (Beta)"
     interface = IPython

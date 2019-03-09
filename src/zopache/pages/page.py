@@ -138,6 +138,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
+    icon="ttwicons/WikiPage.svg"
     
 @implementer (INews)     
 class News (Page,RecentMixIn):

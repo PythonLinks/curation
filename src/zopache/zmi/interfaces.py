@@ -2,6 +2,7 @@ import crom
 from zope.interface import Interface
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IJSON
+from zopache.ttw.interfaces import IPython
 
 class IURLSegment(Interface):
     pass
@@ -36,7 +37,16 @@ class IJSONAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'aceedit'    
+        return 'aceedit'
+
+@crom.adapter
+@crom.sources(IPython)
+@crom.target(IURLSegment)
+class IPythonAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'aceedit'        
     
 
 # FOR A PRINCIPAL

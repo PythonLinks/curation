@@ -4,6 +4,8 @@ from dolmen.forms.base.markers import FAILURE
 from .interfaces import IObjectCutter, IObjectCopier, IObjectRenamer
 from .interfaces import IObjectPaster, IObjectDeleter
 from .interfaces import IObjectRetitler, IObjectRenamer
+from zopache.pages.cache import cache
+from zopache.crud.utilities import title_or_name
 
 class BaseAction(Action):
     def getValues(self,form,message,which='ids_list'):
@@ -19,7 +21,6 @@ class BaseAction(Action):
     
 class ReName(BaseAction):
     def __call__(self,form):
-        import pdb;pdb.set_trace()
         ids = self.getValues(form,
                "You did not specify any object to rename")
         newIds = self.getValues(form,
@@ -34,7 +35,7 @@ class ReName(BaseAction):
             if newId != oldId:
                 renamer = IObjectRenamer(item)
                 renamer.renameItem(oldId, newId,form)
-
+        cache.resetCache()
 
 class ReTitle(BaseAction):                
     def __call__(self,form):
@@ -71,7 +72,6 @@ class CutObjects(BaseAction):
     def __call__(self,form): 
         """Cut objects specified in a list of object ids"""
         ids = self.getValues(form,"You didn't specify any ids to cut.")
-
         for id in ids:
             item = form.context[id]
             cutter = IObjectCutter(item)
@@ -82,14 +82,14 @@ class CutObjects(BaseAction):
                                " Cannot be Cut")
                 return
             cutter.cut(form)
-            
+        cache.resetCache()    
 
 class PasteObjects(BaseAction):            
     def __call__(self,form):
         target = form.context
         paster = IObjectPaster(target)
         paster.paste(form)
-
+        cache.resetCache()
 
 class DeleteObjects(BaseAction):        
     def __call__(self,form):
@@ -101,7 +101,7 @@ class DeleteObjects(BaseAction):
             item= container [id]
             deleter = IObjectDeleter(item)
             deleter.deleteItem(form)
-
+        cache.resetCache()
 
 
 

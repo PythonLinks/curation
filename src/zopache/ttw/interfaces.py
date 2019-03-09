@@ -38,6 +38,8 @@ class ITestURL(Interface):
 
 
 
+
+
     
 class IGLogin(Interface):
         idtoken= Text(
@@ -125,17 +127,13 @@ class ILogin(Interface):
 
     password = Password(
         title='Password', required=True)
+
 class IBranch (IBTreeContainer):
     pass
 
 
-class IAddWebClass(Interface):
-    pass
 
-#Basically this is not moveable, deletable, renamable,
-#editale, or anything. 
-class IProducts(IBTreeContainer,IAddWebClass):
-    pass
+
 
 class IPrincipalFolder(IBTreeContainer,IImutable):
     pass
@@ -156,12 +154,20 @@ class IPrincipalFolder(IBTreeContainer,IImutable):
     #Cromlech does not yet support the following. 
     #contains(IInternalPrincipal)
 
+#BTREE CONTAINERS ARE NOT MUTABLE
+#Basically these 3 are not moveable, deletable, renamable,
+#editale, or anything.
 
-class IWebClass(Interface,IRenameable, IBTreeContainer):
+class IWebClass(Interface, IContainer):
     pass
 
-class IImutableWebClass(Interface, IBTreeContainer):
+class IImutableWebClass(IWebClass,IContainer,Interface, IContainer):
     pass
+
+class IProducts(IBranch,IBTreeContainer,IWebClass):
+    pass
+
+
 
 class ISource(ILeaf):      
 
@@ -182,6 +188,28 @@ class ISource(ILeaf):
 #NO DISPLAYALE, IT RETURNS SOME VERSION OF SOURCE
 class ISourceLeaf(ISource,ILeaf):
       pass
+
+class IPython(ISourceLeaf,ITestURL):
+    """Basic Python  FORM with CRUD"""
+    arguments = schema.TextLine(
+        title = u'Arguments',
+        description = u'An optional comma separated list of arguments',
+        default='',
+        required = False,
+    )    
+    
+    source= schema.Text(
+        title = u'Python Source Code',
+        description = u'The Python code goes here.',
+        required = False,
+        default = u'',
+    )
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'A short reminder of what this Python code  does or its version name.',
+        default='',            
+        required = False,
+    )
 
 class IJavascript(ISourceLeaf):
     "Basic Javascript Form"

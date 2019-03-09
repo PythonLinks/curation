@@ -153,6 +153,7 @@ class Delete(Action):
                     form.status = self.successMessage
                     message(form.status)
                     url = str(IURL(container, form.request))
+                    url = url + '/manage'
                     return SuccessMarker('Deleted', True, url=url)
                 except ValueError:
                     pass

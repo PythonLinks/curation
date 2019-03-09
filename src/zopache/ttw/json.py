@@ -24,7 +24,7 @@ from zopache.ttw.interfaces import IJSON
 @implementer(IJSON)
 class JSON(Leaf):
     # NEEDS AN ICON
-    #icon="ttwicons/CSS.svg"
+    icon="ttwicons/JSON.svg"
     def asPythonObjects(self):
         return json.loads(self.source)
     

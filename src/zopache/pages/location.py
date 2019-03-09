@@ -37,7 +37,8 @@ class LocationBase (PageBase):
 
 @implementer (ILocation)
 class Location (LocationBase, RecentMixIn):
-    pass
+    icon="ttwicons/Location.svg"
+
               
 import googlemaps
 @implementer (IMap)
@@ -45,8 +46,8 @@ class Map(LocationBase,PageMixIn):
     zoomLevel=5.
     mapHeight=0.
     mapWidth=0.
-    webClass = 'Map'
-
+    webClass = 'GoogleMap'
+    icon="ttwicons/Map.svg"
       
     # GET THE JSON FOR CHILD LOCATIONS
     def getLocationsJSON(self):

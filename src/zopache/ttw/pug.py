@@ -118,7 +118,7 @@ class IPug(IPugBase,IJavascript):
 from .javascript import JavascriptBase    
 @implementer(IPug)      
 class Pug(TrustedHTML,JavascriptBase,Leaf):
-    icon="ttwicons/Javascript.svg"    
+    icon="ttwicons/Pug.svg"    
     source =u''
     title=u''
     className='Pug'

@@ -47,7 +47,7 @@ class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
 from .javascript import JavascriptBase    
 @implementer(ICoffeeScript)      
 class CoffeeScript(JavascriptBase,Leaf):
-    icon="ttwicons/Javascript.svg"    
+    icon="ttwicons/CoffeeScript.svg"    
     source =u''
     title=u''
     className='CoffeeScript'

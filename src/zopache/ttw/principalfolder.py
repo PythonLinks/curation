@@ -142,7 +142,7 @@ class InternalPrincipal(Container):
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
-
+    icon="ttwicons/Container.svg"
     def __init__(self):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()

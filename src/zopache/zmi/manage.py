@@ -65,8 +65,7 @@ class ManageBase(Form,Contents):
 @name('managedemo')
 @title("Manage")
 @context(IBTreeContainer)
-@implementer (ITreeSecurity)
-class Demo(ManageBase):
+class ManageDemo(ManageBase):
     def breadcrumbs(self):
         return self.breadcrumbsIndex(self.context)    
 
@@ -98,16 +97,15 @@ class Manage (ManageBase):
 @form_component
 @name('fix')
 @title("Fix")
+@context(IBTreeContainer)
 @permissions('Manage')
 class Fix(Manage):
-    def update(self):
-          item=self.context
-          import pdb; pdb.set_trace()
-          fred = 1
 
     def update(self):
-        root = self.getRoot()
-        self.template = root['Products']['Templates']['EditTitles']
+        Manage.update(self)
+        item=self.context
+        import pdb; pdb.set_trace()
+        pass
 
 
 

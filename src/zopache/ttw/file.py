@@ -10,7 +10,6 @@ from zopache.ttw.interfaces import IFile
           
 @implementer(IFile)
 class File(Leaf):
-
     def __init__(self):
         self.blob = Blob()
         
@@ -38,7 +37,7 @@ class File(Leaf):
 
 
 class Image (File):
-
+    icon="ttwicons/Image.svg"
 
     def postAddProcess(self):
            self.postProcess()

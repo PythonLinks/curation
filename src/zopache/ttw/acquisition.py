@@ -1,47 +1,25 @@
 from zope.location.location import LocationIterator
 from zope.interface import Interface
 from dolmen.container import IBTreeContainer
-
-
-
-#THESE ARE PRODUCTS, THE WEBCLASS IS A POINTER
-def getFromWebClass(aClass, name, marker=None):
-    #COUNTER TO CATCH INEVITABLE INFINITE LOOP
-    counter=1
-
-    while (True):
-       if IBTreeContainer.providedBy (aClass):
-            result =aClass.get(name, marker)
-
-            #IF THE WebCLASS CONTAINS THE OBJECT
-            if result != marker:
-               return result
-
-       if not hasattr(aClass,'webClass'):
-           return marker
-
-       if aClass.webClass == None:
-           return marker
-         
-       counter += 1    
-       if counter > 100:
-           raise Exception("YOU ARE IN AN INFINITE LOOP OF WEBClasses")
-
-       #AND NOW REPEAT THE LOOP WITH THE PARENT WEBCLASS
-       aClass=aClass.webClass
+from zopache.ttw.interfaces import IWebClass
+from zopache.core import getRoot
 
 #MAYBE THE WEBCLASS IS A STRING OR A POINTER       
-def webClassAcquire(context,name):
+def webClassAcquire(context,name, marker = object):
     if hasattr(context, "webClass"):
-        if context.webClass != None:
-               webClass =  context.webClass
-               if isinstance(webClass, str):
-                    root =context.getRoot()
-                    products = root["Products"]
-                    webClass = products[webClass]
-               item = getFromWebClass (webClass,name)
-               return item
-    return None       
+        webClass = context.webClass
+        if IWebClass.providedBy(context):
+            webClass = context 
+        elif isinstance(webClass, str):
+            root =getRoot(context)
+            products = root["Products"]
+            webClass = products[webClass]
+        else:
+            raise Exception("Something is Wrong")
+        item = webClass.getFromWebClass (name,object)
+        if item != object:
+            return item
+    return marker
 
 
 # JUST  PARENTAL (NO ZCLASS) ACQUISITION OF OBJECTS IN CONTAINERS

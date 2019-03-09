@@ -17,6 +17,8 @@ HTML  <span class="caret"></span></a>
 <li><a href="./addSecureHTML">Secure HTML</a></li>
 <li><a href="./addCSS">CSS</a></li>
 <li><a href="./addImage">Image</a></li>
+<li><a href="./addPython">Image</a></li>
+<li><a href="./addFile">File</a></li>
 </ul>
 </li>
 
@@ -58,7 +60,7 @@ Content <span class="caret"></span></a>
 
 <li class="dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-CRUD  <span class="caret"></span></a>
+Node  <span class="caret"></span></a>
 
 <ul class="dropdown-menu">
 <li tal:condition="view.implements('zopache.ttw.interfaces.IAceHTML')"><a href="./aceedit">AceEdit</a></li>

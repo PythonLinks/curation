@@ -49,7 +49,6 @@ from zopache.ttw.interfaces import ICkHTML
 
 
 class HTMLBase(object):
-    icon="ttwicons/HTML.svg"
     title=u'HTML Page'
     source=''
 
@@ -62,6 +61,8 @@ class HTMLBase(object):
 
 
 class TrustedHTML(HTMLBase):
+    icon="ttwicons/CkHTML.svg"
+
     def setTemplate(self):
             if not hasattr(self,'_v_compiledTemplate'):
                self.compileTemplate()
@@ -126,11 +127,13 @@ class HTML(TrustedHTML,Leaf):
 
 @implementer(IAceHTMLClass)
 class AceHTML(TrustedHTML,Leaf):
-    pass
+    icon="ttwicons/HTML.svg"
+
 
 @implementer(ISecureHTML)
 class SecureHTML(AceHTML):
-    pass    
+    icon="ttwicons/SecureHTML.svg"
+
 
 class AceScripts(AceScripts):
     def  footerScripts(self):
