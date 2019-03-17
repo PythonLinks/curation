@@ -40,7 +40,6 @@ class ReName(BaseAction):
 class ReTitle(BaseAction):                
     def __call__(self,form):
         """Given a sequence of tuples of old, new ids we rename"""
-        import pdb; pdb.set_trace()
         ids = self.getValues(form,
                "You did not specify any object to reTitle")
         newTitles = self.getValues(form,

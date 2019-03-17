@@ -29,6 +29,7 @@ def secured(app):
     @wraps(app)
     def secure_application(environ, start_response, default=anonymous):
         session = getSession()
+        principal = default        
         if session is not None and 'user' in session:
             environ['REMOTE_USER'] = username = session['user']
             conn = environ["zodb.connection"]
@@ -36,9 +37,11 @@ def secured(app):
             root=root["applicationRoot"]
             principalFolder = root["person"]
             id = principalFolder.getIdByEmail(username)
-            principal= principalFolder[id]
-        else:
-            principal = default
+            if id == None:
+                id = principalFolder.getIdByHandle(username)
+            if id != None:    
+               principal= principalFolder[id]
+
         return app(environ, start_response, principal)
 
     return secure_application

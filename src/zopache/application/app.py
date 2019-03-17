@@ -68,8 +68,12 @@ def publish(environ, start_response, principal):
     # process.
     request = Request(environ)
     conn = environ["zodb.connection"]
-    root=conn.root()
-    root=root["applicationRoot"]
+    connRoot=conn.root()
+
+    root=connRoot["applicationRoot"]
+    #if not hasattr(root,'__parent__'):
+    #    root.__parent__=connRoot
+
     request.principal = principal
     request.root = root
     

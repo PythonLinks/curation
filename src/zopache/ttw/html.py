@@ -1,4 +1,3 @@
-import crom
 from cromlech.webob.response import Response
 from dolmen.view import  make_view_response
 from zopache.core import View

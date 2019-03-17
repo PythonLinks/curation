@@ -20,10 +20,10 @@ run a chat and voting server"""
 
 from cromlech.file import FileField
 
-class IFile(Interface):
+class IFile(ILeaf):
          data = FileField(title=u'Upload a File')
 
-class IImage(Interface):
+class IImage(ILeaf):
          data = FileField(title=u'Upload an Image')         
 
     
@@ -72,7 +72,7 @@ class IPermissions (IShared):
         description = "Be Strong",
         required = True)
     
-class IJSON(Interface):
+class IJSON(ILeaf):
     """Basic JSON CRUD """
 
     title = schema.TextLine(

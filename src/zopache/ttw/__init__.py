@@ -13,5 +13,4 @@ def tal_template(name):
 
 
 from fanstatic import Library
-
 library = Library('ttwicons', 'ttwiconsLibrary')

@@ -1,11 +1,8 @@
-#This software is subject to the No Compete MIT license License Agreement.
 import json
 
 from zopache.core.viewdecorators import *
-from zopache.application.interfaces import ITab
 from zope import schema
 from zope.interface import implementer
-
 from dolmen.view import View
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
@@ -13,8 +10,6 @@ from dolmen.view import View, make_view_response
 from dolmen.container import IBTreeContainer
 
 from zopache.core import Leaf
-from zopache.ttw.interfaces import ISourceLeaf
-from zopache.ttw.interfaces import ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import IJSON
@@ -45,7 +40,6 @@ class  AceScripts(AceScripts):
 @form_component
 @name('addJSON')
 @context(IBTreeContainer)
-#@target(ITab)
 @title("Add JSON")
 @permissions('Manage')
 class AddJSON(AceScripts,AceAddForm):
@@ -75,7 +69,6 @@ class Index(View):
 
 @form_component
 @context(IJSON)
-@crom.target(ITab)
 @title("AceEdit JSON")
 @name("aceedit")
 @permissions('Manage')
@@ -90,7 +83,6 @@ class AceEditJSON(AceScripts,AceEditForm):
 
 @form_component
 @context(IJSON)
-@crom.target(ITab)
 @name('manage')
 @title("Manage")
 @permissions('Manage')

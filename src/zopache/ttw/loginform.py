@@ -32,7 +32,6 @@ class LoginAction(Action):
         if errors:
             form.errors = errors
             return FAILURE
-        
         success = self.getContext(form).authenticate(data)
         if success == None:
             form.errors.append(Error(

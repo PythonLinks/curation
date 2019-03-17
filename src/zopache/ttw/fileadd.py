@@ -1,16 +1,11 @@
 
-
-from dolmen.widget.file import FileWidget
-
-
-from zopache.core.viewdecorators import *
-from zopache.crud.forms import AddForm
-from dolmen.widget.file import FileSchemaField
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions
 from zopache.ttw.fileaction  import AddFileAction, AddImageAction
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IFile, IImage
+from zopache.core.viewdecorators import *
+from zopache.crud.forms import AddForm
 
 @form_component
 @name('addFile')

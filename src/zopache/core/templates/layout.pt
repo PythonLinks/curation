@@ -34,9 +34,10 @@
   </head>
   <body class="bg-secondary">
     <div class="container">
-    <div class="img-fluid" style="float:left; margin:20px">
-      <img src="/fanstatic/ttwicons/PythonLinks.png" width="87"
-	   height="95" >
+      <div class="img-fluid" style="float:left; margin:20px">
+	<a href ="https://PythonLinks.info">
+      <img src="/fanstatic/ttwicons/PythonLinks.svg" width="87"
+	   height="95" ></a>
 	 </div>
       <h1>${view.acquireTitle()}</h1>
             <h2>${view.subTitle}</h2>
