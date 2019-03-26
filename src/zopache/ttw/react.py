@@ -22,35 +22,35 @@ from .interfaces import ITestURL
 from cromlech.webob.response import Response
 from .javascript import JavascriptBase
 
-class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
-    "Basic CoffeeScript Form"
+class IReact(ISourceLeaf,IJavascript,ITestURL):
+    "Basic React Form"
 
     title = schema.TextLine(
         title = u'Title',
-        description = u'Describe this CoffeeScript g Object.',
+        description = u'Describe this React g Object.',
         required = False,
     )
 
     source= schema.Text(
-        title = u'CoffeeScript Source Code',
-        description = u'The CoffeeScript code goes here.',
+        title = u'React Source Code',
+        description = u'The React code goes here.',
         required = False,
         default = u' ',
     )
     javascript= schema.Text(
-        title = u'The Generated CoffeeScript',
-        description = u'This Javascript is generated from the CoffeeScript',
+        title = u'The Generated React',
+        description = u'This Javascript is generated from the React',
         required = False,
         default = u'',
     )    
 
 from .javascript import JavascriptBase    
-@implementer(ICoffeeScript)      
-class CoffeeScript(JavascriptBase,Leaf):
-    icon="ttwicons/CoffeeScript.svg"    
+@implementer(IReact)      
+class React(JavascriptBase,Leaf):
+    icon="ttwicons/React.svg"    
     source =u''
     title=u''
-    className='CoffeeScript'
+    className='React'
 
     def getJavascript(self):
         return self.javascript
@@ -69,34 +69,34 @@ class  AceScripts(AceScriptsBase):
     
     def  footerScripts(self):
         result =  self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/coffee");
+        <script >editor.getSession().setMode("ace/mode/react");
         </script>
         """     
         result += """
-<script  src="/fanstatic/ttwicons/coffeescript.js"></script>
+<script  src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
     """
         result += "<script>"
         root= self.getRoot()
         script = root['Products']['Templates']['TranspilerScripts']
         result += """
-                  var transpiler = 'CoffeeScript';
+                  var transpiler = 'React';
                   """
         result += script.source
         result += "</script>"
         return result
 
 @form_component
-@name('addCoffeeScript')
+@name('addReact')
 @context(IBTreeContainer)
 @target(IView)
-@title("Add CoffeeScript")
+@title("Add React")
 @permissions('Manage')
 @implementer(IWeb)
-class AddCoffeeScript(AceScripts,AceAddForm):
-    subTitle='Add a Coffeecript Object'
-    interface = ICoffeeScript
+class AddReact(AceScripts,AceAddForm):
+    subTitle='Add a React Object'
+    interface = IReact
     ignoreContent = True
-    factory=CoffeeScript
+    factory=React
 
     def postProcess(self):
         self.new.postProcess()
@@ -106,17 +106,17 @@ from .javascript import make_javascript_response, JavascriptBase
 
 @view_component
 @name('index')
-@context(ICoffeeScript)
-@title("View CoffeeScript")
-class CoffeeScriptIndex(Page):
+@context(IReact)
+@title("View React")
+class ReactIndex(Page):
     responseFactory = Response
     make_response = make_javascript_response
         
     def render(self ):
         return self.context.javascript
 
-class BaseCoffeeScriptForm(AceScripts):
-    subTitle='Ace Edit this  Coffeecript'
+class BaseReactForm(AceScripts):
+    subTitle='Ace Edit this  React Object'
     label=''
     def breadcrumbs(self):
         return self.breadcrumbsManage()
@@ -132,20 +132,20 @@ class BaseCoffeeScriptForm(AceScripts):
                
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
-@context(ICoffeeScript)
+@context(IReact)
 @target(IView)
 @title("AceEdit")
 @name("aceedit")
 @permissions('Manage')
-class AceEditCoffeeScript(BaseCoffeeScriptForm,AceEditForm):
-    subTitle = "Ace Edit a Coffescript Object."
-    title = "CoffeeScript Editor"
+class AceEditReact(BaseReactForm,AceEditForm):
+    subTitle = "Ace Edit a React Object."
+    title = "React Editor"
 
 #AND HERE WE HAVE THE ACE DEMO FORM               
 @form_component
-@context(ICoffeeScript)
+@context(IReact)
 @target(IView)
 @title("Ace Demo")
 @name("acedemo")
-class AceDemoCoffeecript(BaseCoffeeScriptForm,EditDemoForm):
-    subTitle = "Ace Edit Coffescript Demo."        
+class AceDemoReact(BaseReactForm,EditDemoForm):
+    subTitle = "Ace Edit React  Demo."        

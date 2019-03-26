@@ -6,7 +6,7 @@ from zopache.ttw.branch import Branch
 
 @implementer(IProducts)
 class Products(Branch,ImutableWebClass):
-    icon="ttwicons/Container.svg"
+    icon="ttwicons/branch.svg"
     title = "Products"
     valuesByToken = {}
     def __init__(self):

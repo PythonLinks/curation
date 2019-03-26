@@ -28,6 +28,7 @@ JavaScript <span class="caret"></span></a>
 <ul class="dropdown-menu">
 <li><a href="./addJavascript">JavaScript</a></li>
 <li><a href="./addCoffeeScript">CoffeeScript</a></li>
+<li><a href="./addReact">React</a></li>
 <li><a href="./addPug">Pug</a></li>
 <li><a href="./addJavascriptFolder">Javascript Folder</a></li>
 <li><a href="./addJSON">JSON</a></li>

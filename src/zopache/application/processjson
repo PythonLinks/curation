@@ -1,0 +1,56 @@
+converToClass ={
+          ‘WikiPage” : zopache.pages.Page,
+	  “Map”: zopache.pages.Map
+          “Location”: zopache.pages.Location
+           }
+
+class JSONObject(object):
+        
+    def setValues(self,new):
+        for item in new.keys():
+            if key == 'children':
+    	       continue
+	    elif key == "key":
+	       new.__name__ = new ["key"]
+	    else:   
+         	setattr(original,key,new[key])   
+
+    def editNode(self,original,new):
+        setValues(original,new)
+    
+    def addNode(self,data):
+        newClass = convertToClass[data["class"]]
+        new = newClass()
+        setValues(new,data)
+	key = data ["key"]
+        self[key]= new
+	new.possibleProcessArray(data)
+        return new
+	
+    def processTree(self,data)
+       key = data[“key”]
+       if key == self.__name__:
+            editNode(self,data)
+	    self.possibleyProcessArray (data)
+       elif key in self:
+            item=self[key]
+            item.processTree(data)
+       else:
+          new = addNode(self,data)
+          
+    def possibleProcessArray(self,data):
+        if "children" in data:
+	   self.processArray(data["children"])
+	   
+    def processArray(self,data)	  
+        for item in data:
+              processTree(item)
+    
+    def processData(self,data):
+       if type (data) == dict:
+          processTree(data)
+       elif type(data)==Array: ???
+          self.processArray(data)
+       else:
+         raise Exception("The Node is neither a dict nor an array")
+	  

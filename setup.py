@@ -134,6 +134,8 @@ setup(
                 ],
            'fanstatic.libraries': [
                 'ttwicons = zopache.ttw:library',
+                'zmiicons = zopache.zmi:library',
+                'iodide = zopache.iodide:library',                             
                 ],
         },
               

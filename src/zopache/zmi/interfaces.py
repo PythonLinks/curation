@@ -19,7 +19,7 @@ class IEditAdaptor(object):
         return 'edit'
 """
 
-    
+#FOR BTREES    
 @crom.adapter
 @crom.sources(IBTreeContainer)
 @crom.target(IURLSegment)
@@ -28,6 +28,11 @@ class IManageAdaptor(object):
         self.context=context
     def getSegment(self):
         return 'manage'
+
+
+
+
+    
 
 #FOR JSON
 @crom.adapter

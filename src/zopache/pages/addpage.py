@@ -17,7 +17,7 @@ from zopache.pages import Map, Location
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
     def getSubTitle(self):
         return (
-                "To " +  
+                "To a " +  
                 self.context.webClass +
                 u' called: ' +
                 self.context.getTitle()

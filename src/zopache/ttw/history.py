@@ -64,7 +64,10 @@ class History(Page, Breadcrumbs):
 @implementer (IHistoricDetails)
 class HistoricIndex(Page):
        def render(self ):
-           return self.context.item['obj'].source
+           before = "<html><body></body><code>"
+           content = self.context.item['obj'].source
+           after = "</code></body></html>"
+           return  before + content + after
 
 
 @view_component

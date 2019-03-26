@@ -8,6 +8,7 @@
         <grok:grok package="zopache.core" />
         <grok:grok package="zopache.forms" />    	
         <grok:grok package="zopache.pages" />
+        <grok:grok package="zopache.iodide" />	
     <grok:grok package="zopache.application" />    
     <grok:grok package="zopache.copy" />
 
