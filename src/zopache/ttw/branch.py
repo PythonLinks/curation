@@ -26,7 +26,7 @@ class Branch(object):
            itemType = IPage
         elif IProducts.providedBy(self):
            itemType = IWebClass            
-           self.indexBranch(self,self,itemType)
+        self.indexBranch(self,self,itemType)
 
 
     def test(self,item):

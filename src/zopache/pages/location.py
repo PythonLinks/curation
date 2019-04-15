@@ -1,4 +1,5 @@
-from .interfaces import ILocation, IMap
+
+from .interfaces import ILocation, ILocationBase,IMap
 from zopache.pages.page import PageBase
 from zopache.pages.interfaces import IPage , IRootPage
 from zope.interface import implementer
@@ -25,14 +26,14 @@ class LocationBase (PageBase):
                   firstItem=False      
                   result+='\n'
                   result += '['
-                  result +='\'' +  self.__name__ + '\''
+                  result +='"' +  self.__name__ + '"'
                   result += ','
-                  result +='\'' +  self.title + '\''
+                  result +='"' +  self.title + '"'
                   result += ','                      
                   result +=  str(self.lattitude)  
-                  result += u','    
+                  result += ','    
                   result += str(self.longitude)
-                  result += ']'
+                  result += ',"red"]'
                   return result, firstItem
 
 @implementer (ILocation)
@@ -52,30 +53,30 @@ class Map(LocationBase,PageMixIn):
     # GET THE JSON FOR CHILD LOCATIONS
     def getLocationsJSON(self):
         firstItem=True
-        result=''             
-        begin= 'var locations =['
-        end='\n];'
+        result=""   
+        begin= "var locations =["
+        end="\n];"
         result, firstItem= self.getLocationsRecursively(
                                 firstItem,result)
         return begin + result + end
 
 
     def getLocationsRecursively(self,firstItem,result):
-
+        
         for item in self.values():
-             if not ILocation.providedBy(item):
+             if not ILocationBase.providedBy(item):
                    continue
 
              # IF LOCATION GET THE JSON
-             if ( item.webClass=='Location'):
+             if ( ILocation.providedBy(item)):
                 result, firstItem= item.getOneMarker(firstItem,result)
 
             #IF IF IS A MAP SHOW IT
             #OR SHOW A SINGLETON CHILD
-             if ( item.webClass=='Map'): 
-                  location=item.onlyOneLocationIn()
-                  if (location!=None):
-                     item = location
+             if ( IMap.providedBy (item)): 
+                  #location=item.onlyOneLocationIn()
+                  #if (location!=None):
+                  #   item = location
                   result, firstItem= item.getOneMarker(  
                             firstItem,result)
 
@@ -84,7 +85,7 @@ class Map(LocationBase,PageMixIn):
 
     #ITERATE THROUGH THE CHILDREN
     # IF ONLY ONE COMPANY RETURN IT, ELSE RETURN NONE
-    def onlyOneLocatinIn(self):
+    def onlyOneLocationIn(self):
          company=None
          for item in self.values():
              if ILocation.providedBy(item):

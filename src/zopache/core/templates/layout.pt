@@ -49,7 +49,7 @@
 	<div id="main">
 	  <div id="content">
 	    <div tal:condition="hasattr(view,'error')"
-		 style="color:red;">${view.error} </div>  
+		 style="color:red;">${view.error} </div>
 	    <div tal:replace="structure slot:contextualactions" />
 	    ${structure: view.breadcrumbs()}
 <br><br>

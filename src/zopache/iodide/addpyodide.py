@@ -19,6 +19,7 @@ from zopache.iodide.interfaces import IIodide
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
+
     def getSubTitle(self):
         return (
                 "To a " +  
@@ -59,7 +60,7 @@ class AceEditIodide(AceScripts,AceEditForm):
 @target(IView)
 @permissions('AddContent')
 @context(IPage)    
-class AddPage(AddPageBase):
+class AddPage(AceScripts,AddPageBase):
     interface = IIodide
     label="Add an Iodide Object"
     subTitle='Add an Iodide Object'    

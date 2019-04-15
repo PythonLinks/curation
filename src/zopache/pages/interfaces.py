@@ -29,7 +29,7 @@ class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML):
         title = u'Description',
         description = """A brief introduction of this page.  
                         This is used by the search functions.""",
-        required = True,
+        required = False,
         default = u'',
     )
      

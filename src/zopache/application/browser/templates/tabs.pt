@@ -10,7 +10,7 @@ HTML  <span class="caret"></span></a>
 
 <ul class="dropdown-menu">
 
-<li tal:condition="view.safeMethod('isPage')"><a href="./addVideo">Page</a></li>
+<li tal:condition="view.safeMethod('isPage')"><a href="./addPage">Page</a></li>
 <li><a href="./addContainer">Container</a></li>
 <li><a href="./addHTML">HTML</a></li>
 <li><a href="./addAceHTML">Ace HTML</a></li>
@@ -63,17 +63,25 @@ Content <span class="caret"></span></a>
 Node  <span class="caret"></span></a>
 
 <ul class="dropdown-menu">
+<li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
+<a href="./manage">Manage</a></li>
+
 <li tal:condition="view.implements('zopache.ttw.interfaces.IAceHTML')"><a href="./aceedit">AceEdit</a></li>
 
 <li tal:condition="view.implements('zopache.ttw.interfaces.ICkHTML')"><a href="./ckedit">CkEdit</a></li>
 
-<li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
-<a href="./manage">Manage</a></li>
-
-
 <li tal:condition="view.implements('zopache.ttw.interfaces.ISource')"><a href="./history">History</a></li>
 
 <li tal:condition="view.implements('zopache.pages.interfaces.IPage')"><a href="./json">JSON</a></li>
+
+<li ><a href="./delete">Delete</a></li>
+
+<li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
+<a href="./forest-wiki-backup">Backup</a></li>
+<li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
+<a href="./restopre">Restore</a></li>
+<li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
+<a href="./replace">Replace</a></li>
 
 
 </ul>

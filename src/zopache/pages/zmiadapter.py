@@ -66,7 +66,7 @@ class LocalBase(BaseClass):
 class CategoryCopier(LocalBase,Copier):
     # YOU NEVER WANT TO COPY CATEGORIES
     #REALLY WANT PROXY OBJECTS
-    def allowed(self):
+    def allowed(self,item):
         return False
 
 @crom.adapter
@@ -79,7 +79,7 @@ class CategoryCutter(LocalBase,Cutter):
     def cut(self,view):
         self.view = view
         obj=self.context
-        if not self.allowed():
+        if not self.allowed(obj):
             self.view.error = obj.__name__ + " CUT IN NOT ALLOWED"
             return
         self.deleteToken(obj)
@@ -118,8 +118,9 @@ class ItemNotFoundError(Exception):
 @crom.target(IObjectRenamer)
 class CategoryRenamer(LocalBase,Renamer,UniquePageName):
     def renameItem(self, oldName, newName,view):
-        self.view = view        
-        if not self.allowed():
+        self.view = view
+        item = self.context[oldName]
+        if not self.allowed(item):
              self.view.error += oldName + " Not Allowed "
              return
         container=self.context
@@ -141,15 +142,15 @@ class CategoryRenamer(LocalBase,Renamer,UniquePageName):
 @crom.target(IObjectDeleter)
 class CategoryDeleter(Deleter,LocalBase):
     def deleteItem(self,view):
-        self.view = view        
+        self.view = view
         contained=self.context
         name=contained.__name__
-        root = getRoot(contained)
-        if not self.allowed():
+        if not self.allowed(contained):
             self.view.error +=   name + " was not deleted. <br>"   
             self.view.error += " Maybe it still contains something"
             return
-        
+
+        root = getRoot(contained)
         #OKAY NOW DO THE WORK
         # DELETE THE CANNONICAL NAME
         # HAVE TO DO THIS FIRST
@@ -175,12 +176,11 @@ class CategoryDeleter(Deleter,LocalBase):
 #                 item.privatePart.groupPart=None
 #                 item.groupDeleted=True
            
-    def allowed(self):
-         contained=self.context
-         if  not IDeletable.providedBy(contained):
+    def allowed(self,item):
+         if  not IDeletable.providedBy(item):
                 return False
-         if   (IPage.providedBy(contained)):
-            for i in contained.values():
+         if   (IPage.providedBy(item)):
+            for i in item.values():
                return False
          return True    
      

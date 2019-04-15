@@ -64,9 +64,9 @@ class History(Page, Breadcrumbs):
 @implementer (IHistoricDetails)
 class HistoricIndex(Page):
        def render(self ):
-           before = "<html><body></body><code>"
+           before = '<html><body></body><textarea rows="20" cols="80" margin: 20px; padding: 20px;>'
            content = self.context.item['obj'].source
-           after = "</code></body></html>"
+           after = "</textarea></body></html>"
            return  before + content + after
 
 

@@ -127,7 +127,7 @@ class DisplayForm(Form):
 
 @form_component
 @name (u'delete')
-@context(IDeletable)
+@context(Interface)
 @title("Delete")
 @permissions('Manage')    
 @title("Delete")
@@ -136,7 +136,11 @@ class DeleteForm(Form):
     """
     label =''
     subTitle='Delete This Object'
-    description = _(u"Are you really sure ? This will also delete all of its children.")
+    description = """Are you really sure ? This will also delete all of its 
+children, and reindex the tree.<br><br> 
+ If there are video objects (advanced version)
+ in this branch of the tree, the links from the conference will not be 
+deleted, and there will be trouble.  """
     actions = Actions(formactions.Delete(_("Delete","Delete")),
                       formactions.Cancel(_("Cancel","Cancel")))
 

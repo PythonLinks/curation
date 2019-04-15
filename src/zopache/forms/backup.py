@@ -10,7 +10,7 @@ def make_file_response(view, result, *args, **kwargs):
         return response
 
 @view_component
-@name('distributed-wiki-backup')
+@name('forest-wiki-backup')
 @context(Interface)
 @title("Backup To Your Computer")
 class Index(View):

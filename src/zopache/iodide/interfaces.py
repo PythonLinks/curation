@@ -11,6 +11,13 @@ class IIodide(IPage):
         required = True,
     )
 
+    description= schema.Text(
+        title = u'Description',
+        description = """A brief introduction of this Iodide Notebook""",  
+        required = False,
+        default = u'',
+    )
+    
     source= schema.Text(
         title = u'Content',
         description = u'This is the main content for this page',

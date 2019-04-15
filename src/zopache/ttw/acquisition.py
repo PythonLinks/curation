@@ -6,6 +6,8 @@ from zopache.core import getRoot
 
 #MAYBE THE WEBCLASS IS A STRING OR A POINTER       
 def webClassAcquire(context,name, marker = object):
+    if name in context:
+          return context[name] 
     if hasattr(context, "webClass"):
         webClass = context.webClass
         if IWebClass.providedBy(context):

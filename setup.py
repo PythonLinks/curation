@@ -17,10 +17,11 @@ extensions =[
                  Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
                  Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
                  Extension("zopache.forms/*",
-                            ["src/zopache/forms/*.py"]),
+                 ["src/zopache/forms/*.py"]),
                  Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
-                 Extension("zopache.ttw/json", ["src/zopache/ttw/json.pyx"]),    
+                 Extension("zopache.iodide/*", ["src/zopache/iodide/*.py"]),
                  Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
+                 Extension("zopache.climate/*", ["src/zopache/climate/*.py"]),    
                  Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
@@ -58,7 +59,7 @@ install_requires = [
     'dolmen.view',
     'dolmen.viewlet',
     'dolmen.widget.file',
-    'awesome-slugify',
+    'unicode-slugify',
     'setuptools',
     'zopache',
     'zopache.copy',

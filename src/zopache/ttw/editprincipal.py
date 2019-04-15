@@ -1,5 +1,5 @@
 from zope.interface import Interface
-from zope.schema import TextLine , URI
+from zope.schema import TextLine , URI, Password
 from z3c.schema.email  import RFC822MailAddress as Email
 
 #from cromlech.security import permissions
@@ -11,7 +11,7 @@ from zopache.core.viewdecorators import *
 from zopache.core.breadcrumbs import parents
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
-from .interfaces import IInternalPrincipal
+from zopache.ttw.interfaces import IInternalPrincipal
 
 
 
@@ -25,12 +25,14 @@ class IGEdit(Interface):
         title="Handle ",
         description= "Your publically visible name.",
         required = True)
-    """
+
     email = Email(
         title="Your Email Address",
         description ="We'll never share your email with anyone else.",
         required = True)
-    """
+
+    password = Password(
+        title='Password', required=True)    
     
     picture = URI(
         title = "Your Photo",
@@ -40,7 +42,7 @@ class IGEdit(Interface):
     homePage = URI(
         title = "Your Home Page",
         description= "For Chat.  Where people go to find out more about you. ",
-        required = True)    
+        required = False)    
     
         
 @form_component

@@ -30,9 +30,12 @@ class ManageBase(Form,Contents):
     
  
     def getManageURL(self,item):
-        url = self.url(item)
-        segment =  IURLSegment(item).getSegment()
-        return url + '/' + segment
+        try:
+           url = self.url(item)
+           segment =  IURLSegment(item).getSegment()
+           return url + '/' + segment
+        except:
+           return "BROKEN-URL"
                 
     def breadcrumbs(self):
         return self.breadcrumbsManage()
@@ -56,9 +59,8 @@ class ManageBase(Form,Contents):
         return False
     """
     def update(self):
-          Form.update(self)
           root = self.getRoot()
-          self.template = root['Products']['Templates']['EditTitles']
+          self.template = root['Products']['Templates']['Manage.pt']
     
 #THE MANAGE DEMO
 @form_component
@@ -105,6 +107,12 @@ class Fix(Manage):
         Manage.update(self)
         item=self.context
         import pdb; pdb.set_trace()
+        from zopache.climate.doit import doit
+        from zopache.climate.doit import getMapCenter
+        #getMapCenter(item)
+        
+        doit(item)
+
         pass
 
 

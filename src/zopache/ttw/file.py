@@ -5,7 +5,7 @@ from ZODB.blob import Blob, BlobFile
 from zope.interface import Interface, implementer
 from dolmen.container import OrderedBTreeContainer
 from zopache.core import Leaf
-from zopache.ttw.interfaces import IFile
+from zopache.ttw.interfaces import IFile, IImage
 
           
 @implementer(IFile)
@@ -35,7 +35,7 @@ class File(Leaf):
     def postAddProcess(self):
         pass
 
-
+@implementer(IImage)
 class Image (File):
     icon="ttwicons/Image.svg"
 

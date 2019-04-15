@@ -13,13 +13,17 @@ from zopache.core import Leaf
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import IJSON
-
+from zopache.ttw.javascript import JavascriptBase
 
 
 @implementer(IJSON)
-class JSON(Leaf):
+class JSON(JavascriptBase,Leaf):
     # NEEDS AN ICON
     icon="ttwicons/JSON.svg"
+
+    def getSource(self):
+        return self.getJavascript()
+    
     def asPythonObjects(self):
         return json.loads(self.source)
     
@@ -28,6 +32,10 @@ class JSON(Leaf):
         
     def getJavascript (self):
         return self.source
+#        start = "var " + self.__name__ + ' = "" + "'
+#        end = '";'
+#        return start + self.source  + end
+        
     
 class  AceScripts(AceScripts):
     def  footerScripts(self):

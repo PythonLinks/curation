@@ -72,21 +72,7 @@ class IPermissions (IShared):
         description = "Be Strong",
         required = True)
     
-class IJSON(ILeaf):
-    """Basic JSON CRUD """
 
-    title = schema.TextLine(
-        title = u'Title',
-        description = u'Please Describe this JSON.',
-        required = False,
-    )
-
-    source= schema.Text(
-        title = u'JSON Source',
-        description = u'The JSON  goes here.',
-        required = False,
-        default = u'',
-    )
 
 class IGRegister (IShared):        
     idtoken= Text(
@@ -114,7 +100,7 @@ class ISearchSchema(Interface):
 
 
     
-class IInternalPrincipal(IDeletable,ICromlechPrincipal,IBTreeContainer):
+class IInternalPrincipal(IEditable,IDeletable,ICromlechPrincipal,IBTreeContainer):
     """Principal information"""
     pass
 
@@ -135,7 +121,7 @@ class IBranch (IBTreeContainer):
 
 
 
-class IPrincipalFolder(IBTreeContainer,IImutable):
+class IPrincipalFolder(IImutable):
     pass
 
 #    def getIdByEmail(self,email):
@@ -158,16 +144,15 @@ class IPrincipalFolder(IBTreeContainer,IImutable):
 #Basically these 3 are not moveable, deletable, renamable,
 #editale, or anything.
 
-class IWebClass(Interface, IContainer):
+
+class IWebClass(IImutable):
     pass
 
-class IImutableWebClass(IWebClass,IContainer,Interface, IContainer):
+class IMutableWebClass(IWebClass,IContainer):
     pass
 
-class IProducts(IBranch,IBTreeContainer,IWebClass):
+class IProducts(IBranch,IWebClass):
     pass
-
-
 
 class ISource(ILeaf):      
 
@@ -228,6 +213,22 @@ class IJavascript(ISourceLeaf):
     )
 
 
+class IJSON(IJavascript):
+    """Basic JSON CRUD """
+
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'Please Describe this JSON.',
+        required = False,
+    )
+
+    source= schema.Text(
+        title = u'JSON Source',
+        description = u'The JSON  goes here.',
+        required = False,
+        default = u'',
+    )
+    
 class ITestSource (ISource, ITestURL):
    pass
 

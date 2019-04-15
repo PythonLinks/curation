@@ -1,6 +1,7 @@
 from slugify import slugify
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
+
 from .interfaces import IObjectCutter, IObjectCopier, IObjectRenamer
 from .interfaces import IObjectPaster, IObjectDeleter
 from .interfaces import IObjectRetitler, IObjectRenamer
@@ -29,14 +30,16 @@ class ReName(BaseAction):
         if (len (ids) != len (newIds)):
             form.error += "Lengths of Ids and Names  do not match. "
             return
+
         for oldId , newId in zip (ids, newIds):
             item = form.context[oldId]
-            newId = slugify (newId)
+            newId = newId
             if newId != oldId:
                 renamer = IObjectRenamer(item)
                 renamer.renameItem(oldId, newId,form)
         cache.resetCache()
-
+        return SuccessMarker('Renamed', True)
+    
 class ReTitle(BaseAction):                
     def __call__(self,form):
         """Given a sequence of tuples of old, new ids we rename"""
@@ -52,7 +55,7 @@ class ReTitle(BaseAction):
             item = form.context[id]
             reTitler = IObjectRetitler(item)
             reTitler.retitleItem(item,newTitle,form)   
-
+        return SuccessMarker('Retitled', True)
 
 class CopyObjects(BaseAction):
     def __call__(self,form):
@@ -62,11 +65,12 @@ class CopyObjects(BaseAction):
         for id in ids:
             item = form.context[id]
             copier = IObjectCopier(item)
-            if not copier.allowed():
+            if not copier.allowed(item):
                 form.error += "Object "+ id + " cannot be copied"
                 return
             copier.copy(form)
-
+        return SuccessMarker('Copied', True)
+    
 class CutObjects(BaseAction):
     def __call__(self,form): 
         """Cut objects specified in a list of object ids"""
@@ -74,7 +78,7 @@ class CutObjects(BaseAction):
         for id in ids:
             item = form.context[id]
             cutter = IObjectCutter(item)
-            if not cutter.allowed():
+            if not cutter.allowed(item):
                 title = title_or_name(item)
                 form.error += ("Object " +
                                id + ' ' + title + 
@@ -82,14 +86,16 @@ class CutObjects(BaseAction):
                 return
             cutter.cut(form)
         cache.resetCache()    
-
+        return SuccessMarker('Cut', True)
+    
 class PasteObjects(BaseAction):            
     def __call__(self,form):
         target = form.context
         paster = IObjectPaster(target)
         paster.paste(form)
         cache.resetCache()
-
+        return SuccessMarker('Pasted', True)
+    
 class DeleteObjects(BaseAction):        
     def __call__(self,form):
         """Remove objects specified in a list of object ids"""
@@ -101,7 +107,7 @@ class DeleteObjects(BaseAction):
             deleter = IObjectDeleter(item)
             deleter.deleteItem(form)
         cache.resetCache()
-
+        return SuccessMarker('Deleted', True)
 
 
        

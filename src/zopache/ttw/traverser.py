@@ -52,7 +52,7 @@ class Traverser(object):
             item = context.get(name,object)
             if item != object:
                 return item, None
-
+            
         #NOW GET IT FROM THE WEBCLASS    
         if hasattr(context, "webClass"):
                item =webClassAcquire(context,name,marker = object)

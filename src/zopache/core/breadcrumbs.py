@@ -116,7 +116,8 @@ class Breadcrumbs(UniqueName):
 
     def urlEncode(self,str):
         return urllib.parse.quote(str)
-  
+    
+    #QUITE A STRANGE METHOD.  DO I REALLY USE IT?
     def safeParentalAcquire(self,name,context=None):
           if context==None:
              context = self.context
@@ -226,8 +227,6 @@ class Breadcrumbs(UniqueName):
            return  IBTreeContainer.providedBy(self.context)    
         return  IBTreeContainer.providedBy(args[0])    
 
-    def objectHref(self,obj,name):
-        return self.href(self.url(obj),name)
 
     #THIS ONE IS BEING DEPRECATED
     #NOT QUITE CLEAR WHAT IT DOES
@@ -257,12 +256,14 @@ class Breadcrumbs(UniqueName):
 
              
     def url(self, *args):
-
-        if len(args)==0:
+        try:
+          if len(args)==0:
             return self.request.url
-        else:
+          else:
             return  get_absolute_url((args)[0], self.request)
-
+        except:
+            return "BROKEN-URL-IN-BREADCRUMBS"
+        
     def contextURL(self, name=''):
         itemURL = get_absolute_url(self.context, self.request)
         if name:
@@ -299,7 +300,6 @@ class Breadcrumbs(UniqueName):
         result = self.domain(container)
         return result      
 
-   
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
     

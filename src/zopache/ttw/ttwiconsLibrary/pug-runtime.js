@@ -188,7 +188,7 @@ pug.attrs = function (obj, terse){
 
 var pug_match_html = /["&<>]/;
 //exports.escape = pug_escape;
-pug.escape = function (_html){
+pug_escape = function (_html){
   var html = '' + _html;
   var regexResult = pug_match_html.exec(html);
   if (!regexResult) return _html;
@@ -210,6 +210,9 @@ pug.escape = function (_html){
   if (lastIndex !== i) return result + html.substring(lastIndex, i);
   else return result;
 };
+pug.escape = pug_escape;
+pug.pug_escape = pug_escape;
+
 
 /**
  * Re-throw the given `err` in context to the
