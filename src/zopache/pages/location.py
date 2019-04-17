@@ -1,4 +1,4 @@
-from .interfaces import ILocation, IMap
+from .interfaces import ILocation, ILocation,Base,IMap
 from .page import PageBase
 from zopache.pages.interfaces import IPage , IRootPage
 from zope.interface import implementer
@@ -62,7 +62,7 @@ class Map(LocationBase,PageMixIn):
     def getLocationsRecursively(self,firstItem,result):
 
         for item in self.values():
-             if not ILocation.providedBy(item):
+             if not ILocationBase.providedBy(item):
                    continue
 
              # IF LOCATION GET THE JSON

@@ -31,7 +31,7 @@ def sort_key(component):
 @slot(ContextualActions)
 class Tabs(Viewlet):
     template = tal_template('tabs.pt')
-
+    """
     def tabs(self):
         context=self.context
         url = IURL(context, self.request)
@@ -88,3 +88,4 @@ class Tabs(Viewlet):
 
         self._tabs = sort_components(tabs, key=sort_key)
         self.available = len(self._tabs) > 0
+     """

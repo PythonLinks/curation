@@ -142,10 +142,10 @@ class IPrincipalFolder(IBTreeContainer,IImutable):
     #contains(IInternalPrincipal)
 
 
-class IWebClass(Interface,IRenameable, IBTreeContainer):
+class IWebClass(Interface,IRenameable, IContainer):
     pass
 
-class IImutableWebClass(Interface, IBTreeContainer):
+class IImutableWebClass(Interface, IContainer):
     pass
 
 class ISource(ILeaf):      
