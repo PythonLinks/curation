@@ -58,11 +58,14 @@ class Add(Action):
                 break
         set_fields_data(form.fields, obj, data)            
         people[newName]=obj
+        obj.__parent__ = people
         people.authenticate (data)
         message(_(u"You are Registered"))
         if INotPage.providedBy(self.form.context):
             newURL = self.form.url(obj) + '/speakerregistration'
         else:
-            newURL = '.'            
+            newURL = '/'
+        if hasattr(form,'postAddProcess'):      
+              form.postAddProcess()    
         raise HTTPFound(newURL)
     

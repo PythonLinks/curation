@@ -9,4 +9,4 @@ def tal_template(name):
     return TALTemplate(path.join(TEMPLATE_DIR, name))
 
 from fanstatic import Library
-library = Library('zmiicons', 'zmiicons')
+library = Library('zmiicons', 'zmiiconsLibrary')

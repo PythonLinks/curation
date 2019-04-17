@@ -27,7 +27,15 @@ from .html import TrustedHTML
 
 class IPugBase(ISourceLeaf,IJavascript):
     pass
-  
+
+defaultPug = """
+html
+  head
+    title Hello World
+  body
+    h1 Hello World 
+"""
+
 class IPug(IPugBase,IJavascript):    
     "Basic Pug Form"
 
@@ -39,7 +47,7 @@ class IPug(IPugBase,IJavascript):
 
     functionName = schema.TextLine(
         title = u'Function Name',
-        description = 'What is this functin called',
+        description = 'What is this function called',
         required = False,
     )
     
@@ -53,7 +61,7 @@ class IPug(IPugBase,IJavascript):
         title = u'Pug Source Code',
         description = u'The Pug Template:',
         required = False,
-        default = u' ',
+        default = defaultPug,
     )
     
     javascript= schema.Text(
@@ -67,7 +75,7 @@ class IPug(IPugBase,IJavascript):
         title = u'HTML:',
         description = u'The generated HTML:',
         required = False,
-        default = u'',
+        default = '',
     )
 
     compileDebug= schema.Bool(
@@ -110,11 +118,15 @@ class IPug(IPugBase,IJavascript):
 from .javascript import JavascriptBase    
 @implementer(IPug)      
 class Pug(TrustedHTML,JavascriptBase,Leaf):
-    icon="ttwicons/Javascript.svg"    
+    icon="ttwicons/Pug.svg"    
     source =u''
     title=u''
     className='Pug'
 
+    def postProcess(self):
+        TrustedHTML.postProcess(self)
+        JavascriptBase.postProcess(self)
+        
     def getHTML(self):
         return self.html
     
@@ -127,7 +139,7 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
 class  AceScripts(AceScriptsBase):
     def update(self):
         root = self.getRoot()
-        self.template = root['Products']['Templates']['CoffeeScriptTemplate']
+        self.template = root['Products']['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
         result = AceScriptsBase.headerScripts(self)
@@ -142,7 +154,7 @@ class  AceScripts(AceScriptsBase):
         """     
         result += """
 <script  src="https://pythonlinks.info/static/pug/pug.js"></script>
-<script  src="https://pythonlinks.info/static/pug/runtime.js"></script>    
+<script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
         """
         result += "<script>"
         root= self.getRoot()

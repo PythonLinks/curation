@@ -9,8 +9,9 @@ from zope.interface.interfaces import ComponentLookupError
 from copy import copy 
 from dolmen.container import IBTreeContainer
 from .interfaces import IAceHTML
-from .acquisition import getFromWebClass
 from zopache.core import getRoot
+from zopache.ttw.interfaces import IWebClass
+from zopache.ttw.acquisition import webClassAcquire
 
 class NotFound(Exception):
     pass
@@ -30,7 +31,6 @@ class Traverser(object):
            try: 
               view = self.view_lookup(request, zopacheTemplate, name)
            except ComponentLookupError:
-
 
               #This allows us to pass arguments in the URL after
               # the template name
@@ -52,17 +52,10 @@ class Traverser(object):
             item = context.get(name,object)
             if item != object:
                 return item, None
-               
-        #Now check the webclass for the object
-
-        if hasattr(context, "webClass") and context.webClass != None:
-
-               webClass =  context.webClass
-               if isinstance(webClass, str):
-                    root =getRoot(context)
-                    products = root["Products"]
-                    webClass = products[webClass]
-               item = getFromWebClass (webClass,name,object)
+            
+        #NOW GET IT FROM THE WEBCLASS    
+        if hasattr(context, "webClass"):
+               item =webClassAcquire(context,name,marker = object)
                if item != object:
                   if IAceHTML.providedBy(item):
                      self.zopacheTemplate = item
@@ -70,7 +63,6 @@ class Traverser(object):
                   else:
                      return item, None
                  
-
         #CHECK FOR A VIEW ON THE CONTEXT
         view = self.view_lookup(request, context, name)
         if view is not None:

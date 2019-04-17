@@ -9,7 +9,6 @@ from cromlech.i18n import translate
 
 from cromlech.security import getSecurityGuards, permissions
 
-from zope.cachedescriptors.property import CachedProperty
 from zopache.ttw.interfaces import IName, IContainer, ILeaf
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
@@ -40,8 +39,13 @@ class Register(Form):
     igrnoreRequest = False
     template = tal_template('register.pt')
 
+    def postAddProcess(self):
+       if len(self.new.__parent__)==1:
+           self.new.permissions = ['AddContent','EditContent',
+            'Manage','Vote','Edit','Add']                                      
+
     def acquireTitle(self):
-        return 'Sign Up'
+       return 'Sign Up'
     
     def widgetDictionary(self):
         return {c.htmlId():c for c in self.bootstrap_widgets()}
@@ -49,7 +53,7 @@ class Register(Form):
     def fieldDictionary(self):
         return {c.__name__:c for c in self.fields}    
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(Add("Add",self))
 

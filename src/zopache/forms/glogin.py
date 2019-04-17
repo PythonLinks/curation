@@ -9,7 +9,6 @@ from cromlech.i18n import translate
 
 from cromlech.security import getSecurityGuards, permissions
 
-from zope.cachedescriptors.property import CachedProperty
 from zopache.ttw.interfaces import IName, IContainer, ILeaf, IGLogin
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
@@ -41,7 +40,7 @@ class GoogleLogin(Form):
     loggedIn = False
     
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(GoogleLoginAction("Add", self))
 

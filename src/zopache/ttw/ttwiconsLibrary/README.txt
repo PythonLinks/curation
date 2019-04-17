@@ -8,3 +8,6 @@ http://simpleicon.com/note.html
 
 The Kitchen sink is from
 http://free-icon-rainbow.com/bathroom-sink-free-icon-1/
+
+The pug came from FreePick.com
+Creative Commons

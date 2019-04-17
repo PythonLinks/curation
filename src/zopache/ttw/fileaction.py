@@ -14,7 +14,7 @@ from zope.lifecycleevent import ObjectCreatedEvent
 from zopache.ttw.html import HTML
 from zopache.ttw.javascript import Javascript
 from zopache.ttw.css import CSS
-from zopache.ttw.json import JSON
+from zopache.ttw.JSON import JSON
 from zopache.ttw  import File, Image
 from ZODB.blob import Blob
 

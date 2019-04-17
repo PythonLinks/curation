@@ -17,10 +17,11 @@ from ..interfaces import ITab,IContent
 
 
 from zopache.core.page  import  Page
-from ..auth import logout
+
 from dolmen.breadcrumbs import BreadcrumbsRenderer
 from . import tal_template
-
+from cromlech.security import unauthenticated_principal as anonymous
+    
 @view_component
 @name('logout')
 @title("Logout")
@@ -28,7 +29,9 @@ from . import tal_template
 class Logout(Page):
 
     def update(self):
-        logout()
+        principal = self.request.principal
+        if principal != anonymous:
+           principal.logout()
 
     def render(self):
         return "You have been logged out"
@@ -42,7 +45,7 @@ class Logout(Page):
 class Logout2(Page):
 
     def update(self):
-        logout()
+        self.request.principal.logout()
 
     def render(self):
         newURL ='.'

@@ -1,10 +1,8 @@
-#This software is subject to the No Compete MIT license License Agreement.
+import json
 
 from zopache.core.viewdecorators import *
-from zopache.application.interfaces import ITab
 from zope import schema
 from zope.interface import implementer
-
 from dolmen.view import View
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
@@ -12,19 +10,34 @@ from dolmen.view import View, make_view_response
 from dolmen.container import IBTreeContainer
 
 from zopache.core import Leaf
-from zopache.ttw.interfaces import ISourceLeaf
-from zopache.ttw.interfaces import ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw.acescripts import AceScripts
-from zopache.ttw.interaces import IJSON
+
+from zopache.ttw.interfaces import IJSON
+from zopache.ttw.javascript import JavascriptBase
 
 
 @implementer(IJSON)
-class JSON(Leaf):
+class JSON(JavascriptBase,Leaf):
     # NEEDS AN ICON
-    #icon="ttwicons/CSS.svg"
-    pass
+    icon="ttwicons/JSON.svg"
 
+    def getSource(self):
+        return self.getJavascript()
+    
+    def asPythonObjects(self):
+        return json.loads(self.source)
+    
+    def fromPythonObjects(self,data):
+        self.source = json.dumps(data)
+        
+    def getJavascript (self):
+        return self.source
+#        start = "var " + self.__name__ + ' = "" + "'
+#        end = '";'
+#        return start + self.source  + end
+        
+    
 class  AceScripts(AceScripts):
     def  footerScripts(self):
         return self.aceEditorFooter + """ 
@@ -36,10 +49,9 @@ class  AceScripts(AceScripts):
 @form_component
 @name('addJSON')
 @context(IBTreeContainer)
-#@target(ITab)
 @title("Add JSON")
 @permissions('Manage')
-class AddCSS(AceScripts,AceAddForm):
+class AddJSON(AceScripts,AceAddForm):
     subTitle='Add a JSON Object'
     interface = IJSON
     ignoreContent = True
@@ -66,7 +78,6 @@ class Index(View):
 
 @form_component
 @context(IJSON)
-@crom.target(ITab)
 @title("AceEdit JSON")
 @name("aceedit")
 @permissions('Manage')
@@ -81,7 +92,6 @@ class AceEditJSON(AceScripts,AceEditForm):
 
 @form_component
 @context(IJSON)
-@crom.target(ITab)
 @name('manage')
 @title("Manage")
 @permissions('Manage')

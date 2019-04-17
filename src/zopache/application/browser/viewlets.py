@@ -89,3 +89,4 @@ class Tabs(Viewlet):
         self._tabs = sort_components(tabs, key=sort_key)
         self.available = len(self._tabs) > 0
      """
+

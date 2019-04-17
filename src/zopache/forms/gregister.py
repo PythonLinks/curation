@@ -1,7 +1,6 @@
 #Subject to the Non Compete MIT license
 # -*- coding: utf-8 -*-
 
-from zope.cachedescriptors.property import CachedProperty
 from dolmen.forms.base import Actions
 from zopache.core.viewdecorators import *
 #This software is subject to the CV and Zope Public Licenses.
@@ -40,7 +39,7 @@ class GoogleRegister(AddForm):
     def acquireTitle(self):
         return 'GDPR Permissions'
     
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(GoogleRegisterAction("Add", self))
 

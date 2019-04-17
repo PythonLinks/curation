@@ -8,11 +8,24 @@ from setuptools.extension import Extension
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 
+extensions =[
+                 Extension("zopache.application/*",
+                           ["src/zopache/application/*.py"]),
+                 Extension("zopache.application/browser/*",
+                           ["src/zopache/application/browser/*.py"]),    
+                 Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
+                 Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
+                 Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
+                 Extension("zopache.forms/*",
+                 ["src/zopache/forms/*.py"]),
+                 Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
+                 Extension("zopache.iodide/*", ["src/zopache/iodide/*.py"]),
+                 Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
+                 Extension("zopache.climate/*", ["src/zopache/climate/*.py"]),    
+                 Extension("zopache.core/*", ["src/zopache/core/*.py"])
+                 ]
 
-
-from scandir import extensions
-
-
+extensions =[]
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()
@@ -20,6 +33,8 @@ history = open(join('docs', 'HISTORY.txt')).read()
 
 
 install_requires = [
+    'biscuits',
+    'cryptography',
     'crom',
     'cromlech.auth',
     'cromlech.browser',
@@ -44,7 +59,7 @@ install_requires = [
     'dolmen.view',
     'dolmen.viewlet',
     'dolmen.widget.file',
-    'python-slugify',
+    'unicode-slugify',
     'setuptools',
     'zopache',
     'zopache.copy',
@@ -83,16 +98,7 @@ setup(
              ],
 
       ext_modules=cythonize(
-                [
-                 Extension("zopache.application",
-                           ["src/zopache/application/*.py"]),
-                 Extension("zopache.core", ["src/zopache/core/*.py"]),
-                 Extension("zopache.crud", ["src/zopache/crud/*.py"]),
-                 Extension("zopache.pages", ["src/zopache/pages/*.py"]),
-                 Extension("zopache.ttw", ["src/zopache/ttw/*.py"]),
-                 Extension("zopache.zmi", ["src/zopache/zmi/*.py"])
-                 ],
-                #build_dir="src/zopache",
+                extensions,
                 compiler_directives=dict(
                     language_level = "3",
                     always_allow_keywords=True)
@@ -129,6 +135,8 @@ setup(
                 ],
            'fanstatic.libraries': [
                 'ttwicons = zopache.ttw:library',
+                'zmiicons = zopache.zmi:library',
+                'iodide = zopache.iodide:library',                             
                 ],
         },
               

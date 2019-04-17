@@ -5,13 +5,13 @@ from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 from cromlech.browser.interfaces import IPublicationRoot
 from .geo import Address
-from zopache.ttw.interfaces import IUntrustedHTML
+from zopache.ttw.interfaces import IUntrustedHTML, IBranch
 
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
     pass
 
-class IPage(IContainer,IOrdered ,IUntrustedHTML):
+class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML):
 
     title = schema.TextLine(
         title = u'Page Name',
@@ -29,7 +29,7 @@ class IPage(IContainer,IOrdered ,IUntrustedHTML):
         title = u'Description',
         description = """A brief introduction of this page.  
                         This is used by the search functions.""",
-        required = True,
+        required = False,
         default = u'',
     )
      
@@ -43,7 +43,7 @@ class IPage(IContainer,IOrdered ,IUntrustedHTML):
 class INews (IPage,IRecent):
     pass
 
-class IRootPage(IPublicationRoot,IPage):
+class IRootPage(IBranch,IPublicationRoot,IPage):
     pass
 
 class INotPage (Interface):
@@ -58,7 +58,7 @@ class ILocationBase(IPage):
         description = u'Lattitude',
         min=-90.,
         max=90.,
-        default = 45.,
+        default = 51.509865,
         required = True,
     )
 
@@ -83,7 +83,7 @@ class IMap(ILocationBase):
         default = 5., 
         required = True,
     )
-    
+    """
     mapWidth = schema.Float(
         title = u'Map Width',
         description = u'Map Width ',
@@ -99,7 +99,7 @@ class IMap(ILocationBase):
         max=20000.,
         required = True,
     )    
-    """
+
     address= Address(
         title = u'Address (For the map)',
         description = u'Where is the main office for this company?',

@@ -64,7 +64,10 @@ class History(Page, Breadcrumbs):
 @implementer (IHistoricDetails)
 class HistoricIndex(Page):
        def render(self ):
-           return self.context.item['obj'].source
+           before = '<html><body></body><textarea rows="20" cols="80" margin: 20px; padding: 20px;>'
+           content = self.context.item['obj'].source
+           after = "</textarea></body></html>"
+           return  before + content + after
 
 
 @view_component
@@ -94,7 +97,7 @@ class Restore(Page):
               contextParent.title=item.title
            if hasattr(item,'source'):
               contextParent.source=item.source
-              if hasattr(contextParent,'postProcess'):
+           if hasattr(contextParent,'postProcess'):
                      contextParent.postProcess()
            newURL=self.url(self.context.__parent__)+'/history'
            raise HTTPFound(newURL)

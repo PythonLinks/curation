@@ -65,10 +65,10 @@ class Cache:
             return False
 
     def __call__(self, name):
-            cache = getattr(self, name)
             def caching(func):
                 @wraps(func)
                 def cached(target,*args, **kwargs):
+                    cache = getattr(self, name)
                     key = target.__name__
                     if key in cache:
                         value = cache.get(key)
@@ -187,9 +187,6 @@ class MixIn(object):
                 z = 1.96 #1.44 = 85%, 1.96 = 95%
                 phat = float(ups) / n
                 wilsonScore = ((phat + z*z/(2*n) - z * math.sqrt((phat*(1-phat)+z*z/(4*n))/n))/(1+z*z/n))
-                #print (ups,' ',downs)
-                #print (wilsonScore,' ',self.title)
-                #import pdb; pdb.set_trace()
                 return wilsonScore
             
     @cache('myScoreCache')                                   
@@ -198,9 +195,6 @@ class MixIn(object):
         if viewCount == 0:
             return 0
         myScore =  1000*(self.upVotes() - (5 * self.downVotes()))/viewCount
-        #print (self.upVotes(),' ',self.downVotes(),' ',self.viewCount)
-        #print (myScore,' ',self.title)
-        #import pdb; pdb.set_trace()
         return myScore
 
     def getMostRecent(self):
@@ -209,7 +203,6 @@ class MixIn(object):
         if hasattr(self,'creationTime'):
            return self.creationTime   
         else:
-           print (self.title) 
            return 0
        
     mostRecent = property (getMostRecent)

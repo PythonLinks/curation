@@ -33,7 +33,7 @@ from zopache.ttw.interfaces import IInternalPrincipal
 from zopache.crud.forms import EditForm
 
 @form_component
-@name (u'permissions')
+@name ('permissions')
 @context(IInternalPrincipal)
 @title("Edit Permissions")
 @permissions('Manage')

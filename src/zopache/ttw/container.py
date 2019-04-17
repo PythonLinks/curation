@@ -1,5 +1,4 @@
 from zope.interface import implementer
-from zope.cachedescriptors.property import CachedProperty
 from zope.interface import implementer
 
 from dolmen.container import IBTreeContainer
@@ -42,7 +41,7 @@ class ContainerAddForm(AddForm):
     ignoreContent = True
     factory=HTMLContainer
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               ttwactions.AddAndManage(_("Add and Manage","Add and Manage"), self.factory),

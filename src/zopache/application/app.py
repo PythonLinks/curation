@@ -61,7 +61,6 @@ def makeWiki(connRoot):
      
 @secured
 def publish(environ, start_response, principal):
-
     # We instanciate an IRequest object.
     # Here, we use WebOB but you can implement your own
     # or adapt the one of your liking.
@@ -69,8 +68,12 @@ def publish(environ, start_response, principal):
     # process.
     request = Request(environ)
     conn = environ["zodb.connection"]
-    root=conn.root()
-    root=root["applicationRoot"]
+    connRoot=conn.root()
+
+    root=connRoot["applicationRoot"]
+    #if not hasattr(root,'__parent__'):
+    #    root.__parent__=connRoot
+
     request.principal = principal
     request.root = root
     

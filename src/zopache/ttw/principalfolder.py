@@ -18,7 +18,7 @@ from zope.interface import implementer, Interface
 from zope.password.interfaces import IPasswordManager
 from zope.password.password import SSHAPasswordManager as PasswordManager
 from dolmen.container import BTreeContainer
-from cromlech.browser import getSession
+from cromlech.browser import getSession, setSession
 
 from zopache.core import Container
 from zopache.crud.interfaces import IImutable, IContainer
@@ -34,11 +34,22 @@ class InternalPrincipal(Container):
     _password = ''
     title = "Your Profile"
     talkURL =""
+    permissions = ['Vote']    
+
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()
         Container.__init__(self)
-                         
+
+    def logout(self,session=None):
+        if session is None:
+            session = getSession()
+        if 'user' in session:
+            session.clear()
+            return True
+        return False
+
+        
     """ Pricipals which are stored in the ZODB Principal Folder"""
     def upVote(self,item):
         self.possiblyCreateVoteCounts()
@@ -131,7 +142,7 @@ class InternalPrincipal(Container):
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
-
+    icon="ttwicons/Container.svg"
     def __init__(self):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()
@@ -162,13 +173,12 @@ class PrincipalFolder(Container):
 
         del self.idBySlugifiedHandle[slugify(oldHandle)]
         self.idBySlugifiedHandle[slugify(principal.handle)] = principal.__name__        
+
     def __setitem__(self, id, principal):
         """Add a user """
-
         # A user with the new login or handle  already exists
         if principal.email in self.idByEmail:
             raise DuplicateIDError('That Email address is already taken!')
-
         if slugify(principal.handle) in self.idBySlugifiedHandle:
             raise DuplicateIDError('That Handle is already taken!')        
 
@@ -188,27 +198,28 @@ class PrincipalFolder(Container):
         """
         if not ('email' in credentials and 'password' in credentials):
             return None
-        id = self.idByEmail.get(credentials['email'])
+        id = self.idByEmail.get(credentials['email'],None)
         if id is None:
             id = self.idBySlugifiedHandle.get(
-                 slugify(credentials['email']))            
+                 slugify(credentials['email']),None)            
         if id is None:            
             return None
         internal = self[id]
         if not internal.checkPassword(credentials["password"]):
             return None
         session = getSession()
-        session['user'] = credentials['email']
+        session['user'] = internal.email
         return internal
 
     def loginUser(self,user):
         session = getSession()
         session['user'] =getattr(user,'email')
 
+        
     def getIdByEmail(self, email):
-        return self.idByEmail[email]
+        return self.idByEmail.get (email,None)
 
     def getIdByHandle(self, handle):
         aSlug = slugify(handle) 
-        return self.idBySlugifiedHandle[aSlug]
+        return self.idBySlugifiedHandle.get(aSlug,None)
 

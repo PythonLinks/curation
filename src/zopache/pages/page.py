@@ -32,14 +32,10 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
 
 
     def postProcess(self):
-        self.description = self.description.replace('"',"'")
-        self.description = self.description.replace('\n'," ")
-        self.description = self.description.replace('\r'," ")                 
         self.recalculateRootJSON()
         cache.resetCache()
         
     def postAddProcess(self):
-        cache.resetCache()        
         self.postProcess()
     
     # NOT YET SERVING JSON
@@ -142,6 +138,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
+    icon="ttwicons/WikiPage.svg"
     
 @implementer (INews)     
 class News (Page,RecentMixIn):

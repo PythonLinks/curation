@@ -18,6 +18,7 @@ from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 from zopache.core.transactionnote import TransactionNote
+from zopache.pages.cache import cache
 
 class LocalBase(BaseClass):
     def printToken(self,obj, message):
@@ -65,7 +66,7 @@ class LocalBase(BaseClass):
 class CategoryCopier(LocalBase,Copier):
     # YOU NEVER WANT TO COPY CATEGORIES
     #REALLY WANT PROXY OBJECTS
-    def allowed(self):
+    def allowed(self,item):
         return False
 
 @crom.adapter
@@ -78,12 +79,13 @@ class CategoryCutter(LocalBase,Cutter):
     def cut(self,view):
         self.view = view
         obj=self.context
-        if not self.allowed():
+        if not self.allowed(obj):
             self.view.error = obj.__name__ + " CUT IN NOT ALLOWED"
             return
         self.deleteToken(obj)
         super().cut(view) 
-
+        cache.resetCache()
+        
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectPaster)
@@ -107,7 +109,7 @@ class CategoryPaster(LocalBase,Paster,UniquePageName):
             new_name=self.uniqueName(toContainer,orig_name,"Copy")
             self.moveFrom(fromFolder, orig_name, toContainer, new_name)
             #self.addToken(item)  
-
+        cache.resetCache()
             
 class ItemNotFoundError(Exception):
     pass
@@ -116,8 +118,9 @@ class ItemNotFoundError(Exception):
 @crom.target(IObjectRenamer)
 class CategoryRenamer(LocalBase,Renamer,UniquePageName):
     def renameItem(self, oldName, newName,view):
-        self.view = view        
-        if not self.allowed():
+        self.view = view
+        item = self.context[oldName]
+        if not self.allowed(item):
              self.view.error += oldName + " Not Allowed "
              return
         container=self.context
@@ -139,21 +142,20 @@ class CategoryRenamer(LocalBase,Renamer,UniquePageName):
 @crom.target(IObjectDeleter)
 class CategoryDeleter(Deleter,LocalBase):
     def deleteItem(self,view):
-        self.view = view        
+        self.view = view
         contained=self.context
         name=contained.__name__
-        root = getRoot(contained)
-        if not self.allowed():
+        if not self.allowed(contained):
             self.view.error +=   name + " was not deleted. <br>"   
             self.view.error += " Maybe it still contains something"
             return
-        
+
+        root = getRoot(contained)
         #OKAY NOW DO THE WORK
         # DELETE THE CANNONICAL NAME
         # HAVE TO DO THIS FIRST
         self.describeTransaction("Deleted an object with a Canonical URL",contained)        
         self.deleteToken(contained)
-        
         # DELETE THE OBJECT
         container=contained.__parent__
         del container[name]
@@ -167,18 +169,18 @@ class CategoryDeleter(Deleter,LocalBase):
         # THIS SHOULD ALWAYS BE TRUE
         if IPage.providedBy (container):   
            root.recalculateRootJSON()
+        cache.resetCache()        
 
 #THIS IS NEEDED FOR PRIVATE PARTS
 #              if hasattr(item,'privatePart') and item.privatePart!=None:
 #                 item.privatePart.groupPart=None
 #                 item.groupDeleted=True
            
-    def allowed(self):
-         contained=self.context
-         if  not IDeletable.providedBy(contained):
+    def allowed(self,item):
+         if  not IDeletable.providedBy(item):
                 return False
-         if   (IPage.providedBy(contained)):
-            for i in contained.values():
+         if   (IPage.providedBy(item)):
+            for i in item.values():
                return False
          return True    
      

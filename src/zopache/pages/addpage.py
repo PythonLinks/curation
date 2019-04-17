@@ -1,5 +1,4 @@
 
-from zope.cachedescriptors.property import CachedProperty
 from dolmen.forms.base import Actions
 from zopache.pages.pageactions import *
 from zopache.crud import actions as formactions
@@ -18,13 +17,13 @@ from zopache.pages import Map, Location
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
     def getSubTitle(self):
         return (
-                "To " +  
+                "To a " +  
                 self.context.webClass +
                 u' called: ' +
                 self.context.getTitle()
                )
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               AddAndView("Add and View", self.factory),

@@ -12,6 +12,7 @@ from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 
+from zopache.core import getRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
 
@@ -49,17 +50,20 @@ class Add(Action, UniqueName):
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
         newName = self.newName(data)
+        newName = slugify(newName, lower = False)
         context[newName]=obj
         message(_(u"Content created"))
         baseURL = str(IURL(obj, form.request))    
         url=self.newURL(baseURL)
         form.new.postProcess()
-        form.postAddProcess()        
+        if hasattr(form.new,'postAddProcess'):
+            form.new.postAddProcess()
+        form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newName(self,data):    
         name =  data['__name__']
-        name = slugify(name)
+        name = slugify(name, lower = False)
         context = self.form.context
         newName=self.uniqueName(context,name,ofType="#")
         return newName
@@ -70,7 +74,7 @@ class Add(Action, UniqueName):
 class AddByTitle (Add):
     def newName(self,data):    
         name =  data['title']
-        name = slugify(name)
+        name = slugify(name,lower=True)
         context = self.form.context
         newName=self.uniqueName(context,name,ofType="-")
         return newName
@@ -96,7 +100,10 @@ class Update(Action):
         form.postProcess()
         baseURL = str(IURL(form.context, form.request))
         url=self.newURL(baseURL)
-        return SuccessMarker('Updated', True, url=url)
+        if url == form.request.url:
+           return SuccessMarker('Updated', True)
+        else:
+           return SuccessMarker('Updated', True, url=url)
 
     def newURL(self,baseURL):
             return self.form.request.url
@@ -147,10 +154,16 @@ class Delete(Action):
             name = content.__name__
             if name in container:
                 try:
+                    item = container[name]
+                    root = getRoot(item)
                     del container[name]
+                    root.indexTree()
+                    root.indexTree()
+                    root['Products'].indexTree()                    
                     form.status = self.successMessage
                     message(form.status)
                     url = str(IURL(container, form.request))
+                    url = url + '/manage'
                     return SuccessMarker('Deleted', True, url=url)
                 except ValueError:
                     pass

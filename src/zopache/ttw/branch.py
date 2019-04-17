@@ -11,7 +11,8 @@ from dolmen.container import BTreeContainer
 
 from .interfaces import IBranch
 from zopache.core.breadcrumbs import Breadcrumbs
-
+from zopache.pages.interfaces import IRootPage
+from zopache.ttw.interfaces import IWebClass, IProducts
 
 @implementer (IBranch)
 class Branch(object):
@@ -21,23 +22,23 @@ class Branch(object):
 
     def indexTree(self):
         self.valuesByToken=OOBTree()
-        #self.tokensByValue={}
-        self.indexBranch(self,self)
-        #self._p_changed=True
+        if IRootPage.providedBy(self):
+           itemType = IPage
+        elif IProducts.providedBy(self):
+           itemType = IWebClass            
+        self.indexBranch(self,self,itemType)
+
 
     def test(self,item):
         if IBTreeContainer.providedBy(item):
            return True
         return False
         
-    def indexBranch(self,tree,branch):
+    def indexBranch(self,tree,branch,itemType):
         for item in branch.values():
-               #allow any zclass object
-               # and item.__ZClass__.__name__=='Skill':
-               if IPage.providedBy(item):
-                   #self.tokensByValue[item]=item.__name__
-                   self.valuesByToken[item.__name__]=item
-                   self.indexBranch(tree,item)
+            if itemType.providedBy(item):
+                self.valuesByToken[item.__name__]=item
+                self.indexBranch(tree,item,itemType)
 
 
 
