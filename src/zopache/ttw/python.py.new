@@ -24,7 +24,6 @@ from dolmen.view import name, context, view_component
 from dolmen.view import View
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
-from zope.cachedescriptors.property import CachedProperty
 from RestrictedPython import compile_restricted_function
 from RestrictedPython import compile_restricted
 from zopache.ttw.acescripts import AceScripts
@@ -234,7 +233,7 @@ class AceEditPython(AceScripts,AceEditForm):
     def postProcess(self):
         self.context.postProcess()
         
-    @CachedProperty
+    @Property
     def actions(self):
 
         action1=EditPython("Save","Save")

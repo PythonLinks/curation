@@ -60,8 +60,9 @@ class ManageBase(Form,Contents):
     """
     def update(self):
           root = self.getRoot()
-          self.template = root['Products']['Templates']['Manage.pt']
-    
+          #self.template = root['Products']['Templates']['Manage.pt']
+          self.template = root['Products']['Templates']['EditTitles']          
+          return 
 #THE MANAGE DEMO
 @form_component
 @name('managedemo')
@@ -92,7 +93,7 @@ class Manage (ManageBase):
         actionList = [act1,act2,act3, act4]
         if self.hasClipboardContents():
            actionList.append (act5)
-        actionList.append (act6)            
+        actionList.append (act6)
         return Actions(*actionList)        
             
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
@@ -111,7 +112,7 @@ class Fix(Manage):
         from zopache.climate.doit import getMapCenter
         #getMapCenter(item)
         
-        doit(item)
+        #doit(item)
 
         pass
 

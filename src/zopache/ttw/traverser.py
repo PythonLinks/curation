@@ -53,7 +53,8 @@ class Traverser(object):
             if item != object:
                 return item, None
             
-        #NOW GET IT FROM THE WEBCLASS    
+        #NOW GET IT FROM THE WEBCLASS
+
         if hasattr(context, "webClass"):
                item =webClassAcquire(context,name,marker = object)
                if item != object:

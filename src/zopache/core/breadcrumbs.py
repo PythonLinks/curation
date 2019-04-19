@@ -92,11 +92,17 @@ def nameAndTitle(item,showTitles):
         return name, name
 
 from pydoc import locate
-import cython
 
+try:
+   import cython
+except:
+   pass
 class Breadcrumbs(UniqueName):
-    def isCompiledByCython(self):
+    try:   
+      def isCompiledByCython(self):
         return cython.compiled
+    except:
+        pass
 
     def parents(self, item=None):
         if item == None:
@@ -260,8 +266,11 @@ class Breadcrumbs(UniqueName):
           if len(args)==0:
             return self.request.url
           else:
-            return  get_absolute_url((args)[0], self.request)
+            result =  self.simpleUrl((args)[0])
+            return result
+            #return  get_absolute_url((args)[0], self.request)
         except:
+
             return "BROKEN-URL-IN-BREADCRUMBS"
         
     def contextURL(self, name=''):

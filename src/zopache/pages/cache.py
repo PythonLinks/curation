@@ -93,7 +93,6 @@ cache = Cache()
 
 
 class MixIn(object):
-    """
     #USED TO DISPLAY CHILDREN, BUT NOT HTML OBJECTS
     def childCategories(self):
         result =[]
@@ -101,7 +100,7 @@ class MixIn(object):
             if IPage.providedBy (item):
                result.append (item)
         return result
-    """
+
     #The best caches have to cache __name__
     #So we have to convert back and forth to ids. 
     def convertNamesToObjects(self,list):
