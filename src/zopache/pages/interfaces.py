@@ -5,13 +5,13 @@ from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 from cromlech.browser.interfaces import IPublicationRoot
 from .geo import Address
-from zopache.ttw.interfaces import IUntrustedHTML, IBranch
+from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
     pass
 
-class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML):
+class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical):
 
     title = schema.TextLine(
         title = u'Page Name',

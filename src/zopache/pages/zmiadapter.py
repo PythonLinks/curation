@@ -127,7 +127,7 @@ class CategoryRenamer(LocalBase,Renamer,UniquePageName):
         obj = container.get(oldName)
         if obj is None:
             raise ItemNotFoundError(self.container, oldName)
-        new_name=self.uniqueName(container,newName)
+        newName=self.uniqueName(container,newName)
         self.deleteToken(obj)
         self.moveFrom(container,oldName, container, newName)
         #self.addToken(obj)

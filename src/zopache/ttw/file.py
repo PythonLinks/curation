@@ -1,5 +1,3 @@
-
-
 from ZODB.blob import Blob, BlobFile
 
 from zope.interface import Interface, implementer
@@ -8,8 +6,8 @@ from zopache.core import Leaf
 from zopache.ttw.interfaces import IFile, IImage
 
           
-@implementer(IFile)
-class File(Leaf):
+
+class FileBase(object):    
     def __init__(self):
         self.blob = Blob()
         
@@ -18,10 +16,13 @@ class File(Leaf):
         return self.blob.getSize()
 
     def setData(self, data):
-        blobFile = BlobFile(self.__name__, 'w', self.blob)
-        with self.blob.open(mode ="w") as f:
-           f.write(data)
-        f.close()
+        dataFile = data.file
+        with self.blob.open(mode ="w") as blobFile:
+           bits =  dataFile.read()
+           blobFile.write(bits)
+           self.contentType = data.headers.get_content_type()
+        blobFile.close()
+
         
     def getData(self):
         with  self.blob.open(mode='r') as f:
@@ -29,6 +30,8 @@ class File(Leaf):
        
     data = property(getData,setData)
     
+@implementer(IFile)
+class File(FileBase,Leaf):    
     def postProcess(self):
         pass
 
@@ -44,28 +47,43 @@ class Image (File):
     
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()
-        response.write(result or u'')
         response.content_type=view.context.contentType
+        response.write(result or u'')
         return response
 
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
 from zopache.core.viewdecorators import *
+
 @view_component
 @name('index')
 @context(IFile)
 @title("View File")
-class Index(View):
+class IndexFile(View):
     responseFactory = Response
     make_response = make_file_response
         
     def render(self):
                return self.context.data
 
+
+from zopache.ttw.interfaces import IInternalPrincipal           
+@view_component
+@name('cv')
+@context(IInternalPrincipal)
+@title("View CV")
+@permissions('Manage')
+class IndexCV(View):
+    responseFactory = Response
+    make_response = make_file_response
+        
+    def render(self):
+               return self.context.data           
+
 @view_component
 @context(IFile)
 @name('manage')
-class ManageFile(Index):    
+class ManageFile(IndexFile):    
    pass
                 
                          

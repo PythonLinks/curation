@@ -1,4 +1,3 @@
-
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions
 from zopache.ttw.fileaction  import AddFileAction, AddImageAction

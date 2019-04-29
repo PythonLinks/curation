@@ -61,7 +61,7 @@ class BaseEditForm(Form):
     subTitle='Edit This Object'
     ignoreContent = False
     ignoreRequest = False
-    actions = Actions(formactions.Edit(_("Edit","Save")),
+    actions = Actions(formactions.Edit(_("Save","Save")),
                     formactions.SaveAndView(_("SaveAndView","Save And View")),
                     formactions.Cancel(_("Cancel","Cancel")))
     @property

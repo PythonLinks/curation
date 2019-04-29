@@ -1,10 +1,11 @@
 from slugify import slugify
+from slugify import slugify
 
 class UniqueName(object):
     def uniqueContainerName(self, container, new_name,ofType="-"):
         count=0
         copyName=new_name+ofType
-        copyName = slugify (copyName)
+        copyName = slugify (copyName, lower=False)
         while container.has_key(new_name):
                count +=1
                new_name=copyName+str(count)

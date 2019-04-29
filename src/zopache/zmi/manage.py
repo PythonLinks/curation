@@ -41,8 +41,12 @@ class ManageBase(Form,Contents):
         return self.breadcrumbsManage()
 
     def iconTag(self,url):
-        return """ <img height="17px" width="17px" src="%s"> </img>""" % url
- 
+        if url [-3:]=="png":
+            return """<img src="%s" width="16px" height = "16px">""" %url
+        return """<div style = "width:16px; height:16px; background:
+        url('%s')" ></div>""" % url 
+
+        
     def iconHTML(self,item):
         if (hasattr(item,'icon') and
            item.icon!=''):
@@ -108,11 +112,9 @@ class Fix(Manage):
         Manage.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        from zopache.climate.doit import doit
-        from zopache.climate.doit import getMapCenter
-        #getMapCenter(item)
-        
+        from zopache.business.doit import doit
         #doit(item)
+
 
         pass
 
