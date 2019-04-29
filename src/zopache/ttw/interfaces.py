@@ -4,14 +4,21 @@ from zope import interface
 from zope.interface import Interface
 from zope import schema
 from zope.schema import Password, TextLine
-from zope.schema import Text, TextLine, Choice, Bool
+from zope.schema import Text, TextLine, Choice, Bool, DottedName
 from z3c.schema.email  import RFC822MailAddress as Email
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal as ICromlechPrincipal
+from cromlech.file.interfaces import IFile as IFileBase
 
 from zopache.crud.interfaces import *
 from zopache.crud.interfaces import ILeaf
 from zopache.crud.interfaces import IImutable
+from zopache.crud.interfaces import IMoveable
+
+class ITreeField(Interface):
+      pass
+
+
 vote = """Vote Permission.  After the conference I will email you 
 asking you to vote on the best talks. """
 
@@ -20,12 +27,14 @@ run a chat and voting server"""
 
 from cromlech.file import FileField
 
-class IFile(ILeaf):
+class IFile(IFileBase,ILeaf):
          data = FileField(title=u'Upload a File')
 
-class IImage(ILeaf):
+class IImage(IFileBase,ILeaf):
          data = FileField(title=u'Upload an Image')         
 
+class ICanonical (Interface):
+      pass   
     
 class ITestURL(Interface):    
     testURL = schema.TextLine(
@@ -46,33 +55,76 @@ class IGLogin(Interface):
         title="Token",
         description= "A Google Login Token",
         required = True)
+        
 
-class IShared(Interface):        
+class IPermissionsBase (Interface):
 
-    chatPermission = Bool(
-        title = "Permission to process your personal information to run a chat server.",
-        required = True,
-        default = False)
-
-    
-class IPermissions (IShared):
-    handle = TextLine(
-        title="Handle ",
-        description= "Your publically visible name.",
+    handle = DottedName(
+        title="User Name",
+        description= "You can log in with this.  No spaces.",
         required = True)
 
     email = Email(
         title="Your Email Address",
-        description ="We'll never share your e\
-        mail with anyone else.",
+        description ="",
+
         required = True)
     
     password = Password(
         title="Password",
         description = "Be Strong",
         required = True)
-    
 
+    
+class ISharedShort(Interface):        
+
+    chatPermission = Bool(
+        title = "Run this web server.",
+        required = True,
+        default = False)
+
+    
+class IShared(Interface):            
+    newsPermission = Bool(
+        title = "Please recommend good videos.",
+        required = False,
+        default = False)    
+
+    hirePermission = Bool(
+	    title = "Help me to get a better job.",
+	    required = False,
+	    default = False)   
+
+    recruitPermission = Bool(
+	   title = "Help me hire a good developer / data scientist.",
+	   required = False,
+	 default = False)
+
+
+
+class ExtrePermissions(Interface):
+    """    
+    pugPermission =Bool(
+	 title = "Pug course permissions.",
+	 required = False,
+	 default = False)
+
+    pyodidePermission =Bool(
+	 title = "PyOdide course permissins",
+	 required = False,
+	 default = False)
+
+    helpPermission =Bool(
+	 title = "Help curate content",
+	 required = False,
+	 default = False)    
+    """              
+    
+class IPermissions (IPermissionsBase,IShared):    
+    pass
+
+class IPermissionsShort (IPermissionsBase,ISharedShort):    
+    pass
 
 class IGRegister (IShared):        
     idtoken= Text(
@@ -81,10 +133,10 @@ class IGRegister (IShared):
                  required = True)
 
 
+class IRegister(IPermissions):
+   pass
 
-
-class IRegister(IPermissions,
-                ):
+class IRegisterShort(IPermissionsShort):
    pass
 
     
@@ -98,13 +150,9 @@ class ISearchSchema(Interface):
         default=u'',
         missing_value=u'')
 
-
-    
-class IInternalPrincipal(IEditable,IDeletable,ICromlechPrincipal,IBTreeContainer):
+class IInternalPrincipal(IFile,IContainer, ICanonical,ICromlechPrincipal):
     """Principal information"""
     pass
-
-
 
 class ILogin(Interface):
 
@@ -116,10 +164,6 @@ class ILogin(Interface):
 
 class IBranch (IBTreeContainer):
     pass
-
-
-
-
 
 class IPrincipalFolder(IImutable):
     pass
@@ -145,7 +189,7 @@ class IPrincipalFolder(IImutable):
 #editale, or anything.
 
 
-class IWebClass(IImutable):
+class IWebClass(IImutable, ICanonical):
     pass
 
 class IMutableWebClass(IWebClass,IContainer):

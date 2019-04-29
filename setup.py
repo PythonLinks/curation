@@ -80,7 +80,6 @@ install_requires = [
     'zope.event',
     'zope.interface',
     'zope.lifecycleevent',
-    'zope.location',
     'zope.password',    
     'zope.schema',
     'restrictedpython',    

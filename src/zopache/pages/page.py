@@ -15,8 +15,9 @@ from zopache.core.breadcrumbs import parentWhichImplements
 from zopache.core.breadcrumbs import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
+from zopache.core import AllObjects
 
-class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
+class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     title = ''
     url = ''
     branchSize=1
@@ -138,7 +139,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
-    icon="ttwicons/WikiPage.svg"
+    icon="ttwicons/WikiPage.png"
     
 @implementer (INews)     
 class News (Page,RecentMixIn):

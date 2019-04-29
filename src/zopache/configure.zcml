@@ -12,5 +12,6 @@
 	        <grok:grok package="zopache.iodide" />
     <grok:grok package="zopache.application" />
     <grok:grok package="zopache.copy" />
-
+  <grok:grok package="cromlech.location" />
+  
 </configure>

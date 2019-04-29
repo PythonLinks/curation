@@ -17,7 +17,7 @@ __docformat__ = 'restructuredtext'
 
 import transaction
 import crom
-from slugify import slugify
+from slugify import slugify, SLUG_OK
 from zope.interface import implementer, Invalid
 from dolmen.container.interfaces import IBTreeContainer#, IOrderedContainer
 from zope.interface import implementer
@@ -62,8 +62,8 @@ class Renamer(BaseClass):
                view.error += oldName + "WAS NOT FOUND <br>"
         if not self.allowed(obj):
                      return
-        new_name=self.uniqueName(container,newName)
-        new_name = slugify(new_name, lower= False)
+        newName=self.uniqueName(container,newName)
+        newName = slugify(newName,ok=SLUG_OK+'.', lower= False)
         self.moveFrom(container,oldName, container, newName)                
         cache.resetCache()
         

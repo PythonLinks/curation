@@ -25,7 +25,10 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')
-
+    
+    def before(self,widget):
+        return ""
+    
     @property
     def action_url(self):
         return self.request.url
@@ -41,7 +44,16 @@ class Form(BaseForm,Scripts,Breadcrumbs):
 
     def isCheckBoxList (self,widget):
         return  widget.__class__.__name__=='MultiChoiceFieldWidget'
-
+    def isMultiChoiceFieldWidget (self,widget):
+        return  widget.__class__.__name__=='MultiChoiceFieldWidget'
+    def useFormControl(self,widget):
+        if self.isCheckBoxList(widget):
+            return False
+        if self.isMultiChoiceFieldWidget(self):
+            return False
+        if self.isBool(widget):
+            return False
+        return True
     def bootstrap_widgets(self):
         return self.bootstrapWidgets()
     
@@ -52,13 +64,16 @@ class Form(BaseForm,Scripts,Breadcrumbs):
             pass
         result = []
         for widget in self.fieldWidgets:
-            defaultHtmlClass = widget.defaultHtmlClass
-            if  self.isBool(widget) or self.isCheckBoxList(widget):
-               if not 'form-check-input' in defaultHtmlClass: 
+            if not self.useFormControl(widget):
+               if "form-control" in widget.defaultHtmlClass:
+                   widget.defaultHtmlClass.remove ("form-control")
+
+               if not 'form-check-input' in widget.defaultHtmlClass: 
                    widget.defaultHtmlClass.append('form-check-input')
             else:
-                if not ('form-control' in defaultHtmlClass):                 
+                if not ('form-control' in widget.defaultHtmlClass):                 
                    widget.defaultHtmlClass.append('form-control')
+            widget.defaultHtmlClass = widget.defaultHtmlClass.copy()
             result.append (widget)
         return result
 

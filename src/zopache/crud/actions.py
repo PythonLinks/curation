@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
-from slugify import slugify
+from slugify import slugify, SLUG_OK
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
@@ -50,7 +50,7 @@ class Add(Action, UniqueName):
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
         newName = self.newName(data)
-        newName = slugify(newName, lower = False)
+        newName = slugify(newName, ok=SLUG_OK+'.', lower = False)
         context[newName]=obj
         message(_(u"Content created"))
         baseURL = str(IURL(obj, form.request))    
@@ -125,7 +125,12 @@ class SaveAndViewHTML(Update):
 
 class SaveAndViewJS(Update):
         def newURL(self,baseURL):
-               return baseURL + '/javascript'          
+               return baseURL + '/javascript'
+
+class SaveAndRoot(Update):
+    def newURL(self,baseURL):
+        return "/"
+
 
 class SaveAndTest(Update):
         def newURL(self,baseURL):

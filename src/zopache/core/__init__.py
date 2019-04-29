@@ -11,17 +11,38 @@ from dolmen.container import BTreeContainer
 from cromlech.location import get_absolute_url
 from cromlech.container.contained import Contained
 from persistent import Persistent
-class Leaf(Contained, Persistent):
-    icon=''
-    def postProcess(self):
-        pass
 
 from dolmen.container import BTreeContainer
-class Container(BTreeContainer):
+
+#THIS IS STUFF REQUIRED FOR ALL OBJECTS
+class AllObjects(object):
     icon=''
+    
     def postProcess(self):
         pass
+    
+    def getParent(self):
+        return self.__parent__
+    
+    def setParent(self,value):
+        self.__parent__ = value
+        
+    parent = property (getParent,setParent)
 
+    def getName(self):
+        return self.__name__
+    
+    def setName(self,value):
+        self.__name__ = value
+        
+    name = property (getName,setName)
+
+class Leaf(Contained, Persistent,AllObjects):
+    pass
+    
+class Container(BTreeContainer,AllObjects):
+      pass
+    
 class RootContainer (BTreeContainer):
     def __init__(self):
        BTreeContainer.__init__(self)
@@ -53,6 +74,13 @@ def getRoot(object):
                 raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
         raise TypeError("Parents needed to  determine location root")
 
+def getPrincipalFolder(item):
+    root = getRoot(item)
+    if "person" in root:
+        return root["person"]
+    else:
+        return root.__parent__["person"] 
+    
 
 class ErrorPage(Page):
     code = 400

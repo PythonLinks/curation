@@ -3,6 +3,7 @@ from zope.interface import Interface
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IJSON
 from zopache.ttw.interfaces import IPython
+from zopache.ttw.interfaces import IInternalPrincipal
 
 class IURLSegment(Interface):
     pass
@@ -51,8 +52,19 @@ class IPythonAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'aceedit'        
-    
+        return 'aceedit'
+
+"""
+THERE IS ANOTHER ONE FOR return 'permissions'
+@crom.adapter
+@crom.sources(IInternalPrincipal)
+@crom.target(IURLSegment)
+class IPrincipalAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'edit'            
+"""    
 
 # FOR A PRINCIPAL
 from zopache.ttw.interfaces import IInternalPrincipal

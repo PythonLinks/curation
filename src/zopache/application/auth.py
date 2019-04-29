@@ -13,11 +13,12 @@ from zope.location import Location
 @implementer(IPublicationRoot)
 class Auth(dict, Location):
 
-    def authenticate(self, username, password):
-        if username in self:
-            if password == self[username]:
+    def authenticate(self, userName, password):
+        import pdb; pdb.set_trace()
+        if userName in self:
+            if password == self[userName]:
                 session = getSession()
-                session['user'] = username
+                session['user'] = userName
                 return True
         return False
 
@@ -29,19 +30,14 @@ def secured(app):
     @wraps(app)
     def secure_application(environ, start_response, default=anonymous):
         session = getSession()
-        principal = default        
+        principal = default
         if session is not None and 'user' in session:
-            environ['REMOTE_USER'] = username = session['user']
+            environ['REMOTE_USER'] = userName = session['user']
             conn = environ["zodb.connection"]
             root=conn.root()
             root=root["applicationRoot"]
             principalFolder = root["person"]
-            id = principalFolder.getIdByEmail(username)
-            if id == None:
-                id = principalFolder.getIdByHandle(username)
-            if id != None:    
-               principal= principalFolder[id]
-
+            principal = principalFolder.getPrincipalByUserName(userName)
         return app(environ, start_response, principal)
 
     return secure_application
