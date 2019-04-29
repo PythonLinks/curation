@@ -2,7 +2,7 @@
 #This software is subject to the CV and Zope Public Licenses.
 
 from cromlech.webob.response import Response
-
+import dolmen
 from dolmen.template import TALTemplate
 from dolmen.view import View, make_layout_response
 from dolmen.forms.base import Form as BaseForm
@@ -14,12 +14,25 @@ from .scripts import Scripts
 
 from dolmen.container import IBTreeContainer
 from .breadcrumbs import Breadcrumbs
+
+#FOR MONKEY PATCHING ACTION WIDGETS
+def htmlClass(self):
+    return "action btn"
+
 class Form(BaseForm,Scripts,Breadcrumbs):
     title=""
     subTitle=u""
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')
+    
+    def before(self,widget):
+        return ""
+    
+    @property
+    def action_url(self):
+        return self.request.url
+            
     def widgetDictionary(self):
         return {c.htmlId():c for c in self.bootstrapWidgets()}
 
@@ -29,24 +42,49 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def isBool(self,widget):
         return widget.component._field._type==type(True)
 
+    def isCheckBoxList (self,widget):
+        return  widget.__class__.__name__=='MultiChoiceFieldWidget'
+    def isMultiChoiceFieldWidget (self,widget):
+        return  widget.__class__.__name__=='MultiChoiceFieldWidget'
+    def useFormControl(self,widget):
+        if self.isCheckBoxList(widget):
+            return False
+        if self.isMultiChoiceFieldWidget(self):
+            return False
+        if self.isBool(widget):
+            return False
+        return True
     def bootstrap_widgets(self):
         return self.bootstrapWidgets()
     
     def bootstrapWidgets(self):
         """Adds the needed css classes for bootstrap styles.
         """
-        
+        for widget in self.fieldWidgets:
+            pass
         result = []
         for widget in self.fieldWidgets:
-            defaultHtmlClass = widget.defaultHtmlClass
-            if  self.isBool(widget):
-               if not 'form-check-input' in defaultHtmlClass: 
+            if not self.useFormControl(widget):
+               if "form-control" in widget.defaultHtmlClass:
+                   widget.defaultHtmlClass.remove ("form-control")
+
+               if not 'form-check-input' in widget.defaultHtmlClass: 
                    widget.defaultHtmlClass.append('form-check-input')
             else:
-                if not ('form-control' in defaultHtmlClass):                 
+                if not ('form-control' in widget.defaultHtmlClass):                 
                    widget.defaultHtmlClass.append('form-control')
+            widget.defaultHtmlClass = widget.defaultHtmlClass.copy()
             result.append (widget)
         return result
+
+    def bootstrapActionWidgets(self):
+           """Adds the needed css classes for bootstrap styles.
+           """
+           dolmen.forms.base.widgets.ActionWidget.htmlClass = htmlClass
+           result = []
+           for widget in self.actionWidgets:
+               result.append (widget)
+           return result
 
     def isBTreeContainer(self):
          return  IBTreeContainer.providedBy(self.context)
@@ -58,7 +96,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def postAddProcess(self):
          pass     
 
-    def breadcrumbs(self):     
+    def breadcrumbs(self):
         return self.breadcrumbsManage()
 
 

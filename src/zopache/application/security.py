@@ -9,30 +9,24 @@ from cromlech.security.interfaces import ISecurityPredicate
 from cromlech.security.meta import permissions
 from zope.interface import Interface
 from zopache.core.interfaces import ITreeSecurity
+from zopache.application.treesecurity import TreeSecurity    
 
-class Access(object):
-      """Custom Rules for Permissions """
-
-      def get(self, key, extraArgument):
-
-          if key ==  'lozinski@PythonLinks.info':
-             return  frozenset(('AddContent','EditContent',
-                                'Manage','Vote','Edit','Add'))
-          if key != 'user.unauthenticated':
-             return  frozenset(('Vote','AddContent',
-                                'EditContent','Edit'))
-          return frozenset(())
-
-accesses = Access()
+def getPermissions(principal):
+          if principal.id == 'user.unauthenticated':
+               return []
+          return principal.permissions
+                
 
 def check_permissions(component, interaction):
+    #return      
     perms = permissions.get(component) or tuple()
     if not perms:
         return
     for principal in interaction.principals:
-        access = accesses.get(principal.id, None)
-        if not access or not frozenset(perms) <= access:
-            return Unauthorized
+        access = getPermissions(principal)
+        for item in perms:
+            if not item  in access:
+               return Unauthorized
     return
 
 
@@ -46,12 +40,13 @@ def security_predicate(component, interaction):
 def secure_query_view(request, context, name=""):
     check, predict = getSecurityGuards()
     factory = IView.component(context, request, name=name)
+    # TEMPORARY TWO LJNES
+    #view = factory(context, request)
+    #return view
     if predict is not None:
         factory = predict(factory)  # raises if security fails.
     view = factory(context, request)
     check (view)
-    from zopache.application.treesecurity import TreeSecurity    
-
 
     if ITreeSecurity.providedBy(view):
         TreeSecurity(view).check()  

@@ -9,7 +9,6 @@ from cromlech.i18n import translate
 
 from cromlech.security import getSecurityGuards, permissions
 
-from zope.cachedescriptors.property import CachedProperty
 from .interfaces import IName, IContainer, ILeaf
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
@@ -34,23 +33,23 @@ class AddForm(Form):
     label= ''
     subTitle='Add an Object'
 
-    @CachedProperty
+    @property
     def fields(self):
         return  Fields(IName,self.interface)
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
 
 class AddByTitleForm(AddForm):
-    @CachedProperty
+    @property
     def fields(self):
         return  Fields(self.interface)
 
 
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               formactions.AddByTitle("Add", self.factory),
@@ -62,10 +61,10 @@ class BaseEditForm(Form):
     subTitle='Edit This Object'
     ignoreContent = False
     ignoreRequest = False
-    actions = Actions(formactions.Edit(_("Edit","Save")),
-                      formactions.SaveAndView(_("SaveAndView","Save And View")),
-                      formactions.Cancel(_("Cancel","Cancel")))
-    @CachedProperty
+    actions = Actions(formactions.Edit(_("Save","Save")),
+                    formactions.SaveAndView(_("SaveAndView","Save And View")),
+                    formactions.Cancel(_("Cancel","Cancel")))
+    @property
     def fields(self):
         if hasattr(self,'interface'):
             return  Fields(IName,self.interface).omit("__parent__")
@@ -74,11 +73,11 @@ class BaseEditForm(Form):
     @property
     def label(self):
         return ''
-        label = _(u"Edit this Object", default=u"Edit: $name",
-                  mapping={"name": title_or_name(self.context)})
-        return translate(label)
+        #label = _(u"Edit this Object", default=u"Edit: $name",
+        #          mapping={"name": title_or_name(self.context)})
+        #return translate(label)
 
-    @CachedProperty
+    @property
     def fields(self):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
@@ -86,7 +85,7 @@ class BaseEditForm(Form):
 
     
 class EditDemoForm(BaseEditForm):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions()
     
@@ -119,16 +118,16 @@ class DisplayForm(Form):
     @property
     def label(self):
         return ''
-        return title_or_name(self.context)
+        #return title_or_name(self.context)
 
-    @CachedProperty
+    @property
     def fields(self):
         displayed = self.getContentData().getContent()
         return getAllFields(displayed, '__parent__', '__name__', 'title')
 
 @form_component
 @name (u'delete')
-@context(IDeletable)
+@context(Interface)
 @title("Delete")
 @permissions('Manage')    
 @title("Delete")
@@ -137,14 +136,18 @@ class DeleteForm(Form):
     """
     label =''
     subTitle='Delete This Object'
-    description = _(u"Are you really sure ? This will also delete all of its children.")
+    description = """Are you really sure ? This will also delete all of its 
+children, and reindex the tree.<br><br> 
+ If there are video objects (advanced version)
+ in this branch of the tree, the links from the conference will not be 
+deleted, and there will be trouble.  """
     actions = Actions(formactions.Delete(_("Delete","Delete")),
                       formactions.Cancel(_("Cancel","Cancel")))
 
     @property
     def label(self):
         return ''
-        label = u"Delete This Object?" 
-        return translate(label)
+        #label = u"Delete This Object?" 
+        #return translate(label)
 
 

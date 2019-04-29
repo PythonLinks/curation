@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
 
-import random
 import sys
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
@@ -13,7 +12,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
-from zopache.core import getRoot
+from zopache.core import getPrincipalFolder, getRoot
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from zopache.pages.interfaces import INotPage
 
@@ -32,37 +31,55 @@ class Cancel(Action):
 
 
 class Add(Action):
-    """Add action for an IAdding context.
-    """
 
     def __init__(self, title, view):
         super(Add, self).__init__(title)
         self.factory = view.factory
         self.view = view
-        
+
     def __call__(self, form):
-        self.form = form
         data, errors = form.extractData()
         if errors:
             form.submissionError = errors
             return FAILURE
-        obj= form.factory()
-        form.new=obj
-        root = getRoot(form.context)
-        people = root ['person']
-        anInteger = random.randint (1,sys.maxsize)
-        while (True):
-            anInteger += 1
-            newName = str(anInteger)
-            if not newName in people:
-                break
-        set_fields_data(form.fields, obj, data)            
-        people[newName]=obj
-        people.authenticate (data)
-        message(_(u"You are Registered"))
-        if INotPage.providedBy(self.form.context):
-            newURL = self.form.url(obj) + '/speakerregistration'
-        else:
-            newURL = '.'            
+
+        #SUCCESS, SO GO CREATE THE PERSON
+        context = form.context
+        newPerson= form.factory()
+        newPerson.__parent__ = context
+        root = getRoot(context)
+        newName = root.getUniqueNumberString()
+        newPerson.__name__= newName
+        root.addItem(newPerson)
+        #You have to set the name before setting the email.
+        #Because it updates the email->name index.
+        set_fields_data(form.fields, newPerson, data)
+        
+        #REGISTER AND LOG THE PERSON IN
+        principalFolder = getPrincipalFolder (form.context)
+        principalFolder [newName]=newPerson
+        #You have to add it to the root index
+        #before authenticating it.
+        principalFolder.authenticate (data)
+        message(_(u"You are Registered and Logged In"))
+        newURL = form.newURL(new)
+        if hasattr(form,'postAddProcess'):
+              form.new=newPerson            
+              form.postAddProcess()    
         raise HTTPFound(newURL)
+
     
+        """
+        CODE I MIGHT NEED IN THE FUTURE
+        newPerson.__parent__ = context
+        self.form = form
+
+
+        if INotPage.providedBy(self.form.context):
+            newURL = self.form.url(newPerson) + '/speakerregistration'
+        else:
+        """
+
+
+
+        

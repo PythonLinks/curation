@@ -1,8 +1,9 @@
 import time
 import os
+from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from zopache.pages.interfaces import IPage , IRootPage
+from zopache.pages.interfaces import IPage , IRootPage, INews
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from zopache.core.breadcrumbs import parentWhichImplements
@@ -10,18 +11,50 @@ from cromlech.container.contained import Contained
 from zope.interface import implementer
 from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
+from zopache.core.breadcrumbs import parentWhichImplements
+from zopache.core.breadcrumbs import parentsUpTo
+from zopache.pages.jsonobject import JsonObject
+from zopache.pages.cache import cache, PageMixIn, RecentMixIn
+from zopache.core import AllObjects
 
-class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
+class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     title = ''
     url = ''
     branchSize=1
     description = ''
+    webApproved = True
+    
+    def valuesAsList(self):
+        result = []
+        for item in self.values():
+            if IPage.providedBy(item):            
+               result.append (item)
+        return result
+
+
+    def postProcess(self):
+        self.recalculateRootJSON()
+        cache.resetCache()
+        
+    def postAddProcess(self):
+        self.postProcess()
+    
+    # NOT YET SERVING JSON
+    def recalculateRootJSON(self):
+        pass
 
     def __init__(self):
          OrderedBTreeContainer.__init__(self)
          self.creationTime=time.time()
          self.modificationTime=time.time()
 
+    def getRoot(self):
+         return parentWhichImplements(self,IRootPage)
+     
+    def blogParents(self):
+         return parentsUpTo(self,IRootPage)
+
+         
     def isCategory (self):
         return False
     
@@ -33,7 +66,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
 
     def wikiPageChildren(self):
         for item in self.values():
-            if IWikiPage.providedBy(item):
+            if IPage.providedBy(item):
                 yield item                   
 
     def __setitem__(self,  key,item):
@@ -49,10 +82,10 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     def countLeaves(self):
         total=1
         for item in self.values():
-            if IBlogObject.providedBy(item):
+            if IPage.providedBy(item):
                 if not item.webApproved:
                    continue
-                if ICategory.providedBy(item): 
+                if IPage.providedBy(item): 
                     total+=item.countLeaves()
                 else:
                     total+=item.branchSize
@@ -63,7 +96,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
 
                   
     def hasContent(self):
-         if len(self.source)<2 or self.source == NoContentString:
+         if len(self.source)<2:
             return False
          else:
             return True
@@ -76,7 +109,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
          return time.strftime("%Y-%m-%d",time.localtime(self.modificationTime))
 
     def creationDateForHumans(self):
-         return self.creationTime
+         return time.strftime("%Y-%m-%d",time.localtime(self.creationTime))
 
     def editDateForHumans(self):
          return self.creationTime
@@ -84,7 +117,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     def sortedByTitle(self):
            unsortedList=[]
            for item in self.values():
-               if IBlogObject.providedBy(item):
+               if IPage.providedBy(item):
                   unsortedList.append(item)
            aKey=methodcaller('getTitle')
            return sorted(unsortedList, key=aKey)
@@ -95,7 +128,7 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
     def sortedByName(self):
            unsortedList=[]
            for item in self.values():
-               if IBlogObject.providedBy(item):
+               if IPage.providedBy(item):
                   unsortedList.append(item)
            aKey=methodcaller('getName')
            return sorted(unsortedList, key=aKey)
@@ -104,12 +137,17 @@ class PageBase(OrderedBTreeContainer,UntrustedHTMLBase,Contained):
          return self.__name__
 
 @implementer (IPage)     
-class Page(PageBase):
-    webClass='WikiPage'        
-
+class Page(PageBase, PageMixIn):
+    webClass='WikiPage'
+    icon="ttwicons/WikiPage.png"
+    
+@implementer (INews)     
+class News (Page,RecentMixIn):
+    webClass = 'News'
+    pass
 
 @implementer(IRootPage)
-class RootPage(Branch,PageBase):
+class RootPage(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     def __init__(self):
        Branch.__init__(self)

@@ -3,7 +3,7 @@
 
 from cromlech.browser.interfaces import IPublicationRoot
 from zope.interface import Interface, Attribute
-from zope.schema import TextLine, Text, Object
+from zope.schema import TextLine, Text,  DottedName
 from dolmen.container.interfaces import IBTreeContainer
 
 #Views that are in the app menu.
@@ -44,8 +44,6 @@ class ICopyable(Interface):
 class IAddContainer(Interface):
      pass
 
-class IMoeabletale(Interface):
-      pass
 
 class ICopyable (Interface):
        pass

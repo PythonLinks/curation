@@ -4,14 +4,21 @@ from zope import interface
 from zope.interface import Interface
 from zope import schema
 from zope.schema import Password, TextLine
-from zope.schema import Text, TextLine, Choice, Bool
+from zope.schema import Text, TextLine, Choice, Bool, DottedName
 from z3c.schema.email  import RFC822MailAddress as Email
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal as ICromlechPrincipal
+from cromlech.file.interfaces import IFile as IFileBase
 
 from zopache.crud.interfaces import *
 from zopache.crud.interfaces import ILeaf
 from zopache.crud.interfaces import IImutable
+from zopache.crud.interfaces import IMoveable
+
+class ITreeField(Interface):
+      pass
+
+
 vote = """Vote Permission.  After the conference I will email you 
 asking you to vote on the best talks. """
 
@@ -20,12 +27,14 @@ run a chat and voting server"""
 
 from cromlech.file import FileField
 
-class IFile(Interface):
+class IFile(IFileBase,ILeaf):
          data = FileField(title=u'Upload a File')
 
-class IImage(Interface):
+class IImage(IFileBase,ILeaf):
          data = FileField(title=u'Upload an Image')         
 
+class ICanonical (Interface):
+      pass   
     
 class ITestURL(Interface):    
     testURL = schema.TextLine(
@@ -38,38 +47,84 @@ class ITestURL(Interface):
 
 
 
+
+
     
 class IGLogin(Interface):
         idtoken= Text(
         title="Token",
         description= "A Google Login Token",
         required = True)
+        
 
-class IShared(Interface):        
+class IPermissionsBase (Interface):
 
-    chatPermission = Bool(
-        title = "Permission to process your personal information to run a chat server.",
-        required = True,
-        default = False)
-
-    
-class IPermissions (IShared):
-    handle = TextLine(
-        title="Handle ",
-        description= "Your publically visible name.",
+    handle = DottedName(
+        title="User Name",
+        description= "You can log in with this.  No spaces.",
         required = True)
 
     email = Email(
         title="Your Email Address",
-        description ="We'll never share your e\
-        mail with anyone else.",
+        description ="",
+
         required = True)
     
     password = Password(
         title="Password",
         description = "Be Strong",
         required = True)
+
     
+class ISharedShort(Interface):        
+
+    chatPermission = Bool(
+        title = "Run this web server.",
+        required = True,
+        default = False)
+
+    
+class IShared(Interface):            
+    newsPermission = Bool(
+        title = "Please recommend good videos.",
+        required = False,
+        default = False)    
+
+    hirePermission = Bool(
+	    title = "Help me to get a better job.",
+	    required = False,
+	    default = False)   
+
+    recruitPermission = Bool(
+	   title = "Help me hire a good developer / data scientist.",
+	   required = False,
+	 default = False)
+
+
+
+class ExtrePermissions(Interface):
+    """    
+    pugPermission =Bool(
+	 title = "Pug course permissions.",
+	 required = False,
+	 default = False)
+
+    pyodidePermission =Bool(
+	 title = "PyOdide course permissins",
+	 required = False,
+	 default = False)
+
+    helpPermission =Bool(
+	 title = "Help curate content",
+	 required = False,
+	 default = False)    
+    """              
+    
+class IPermissions (IPermissionsBase,IShared):    
+    pass
+
+class IPermissionsShort (IPermissionsBase,ISharedShort):    
+    pass
 
 class IGRegister (IShared):        
     idtoken= Text(
@@ -78,10 +133,10 @@ class IGRegister (IShared):
                  required = True)
 
 
+class IRegister(IPermissions):
+   pass
 
-
-class IRegister(IPermissions,
-                ):
+class IRegisterShort(IPermissionsShort):
    pass
 
     
@@ -95,13 +150,9 @@ class ISearchSchema(Interface):
         default=u'',
         missing_value=u'')
 
-
-    
-class IInternalPrincipal(Interface, ICromlechPrincipal):
+class IInternalPrincipal(IFile,IContainer, ICanonical,ICromlechPrincipal):
     """Principal information"""
     pass
-
-
 
 class ILogin(Interface):
 
@@ -110,19 +161,11 @@ class ILogin(Interface):
 
     password = Password(
         title='Password', required=True)
+
 class IBranch (IBTreeContainer):
     pass
 
-
-class IAddWebClass(Interface):
-    pass
-
-#Basically this is not moveable, deletable, renamable,
-#editale, or anything. 
-class IProducts(IBTreeContainer,IAddWebClass):
-    pass
-
-class IPrincipalFolder(IBTreeContainer,IImutable):
+class IPrincipalFolder(IImutable):
     pass
 
 #    def getIdByEmail(self,email):
@@ -141,11 +184,18 @@ class IPrincipalFolder(IBTreeContainer,IImutable):
     #Cromlech does not yet support the following. 
     #contains(IInternalPrincipal)
 
+#BTREE CONTAINERS ARE NOT MUTABLE
+#Basically these 3 are not moveable, deletable, renamable,
+#editale, or anything.
 
-class IWebClass(Interface,IRenameable, IBTreeContainer):
+
+class IWebClass(IImutable, ICanonical):
     pass
 
-class IImutableWebClass(Interface, IBTreeContainer):
+class IMutableWebClass(IWebClass,IContainer):
+    pass
+
+class IProducts(IBranch,IWebClass):
     pass
 
 class ISource(ILeaf):      
@@ -168,6 +218,28 @@ class ISource(ILeaf):
 class ISourceLeaf(ISource,ILeaf):
       pass
 
+class IPython(ISourceLeaf,ITestURL):
+    """Basic Python  FORM with CRUD"""
+    arguments = schema.TextLine(
+        title = u'Arguments',
+        description = u'An optional comma separated list of arguments',
+        default='',
+        required = False,
+    )    
+    
+    source= schema.Text(
+        title = u'Python Source Code',
+        description = u'The Python code goes here.',
+        required = False,
+        default = u'',
+    )
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'A short reminder of what this Python code  does or its version name.',
+        default='',            
+        required = False,
+    )
+
 class IJavascript(ISourceLeaf):
     "Basic Javascript Form"
 
@@ -185,6 +257,22 @@ class IJavascript(ISourceLeaf):
     )
 
 
+class IJSON(IJavascript):
+    """Basic JSON CRUD """
+
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'Please Describe this JSON.',
+        required = False,
+    )
+
+    source= schema.Text(
+        title = u'JSON Source',
+        description = u'The JSON  goes here.',
+        required = False,
+        default = u'',
+    )
+    
 class ITestSource (ISource, ITestURL):
    pass
 

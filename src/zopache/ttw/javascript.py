@@ -81,7 +81,7 @@ class JavascriptFolder(Javascript,BTreeContainer):
     source =u''
     sourceCache=u''
     className='Javascript Folder'
-
+    icon="ttwicons/JavascriptFolder.svg"    
     def cacheSource(self):
         self.sourceCache=self.getJavascript()
 

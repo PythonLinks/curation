@@ -1,3 +1,5 @@
+import random
+import sys
 from zope import schema
 from zope import interface
 from zope.schema.interfaces import IField
@@ -6,12 +8,14 @@ from BTrees.OOBTree import OOBTree
 from cromlech.browser.interfaces import IPublicationRoot
 from zopache.pages.interfaces import IPage
 from dolmen.container import IBTreeContainer
-
+from zopache.ttw.interfaces import ICanonical
 from dolmen.container import BTreeContainer
 
 from .interfaces import IBranch
 from zopache.core.breadcrumbs import Breadcrumbs
-
+from zopache.pages.interfaces import IRootPage
+from zopache.ttw.interfaces import IWebClass, IProducts
+from zopache.ttw.interfaces import IInternalPrincipal
 
 @implementer (IBranch)
 class Branch(object):
@@ -19,25 +23,38 @@ class Branch(object):
        self.valuesByToken = OOBTree()
        #self.tokensByValue = {}
 
-    def indexTree(self):
-        self.valuesByToken=OOBTree()
-        #self.tokensByValue={}
-        self.indexBranch(self,self)
-        #self._p_changed=True
+    def getUniqueNumberString(self):
+        anInteger = random.randint (1,sys.maxsize)        
+        while (True):
+            if anInteger == sys.maxsize:
+                anInteger = 10000
+            anInteger += 1
+            newName = str(anInteger)
+            if not newName in self:
+                return newName
+            
+    def addItem(self,item):
+        self.valuesByToken[item.__name__]= item
+       
+    def deleteItem(self,item):       
+       del self.valuesByToken[item.__name__]       
 
     def test(self,item):
         if IBTreeContainer.providedBy(item):
            return True
         return False
-        
-    def indexBranch(self,tree,branch):
+
+    def indexTree(self):
+        self.valuesByToken=OOBTree()
+        self.indexBranch(self,self)
+
+
+    def indexBranch(self,tree,branch,itemType=ICanonical):
         for item in branch.values():
-               #allow any zclass object
-               # and item.__ZClass__.__name__=='Skill':
-               if IPage.providedBy(item):
-                   #self.tokensByValue[item]=item.__name__
-                   self.valuesByToken[item.__name__]=item
-                   self.indexBranch(tree,item)
+            if itemType.providedBy(item):
+                self.valuesByToken[item.__name__]=item
+            if IBTreeContainer.providedBy(item):    
+                self.indexBranch(tree,item)
 
 
 

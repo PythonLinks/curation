@@ -17,6 +17,7 @@ __docformat__ = 'restructuredtext'
 
 import transaction
 import crom
+from slugify import slugify, SLUG_OK
 from zope.interface import implementer, Invalid
 from dolmen.container.interfaces import IBTreeContainer#, IOrderedContainer
 from zope.interface import implementer
@@ -32,7 +33,7 @@ from zopache.zmi.interfaces import IObjectDeleter
 from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
-
+from zopache.pages.cache import cache
 from .cutfolder import cutFolder
 
 class BaseClass(TransactionNote,UniqueName):
@@ -55,18 +56,19 @@ class Renamer(BaseClass):
         self.__parent__ = object.__parent__ # TODO: see if we can automate this
         
     def renameItem(self, oldName, newName,view):
-        self.view = view
         container=self.context
         obj = container.get(oldName)
         if obj is None:
-            raise ItemNotFoundError(self.container, oldName)
-        if not self.allowed():
+               view.error += oldName + "WAS NOT FOUND <br>"
+        if not self.allowed(obj):
                      return
-        new_name=self.uniqueName(container,newName)
+        newName=self.uniqueName(container,newName)
+        newName = slugify(newName,ok=SLUG_OK+'.', lower= False)
         self.moveFrom(container,oldName, container, newName)                
-
-    def allowed(self):
-        if  IRenameable.providedBy(self.context):
+        cache.resetCache()
+        
+    def allowed(self,obj):
+        if  IRenameable.providedBy(obj):
                 return True
         return False
 
@@ -80,10 +82,11 @@ class Cutter(BaseClass):
     def cut(self,view):
         self.view = view        
         """ Move the object to the pastefolder"""
-        if not self.allowed():
-                self.view.error +=orig_name + " WAS NOT CUT <br>"            
-                return
         obj=self.context
+        if not self.allowed(obj):
+                self.view.error += self.context.__name__  + """" 
+                     IS NOT ALLOWED TO BE CUT <br>"""
+                return
         oldName=obj.__name__
         toFolder=cutFolder(view)
 
@@ -92,8 +95,8 @@ class Cutter(BaseClass):
         self.moveFrom(container, oldName, toFolder, newName)        
         self.describeTransaction(" Cut ", obj)
 
-    def allowed(self):
-        if  IMoveable.providedBy(self.context):
+    def allowed(self,item):
+        if  IMoveable.providedBy(item):
                 return True 
         return False
 
@@ -105,18 +108,20 @@ class Copier(BaseClass):
         self.view = view        
         """ Move the object to the pastefolder"""
         obj=self.context
-        if not self.allowed():
-                self.view.error +=orig_name + " WAS NOT COPIED <br>"
+        if not self.allowed(obj):
+                self.view.error +=self.context.__name__+ " IS  NOT ALLOWED TO BE COPIED <br>"
                 return
         toFolder=cutFolder(view)
         oldName=obj.__name__
         newName=self.uniqueName(toFolder,oldName)
+        parent = obj.__parent__
+        obj.__parent__ = None
         toFolder[newName]= copy(obj)
+        obj.__parent__ = parent
         self.describeTransaction(" Copy ", obj)
          
-    def allowed(self):
-        obj=self.context
-        if  ICopyable.providedBy(obj):
+    def allowed(self,item):
+        if  ICopyable.providedBy(item):
                 return True 
         return False
 
@@ -163,16 +168,18 @@ class Deleter(BaseClass):
         obj=self.context
         container=obj.__parent__
         name=obj.__name__
-        if not self.allowed():
+        if not self.allowed(obj):
             self.view.error +=  name + " was not deleted. <br>"
             return
         
         # HAVE TO DESCRIE BEFORE DELETING OTHERWISE NO NAME AVAILABLE
         self.describeTransaction(" Deleted ", obj)        
         del container[name]
+        if view.request.principal == obj:
+           obj.logout()
 
         
-    def allowed(self):
-        if  IDeletable.providedBy(self.context):
+    def allowed(self,item):
+        if  IDeletable.providedBy(item):
                 return True
         return False

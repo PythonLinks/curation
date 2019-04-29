@@ -14,7 +14,7 @@ from zope.lifecycleevent import ObjectCreatedEvent
 from zopache.ttw.html import HTML
 from zopache.ttw.javascript import Javascript
 from zopache.ttw.css import CSS
-from zopache.ttw.json import JSON
+from zopache.ttw.JSON import JSON
 from zopache.ttw  import File, Image
 from ZODB.blob import Blob
 
@@ -74,12 +74,12 @@ class AddFileAction(Action):
             if contentType=='txt/html':
                file=HTML()
                file.source=data
-               nextView +=  newName+'/ckedit'
+               nextView +=  fileName+'/ckedit'
 
             elif contentType=='txt/css':
                file=CSS()
                file.source=data
-               nextView +=  newName+'/aceedit'
+               nextView +=  fileName+'/aceedit'
                
             elif (contentType.lower() in
                    ['txt/json',
@@ -87,7 +87,7 @@ class AddFileAction(Action):
                file=JSON()
                file.__name__ = fileName
                file.source=data
-               nextView  +=  newName+'/aceedit'               
+               nextView  += fileName+'/aceedit'               
 
             else:
                file = File()

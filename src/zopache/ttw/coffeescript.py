@@ -39,7 +39,7 @@ class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
     )
     javascript= schema.Text(
         title = u'The Generated CoffeeScript',
-        description = u'This CoffeeScript is generated from the coffeescript',
+        description = u'This Javascript is generated from the CoffeeScript',
         required = False,
         default = u'',
     )    
@@ -47,7 +47,7 @@ class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
 from .javascript import JavascriptBase    
 @implementer(ICoffeeScript)      
 class CoffeeScript(JavascriptBase,Leaf):
-    icon="ttwicons/Javascript.svg"    
+    icon="ttwicons/CoffeeScript.svg"    
     source =u''
     title=u''
     className='CoffeeScript'
@@ -61,7 +61,7 @@ class CoffeeScript(JavascriptBase,Leaf):
 class  AceScripts(AceScriptsBase):
     def update(self):
         root = self.getRoot()
-        self.template = root['Products']['Templates']['CoffeeScriptTemplate']
+        self.template = root['Products']['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
         result = AceScriptsBase.headerScripts(self)
@@ -73,11 +73,14 @@ class  AceScripts(AceScriptsBase):
         </script>
         """     
         result += """
-<script  src="https://pythonlinks.info/static/coffeescript/coffeescript.js"></script>
+<script  src="/fanstatic/ttwicons/coffeescript.js"></script>
     """
         result += "<script>"
         root= self.getRoot()
-        script = root['Products']['Templates']['CoffeeScriptScripts']
+        script = root['Products']['Templates']['TranspilerScripts']
+        result += """
+                  var transpiler = 'CoffeeScript';
+                  """
         result += script.source
         result += "</script>"
         return result

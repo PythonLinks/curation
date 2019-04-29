@@ -1,4 +1,5 @@
-
+#MAYBE TWO PEPOLE CAN HAVE THE SAME SLUGIFIED HANDLE
+#M
 
 # Copyright (c) 2004 Zope Foundation and Contributors.
 #Copyright Chrisotpher Lozinski 2018
@@ -14,34 +15,55 @@
 from slugify import slugify
 import time
 from BTrees.OOBTree import OOBTree
+from zope.schema import ValidationError
 from zope.interface import implementer, Interface
 from zope.password.interfaces import IPasswordManager
 from zope.password.password import SSHAPasswordManager as PasswordManager
+
 from dolmen.container import BTreeContainer
-from cromlech.browser import getSession
+from cromlech.browser import getSession, setSession
+from cromlech.security import unauthenticated_principal as anonymous
 
 from zopache.core import Container
 from zopache.crud.interfaces import IImutable, IContainer
-from .interfaces import IPrincipalFolder, IInternalPrincipal
+from zopache.ttw.interfaces import IPrincipalFolder, IInternalPrincipal
+from zopache.core import getPrincipalFolder, getRoot
+from zopache.ttw.file import FileBase
 
-class DuplicateIDError(KeyError):
+class DuplicateIDError(ValidationError):
     pass
 
-
-
-
-@implementer(IInternalPrincipal,IContainer)
-class InternalPrincipal(Container):
+@implementer(IInternalPrincipal)
+class InternalPrincipal(Container,FileBase):
     _handle  = ''
     _email = ''
     _password = ''
     title = "Your Profile"
     talkURL =""
+    permissions = ['Vote']
+    chatPermission = False
+    newsPermission = False
+    pugPermission = False
+    pyodidePermission = False
+    helpPermission = False
+    hirePermission = False
+    recruitPermission = False
+
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()
         Container.__init__(self)
-                         
+        FileBase.__init__(self)
+        
+    def logout(self,session=None):
+        if session is None:
+            session = getSession()
+        if 'user' in session:
+            session.clear()
+            return True
+        return False
+
+        
     """ Pricipals which are stored in the ZODB Principal Folder"""
     def upVote(self,item):
         self.possiblyCreateVoteCounts()
@@ -72,6 +94,9 @@ class InternalPrincipal(Container):
         if not hasattr(self,"_downVotes"):
            self._downVotes = {}
 
+    def slugifiedHandle(self):
+        return slugify(self.handle)
+           
            
     def getTitle(self):
         return self._handle
@@ -79,13 +104,11 @@ class InternalPrincipal(Container):
     def getId(self):
         return self._email    
     
-    
     def getPassword(self):
         return self._password
 
     def setPassword(self, password):
         self._password = PasswordManager().encodePassword(password,salt='')
-
 
     def checkPassword(self, password):
         return PasswordManager().checkPassword(self.password, password)
@@ -93,10 +116,8 @@ class InternalPrincipal(Container):
     def getEmail(self):
         return self._email
 
-
     def getHandle(self):
         return self._handle
-
         
     def setEmail(self, email):
         oldEmail = self._email
@@ -105,7 +126,7 @@ class InternalPrincipal(Container):
         self._email = email
         if self.__parent__ is not None:
             try:
-                self.__parent__.notifyEmailChanged(oldEmail,   self)
+                getPrincipalFolder(self).notifyEmailChanged(oldEmail,   self)
             except ValueError:
                 self._email = oldEmail
                 raise
@@ -118,7 +139,7 @@ class InternalPrincipal(Container):
         self._handle = handle
         if self.__parent__ is not None:
             try:
-                self.__parent__.notifyHandleChanged(oldHandle,  self)
+                getPrincipalFolder(self).notifyHandleChanged(oldHandle,  self)
             except ValueError:
                 self._handle = oldHandle
                 raise
@@ -134,26 +155,49 @@ class InternalPrincipal(Container):
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
-
+    icon="ttwicons/Container.svg"
     def __init__(self):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()
-        self.idBySlugifiedHandle = OOBTree()        
+        self.idBySlugifiedHandle = OOBTree()
+
+    def indexPeople(self):
+        self.idByEmail = OOBTree()
+        self.idBySlugifiedHandle = OOBTree()                
+        for item in self.values():
+          try:
+            self.idByEmail[item.email] = item.__name__
+            slug = item.slugifiedHandle()
+            self.idBySlugifiedHandle[slug] = item.__name__
+          except:
+              import pdb; pdb.set_trace()
+              pass
+          
+    def getPrincipalByUserName(self,userName, default = anonymous):
+            self.indexPeople()
+            id = self.getIdByEmail(userName)
+            if id == None:
+                id = self.getIdByHandle(userName)
+            if id != None:    
+               principal = self.getPrincipalById(id)
+               return principal
+            return default
         
-        
+    def getPrincipalById(self,id):
+        return self[id]
+        result = getRoot(self)[id]
+        return result
+    
     def notifyEmailChanged(self, oldEmail,  principal):
         """Notify the Container about changed email or handle of a user.
         We need this, so that our two other trees can be kept up-to-date.
         """
-        
         # A user with the new login already exists
         if principal._email in self.idByEmail:
             raise ValueError('That Email Address already taken!')
-        
-        del self.idByEmail[oldEmail]
+        if oldEmail in self.idByEmail:
+            del self.idByEmail[oldEmail]
         self.idByEmail[principal.email] = principal.__name__
-
-
 
     def notifyHandleChanged(self,  oldHandle, principal):
         """Notify the Container about changed email or handle of a user.
@@ -163,54 +207,66 @@ class PrincipalFolder(Container):
         if slugify(principal._handle) in self.idBySlugifiedHandle:
             raise ValueError('That Handle is already taken!')        
 
-        del self.idBySlugifiedHandle[slugify(oldHandle)]
-        self.idBySlugifiedHandle[slugify(principal.handle)] = principal.__name__        
-    def __setitem__(self, id, principal):
-        """Add a user """
+        oldHandle = slugify (oldHandle)
+        if oldHandle in self.idBySlugifiedHandle:
+           del self.idBySlugifiedHandle[oldHandle]
+           
+        handle = principal.slugifiedHandle()
+        self.idBySlugifiedHandle[handle] = principal.__name__  
 
-        # A user with the new login or handle  already exists
-        if principal.email in self.idByEmail:
-            raise DuplicateIDError('That Email address is already taken!')
+    def registerUser(self,principal):
+        #Editing Email or Handle resets them.
+        #So no need to do anything. 
+        pass
 
-        if slugify(principal.handle) in self.idBySlugifiedHandle:
-            raise DuplicateIDError('That Handle is already taken!')        
-
-        super(PrincipalFolder, self).__setitem__(id, principal)
-        self.idByEmail[principal.email] = id
-        self.idBySlugifiedHandle[slugify(principal.handle)] = id        
-
-    def __delitem__(self, id):
-        """Remove principal information."""
-        principal = self[id]
-        super(PrincipalFolder, self).__delitem__(id)
+    #REALLY THIS IS DELETE USER    
+    def unRegisterUser(self,principal):	
         del self.idByEmail[principal.email]
-        del self.idBySlugifiedHandle[slugify(principal.handle)]        
-
+        del self.idBySlugifiedHandle[principal.slugifiedHandle()]
+        root = getRoot(self)
+        root.deleteItem(principal)
+        return
+    
+        
     def authenticate(self, credentials):
         """Return principal info if credentials can be authenticated
         """
         if not ('email' in credentials and 'password' in credentials):
             return None
-        id = self.idByEmail.get(credentials['email'])
-        if id is None:
-            id = self.idBySlugifiedHandle.get(
-                 slugify(credentials['email']))            
-        if id is None:            
+        userName = credentials['email']
+        internal = self.getPrincipalByUserName(userName,default = None)
+        if internal is None:            
             return None
-        internal = self[id]
         if not internal.checkPassword(credentials["password"]):
             return None
         session = getSession()
-        session['user'] = credentials['email']
+        session['user'] = internal.email
         return internal
+    
 
     def loginUser(self,user):
         session = getSession()
         session['user'] =getattr(user,'email')
 
     def getIdByEmail(self, email):
-        return self.idByEmail[email]
+        return self.idByEmail.get (email,None)
 
     def getIdByHandle(self, handle):
-        return self.idBySlugifiedHandle[slugiy(handle)]    
+        aSlug = slugify(handle) 
+        return self.idBySlugifiedHandle.get(aSlug,None)
 
+"""
+
+A partial test script for adding admin. 
+from zopache.core import getRoot
+
+root = getRoot(item)
+
+for key in item.idByEmail.keys():     print (key)
+
+for key in item.idBySlufifiedHandle.keys():     print (key)
+
+item["5886196134148338085"].__name__
+ item["5886196134148338085"].__name__
+ 
+"""

@@ -21,11 +21,8 @@ class Publisher (DawnlightPublisher):
         crumbs = dawnlight.parse_path(path, shortcuts)
         traverser=Traverser(self.view_locator)
         context=root
-
         while crumbs:
            aType, name=crumbs.popleft()
-           #print (name)
-           #import pdb; pdb.set_trace()           
            if (aType =='history'):
               # CALL THE HISTORY TRAVERSER
               historyTraverser=HistoryTraverser(context,None)
@@ -46,7 +43,8 @@ class Publisher (DawnlightPublisher):
         if view is  None:
            name = 'index' 
            context, view=traverser(context,request,name)
-           
+
+
         #IF A VIEW WAS FOUND, RETURN IT 
         if (view is  not None):
                     factory = IResponseFactory(view)

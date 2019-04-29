@@ -7,7 +7,7 @@ from .javascript import IJavascriptFolder, IJavascript
 from .pug import IPug
 from .interfaces import IHTMLClass
 #from .python import IPython
-from zopache.ttw.interfaces import IFile
+from zopache.ttw.interfaces import IFile, IImage
 
 @crom.adapter
 @crom.sources(IHTMLContainer)
@@ -35,7 +35,16 @@ class IFileAdaptor(object):
     def __init__(self,context):
         self.context=context   
     def getSegment(self):
-        return 'index'    
+        return 'index'
+
+@crom.adapter
+@crom.sources(IImage)
+@crom.target(IURLSegment)
+class ImageAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'index'        
 
 
 @crom.adapter

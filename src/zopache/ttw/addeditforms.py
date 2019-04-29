@@ -1,6 +1,5 @@
 from dolmen.forms.base import action, name, context, form_component
 from zopache.crud.forms import AddForm, EditForm
-from zope.cachedescriptors.property import CachedProperty
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions, i18n as _
@@ -8,7 +7,7 @@ from zopache.ttw import actions as ttwactions
 
 
 class AceAddForm (AddForm):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               ttwactions.AddAndAceEdit(_("Add and Ace Edit",
@@ -22,7 +21,7 @@ class AceAddForm (AddForm):
 
 
 class AceEditForm(EditForm):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
@@ -32,7 +31,7 @@ class AceEditForm(EditForm):
 
 
 class PugEditForm(EditForm):
-    @CachedProperty
+    @property
     def actions(self):
         return Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),

@@ -17,7 +17,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.ttw.interfaces import IHistoryItem
 from dm.historical import getHistory
 from cromlech.security import permissions
-
+from zopache.core.breadcrumbs import Breadcrumbs
 """
 #Maybe this is a much simpler versin for more recent zodb. 
 def getHistory(item, size=40):
@@ -35,7 +35,7 @@ def getHistory(item, size=40):
 @target(ITab)
 @permissions('Manage')
 @context(ISource)
-class History(Page):
+class History(Page, Breadcrumbs):
        label=''
        subTitle='Historic Versions'
        def __call__(self ):
@@ -64,7 +64,10 @@ class History(Page):
 @implementer (IHistoricDetails)
 class HistoricIndex(Page):
        def render(self ):
-           return self.context.item['obj'].source
+           before = '<html><body></body><textarea rows="20" cols="80" margin: 20px; padding: 20px;>'
+           content = self.context.item['obj'].source
+           after = "</textarea></body></html>"
+           return  before + content + after
 
 
 @view_component
@@ -94,7 +97,7 @@ class Restore(Page):
               contextParent.title=item.title
            if hasattr(item,'source'):
               contextParent.source=item.source
-              if hasattr(contextParent,'postProcess'):
+           if hasattr(contextParent,'postProcess'):
                      contextParent.postProcess()
            newURL=self.url(self.context.__parent__)+'/history'
            raise HTTPFound(newURL)
