@@ -250,6 +250,10 @@ class Breadcrumbs(UniqueName):
         return webClassAcquire(context,name)   
 
     def acquireTitle(self):
+        if (hasattr(self.context,"webClass") and
+            (self.context.webClass == "Company") and
+            not self.isAuthenticated()):
+              return "Please login to see the Company"
         return self.acquireAttribute ( 'title')
 
     def acquireAttribute(self, attribute):      

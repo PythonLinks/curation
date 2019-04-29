@@ -11,14 +11,12 @@ from zopache.core.uniquename import UniqueName
 from cromlech.browser.interfaces import IPublicationRoot
 
 class BaseAction(Action):
-    """Add action for files.
-    """
-    
     def __init__(self, title):
         super(Action, self).__init__(title)
 
     def __call__(self, form):
         self.form=form
+        import pdb; pdb.set_trace()
         formData, errors = form.extractData()
         if errors:
             form.submissionError = errors

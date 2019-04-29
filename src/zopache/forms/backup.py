@@ -28,5 +28,5 @@ class Index(View):
                 f.seek (0)
                 return f.read()
             context.__parent__ = parent
-            
+            assert(context.__parent__)            
 

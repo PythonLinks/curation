@@ -39,10 +39,8 @@ class LocationBase (PageBase):
 class Location (LocationBase, RecentMixIn):
     icon="ttwicons/Location.svg"
 
-              
 import googlemaps
-@implementer (IMap)
-class Map(LocationBase,PageMixIn):
+class MapBase(LocationBase):
     zoomLevel=5.
     mapHeight=0.
     mapWidth=0.
@@ -105,4 +103,6 @@ class Map(LocationBase,PageMixIn):
         return result
      """
     
-        
+@implementer (IMap)
+class Map(MapBase,PageMixIn):        
+    pass

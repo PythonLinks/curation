@@ -1,15 +1,19 @@
-
 from .interfaces import ICompany
-from zopache.pages.page import PageBase
-from zopache.pages.interfaces import IPage , IRootPage
 from zope.interface import implementer
-from .geo import geoCache
-from zopache.pages.cache import cache, PageMixIn, RecentMixIn
-
+from zopache.pages.location import LocationBase
+from zopache.categories.category import Category
+from cromlech.security import Unauthorized
 
 @implementer (ICompany)
-class Company  (Location):
-    pass
+class Company  (Category,LocationBase):
+     webClass = "Company"
 
-    
+     def canView(self,view):
+         parent = self.__parent__
+         if (hasattr(parent,"hidden") and
+             (parent.hidden == True) and
+             (not view.isAuthenticated())):
+             raise Unauthorized 
+              
+          
         

@@ -9,11 +9,13 @@ from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from crom import target, order
 from cromlech.container.interfaces import IOrderedContainer
+from zopache.business.interfaces import ICompany
+
 
 class JsonObject(object):
     
     #FUNCTION TO GET JSON TREE OF CATEGORIES
-    #JUST CATEGORES, NO DATA
+    #JUST CATEGORIES, NO DATA
     def categoryVariables(self,spacing):
          result=''
          result+=',\n'
@@ -30,7 +32,10 @@ class JsonObject(object):
          text+= ',\n   '
          name='class'
          text += '\"'+name+'\": \"'
-         text += self.webClass
+         webClass = self.webClass
+         if webClass in ["GoogleMap","HomePage"]:
+             webClass = "Category"
+         text += webClass
          text += '\"' 
          
          return text
@@ -173,7 +178,8 @@ class JsonObject(object):
         if IOrderedContainer.providedBy(self):
             firstLine=True
             for item in self.values():
-                if (IPage.providedBy(item) and 
+                if (IPage.providedBy(item) and
+                    (not ICompany.providedBy(item)) and
                    item.webApproved):
                   if not firstLine:
                       result+=',' 

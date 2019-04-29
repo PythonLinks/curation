@@ -57,7 +57,10 @@ class Add(Action, UniqueName):
         url=self.newURL(baseURL)
         form.new.postProcess()
         if hasattr(form.new,'postAddProcess'):
-            form.new.postAddProcess()
+            try: 
+               form.new.postAddProcess(view=form)
+            except:
+               form.new.postAddProcess()                
         form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 

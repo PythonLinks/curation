@@ -1,8 +1,9 @@
 from urllib.request import urlopen
 import json
-from zopache.pages.location import Map
-from zopache.pages.location import Location
+#from zopache.pages.location import Map
+#from zopache.pages.location import Location
 from zopache.business.company import Company
+from zopache.business.map import Map
 site = 'https://maps.pythonlinks.info/json'
 
 useClass = {
@@ -20,7 +21,7 @@ def processData(branch,root,context):
              continue 
       new= useClass[itemClass]()
       newName = item["key"]
-      if itemClass == "GroupCompany":
+      if itemClass == "CompanyGroup":
           newName = root.getUniqueNumberString()
       for key, value in item["data"].items():
                if key not in ["title","description","source",

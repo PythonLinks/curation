@@ -94,6 +94,9 @@ class InternalPrincipal(Container,FileBase):
         if not hasattr(self,"_downVotes"):
            self._downVotes = {}
 
+    def slugifiedHandle(self):
+        return slugify(self.handle)
+           
            
     def getTitle(self):
         return self._handle
@@ -156,10 +159,22 @@ class PrincipalFolder(Container):
     def __init__(self):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()
-        self.idBySlugifiedHandle = OOBTree()        
-        
-    def getPrincipalByUserName(self,userName, default = anonymous):
+        self.idBySlugifiedHandle = OOBTree()
 
+    def indexPeople(self):
+        self.idByEmail = OOBTree()
+        self.idBySlugifiedHandle = OOBTree()                
+        for item in self.values():
+          try:
+            self.idByEmail[item.email] = item.__name__
+            slug = item.slugifiedHandle()
+            self.idBySlugifiedHandle[slug] = item.__name__
+          except:
+              import pdb; pdb.set_trace()
+              pass
+          
+    def getPrincipalByUserName(self,userName, default = anonymous):
+            self.indexPeople()
             id = self.getIdByEmail(userName)
             if id == None:
                 id = self.getIdByHandle(userName)
@@ -169,8 +184,9 @@ class PrincipalFolder(Container):
             return default
         
     def getPrincipalById(self,id):
-        #return self[id]
-        return getRoot(self)[id]
+        return self[id]
+        result = getRoot(self)[id]
+        return result
     
     def notifyEmailChanged(self, oldEmail,  principal):
         """Notify the Container about changed email or handle of a user.
@@ -195,7 +211,7 @@ class PrincipalFolder(Container):
         if oldHandle in self.idBySlugifiedHandle:
            del self.idBySlugifiedHandle[oldHandle]
            
-        handle = slugify (principal.handle)
+        handle = principal.slugifiedHandle()
         self.idBySlugifiedHandle[handle] = principal.__name__  
 
     def registerUser(self,principal):
@@ -206,11 +222,12 @@ class PrincipalFolder(Container):
     #REALLY THIS IS DELETE USER    
     def unRegisterUser(self,principal):	
         del self.idByEmail[principal.email]
-        del self.idBySlugifiedHandle[slugify(principal.handle)]
+        del self.idBySlugifiedHandle[principal.slugifiedHandle()]
         root = getRoot(self)
         root.deleteItem(principal)
         return
     
+        
     def authenticate(self, credentials):
         """Return principal info if credentials can be authenticated
         """
