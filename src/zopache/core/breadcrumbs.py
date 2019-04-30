@@ -297,7 +297,12 @@ class Breadcrumbs(UniqueName):
         result = self.url(container)+ '/' + item.__name__
         return result
 
-
+    def secureShortURL(self):
+        result = 'https://'
+        result += self.getDomain()
+        result += '/'
+        result += self.context.__name__
+        return result
 
     def shortURL(self,viewName=""):
         result = '/'
