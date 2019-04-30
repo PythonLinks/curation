@@ -49,12 +49,13 @@ class IEdit(Interface):
         description= """Who is allowed to see 
                          your information?""",
         required = False)                
-
+    """
     where=TreeField(
         title="Location Permissions",
         description= "Where can people see your information?",
         required = False,
     )
+    """
     
 @form_component
 @name (u'edit')
