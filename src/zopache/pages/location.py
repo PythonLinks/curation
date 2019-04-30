@@ -59,13 +59,16 @@ class MapBase(LocationBase):
 
 
     def getLocationsRecursively(self,firstItem,result):
-        
         for item in self.values():
              if not ILocationBase.providedBy(item):
                    continue
-
+               
+             if ((item.lattitude == 0) and
+                 item.longitude == 0):
+                 continue
+             
              # IF LOCATION GET THE JSON
-             if ( ILocation.providedBy(item)):
+             if ( ILocationBase.providedBy(item)):
                 result, firstItem= item.getOneMarker(firstItem,result)
 
             #IF IF IS A MAP SHOW IT

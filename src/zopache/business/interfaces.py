@@ -1,6 +1,15 @@
+from zope import schema
+
 from zope.interface import Interface
-from zopache.pages.interfaces import ILocation
+
+from dolmen.container import IBTreeContainer
+from cromlech.container.interfaces import IOrdered
+
+from zopache.pages.interfaces import ILocationBase
 from zopache.pages.interfaces import ILocation as IMapBase
+from zopache.crud.interfaces import IContainer
+from zopache.crud.interfaces import IContainer
+from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 
 class ICompany (ILocationBase,IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical):
 
@@ -26,7 +35,7 @@ class ICompany (ILocationBase,IContainer,IOrdered ,IBTreeContainer,IUntrustedHTM
         title = u'Specialization (20 characters)',
         description = " Why is this Company special?",
         required = False,
-        max_len = 20,
+        max_length = 20,
         default = '',
     )
      
@@ -38,8 +47,8 @@ class ICompany (ILocationBase,IContainer,IOrdered ,IBTreeContainer,IUntrustedHTM
     )
 
     address= schema.Text(
-        title = u'Their Office Address',
-        description = """Once the posting is approved, this is Used to 
+        title = u'Company Address',
+        description = """This is used to 
                  locate the company on the map.""",
         required = False,
         default = '',

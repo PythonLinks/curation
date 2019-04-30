@@ -126,7 +126,7 @@ class IPermissions (IPermissionsBase,IShared):
 class IPermissionsShort (IPermissionsBase,ISharedShort):    
     pass
 
-class IGRegister (IShared):        
+class IGRegister (ISharedShort):        
     idtoken= Text(
                  title="Token",
                  description= "A Google Login Token",
