@@ -1,6 +1,8 @@
 #Subject to ZPL and CV Licenses
 # -*- coding: utf-8 -*-
 import urllib.parse
+from urllib.parse import quote
+from urllib.parse import quote_plus
 
 from cromlech.browser import IPublicationRoot
 from cromlech.location import lineage_chain
@@ -15,7 +17,7 @@ from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 from zopache.zmi.interfaces import IURLSegment
 
-from urllib.parse import quote  # Python 3+
+
 
 _safe = '@+'  # Characters that we don't want to have quoted
 
@@ -122,6 +124,9 @@ class Breadcrumbs(UniqueName):
 
     def urlEncode(self,str):
         return urllib.parse.quote(str)
+    
+    def urlQuotePlus(self,str):
+        return urllib.parse.quote_plus(str)    
     
     #QUITE A STRANGE METHOD.  DO I REALLY USE IT?
     def safeParentalAcquire(self,name,context=None):
