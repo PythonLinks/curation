@@ -112,7 +112,7 @@ class Fix(Manage):
         item=self.context
         import pdb; pdb.set_trace()
         from zopache.business.doit import doit
-        doit(item)
+        #doit(item)
 
         pass
 
