@@ -218,26 +218,27 @@ class ISource(ILeaf):
 class ISourceLeaf(ISource,ILeaf):
       pass
 
-class IPython(ISourceLeaf,ITestURL):
+class IPython(ISourceLeaf):
     """Basic Python  FORM with CRUD"""
-    arguments = schema.TextLine(
-        title = u'Arguments',
-        description = u'An optional comma separated list of arguments',
-        default='',
-        required = False,
-    )    
-    
-    source= schema.Text(
-        title = u'Python Source Code',
-        description = u'The Python code goes here.',
-        required = False,
-        default = u'',
-    )
+#    arguments = schema.TextLine(
+#        title = u'Arguments',
+#        description = u'An optional comma separated list of arguments',
+#        default='',
+#        required = False,
+#    )    
+
     title = schema.TextLine(
         title = u'Title',
         description = u'A short reminder of what this Python code  does or its version name.',
         default='',            
         required = False,
+    )
+
+    source= schema.Text(
+        title = u'Python Source Code',
+        description = u'The Python code goes here.',
+        required = False,
+        default = u'',
     )
 
 class IJavascript(ISourceLeaf):
