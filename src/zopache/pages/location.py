@@ -15,7 +15,9 @@ class LocationBase (PageBase):
           #geoCache.geoCode(self.context.address)
           pass
 
-  
+    def getTitle(self):
+        return self.title
+    
     #JUST ADD ONE MARKER TO THE LIST                        
     def getOneMarker(self, firstItem, result):
                   if not hasattr(self, 'longitude'):
@@ -27,13 +29,14 @@ class LocationBase (PageBase):
                   result += '['
                   result +='"' +  self.__name__ + '"'
                   result += ','
-                  result +='"' +  self.title + '"'
+                  result +='"' +  self.getTitle() + '"'
                   result += ','                      
                   result +=  str(self.lattitude)  
                   result += ','    
                   result += str(self.longitude)
                   result += ',"red"]'
                   return result, firstItem
+              
 
 @implementer (ILocation)
 class Location (LocationBase, RecentMixIn):
@@ -46,6 +49,24 @@ class MapBase(LocationBase):
     mapWidth=0.
     webClass = 'GoogleMap'
     icon="ttwicons/Map.svg"
+    
+    def getCompanies(self):
+        result=[]
+        return self.getCompaniesRecursively(result)
+
+    def getCompaniesRecursively(self,result):
+        import pdb; pdb.set_trace()
+        values = self.values()
+        for item in values:
+            print (item.__name__)
+            if (ICompany.providedBy(item) and
+                item.webApproved):
+                result.append(item)
+            if (IMap.providedBy(item)):
+                item.getCompaniesRecursively(result)
+                
+        return result
+        
       
     # GET THE JSON FOR CHILD LOCATIONS
     def getLocationsJSON(self):

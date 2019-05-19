@@ -6,12 +6,17 @@ from cromlech.security import Unauthorized
 
 @implementer (ICompany)
 class Company  (Category,LocationBase):
+     hidden = False
      webClass = "Company"
-
+     longitude = 0.
+     lattitude = 0.
+     def getTitle(self):
+         if self.hidden:
+            return "Hidden"
+         return self.title
+    
      def canView(self,view):
-         parent = self.__parent__
-         if (hasattr(parent,"hidden") and
-             (parent.hidden == True) and
+         if (self.hidden and
              (not view.isAuthenticated())):
              raise Unauthorized 
               

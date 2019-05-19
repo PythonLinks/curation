@@ -26,7 +26,6 @@ class AddCompany(AddPageBase):
     label="Add a Company"
     factory = Company
     def postAddProcess(self):
-        
         self.new.webApproved = False
     
 @view_component

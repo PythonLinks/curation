@@ -6,7 +6,7 @@ from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
 from zopache.pages.interfaces import ILocationBase
-from zopache.pages.interfaces import ILocation as IMapBase
+from zopache.pages.interfaces import IMap as IMapBase
 from zopache.crud.interfaces import IContainer
 from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical

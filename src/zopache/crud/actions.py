@@ -134,11 +134,13 @@ class SaveAndRoot(Update):
     def newURL(self,baseURL):
         return "/"
 
+class SaveAndParent(Update):
+    def newURL(self,baseURL):
+        return ".."    
 
 class SaveAndTest(Update):
         def newURL(self,baseURL):
                return self.form.context.testURL
-
            
 class Delete(Action):
     """Delete action for any locatable context.

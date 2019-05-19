@@ -259,7 +259,9 @@ class Breadcrumbs(UniqueName):
             (self.context.webClass == "Company") and
             not self.isAuthenticated()):
               return "Please login to see the Company"
-        return self.acquireAttribute ( 'title')
+        if hasattr(self,'title'):
+           return self.title
+        return self.acquireAttribute('title')
 
     def acquireAttribute(self, attribute):      
         parents = lineage_chain(self.context)
