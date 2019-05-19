@@ -77,14 +77,14 @@ class IPermissionsBase (Interface):
 
     
 class ISharedShort(Interface):        
-
+   
     chatPermission = Bool(
         title = "Run this web server.",
         required = True,
         default = False)
 
     
-class IShared(Interface):            
+class IShared(ISharedShort):            
     newsPermission = Bool(
         title = "Please recommend good videos.",
         required = False,
@@ -126,7 +126,7 @@ class IPermissions (IPermissionsBase,IShared):
 class IPermissionsShort (IPermissionsBase,ISharedShort):    
     pass
 
-class IGRegister (IShared):        
+class IGRegister (ISharedShort):        
     idtoken= Text(
                  title="Token",
                  description= "A Google Login Token",

@@ -77,13 +77,11 @@ Node  <span class="caret"></span></a>
 <li ><a href="./delete">Delete</a></li>
 
 <li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
+<!--
 <a href="./forest-wiki-backup">Backup</a></li>
+-->
 <li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
-<a href="./restopre">Restore</a></li>
-<li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
-<a href="./replace">Replace</a></li>
-
-
+<a href="./restore">Restore</a></li>
 </ul>
 </li>
 

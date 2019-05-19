@@ -62,11 +62,11 @@ purposes:</p>"""
 
     @property
     def actions(self):
-        return Actions(Add("Add",self))
+        return Actions(Add("Sign Me Up!",self))
 
-    def nextUrl(self,new):
-        if new.recruitPermission:
-            newURL = '/' + newName.__name__ + "/edit"
+    def newURL(self,new):
+        if new.hirePermission:
+            newURL = '/' + new.__name__ + "/edit"
         else:
             newURL = '/'
         return newURL

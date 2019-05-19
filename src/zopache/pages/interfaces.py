@@ -4,7 +4,6 @@ from zopache.crud.interfaces import IContainer
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 from cromlech.browser.interfaces import IPublicationRoot
-from .geo import Address
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 
 # A MARKER TO SHOW THAT THIS IS NEWS
@@ -84,6 +83,8 @@ class IMap(ILocationBase):
         required = True,
     )
     """
+from .geo import Address
+
     mapWidth = schema.Float(
         title = u'Map Width',
         description = u'Map Width ',

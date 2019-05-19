@@ -62,7 +62,7 @@ class Add(Action):
         #before authenticating it.
         principalFolder.authenticate (data)
         message(_(u"You are Registered and Logged In"))
-        newURL = form.newURL(new)
+        newURL = form.newURL(newPerson)
         if hasattr(form,'postAddProcess'):
               form.new=newPerson            
               form.postAddProcess()    

@@ -57,7 +57,10 @@ class Add(Action, UniqueName):
         url=self.newURL(baseURL)
         form.new.postProcess()
         if hasattr(form.new,'postAddProcess'):
-            form.new.postAddProcess()
+            try: 
+               form.new.postAddProcess(view=form)
+            except:
+               form.new.postAddProcess()                
         form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 
@@ -131,11 +134,13 @@ class SaveAndRoot(Update):
     def newURL(self,baseURL):
         return "/"
 
+class SaveAndParent(Update):
+    def newURL(self,baseURL):
+        return ".."    
 
 class SaveAndTest(Update):
         def newURL(self,baseURL):
                return self.form.context.testURL
-
            
 class Delete(Action):
     """Delete action for any locatable context.

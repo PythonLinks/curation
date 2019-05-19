@@ -116,6 +116,6 @@ class GoogleRegisterAction(GoogleLoginAction):
            obj.handle=data['given_name']+data['family_name']
         except:
            obj.handle = data['name']
-        nextURL = self.view.nextURL()   
+        nextURL = form.nextURL()   
         raise HTTPFound(nextURL)
 

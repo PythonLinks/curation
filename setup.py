@@ -59,6 +59,7 @@ install_requires = [
     'dolmen.view',
     'dolmen.viewlet',
     'dolmen.widget.file',
+    'googlemaps',
     'unicode-slugify',
     'setuptools',
     'zopache',

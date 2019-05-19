@@ -1,6 +1,8 @@
 #Subject to ZPL and CV Licenses
 # -*- coding: utf-8 -*-
 import urllib.parse
+from urllib.parse import quote
+from urllib.parse import quote_plus
 
 from cromlech.browser import IPublicationRoot
 from cromlech.location import lineage_chain
@@ -15,7 +17,7 @@ from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 from zopache.zmi.interfaces import IURLSegment
 
-from urllib.parse import quote  # Python 3+
+
 
 _safe = '@+'  # Characters that we don't want to have quoted
 
@@ -92,11 +94,17 @@ def nameAndTitle(item,showTitles):
         return name, name
 
 from pydoc import locate
-import cython
 
+try:
+   import cython
+except:
+   pass
 class Breadcrumbs(UniqueName):
-    def isCompiledByCython(self):
+    try:   
+      def isCompiledByCython(self):
         return cython.compiled
+    except:
+        pass
 
     def parents(self, item=None):
         if item == None:
@@ -116,6 +124,9 @@ class Breadcrumbs(UniqueName):
 
     def urlEncode(self,str):
         return urllib.parse.quote(str)
+    
+    def urlQuotePlus(self,str):
+        return urllib.parse.quote_plus(str)    
     
     #QUITE A STRANGE METHOD.  DO I REALLY USE IT?
     def safeParentalAcquire(self,name,context=None):
@@ -244,7 +255,13 @@ class Breadcrumbs(UniqueName):
         return webClassAcquire(context,name)   
 
     def acquireTitle(self):
-        return self.acquireAttribute ( 'title')
+        if (hasattr(self.context,"webClass") and
+            (self.context.webClass == "Company") and
+            not self.isAuthenticated()):
+              return "Please login to see the Company"
+        if hasattr(self,'title'):
+           return self.title
+        return self.acquireAttribute('title')
 
     def acquireAttribute(self, attribute):      
         parents = lineage_chain(self.context)
@@ -260,8 +277,11 @@ class Breadcrumbs(UniqueName):
           if len(args)==0:
             return self.request.url
           else:
-            return  get_absolute_url((args)[0], self.request)
+            result =  self.simpleUrl((args)[0])
+            return result
+            #return  get_absolute_url((args)[0], self.request)
         except:
+
             return "BROKEN-URL-IN-BREADCRUMBS"
         
     def contextURL(self, name=''):
@@ -279,7 +299,12 @@ class Breadcrumbs(UniqueName):
         result = self.url(container)+ '/' + item.__name__
         return result
 
-
+    def secureShortURL(self):
+        result = 'https://'
+        result += self.getDomain()
+        result += '/'
+        result += self.context.__name__
+        return result
 
     def shortURL(self,viewName=""):
         result = '/'
