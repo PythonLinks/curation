@@ -39,109 +39,12 @@ import RestrictedPython
 from RestrictedPython import _compat
 from dolmen.forms.base.interfaces import ActionError
 
-def safer_getattr(object, name, default=None, getattr=getattr):
-    """Getattr implementation which prevents using format on string objects.
-
-    format() is considered harmful:
-    http://lucumr.pocoo.org/2016/12/29/careful-with-str-format/
-
-    """
-    if isinstance(object, _compat.basestring) and name == 'format':
-        raise NotImplementedError(
-            'Using format() on a %s is not safe.' % object.__class__.__name__)
-    return getattr(object, name, default)
-
-
-safe_builtins['_getattr_'] = getattr
-#safe_builtins['_iter_unpack_sequence_'] = RestrictedPython.Guards.guarded_iter_unpack_sequence
-from RestrictedPython.Guards import guarded_iter_unpack_sequence
-
-def default_guarded_getiter(ob):
-        # No restrictions.
-        return ob
-    
-def default_guarded_getitem(ob, index):
-        # No restrictions.
-        return ob[index]
-
-safe_locals = {}
-    
-class OwnRestrictingNodeTransformer(RestrictingNodeTransformer):
-        pass
-
-policy = OwnRestrictingNodeTransformer
-
-policy_instance = OwnRestrictingNodeTransformer(
-            errors=[],
-            warnings=[],
-            used_names=[]
-        )
-
-
-
-class  DotAccess(object):
-        
-    def __init__(self, context):
-        self.context = context
-        
-    def __getattr__(self, name):
-        if name in self.context:
-            item =  self.context[name]
-            if IPython.providedBy(item):
-               return item
-            return DotAccess(item)
-        item = object.__getattr__(self, name)
-        return item
-
 
 
 @implementer(IPython)
 class PythonScript(Leaf):
     icon="ttwicons/Python.svg"
     
-    def dotAccessParents(self):
-        theParents = parents (self)
-        #result =  dict((node.__name__,DotAccess(node) ) for node in theParents)
-        result =  dict((node.__name__,node ) for node in theParents)        
-        return result
-
-    
-    #We could save some cycles and only compile this when loaded from the ZODB
-    def getCode(self):
-       if not hasattr(self,'_v_code'):
-          self.compile()
-       return self._v_compiledFunction
-
-    def postProcess(self):
-            self.compile()
-            
-    def compile(self):
-        compiled = compile_restricted_function(
-            self.arguments,
-            self.source,
-            self.__name__,
-            globalize = ['view'])
-        self._v_code=compiled.code
-        self._v_errors=compiled.errors
-        self._v_warnings=compiled.warnings
-        self._v_used_names=compiled.used_names
-        products = self.dotAccessParents()
-        safe_globals = {**safe_builtins, 
-                        **limited_builtins, 
-                        **utility_builtins,
-                        **products}
-        safe_globals['_getiter_']  = default_guarded_getiter
-        safe_globals['_iter_unpack_sequence_'] = guarded_iter_unpack_sequence
-        safe_globals['_getitem_'] = default_guarded_getitem
-        
-        exec(compiled.code, safe_globals, safe_locals)
-        self._v_compiledFunction = safe_locals[self.__name__]
-    
-    def __call__(self,*args, **kwargs):
-        code=self.getCode()
-        return code(*args,**kwargs)
-
-
 class  AceScripts(AceScripts):
     def  footerScripts(self):
         return self.aceEditorFooter + """ 
@@ -149,46 +52,20 @@ class  AceScripts(AceScripts):
         </script>
         """
 
-class ValidatePython(object):    
-     def validateCore(self,form,name):
-             self.parentClass.validate(self,form)
-             new=PythonScript()
-             new.__name__=name
-             new.source=form.request.POST.get('form.field.source')
-             new.arguments=form.request.POST.get('form.field.arguments')
-             try:
-                result=new.compile()
-             except:
-                form.submissionError=() 
-                if len(new._v_errors) != 0:
-                   form.submissionError += new._v_errors + ("Extra Error",) 
-                   raise ActionError(new._v_errors) 
-             if len(new._v_warnings) != 0:
-                   form.submissionError += new._v_warnings + ("Extra Warning",)
-                   raise ActinError(new._v_warnings)
-             return True
-             
-class AddPythonAndEdit(ValidatePython,Add):
+class AddPythonAndEdit(Add):
     parentClass=Add
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
 
-class AddPythonAndTest(ValidatePython,Add):
+class AddPythonAndTest(Add):
     parentClass=Add
     def newURL(self,baseURL):
         return self.form.new.testURL
 
-class EditPython (ValidatePython,Edit):
+class EditPython (Edit):
     parentClass=Edit
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
-
-    #Validate on Edit        
-    def validate(self,form):
-            self.form=form
-            name=form.context.__name__
-            return self.validateCore(form,name)
-
 
     
 class EditPythonAndTest(EditPython):
@@ -222,14 +99,8 @@ class AddPythonFunction(AceScripts,AceAddForm):
     def actions(self):
         return Actions(
               AddPythonAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
-              AddPythonAndTest(_("Add and Test","Add -> Test"), self.factory),
+              #AddPythonAndTest(_("Add and Test","Add -> Test"), self.factory),
               Cancel(_("Cancel","Cancel")))
-
-    #Validate on Add
-    def validate(self,form):
-            name=form.request.POST.get('form.field.__name__')
-            return self.validateCore(form,name)
-    
 
 def make_python_response(view, result, *args, **kwargs):
         response = view.responseFactory()
