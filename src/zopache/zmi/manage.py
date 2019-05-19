@@ -65,7 +65,11 @@ class ManageBase(Form,Contents):
     def update(self):
           root = self.getRoot()
           #self.template = root['Products']['Templates']['Manage.pt']
-          self.template = root['Products']['Templates']['EditTitles']          
+          self.template = root['Products']['Templates']
+          try:
+            self.template = self.template['EditTitles']
+          except:
+            self.template = self.template['Manage.pt']              
           return 
 #THE MANAGE DEMO
 @form_component
