@@ -10,6 +10,9 @@ from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 class IRecent(Interface):
     pass
 
+class ICountable(Interface):
+      pass
+
 class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical):
 
     title = schema.TextLine(

@@ -10,8 +10,9 @@ from zopache.pages.interfaces import IMap as IMapBase
 from zopache.crud.interfaces import IContainer
 from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
+from zopache.pages.interfaces  import ICountable
 
-class ICompany (ILocationBase,IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical):
+class ICompany (ILocationBase,IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical, ICountable):
 
     title = schema.TextLine(
         title = 'Company Name',
