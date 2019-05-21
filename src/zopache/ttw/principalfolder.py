@@ -109,7 +109,7 @@ class InternalPrincipal(Container,FileBase):
 
     def setPassword(self, password):
         self._password = PasswordManager().encodePassword(password,salt='')
-
+        
     def checkPassword(self, password):
         return PasswordManager().checkPassword(self.password, password)
 
@@ -170,11 +170,10 @@ class PrincipalFolder(Container):
             slug = item.slugifiedHandle()
             self.idBySlugifiedHandle[slug] = item.__name__
           except:
-              import pdb; pdb.set_trace()
               pass
           
     def getPrincipalByUserName(self,userName, default = anonymous):
-            self.indexPeople()
+
             id = self.getIdByEmail(userName)
             if id == None:
                 id = self.getIdByHandle(userName)

@@ -50,23 +50,6 @@ class MapBase(LocationBase):
     webClass = 'GoogleMap'
     icon="ttwicons/Map.svg"
     
-    def getCompanies(self):
-        result=[]
-        return self.getCompaniesRecursively(result)
-
-    def getCompaniesRecursively(self,result):
-        import pdb; pdb.set_trace()
-        values = self.values()
-        for item in values:
-            print (item.__name__)
-            if (ICompany.providedBy(item) and
-                item.webApproved):
-                result.append(item)
-            if (IMap.providedBy(item)):
-                item.getCompaniesRecursively(result)
-                
-        return result
-        
       
     # GET THE JSON FOR CHILD LOCATIONS
     def getLocationsJSON(self):

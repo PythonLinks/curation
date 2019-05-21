@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+
+#-*- coding: utf-8 -*-
 import os
 from os.path import join
 
@@ -9,23 +10,25 @@ from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 
 extensions =[
-                 Extension("zopache.application/*",
+    Extension("zopache.application/*",
                            ["src/zopache/application/*.py"]),
-                 Extension("zopache.application/browser/*",
+    Extension("zopache.application/browser/*",
                            ["src/zopache/application/browser/*.py"]),    
-                 Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
-                 Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
-                 Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
-                 Extension("zopache.forms/*",
+    Extension("zopache.business/*", ["src/zopache/business/*.py"]),
+    Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
+    Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
+    Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
+    Extension("zopache.forms/*",
                  ["src/zopache/forms/*.py"]),
-                 Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
-                 Extension("zopache.iodide/*", ["src/zopache/iodide/*.py"]),
-                 Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
-                 Extension("zopache.climate/*", ["src/zopache/climate/*.py"]),    
-                 Extension("zopache.core/*", ["src/zopache/core/*.py"])
+    Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
+    Extension("zopache.iodide/*", ["src/zopache/iodide/*.py"]),
+    Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
+    Extension("zopache.climate/*", ["src/zopache/climate/*.py"]),    
+    Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
-extensions =[]
+#extensions =[]
+#extensions =[]
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()
