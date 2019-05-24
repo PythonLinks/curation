@@ -36,7 +36,7 @@ class AddCompany(AddPageBase):
     
         
 @view_component
-@name('addMap')
+@name('addMap2')
 @title("Add Map")
 @target(IView)
 @permissions('AddContent')
