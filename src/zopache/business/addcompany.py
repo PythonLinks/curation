@@ -27,7 +27,14 @@ class AddCompany(AddPageBase):
     factory = Company
     def postAddProcess(self):
         self.new.webApproved = False
+
+    @property
+    def actions(self):
+        return Actions(
+              AddAndView("Add and View", self.factory),
+              formactions.Cancel("Cancel","Cancel"))
     
+        
 @view_component
 @name('addMap')
 @title("Add Map")
