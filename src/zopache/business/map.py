@@ -5,7 +5,7 @@ from zopache.categories.category import Category
 
 @implementer (IMap)
 class Map  (Category,MapBase):
-    webClass = "GoogleMap"
+    webClass = "CompanyMap"
     hidden = False
     interface = IMap
     
