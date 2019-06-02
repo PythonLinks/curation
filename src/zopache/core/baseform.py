@@ -26,8 +26,14 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     make_response = make_layout_response
     template = tal_template('form.pt')
     
+
     def before(self,widget):
-        return ""
+        field = widget.component._field
+        result = ""
+        if hasattr(field,"text"):
+            result = field.text
+        return result       
+
     
     @property
     def action_url(self):

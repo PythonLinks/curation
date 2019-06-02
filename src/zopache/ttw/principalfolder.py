@@ -150,7 +150,10 @@ class InternalPrincipal(Container,FileBase):
     id = property(getId)
     handle = property(getHandle, setHandle)    
 
-            
+
+def key(item):
+    return item._p_mtime
+
 @implementer(IPrincipalFolder,IImutable)
 class PrincipalFolder(Container):
     """ A Container of Principals.
@@ -161,6 +164,13 @@ class PrincipalFolder(Container):
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()
 
+    def values(self):
+        all = []
+        for item in Container.values(self):
+            all.append(item)
+        all.sort(key=key, reverse = True)
+        return all
+    
     def indexPeople(self):
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()                

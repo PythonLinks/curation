@@ -72,6 +72,9 @@ class EditPrincipal(BaseEditForm):
 
 
     def update(self):
-        if not (self.request.principal is self.context):
-                raise Unauthorized()
-        return BaseEditForm.update(self)
+        if  (self.request.principal is self.context):
+           return
+        if 'Manage' in self.request.principal.permissions:
+           return 
+        raise Unauthorized()
+        #return BaseEditForm.update(self)

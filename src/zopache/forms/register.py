@@ -22,7 +22,7 @@ from cromlech.webob import Response
 from zopache.core.baseform import Form
 
 from cromlech.browser.directives import title
-from zopache.ttw.interfaces import IRegister, IRegisterShort
+from zopache.ttw.interfaces import IRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 
@@ -38,13 +38,6 @@ class Register(Form):
     ignoreContent = True
     igrnoreRequest = False
     
-    def before(self,widget):
-        text = """ <p> I give permission 
-to process my professional information for the following 
-purposes:</p>"""
-        if widget.htmlId() == "form-field-chatPermission":
-            return text
-        return ""
     
     def postAddProcess(self):
        if len(self.new.__parent__)==1:
@@ -70,7 +63,8 @@ purposes:</p>"""
         else:
             newURL = '/'
         return newURL
-    
+
+"""    
 @form_component
 @name (u'register')
 @context(Interface)
@@ -81,3 +75,4 @@ class RegisterShort(Register):
     def nextUrl(self,new):
         newURL = '/'
         return newURL
+"""

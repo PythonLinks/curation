@@ -44,26 +44,22 @@ class ITestURL(Interface):
         default='/',            
     )
 
-
-
-
-
-
     
 class IGLogin(Interface):
         idtoken= Text(
         title="Token",
-        description= "A Google Login Token",
+        description= "",
         required = True)
         
 
-class IPermissionsBase (Interface):
+class IHandle(Interface):
 
     handle = DottedName(
         title="User Name",
         description= "You can log in with this.  No spaces.",
         required = True)
 
+class IEmail(Interface):    
     email = Email(
         title="Your Email Address",
         description ="",
@@ -74,17 +70,16 @@ class IPermissionsBase (Interface):
         title="Password",
         description = "Be Strong",
         required = True)
-
     
-class ISharedShort(Interface):        
-   
+class IPermissions(Interface):            
     chatPermission = Bool(
         title = "Run this web server.",
         required = True,
         default = False)
-
-    
-class IShared(ISharedShort):            
+    chatPermission.text = """ <p> I give permission 
+to process my professional information for the following  
+purposes:</p>"""
+        
     newsPermission = Bool(
         title = "Please recommend good videos.",
         required = False,
@@ -94,6 +89,8 @@ class IShared(ISharedShort):
 	    title = "Help me to get a better job.",
 	    required = False,
 	    default = False)   
+    hirePermission.text ="""<p>Please support this website by also granting 
+permission for at least one of the two following purposes:</p>"""
 
     recruitPermission = Bool(
 	   title = "Help me hire a good developer / data scientist.",
@@ -101,42 +98,10 @@ class IShared(ISharedShort):
 	 default = False)
 
 
-
-class ExtrePermissions(Interface):
-    """    
-    pugPermission =Bool(
-	 title = "Pug course permissions.",
-	 required = False,
-	 default = False)
-
-    pyodidePermission =Bool(
-	 title = "PyOdide course permissins",
-	 required = False,
-	 default = False)
-
-    helpPermission =Bool(
-	 title = "Help curate content",
-	 required = False,
-	 default = False)    
-    """              
-    
-class IPermissions (IPermissionsBase,IShared):    
-    pass
-
-class IPermissionsShort (IPermissionsBase,ISharedShort):    
-    pass
-
-class IGRegister (ISharedShort):        
-    idtoken= Text(
-                 title="Token",
-                 description= "A Google Login Token",
-                 required = True)
-
-
-class IRegister(IPermissions):
+class IGRegister (IGLogin,IHandle,IPermissions):        
    pass
 
-class IRegisterShort(IPermissionsShort):
+class IRegister(IHandle, IEmail, IPermissions):
    pass
 
     
@@ -370,3 +335,22 @@ class IZopache(Interface):
     pass
 
 """
+
+class ExtrePermissions(Interface):
+    """    
+    pugPermission =Bool(
+	 title = "Pug course permissions.",
+	 required = False,
+	 default = False)
+
+    pyodidePermission =Bool(
+	 title = "PyOdide course permissins",
+	 required = False,
+	 default = False)
+
+    helpPermission =Bool(
+	 title = "Help curate content",
+	 required = False,
+	 default = False)    
+    """              
+    
