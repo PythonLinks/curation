@@ -40,7 +40,7 @@ class IEdit(Interface):
 
     data = FileField( title ="Your CV or Resume",
                       description = "It is only shown to those whom you allow to see it..",
-                      required = False 
+                      required = True 
     )
     
     who = Set(

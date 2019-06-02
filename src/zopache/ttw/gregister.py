@@ -47,7 +47,7 @@ class GoogleRegister(AddForm):
     
     @property
     def actions(self):
-        return Actions(GoogleRegisterAction("Add", self))
+        return Actions(GoogleRegisterAction("Please Register Me", self))
 
     def newURL(self,new):
         if new.hirePermission:

@@ -83,7 +83,7 @@ class GoogleLoginAction(Action):
         
         root = getRoot(form.context)
         people = root ['person']
-        userId = data['sub']
+        userId = data['sub'] 
         self.innerCall(userId,people)
         
     def innerCall(self,userId,people):
