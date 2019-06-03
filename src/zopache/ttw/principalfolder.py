@@ -48,7 +48,8 @@ class InternalPrincipal(Container,FileBase):
     helpPermission = False
     hirePermission = False
     recruitPermission = False
-
+    contentType = "text/plain"
+    
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()

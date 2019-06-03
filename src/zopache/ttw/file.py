@@ -1,4 +1,5 @@
 from ZODB.blob import Blob, BlobFile
+from ZODB.POSException import POSKeyError
 
 from zope.interface import Interface, implementer
 from dolmen.container import OrderedBTreeContainer
@@ -25,9 +26,18 @@ class FileBase(object):
 
         
     def getData(self):
-        with  self.blob.open(mode='r') as f:
-           return f.read()
-       
+        if not hasattr(self,'blob'):
+            return ""
+        try:
+            with  self.blob.open(mode='r') as f:
+               return f.read()
+        except POSKeyError as error:
+            return error.args[0]
+
+
+
+
+
     data = property(getData,setData)
     
 @implementer(IFile)
@@ -69,7 +79,7 @@ class IndexFile(View):
 
 from zopache.ttw.interfaces import IInternalPrincipal           
 @view_component
-@name('cv')
+@name('index')
 @context(IInternalPrincipal)
 @title("View CV")
 @permissions('Manage')
