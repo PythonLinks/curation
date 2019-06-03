@@ -9,8 +9,7 @@ from zopache.ttw.interfaces import IFile, IImage
           
 
 class FileBase(object):    
-    def __init__(self):
-        self.blob = Blob()
+
         
     @property
     def size(self):
@@ -18,8 +17,16 @@ class FileBase(object):
 
     def setData(self, data):
         dataFile = data.file
+        import pdb; pdb.set_trace()
+        bits =  dataFile.read()        
+        if len(bits) == 0:
+            return
+        
+        if not hasattr(self,'blob'):
+            self.blob = Blob()
+
         with self.blob.open(mode ="w") as blobFile:
-           bits =  dataFile.read()
+
            blobFile.write(bits)
            self.contentType = data.headers.get_content_type()
         blobFile.close()
