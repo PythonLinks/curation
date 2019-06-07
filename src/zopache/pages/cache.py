@@ -168,7 +168,7 @@ class MixIn(object):
     def addToHeapQ2(self,aHeap,sortKey):
         # For conferences we want to compare all the talks
         # Otherwise just the top 10
-        if (len(aHeap)> 9):
+        if (len(aHeap)> 15):
             heapq.heappushpop(aHeap,(getattr(self,sortKey),self.__name__,self))
         else:
             try:
