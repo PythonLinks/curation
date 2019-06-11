@@ -170,7 +170,7 @@ class MixIn(object):
         # Otherwise just the top 10
         listLength = 9
         if self.__name__ == "the-best-lightning-talks-of-pycon-usa-2019":
-            listLenght = 15
+            listLength = 15
         if (len(aHeap)> listLength ):
             heapq.heappushpop(aHeap,(getattr(self,sortKey),self.__name__,self))
         else:
