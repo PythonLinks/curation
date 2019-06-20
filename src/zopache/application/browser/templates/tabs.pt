@@ -27,10 +27,13 @@ HTML  <span class="caret"></span></a>
 JavaScript <span class="caret"></span></a>
 <ul class="dropdown-menu">
 <li><a href="./addJavascript">JavaScript</a></li>
-<li><a href="./addCoffeeScript">CoffeeScript</a></li>
-<li><a href="./addReact">React</a></li>
-<li><a href="./addPug">Pug</a></li>
 <li><a href="./addJavascriptFolder">Javascript Folder</a></li>
+<li><a href="./addCoffeeScript">CoffeeScript</a></li>
+<li tal:condition="view.safeMethod('isPythonFolder')">
+   <a href="./addPython">Python</a></li>
+<li tal:condition="view.safeMethod('isBTreeContainer') or view.safeMethod('isPythonFolder')">
+   <a href="./addPythonFolder">Python Folder</a></li>
+<li><a href="./addPug">Pug</a></li>
 <li><a href="./addJSON">JSON</a></li>
 </ul>
 </li>
@@ -77,9 +80,8 @@ Node  <span class="caret"></span></a>
 <li ><a href="./delete">Delete</a></li>
 
 <li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
-<!--
 <a href="./forest-wiki-backup">Backup</a></li>
--->
+
 <li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
 <a href="./restore">Restore</a></li>
 </ul>

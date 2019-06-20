@@ -183,30 +183,11 @@ class ISource(ILeaf):
 class ISourceLeaf(ISource,ILeaf):
       pass
 
-class IPython(ISourceLeaf):
-    """Basic Python  FORM with CRUD"""
-#    arguments = schema.TextLine(
-#        title = u'Arguments',
-#        description = u'An optional comma separated list of arguments',
-#        default='',
-#        required = False,
-#    )    
 
-    title = schema.TextLine(
-        title = u'Title',
-        description = u'A short reminder of what this Python code  does or its version name.',
-        default='',            
-        required = False,
-    )
+class IJavascriptIndex(Interface):
+      pass
 
-    source= schema.Text(
-        title = u'Python Source Code',
-        description = u'The Python code goes here.',
-        required = False,
-        default = u'',
-    )
-
-class IJavascript(ISourceLeaf):
+class IJavascript(ISourceLeaf,IJavascriptIndex):
     "Basic Javascript Form"
 
     title = schema.TextLine(
@@ -221,8 +202,11 @@ class IJavascript(ISourceLeaf):
         required = False,
         default = u' ',
     )
+    
+class ISearchable(Interface):
+      pass
 
-
+  
 class IJSON(IJavascript):
     """Basic JSON CRUD """
 
@@ -306,6 +290,9 @@ class ISourceContainer(ISource,
 class IHTMLContainer(ISourceContainer,IHTML):
    pass
 
+class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable):
+        "Basic Javascript Folder Form"
+        pass
 
 
 class IUntrustedHTML(IHTML):

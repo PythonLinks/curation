@@ -30,6 +30,7 @@ class AddForm(Form):
     'update'. It checks if the 'require' directive of the factored item
     is respected on the context.
     """
+    error = ''
     label= ''
     subTitle='Add an Object'
 

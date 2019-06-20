@@ -64,7 +64,11 @@ class Renamer(BaseClass):
                      return
         newName=self.uniqueName(container,newName)
         newName = slugify(newName,ok=SLUG_OK+'.', lower= False)
-        self.moveFrom(container,oldName, container, newName)                
+        if hasattr(obj,'preMoveProcess'):
+            obj.preMoveProcess(view)
+        self.moveFrom(container,oldName, container, newName)
+        if hasattr(obj,'postMoveProcess'):
+            obj.postMoveProcess(view)        
         cache.resetCache()
         
     def allowed(self,obj):
@@ -92,7 +96,9 @@ class Cutter(BaseClass):
 
         newName=self.uniqueName(toFolder,oldName)
         container = obj.__parent__
-        self.moveFrom(container, oldName, toFolder, newName)        
+        if hasattr(obj,'preMoveProcess'):
+            obj.preMoveProcess(view)        
+        self.moveFrom(container, oldName, toFolder, newName)
         self.describeTransaction(" Cut ", obj)
 
     def allowed(self,item):
@@ -149,6 +155,8 @@ class Paster(BaseClass):
                self.view.error +=orig_name + " WAS NOT PASTED <br>"
                continue 
            self.moveFrom(fromFolder, orig_name, toContainer, new_name)
+           if hasattr(obj,'postMoveProcess'):
+               obj.postMoveProcess(view)                   
            self.describeTransaction(" Paste ", toContainer[new_name])
            
     def allowed(self,obj):
@@ -173,7 +181,9 @@ class Deleter(BaseClass):
             return
         
         # HAVE TO DESCRIE BEFORE DELETING OTHERWISE NO NAME AVAILABLE
-        self.describeTransaction(" Deleted ", obj)        
+        self.describeTransaction(" Deleted ", obj)
+        if hasattr(obj,'preDeleteProcess'):
+            obj.postMoveProcess(view)                
         del container[name]
         if view.request.principal == obj:
            obj.logout()

@@ -13,21 +13,15 @@ from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts
-from .interfaces import ISourceContainer
-from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
-from zopache.ttw.interfaces import IWeb
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
 from cromlech.webob.response import Response
-from .interfaces import IJavascript
+from .interfaces import IJavascript,IJavascriptIndex
+from zopache.core.relatives import Parents
 
+from zopache.ttw.interfaces import IJavascriptFolder,ISearchable
 
-class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer):
-        "Basic Javascript Folder Form"
-        pass
-        
-
-class JavascriptBase(object):
+class SourceBase(object):
     def getJavascriptObjects(self):
          return [self]
 
@@ -40,6 +34,12 @@ class JavascriptBase(object):
     def getTitle(self):
         return self.__name__
 
+    def getSource(self):
+        return self.source
+    
+class JavascriptBase(SourceBase):
+
+
     def postProcess(self):
         self.createJavascriptCaches()
 
@@ -47,18 +47,10 @@ class JavascriptBase(object):
         self.postProcess()
 
     def createJavascriptCaches(self):
-        parentJavascriptFolders=self.parentsWhichImplement(IJavascriptFolder)
+        parentJavascriptFolders=Parents(self
+                         ).parentsWhichImplement(IJavascriptFolder)
         for folder in parentJavascriptFolders:
              folder.sourceCache=jsmin(folder.getJavascript())
-
-    def parentsWhichImplement(self,interface):
-           item=self
-           result=[]
-           while (item!=None):
-             if interface.providedBy(item):
-                       result.append(item)
-             item=item.__parent__
-           return result
 
     def __call__(self,view,**args):
             return self.getJavascript()       
@@ -72,8 +64,7 @@ class Javascript(JavascriptBase,Leaf):
     def getJavascript(self):
         return self.source
 
-    def getSource(self):
-        return self.source    
+
 
                 
 @implementer(IJavascriptFolder)
@@ -138,17 +129,12 @@ class  AceScripts(AceScripts):
         </script>
         """     
 
-    def commands(self):
-        manual=self.liHref('http://www.zopache.com/baseicwebobjects/javascript','Javascript Manual')
-        return manual 
-
 @form_component
 @name('addJavascript')
 @context(IBTreeContainer)
 @target(IView)
 @title("Add Javascript")
 @permissions('Manage')
-@implementer(IWeb)
 class AddJavascript(AceScripts,AceAddForm):
     subTitle='Add a Javascript Object'
     interface = IJavascript
@@ -166,7 +152,6 @@ class AddJavascript(AceScripts,AceAddForm):
 @target(IView)
 @title("Add JavascriptFolder")
 @permissions('Manage')
-@implementer(IWeb)
 class AddJavascriptFolder(AceScripts,AceAddForm):
     subTitle= 'Add a Javascript Folder'
     interface = IJavascriptFolder
@@ -184,7 +169,7 @@ def make_javascript_response(view, result, *args, **kwargs):
 
 @view_component
 @name('index')
-@context(IJavascript)
+@context(IJavascriptIndex)
 @title("View Javascript")
 class JavascriptIndex(Page):
     responseFactory = Response
@@ -236,7 +221,7 @@ class AceDemoJavascript(BaseJavascript,EditDemoForm):
 @name('search')
 @title("Search")
 @target(IView)
-@context(IJavascriptFolder)
+@context(ISearchable)
 class Search(Page):
     subTitle=u'Search The Javascript'
     template = tal_template('javascriptFolder.pt')

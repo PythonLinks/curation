@@ -41,6 +41,7 @@ def parentsUpTo(self,anInterface):
     return reversed(reversedParentsUpTo(self,anInterface))
 
 def reversedParentsUpTo(self,anInterface):
+        import pdb; pdb.set_trace()
         parents=[]
         item=self        
         while (item!=None):

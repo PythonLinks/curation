@@ -23,12 +23,13 @@ extensions =[
     Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
     Extension("zopache.iodide/*", ["src/zopache/iodide/*.py"]),
     Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
+    Extension("zopache.python/*", ["src/zopache/python/*.py"]),    
     Extension("zopache.climate/*", ["src/zopache/climate/*.py"]),    
     Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
 #extensions =[]
-#extensions =[]
+extensions =[]
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()

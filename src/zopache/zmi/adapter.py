@@ -111,10 +111,12 @@ class ZMIAdapter(object):
             return self.context.__class__.__name__
 
       def size (self):
-            if hasattr(self.context, 'values'):
-              return len(list(self.context.values()))
+            if hasattr(self.context, 'valuesAsList'):
+              return len(list(self.context.valuesAsList()))
             return 1
-      
+
+    
       def modified (self):
-            return arrow.get(self.context._p_mtime).humanize()[:-3]        
+            return arrow.get(self.context._p_mtime).humanize()[:-3]
+                         
 

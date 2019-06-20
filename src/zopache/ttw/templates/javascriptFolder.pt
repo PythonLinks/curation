@@ -3,7 +3,7 @@
    tal:content="view.context.title"></a> 
 <ul>
 <span tal:repeat="item view.context.values()">
-<li><a tal:attributes="href view.url(item) + '/aceedit'"
+<li><a tal:attributes="href view.url(item) + '/' + view.IURLSegment(item)"
    tal:content="item.title"></a> </li>
 </span>
 </ul>
