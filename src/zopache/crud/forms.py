@@ -89,23 +89,25 @@ class EditDemoForm(BaseEditForm):
     def actions(self):
         return Actions()
     
-@form_component
-@name (u'edit')
-@context(IEditable)
-@permissions('Manage')    
-@title("Edit")
-@permissions('Manage')
+#@form_component
+#@name (u'edit')
+#@context(IEditable)
+#@permissions('Manage')    
+#@title("Edit")
+#@permissions('Manage')
+
 class EditForm(BaseEditForm):
     pass
 
 
 
-@form_component
-@name (u'display')
-@context(IDisplayable)
-@title("Display")
-@title("Display")
-@permissions('Manage')    
+#@form_component
+#@name (u'display')
+#@context(IDisplayable)
+#@title("Display")
+#@title("Display")
+#@permissions('Manage')
+
 class DisplayForm(Form):
     """
     """

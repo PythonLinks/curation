@@ -26,8 +26,20 @@ class ManageBase(Form,Contents):
     supportsPaste = True
     label=''
     subTitle='Rename Videos. Cut and Paste them.  '
-    # TEMPLATE IS IN THE ZODB
-    
+
+    template = tal_template('manage.pt')
+    """
+    #TEMPLATE IS NOW DEFINED ON THE FILE SYSTEM
+    def update(self):
+          root = self.getRoot()
+          #self.template = root['Products']['Templates']['Manage.pt']
+          self.template = root['Products']['Templates']
+          try:
+            self.template = self.template['EditTitles']
+          except:
+            self.template = self.template['Manage.pt']              
+          return 
+     """    
  
     def getManageURL(self,item):
         try:
@@ -62,15 +74,8 @@ class ManageBase(Form,Contents):
              return True
         return False
     """
-    def update(self):
-          root = self.getRoot()
-          #self.template = root['Products']['Templates']['Manage.pt']
-          self.template = root['Products']['Templates']
-          try:
-            self.template = self.template['EditTitles']
-          except:
-            self.template = self.template['Manage.pt']              
-          return 
+
+    
 #THE MANAGE DEMO
 @form_component
 @name('managedemo')
@@ -84,8 +89,6 @@ class ManageDemo(ManageBase):
 
 @form_component
 @name('manage')
-@title("Manage")
-@permissions ('EditContent')
 @context(Interface)
 @permissions('Manage')
 class Manage (ManageBase):
