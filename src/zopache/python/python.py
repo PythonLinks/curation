@@ -46,12 +46,12 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
     icon="ttwicons/Python.svg"
 
     def getJavascriptSource(self):
-        javaScriptObject = self.javascriptObject()
+        javascriptObject = self.javascriptObject()
         if javascriptObject:
            return javascriptObject.source
         else:
            base = "WARNING Not able to access: " 
-           return base + javascriptFoler.fileName + self.javascriptFileName()
+           return base + self.javascriptFolder().fileName + self.javascriptFileName()
 
 
     def javascriptFileName(self):
@@ -60,12 +60,14 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
     def getJavascriptFileName(self,name):
         return self.__name__[:-3] + '.js'
         
-      
+    def javascriptFolder(self):
+        return self.__parent__["__javascript__"]
+    
     def javascriptObject(self):    
-        javascriptFolder = self.__parent__["__javascript__"]
+        javascriptFolder = self.javascriptFolder()
         javascriptFileName = self.javascriptFileName()
         if javascriptFolder.exists(javascriptFileName):
-            return javascriptFolder[javascriptName]
+            return javascriptFolder[javascriptFileName]
         else:
             return None
     
@@ -88,16 +90,15 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
         FileBase.__init__(self)        
         self.exportSource(self.source)
         self.compile(view)
-        self.setLastPath()
 
     def preMoveProcess(self,view):
         self.deleteJavascriptObject(view)
         self.delete(view)
+        self.setLastPath()
         
     def postMoveProcess(self,view):    
         self.exportSource()
         self.compile(view)
-        self.setLastPath()
 
 class  AceScripts(AceScripts):
     def  footerScripts(self):

@@ -14,7 +14,6 @@ from zope.location import Location
 class Auth(dict, Location):
 
     def authenticate(self, userName, password):
-        import pdb; pdb.set_trace()
         if userName in self:
             if password == self[userName]:
                 session = getSession()

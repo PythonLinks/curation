@@ -120,8 +120,8 @@ class Edit(Update):
     
 class SaveAndView(Update):
         def newURL(self,baseURL):
-               return baseURL 
-
+               return baseURL
+           
 class SaveAndViewHTML(Update):
         def newURL(self,baseURL):
                return baseURL + '/html'

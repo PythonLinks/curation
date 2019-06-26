@@ -29,7 +29,8 @@ extensions =[
                  ]
 
 #extensions =[]
-extensions =[]
+
+
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()

@@ -155,8 +155,8 @@ class Paster(BaseClass):
                self.view.error +=orig_name + " WAS NOT PASTED <br>"
                continue 
            self.moveFrom(fromFolder, orig_name, toContainer, new_name)
-           if hasattr(obj,'postMoveProcess'):
-               obj.postMoveProcess(view)                   
+           if hasattr(item,'postMoveProcess'):
+               item.postMoveProcess(view)                   
            self.describeTransaction(" Paste ", toContainer[new_name])
            
     def allowed(self,obj):

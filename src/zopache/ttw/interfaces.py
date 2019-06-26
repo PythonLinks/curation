@@ -8,7 +8,7 @@ from zope.schema import Text, TextLine, Choice, Bool, DottedName
 from z3c.schema.email  import RFC822MailAddress as Email
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal as ICromlechPrincipal
-from cromlech.file.interfaces import IFile as IFileBase
+#from cromlech.file.interfaces import IFile as IFileBase
 
 from zopache.crud.interfaces import *
 from zopache.crud.interfaces import ILeaf
@@ -27,11 +27,21 @@ run a chat and voting server"""
 
 from cromlech.file import FileField
 
-class IFile(IFileBase,ILeaf):
-         data = FileField(title=u'Upload a File')
+class IFile(ILeaf):
+    title = schema.TextLine(
+        title = u'File Desciption',
+        description = u'Describe this File.',
+        required = True,
+    )      
+    data = FileField(title=u'Upload a File')
 
-class IImage(IFileBase,ILeaf):
-         data = FileField(title=u'Upload an Image')         
+class IImage(ILeaf):
+    title = schema.TextLine(
+        title = u'Image Desciption',
+        description = u'Describe this Image.',
+        required = True,
+    )
+    data = FileField(title=u'Upload an Image')         
 
 class ICanonical (Interface):
       pass   

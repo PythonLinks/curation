@@ -46,7 +46,6 @@ class Session(object):
         setSession()
 
 def makeWiki(connRoot):
-     import pdb; pdb.set_trace()     
      from zopache.pages.page  import RootPage
      new = RootPage()
 

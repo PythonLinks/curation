@@ -98,7 +98,11 @@ class DirectoryBase(FileAndDirectoryBase):
     
     title = property (getTitle)
     def getSize(self):
-        return  os.path.getsize(self.path)
+        try:
+            result = os.path.getsize(self.path)
+        except:
+            result = 'N/A'
+        return result    
 
     size = property(getSize)
     
@@ -135,6 +139,7 @@ class DirectoryBase(FileAndDirectoryBase):
         return default
 
     def fileSystemKeys(self):
+        path  = self.path
         return sorted(os.listdir(self.path))
 
     def delete(self,view):        

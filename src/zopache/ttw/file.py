@@ -17,7 +17,6 @@ class FileBase(object):
 
     def setData(self, data):
         dataFile = data.file
-        import pdb; pdb.set_trace()
         bits =  dataFile.read()        
         if len(bits) == 0:
             return
@@ -72,16 +71,28 @@ from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
 from zopache.core.viewdecorators import *
 
+
+
 @view_component
 @name('index')
 @context(IFile)
-@title("View File")
 class IndexFile(View):
     responseFactory = Response
     make_response = make_file_response
         
     def render(self):
                return self.context.data
+
+#And the same for images           
+@view_component
+@name('index')
+@context(IImage)
+class IndexImage(View):
+    responseFactory = Response
+    make_response = make_file_response
+        
+    def render(self):
+               return self.context.data           
 
 
 from zopache.ttw.interfaces import IInternalPrincipal           

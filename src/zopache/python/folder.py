@@ -110,11 +110,12 @@ class MixedFolder(MixedObject):
         
     def postAddProcess(self,view):
         create_directory(self.path)
+
+    def preMoveProcess(self,view):
         self.setLastPath()
         
     def postMoveProcess(self,view):
         subprocess.call(['mv',self.lastPath,self.path])
-        self.setLastPath()
         
 
 @implementer(IPythonFolder)
