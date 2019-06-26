@@ -7,6 +7,10 @@ class AddAndCkEdit(Add):
 class AddAndAceEdit(Add):
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
+ 
+class AddAndSearch(Add):
+    def newURL(self,baseURL):
+        return baseURL + '/search'   
 
 class AddAndViewSource(Add):
     def newURL(self,baseURL):

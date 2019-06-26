@@ -1,0 +1,39 @@
+Just so I have a record of my design decisions, before I forget.
+
+So first of all everyone is interested in Python in the Browser.
+My link to "A world without Javascript" got so many upvotes.
+
+So I tried Pyodide,but the downlaod speed it too great.  And Mike Muller from
+Python Academy recommended Transcrypt.  Only 50Kb runtime.  Great idea.
+
+So my first thought was to do a file system based editor.  Web Enabled.  Tons
+of awesomeones in PHP. One reasonable one in Python.  Souheil has a baby.  An
+aweome one in GoLang.  github FileBrowser.  Even would execute commands
+on the file system after events.  For a while I was quite taken by it.
+And golang is an actor model.  Easy to code, even if it is statically typed.
+It would scale like gang  busters.
+
+Why not make my whole sysem file based?????
+
+No versions.  No real ability to do web classes on the file system.
+And I have to run two servers.  Two languages.  Two processes.  Docker
+does not like that.
+
+And I could do schools really well.  So why did I ignore that?
+
+Well you end up with two different user interfaces. The ZMI and and
+FileBrowser interface.  Worse yet, they do not really reside in the
+WebClass.  That was the killer for me.  And versions.
+
+And finally I just thought it would be so easy to do.  I was wrong.  A lot more complex to write the code than I expected.  Days spent in the hot
+(less productive) summer months. 
+
+Then I thought of doing it all in the ZODB. But I would have to
+edit both Transcrypt and cPython.  cPython reads from the file system.
+Just way way too painful.
+
+Eventually I settled on doing it the zopache way.  But just export the
+data to the file system to run Transcrypt.  And do what it takes to keep the
+two in sync. 
+
+Well it is now written, we will see how it works in practice. 

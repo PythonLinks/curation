@@ -50,7 +50,7 @@ class Add(Action, UniqueName):
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
         newName = self.newName(data)
-        newName = slugify(newName, ok=SLUG_OK+'.', lower = False)
+        newName = slugify(newName ,ok=SLUG_OK+'.', lower = False)
         context[newName]=obj
         message(_(u"Content created"))
         baseURL = str(IURL(obj, form.request))    
@@ -66,7 +66,7 @@ class Add(Action, UniqueName):
 
     def newName(self,data):    
         name =  data['__name__']
-        name = slugify(name, lower = False)
+        name = slugify(name, ok=SLUG_OK+'.', lower = False)
         context = self.form.context
         newName=self.uniqueName(context,name,ofType="#")
         return newName
@@ -120,8 +120,8 @@ class Edit(Update):
     
 class SaveAndView(Update):
         def newURL(self,baseURL):
-               return baseURL 
-
+               return baseURL
+           
 class SaveAndViewHTML(Update):
         def newURL(self,baseURL):
                return baseURL + '/html'

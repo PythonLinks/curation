@@ -42,31 +42,25 @@ class AddFileAction(Action):
         self.new.postAddProcess()
         return SuccessMarker('Added', True, url=url,code=307)
 
-    def saveFile(self,file,formData):
-        name=formData['__name__']
-        context = self.form.context
-        newName=self.form.uniqueName(context,name)        
-        self.form.context[newName] = file
-        file.__parent__=self.form.context
-        file.__name__=newName
 
-    def saveDetails(self,file,fileUpload):    
-        file.contentType=fileUpload.type
-        file.title = fileUpload.filename
+
         
     def message(self):    
         message(u"File Uplaoded")        
 
     def upload(self, formData):
-        file = self.createFile(formData) 
-        self.saveFile(file,formData)
+        file = self.createFile(formData)
+        name=formData['__name__']
+        context = self.form.context
+        newName=self.form.uniqueName(context,name)        
+        context[newName] = file
         self.new = file
         return file
         
     def createFile(self,formData):
-        nextView ='/'
+        nextView= '/'
         fileUpload =  formData ['data']
-        contentType = formData ['data'].headers.get_content_type()
+        contentType = fileUpload.headers.get_content_type()
         fileName = fileUpload.filename        
         if True:
             data = fileUpload.file.read()
@@ -95,7 +89,6 @@ class AddFileAction(Action):
                file.data = data
                nextView = '/manage'
 
-            self.saveDetails(file,fileUpload)
             self.nextView=nextView
             return file
 
@@ -105,24 +98,13 @@ class AddImageAction(AddFileAction):
 
 
     def createFile(self,formData):
-         nextView ='/'
-         fileUpload =  formData ['data']
-         contentType = formData ['data'].headers.get_content_type()
-         fileName = fileUpload.filename        
-
-         data = fileUpload.file.read()
+         self.nextView = '/manage'
          file = Image()
-         file.__name__ = fileName
-         file.data = data
-         nextView = '/manage'
-
-         self.saveDetails(file,fileUpload)
-         self.nextView=nextView
-
-         image = PilImage.open(fileUpload.file, mode = 'r')
-         self.width = image.width
-         self.height = image.height
-         
+         imageData  = formData['data']
+         file.data = imageData  
+         image = PilImage.open(imageData.file, mode = 'r')
+         file.width = image.width
+         file.height = image.height
          return file
 
         

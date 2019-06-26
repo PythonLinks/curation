@@ -5,6 +5,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Text,  DottedName
 from dolmen.container.interfaces import IBTreeContainer
+from zopache.zmi.interfaces import IZMI
 
 #Views that are in the app menu.
 #That menu is to be modified by users/developers. 
@@ -44,26 +45,24 @@ class ICopyable(Interface):
 class IAddContainer(Interface):
      pass
 
-
-class ICopyable (Interface):
-       pass
-
-#Not HTML
-class IContainer(
-                 IBTreeContainer,
-                 IAddContainer,
-                 IRenameable,
+class IZMI(IRenameable,
                  IMoveable,
                  ICopyable,
-                 IDisplayable,
                  IDeletable
-               ): 
+          ):
+      pass
+
+#Not HTML
+class IContainer(IZMI,
+                 IBTreeContainer,
+                 IAddContainer               ): 
      pass
 
 class IEditableContainer(IContainer,IEditable):
           pass
  
 class IImutable(     IBTreeContainer,
+                     IZMI,
                      IAddContainer,
                      IDisplayable,
                      ):
@@ -77,7 +76,7 @@ class IEditableImutable(IImutable,IEditable):
 #The Root Container also has to implement IPublicationRoot      
 #But you cannot delete or rename the root container
 #So no IDeletable or IRenameable
-class IRootContainer(IPublicationRoot,IImutable):
+class IRootContainer(IPublicationRoot,IImutable,IZMI):
      pass
 
 class IEditableRootContainer(IRootContainer, IEditable):

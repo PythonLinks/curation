@@ -12,6 +12,8 @@ from .interfaces import IAceHTML
 from zopache.core import getRoot
 from zopache.ttw.interfaces import IWebClass
 from zopache.ttw.acquisition import webClassAcquire
+from zopache.python.interfaces import IDirectory
+
 
 class NotFound(Exception):
     pass
@@ -48,7 +50,8 @@ class Traverser(object):
                      "%s does not support method setZopacheTempalte",
                                    zopacheTemplate.__name__)
         #TRAVERSE THE CONTAINER
-        if IBTreeContainer.providedBy(context):
+        if (IBTreeContainer.providedBy(context) or
+           IDirectory.providedBy(context)):
             item = context.get(name,object)
             if item != object:
                 return item, None

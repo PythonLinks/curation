@@ -25,10 +25,8 @@ class Company  (Category,LocationBase):
         return self.getCompaniesRecursively(result)
 
     def getCompaniesRecursively(self,result):
-        import pdb; pdb.set_trace()
         values = self.values()
         for item in values:
-            print (item.__name__)
             if (ICompany.providedBy(item) and
                 item.webApproved):
                 result.append(item)

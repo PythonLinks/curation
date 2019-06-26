@@ -12,6 +12,7 @@ from zopache.zmi.cutfolder import cutFolder
 from . import tal_template
 
 from zopache.zmi.interfaces import IObjectRetitler
+from zopache.zmi.interfaces import IZMI
 
 from zopache.core.viewdecorators import *
 from zopache.zmi.interfaces import IURLSegment
@@ -21,6 +22,7 @@ from zopache.zmi.actions import (
     ReTitle,PasteObjects)
 from zopache.core.baseform import Form
 from zopache.pages.interfaces import INotPage
+from zopache.python.interfaces import IDirectory
 
 class ManageBase(Form,Contents):
     supportsPaste = True
@@ -75,18 +77,25 @@ class ManageBase(Form,Contents):
         return False
     """
 
-    
 #THE MANAGE DEMO
 @form_component
 @name('managedemo')
 @title("Manage")
-@context(IBTreeContainer)
+@context(IZMI)
 class ManageDemo(ManageBase):
     def breadcrumbs(self):
         return self.breadcrumbsIndex(self.context)    
 
+#MANAGE FILE SYSTEM DIRECTORY
+@form_component
+@name('manage')
+@context(IDirectory)
+@permissions('Manage')
+class ManageDirectory (ManageDemo): 
+    def breadcrumbs(self):
+        return self.breadcrumbsManage()       
+    
 #THE REAL MANAGE
-
 @form_component
 @name('manage')
 @context(Interface)
@@ -119,9 +128,6 @@ class Fix(Manage):
         Manage.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-
-        from zopache.business.doit import doit
-        #doit(item)
         pass
 
 

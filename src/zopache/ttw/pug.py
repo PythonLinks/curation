@@ -47,13 +47,13 @@ class IPug(IPugBase,IJavascript):
 
     functionName = schema.TextLine(
         title = u'Function Name',
-        description = 'What is this function called',
+        description = 'What is this function called?',
         required = False,
     )
     
     globals = schema.TextLine(
         title = u'Globals',
-        description = u'Which Global Variables are Accessible',
+        description = u'Which Global Variables are Accessible?',
         required = False,
     )        
 

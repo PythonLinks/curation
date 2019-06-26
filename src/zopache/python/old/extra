@@ -1,0 +1,10 @@
+    def deleteOldJavascript(self):
+        lastPath = self.lastPath
+        lastFolder =  os.path.dirname(lastPath)
+        lastFile = os.path.basename (lastPath)
+        jsFolder = os.path.join(lastFolder, '__javascript__')
+        jsFileName  = self.getJavascriptFileName(lastFile)
+        jsFile = os.path.join(jsFolder,jsFileName)
+        result = subprocess.call(['rm',jsFile])
+        return result.error or ''
+    
