@@ -95,24 +95,25 @@ purposes:</p>"""
         required = False,
         default = False)    
 
-    hirePermission = Bool(
-	    title = "Help me to get a better job.",
-	    required = False,
-	    default = False)   
-    hirePermission.text ="""<p>Please support this website by also granting 
-permission for at least one of the two following purposes:</p>"""
-
-    recruitPermission = Bool(
-	   title = "Help me hire a good developer / data scientist.",
-	   required = False,
-	 default = False)
-
 
 class IGRegister (IGLogin,IHandle,IPermissions):        
    pass
 
 class IRegister(IHandle, IEmail, IPermissions):
    pass
+
+class ISupport (Interface):
+    hirePermission = Bool(
+	    title = "Help me to get a better job.",
+	    required = False,
+	    default = False)   
+    hirePermission.text ="""<p>I give permission to process my professional information for the following puruposes:</p>"""
+
+    recruitPermission = Bool(
+	   title = "Help me hire a good developer / data scientist.",
+	   required = False,
+	 default = False)
+
 
     
 class ISearchSchema(Interface):

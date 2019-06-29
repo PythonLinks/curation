@@ -29,6 +29,8 @@
     </ul>
   </div>
 
+  <p style= "max-width:40em" tal:condition="hasattr(view,'preamble')">${view.preamble}</p>
+
   <tal:fields condition="view.fieldWidgets">
     <div tal:attributes="class widget.required and 'form-group required' or 'form-group'"
 	 tal:repeat="widget view.bootstrap_widgets()">
@@ -54,3 +56,6 @@
 		tal:repeat="widget view.bootstrapActionWidgets()" />
   </tal:actions>
 </form>
+<br>
+  <p style= "max-width:40em" tal:condition="hasattr(view,'postamble')">
+  ${view.postamble}</p>

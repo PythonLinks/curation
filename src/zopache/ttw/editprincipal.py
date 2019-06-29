@@ -15,7 +15,7 @@ from zope.schema import Text, Set, List
 from zopache.core.breadcrumbs import parents
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import BaseEditForm
-from zopache.ttw.interfaces import IInternalPrincipal
+from zopache.ttw.interfaces import IInternalPrincipal, ISupport
 from zopache.ttw.treewidget import TreeField
 
 def possibleItems():
@@ -37,8 +37,14 @@ def possibleItems():
 
 
 class IEdit(Interface):
+    professionalURL = TextLine(
+        title="Your Proessinal URL",
+        description="Your professional website, or Linkedin page.",
+        required=False,
+        default=u'',
+        missing_value=u'')
 
-    data = FileField( title ="Your CV or Resume",
+    data = FileField( title ="Or Post Your CV or Resume",
                       description = "It is only shown to those whom you allow to see it..",
                       required = True 
     )
@@ -60,16 +66,14 @@ class IEdit(Interface):
 @form_component
 @name (u'edit')
 @context(IInternalPrincipal)
-@title("Edit")
 class EditPrincipal(BaseEditForm):
     title = 'Your Profile'
     interface = IEdit
-    fields = Fields(IEdit)
+    fields = Fields(IEdit)    
     actions = Actions(formactions.SaveAndRoot("Save","Save"),
                           formactions.Cancel("Cancel","Cancel"))
     def acquireTitle(self):
         return 'Your Profile'
-
 
     def update(self):
         if  (self.request.principal is self.context):
@@ -77,4 +81,37 @@ class EditPrincipal(BaseEditForm):
         if 'Manage' in self.request.principal.permissions:
            return 
         raise Unauthorized()
-        #return BaseEditForm.update(self)
+
+
+@form_component
+@name (u'support')
+@context(IInternalPrincipal)
+@title("Edit")
+class EditSupport (EditPrincipal):
+    interface = ISupport
+    fields = Fields(ISupport)
+    preamble = """ If you like this website, please support the business 
+                   model by checkng one of the following two boxes. """
+    postamble = """What is 
+                   the business model?  I am a recruiter.  Instead of spamming 
+                   people, I publish good information, earn their respect, 
+                   and if I see a job they would like, I recruit them. By 
+                   checking one of the GDPR boxes below you give me 
+                   permission to do so.  
+                   In practice I already have GDPR permission for over 
+                   200 candidates, what I am short on is clients.    
+               """
+    def acquireTitle(self):
+        return 'GDPR Permissions'
+    
+    subTitle = " "
+
+    actions = Actions(formactions.SaveAndViewURL("Save","Save"),
+                          formactions.Cancel("Cancel","Cancel"))    
+
+    def newURL(self,new):
+        if self.context.hirePermission:
+            newURL = '/' + self.context.__name__ + "/edit"
+        else:
+            newURL = '/'
+        return newURL

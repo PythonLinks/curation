@@ -141,7 +141,11 @@ class SaveAndParent(Update):
 class SaveAndTest(Update):
         def newURL(self,baseURL):
                return self.form.context.testURL
-           
+
+class SaveAndViewURL(Update):
+      def newURL(self,baseURL):
+          return self.form.newURL(baseURL)
+      
 class Delete(Action):
     """Delete action for any locatable context.
     """
