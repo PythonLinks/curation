@@ -99,7 +99,7 @@ class ManageDirectory (ManageDemo):
 @form_component
 @name('manage')
 @context(Interface)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class Manage (ManageBase):
     
     @property

@@ -96,7 +96,7 @@ class EditSupport (EditPrincipal):
                    the business model?  I am a recruiter.  Instead of spamming 
                    people, I publish good information, earn their respect, 
                    and if I see a job they would like, I recruit them. By 
-                   checking one of the GDPR boxes below you give me 
+                   checking one of the GDPR boxes above you give me 
                    permission to do so.  
                    In practice I already have GDPR permission for over 
                    200 candidates, what I am short on is clients.    
