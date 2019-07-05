@@ -62,6 +62,14 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
         
     def javascriptFolder(self):
         return self.__parent__["__javascript__"]
+
+    def javascriptFolderPath(self):
+        return self.javascriptFolder().path
+
+    def outputPath(self):
+        jsPath =  self.javascriptFolder().path
+        path = os.path.join(jsPath, "output")
+        return path
     
     def javascriptObject(self):    
         javascriptFolder = self.javascriptFolder()
@@ -72,8 +80,9 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
             return None
     
     def compile(self,view):
-        result = subprocess.run( ['transcrypt', self.path])
-        self.displayResult(result,view)
+        result = subprocess.Poen( ['transcrypt', self.path, ">",
+                                   self.outputPath()])
+        #self.displayResult(result,view)
                                  
     def deleteJavascriptObject(self,view):
         self.javascriptObject.delete(view)
@@ -85,7 +94,7 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
     def postEditProcess(self,view):
         self.exportSource(self.source)
         self.compile()
-        
+
     def postAddProcess (self,view):
         FileBase.__init__(self)        
         self.exportSource(self.source)
@@ -191,10 +200,11 @@ class AceEditPython(AceScripts,AceEditForm):
 
     @property
     def actions(self):
-
         action1=EditPython("Save","Save")
         action2=EditPythonAndTest("Save  and View","Save -> View")
         action3=Cancel("Cancel","Cancel")
         return Actions(action1,action2,action3)
 
+    def postProcess(self):
+        self.context.postEditProcess()
 
