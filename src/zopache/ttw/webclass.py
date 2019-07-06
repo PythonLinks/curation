@@ -25,6 +25,8 @@ class BaseWebClass (Container):
         if IProducts.providedBy(self):
            return marker
         #AND NOW REPEAT THE LOOP WITH THE PARENT WEBCLASS
+        #if self.__parent__ == None:
+        #    import pdb; pdb.set_trace()
         return self.__parent__.getFromWebClass(name,marker)
 
         
