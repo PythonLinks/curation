@@ -33,6 +33,13 @@
     </style>
   </head>
   <body class="bg-secondary">
+    <div style = "float:right; padding: 20px;">
+    <span  tal:condition="view.isAuthenticated()"><a href="./logout">Logout</a></span>
+    <span tal:condition="not view.isAuthenticated()"><a href="./login">Login</a>
+</span>
+
+    </div>
+    
     <div class="container">
       <div class="img-fluid" style="float:left; margin:20px">
 	<a href ="https://PythonLinks.info">
