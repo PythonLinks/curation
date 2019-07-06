@@ -56,10 +56,13 @@ class Register(Form):
     @property
     def actions(self):
         return Actions(Add("Sign Me Up!",self))
-
+    
     def newURL(self,new):
-        newURL = '/' + new.__name__ + "/support"
-        return newURL
+             if new.hirePermission:
+                 newURL = '/' + new.__name__ + "/edit"
+             else:
+                 newURL = '/'
+             return newURL
 
 """    
 @form_component
