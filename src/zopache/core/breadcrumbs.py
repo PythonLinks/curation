@@ -281,7 +281,6 @@ class Breadcrumbs(UniqueName):
             return result
             #return  get_absolute_url((args)[0], self.request)
         except:
-
             return "BROKEN-URL-IN-BREADCRUMBS"
         
     def contextURL(self, name=''):

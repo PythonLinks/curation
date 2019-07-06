@@ -58,10 +58,7 @@ class Register(Form):
         return Actions(Add("Sign Me Up!",self))
 
     def newURL(self,new):
-        if new.hirePermission:
-            newURL = '/' + new.__name__ + "/edit"
-        else:
-            newURL = '/'
+        newURL = '/' + new.__name__ + "/support"
         return newURL
 
 """    

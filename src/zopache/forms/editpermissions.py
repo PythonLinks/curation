@@ -42,10 +42,7 @@ class EditPermissions (EditForm):
     suTitle = 'What is each user allowed to do.'
     interface = IPermissions
     fields = Fields(IPermissions)
-    
-    def url (self):
-        return self.url() 
-    
+        
     def acquireTitle(self):
         return 'Edit Permissions'
 

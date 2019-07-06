@@ -20,7 +20,7 @@ class FileBase(object):
         bits =  dataFile.read()        
         if len(bits) == 0:
             return
-        
+
         if not hasattr(self,'blob'):
             self.blob = Blob()
 

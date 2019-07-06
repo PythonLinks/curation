@@ -69,7 +69,6 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
         return self.javascriptFolder().path
 
     def outputPath(self):
-        import pdb; pdb.set_trace()
         jsPath =  self.javascriptFolder().path
         path = os.path.join(jsPath, "output")
         return path
@@ -85,7 +84,7 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
     def compile(self,view):
         cmd = 'transcrypt ' +  self.path +  " > " + self.outputPath()
         os.system(cmd)
-                                 
+
     def deleteJavascriptObject(self,view):
         self.javascriptObject.delete(view)
 
@@ -209,5 +208,7 @@ class AceEditPython(AceScripts,AceEditForm):
         return Actions(action1,action2,action3)
 
     def postProcess(self):
+
         self.context.postEditProcess(self)
+
 
