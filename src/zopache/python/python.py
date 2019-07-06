@@ -1,5 +1,7 @@
 #Copyright Christopher Lozinski.  All rights reserved.
+import os
 import subprocess
+
 
 from zope.schema import ValidationError
 from zope.interface import implementer
@@ -61,7 +63,16 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
         return self.__name__[:-3] + '.js'
         
     def javascriptFolder(self):
-        return self.__parent__["__javascript__"]
+        return self.__parent__["__target__"]
+
+    def javascriptFolderPath(self):
+        return self.javascriptFolder().path
+
+    def outputPath(self):
+        import pdb; pdb.set_trace()
+        jsPath =  self.javascriptFolder().path
+        path = os.path.join(jsPath, "output")
+        return path
     
     def javascriptObject(self):    
         javascriptFolder = self.javascriptFolder()
@@ -72,8 +83,8 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
             return None
     
     def compile(self,view):
-        result = subprocess.run( ['transcrypt', self.path])
-        self.displayResult(result,view)
+        cmd = 'transcrypt ' +  self.path +  " > " + self.outputPath()
+        os.system(cmd)
                                  
     def deleteJavascriptObject(self,view):
         self.javascriptObject.delete(view)
@@ -83,9 +94,10 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
         self.deleteJavascriptObject(view)
         
     def postEditProcess(self,view):
+        import pdb;pdb.set_trace()
         self.exportSource(self.source)
-        self.compile()
-        
+        self.compile(view)
+
     def postAddProcess (self,view):
         FileBase.__init__(self)        
         self.exportSource(self.source)
@@ -191,10 +203,11 @@ class AceEditPython(AceScripts,AceEditForm):
 
     @property
     def actions(self):
-
         action1=EditPython("Save","Save")
         action2=EditPythonAndTest("Save  and View","Save -> View")
         action3=Cancel("Cancel","Cancel")
         return Actions(action1,action2,action3)
 
+    def postProcess(self):
+        self.context.postEditProcess(self)
 
