@@ -49,6 +49,13 @@ class InternalPrincipal(Container,FileBase):
     hirePermission = False
     recruitPermission = False
     contentType = "text/plain"
+
+    def __setattr__(self, name,value):
+        if name == "__parent__":
+           print ("PARENT VALUE",value)
+           if value == None:
+               raise Exception()
+        Container.__setattr__(self,name,value)    
     
     def __init__(self):
         self.creationTime=time.time()

@@ -119,7 +119,6 @@ class Manage (ManageBase):
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @form_component
 @name('fix')
-@title("Fix")
 @context(IBTreeContainer)
 @permissions('Manage')
 class Fix(Manage):
@@ -129,6 +128,22 @@ class Fix(Manage):
         item=self.context
         import pdb; pdb.set_trace()
         pass
+
+#USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
+@form_component
+@name('fix2')
+@context(IBTreeContainer)
+@permissions('Manage')
+class Fix2(Manage):
+
+    def update(self):
+        Manage.update(self)
+        item=self.context
+        for i in item.values():
+            if i.__parent__ == None:
+               i.__parent__ = item
+               print ("SET PARENT", i.__name__)
+        pass    
 
 
 
