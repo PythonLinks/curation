@@ -129,22 +129,41 @@ class Fix(Manage):
         import pdb; pdb.set_trace()
         pass
 
-#USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @form_component
-@name('fix2')
+@name('visitChildren')
 @context(IBTreeContainer)
 @permissions('Manage')
-class Fix2(Manage):
-
+class VisitChildren(Manage):
+    fix = False
+    result = "Visiting Children \n"    
     def update(self):
         Manage.update(self)
         item=self.context
-        for i in item.values():
-            if i.__parent__ == None:
-               i.__parent__ = item
-               print ("SET PARENT", i.__name__)
-        pass    
+        self.visitChildren(item)
+        
+    def visitChildren(self,item):
+        for child in item.values():
+            if child.__parent__ == None:
+               if self.fix: 
+                  child.__parent__ = item
+               self.result +=  child.__name__
+               self.result += "<br>"
 
+            if IBTreeContainer.providedBy(child):
+               self.visitChildren(child) 
+               
+    def render(self):
+        return self.result
+    
+
+@form_component
+@name('fixParents')
+@context(IBTreeContainer)
+@permissions('Manage')
+class FixParents(VisitChildren):
+    fix = True
+    result = "Fixing Parents\n"    
+     
 
 
 
