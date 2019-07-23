@@ -22,6 +22,7 @@ class IClass(Interface):
 @form_component
 @name ('editWebClass')
 @context(IPage)
+@permissions('Manage')
 class EditWebClass (EditForm):
     title = 'Edit the WebClass.'
     subTitle = 'This is used to change the layout of this object.'
