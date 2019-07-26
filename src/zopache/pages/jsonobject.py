@@ -11,6 +11,11 @@ from crom import target, order
 from cromlech.container.interfaces import IOrderedContainer
 from zopache.business.interfaces import ICompany
 
+from zopache.categories.treewidget import IConference, IConferenceContainer
+try:
+    pass
+except:
+    pass
 
 class JsonObject(object):
     
@@ -132,24 +137,48 @@ class JsonObject(object):
         return '[' +  self.getJSON(indent,'treeVariables') + ']'
 
     def jsonCategories(self,indent):
-        return '[' +  self.getJSONSimple(indent,'categoryVariables') + ']'    
+        return '[' +  self.getJSONCategories(indent,'categoryVariables') + ']'    
 
-    # THIS ONE IS NOT USED
-    def getJSONSimple(self,aFunction):
-        indent = 0
-        spacing=''
+
+#AND HERE FOR JUST THE CATEOGIRES
+    def getJSONCategories(self,indent,aFunction):
         result=''
-        firstLine=True
-        for item in self.values():
-                if (IPage.providedBy(item) and 
-                   item.webApproved):
-                  if not firstLine:
+        spacing=' '*indent*2
+        shortSpacing = ' '*(2*indent-1)
+        result += '\n'+shortSpacing
+        result += '{'
+        result+= '\"key\": \"'+ getattr(self,'__name__')+'\"'
+        result+=',\n'
+        
+        #NOW GET THE VARIBLgES
+        result+=getattr(self,aFunction)(spacing)
+
+        #NOW GET THE CONTAINED OBJECTS
+        valuesLength=len(list(self.values()))
+
+        if valuesLength> 0:
+                  result+=',\n \"folder\":true'
+                  result+=',\n'
+                  result += spacing + '\"children\":'
+                  result += '['
+
+        if IOrderedContainer.providedBy(self):
+            firstLine=True
+            for item in self.values():
+                if ((item.__class__.__name__ == 'Conference') or
+                    (item.__class__.__name__ == 'ConferenceContainer' )):
+
+                   if not firstLine:
                       result+=',' 
-                  else:
+                   else:
                       firstLine=False
-                  result+=item.getJSONSimple(indent+1,aFunction)
+                   result+=item.getJSONCategories(indent+1,aFunction)
+        if valuesLength> 0:
+             result+=']'
+        result+='}'
         return result
 
+    
 #AND HERE YOU HAVE THE GENERIC ONE
     def getJSON(self,indent,aFunction):
         result=''
@@ -179,13 +208,13 @@ class JsonObject(object):
             firstLine=True
             for item in self.values():
                 if (IPage.providedBy(item) and
-                    (not ICompany.providedBy(item)) and
+                   (not ICompany.providedBy(item)) and
                    item.webApproved):
-                  if not firstLine:
+                   if not firstLine:
                       result+=',' 
-                  else:
+                   else:
                       firstLine=False
-                  result+=item.getJSON(indent+1,aFunction)
+                   result+=item.getJSON(indent+1,aFunction)
         if valuesLength> 0:
              result+=']'
         result+='}'
