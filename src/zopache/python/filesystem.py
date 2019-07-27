@@ -48,7 +48,7 @@ class FileBase(FileAndDirectoryBase):
     iterator = FileIterator
     size = 0
     
-    def __init__(self, mime=None):
+    def setMimeType(self, mime=None):
              self.mime = mime or guess_type(self.__name__)    
 
     def delete(self,view):        
@@ -69,9 +69,6 @@ class File (FileBase):
              self.__name__ = name
              self.mime = mime or guess_type(self.__name__)
 
-    def getJavascript(self):
-        return self.source
-    
     def getSource(self):
         with open(self.path,'r') as theFile:
              return theFile.read()
@@ -79,6 +76,8 @@ class File (FileBase):
     source = property(getSource)
     #Used by the zmi to look like a zodb object.     
 
+    def getJavascript(self):
+        return self.source
     
 
 @implementer(IPythonFile)    
@@ -88,8 +87,6 @@ class PythonFile(File):
 @implementer(IJavascriptFile)
 class JavascriptFile(File):
    pass
-
-
 
 
 class DirectoryBase(FileAndDirectoryBase):
@@ -124,9 +121,8 @@ class DirectoryBase(FileAndDirectoryBase):
                     
                elif name[-3:] == ".js":
                     new =  JavascriptFile(path,name)
-
                else:
-                    new =  File(path,name)                   
+                    new =  File(path,name)         
 
             #NOT A FILE, MUST BE A FOLDER
             else:

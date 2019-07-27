@@ -27,7 +27,7 @@ from zopache.ttw.interfaces import IJavascript
 from zopache.python.interfaces import IPython
 
 #OBJECTS WHICH EXIST BOTH IN THE ZODB AND IN THE FILE SYSTEM.
-class MixedObject(object):
+class MixedBase(object):
     lastPath = ''
 
     #The BASE TRANSCRYPT OBJECTS GETS ITS PATH FROM ./data/files    
@@ -57,7 +57,31 @@ class MixedObject(object):
     def deleteLastPath(self,view):        
         subrpocess.call(['rm','-r', self.lastPath])
 
+class MixedObject(MixedBase):
 
+    def preDeleteProcess(self,view):
+        self.delete(view)
+        self.deleteJavascriptObject(view)
+        
+    def postEditProcess(self,view):
+        self.exportSource(self.source)
+        self.compile(view)
+
+    def postAddProcess (self,view):
+        FileBase.__init__(self)        
+        self.exportSource(self.source)
+        self.compile(view)
+
+    def preMoveProcess(self,view):
+        self.deleteJavascriptObject(view)
+        self.delete(view)
+        self.setLastPath()
+        
+    def postMoveProcess(self,view):    
+        self.exportSource()
+        self.compile(view)
+
+        
 #This is a folder which contains both ZODB and File System Objects
 #It is a separate class, just to make it easier to understrand. 
 class MixedFolder(MixedObject):

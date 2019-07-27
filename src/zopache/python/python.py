@@ -87,30 +87,7 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
 
     def deleteJavascriptObject(self,view):
         self.javascriptObject.delete(view)
-
-    def preDeleteProcess(self,view):
-        self.delete(view)
-        self.deleteJavascriptObject(view)
         
-    def postEditProcess(self,view):
-        import pdb;pdb.set_trace()
-        self.exportSource(self.source)
-        self.compile(view)
-
-    def postAddProcess (self,view):
-        FileBase.__init__(self)        
-        self.exportSource(self.source)
-        self.compile(view)
-
-    def preMoveProcess(self,view):
-        self.deleteJavascriptObject(view)
-        self.delete(view)
-        self.setLastPath()
-        
-    def postMoveProcess(self,view):    
-        self.exportSource()
-        self.compile(view)
-
 class  AceScripts(AceScripts):
     def  footerScripts(self):
         return self.aceEditorFooter + """ 

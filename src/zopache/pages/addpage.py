@@ -32,7 +32,6 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
               formactions.Cancel("Cancel","Cancel"))
     
 
-    
 @view_component
 @name('addPage')
 @title("Add Page")

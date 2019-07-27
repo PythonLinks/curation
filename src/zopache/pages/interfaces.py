@@ -4,7 +4,9 @@ from zopache.crud.interfaces import IContainer
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 from cromlech.browser.interfaces import IPublicationRoot
+
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
+from zopache.python.interfaces import IDirectory
 
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
@@ -41,6 +43,13 @@ class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical):
         required = False,
         default = u'',
     )
+
+class IMarkdown (IPage):
+    pass
+
+from zopache.ttw.interfaces import IJSON
+class INotebook (IJSON,IDirectory):
+    pass
 
 class INews (IPage,IRecent):
     pass

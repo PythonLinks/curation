@@ -1,5 +1,6 @@
 from cromlech.webob.response import Response
 from dolmen.view import  make_view_response
+
 from zopache.core import View
 from zopache.core.breadcrumbs import Breadcrumbs
 from dolmen.forms.base import Actions
@@ -182,7 +183,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 
 
 @form_component
-@name (u'addHTML')
+@name ('addHTML')
 @context(IBTreeContainer)
 @title("Add CkHTML.")
 @permissions('Manage')
