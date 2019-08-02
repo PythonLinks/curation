@@ -183,4 +183,14 @@ class CategoryDeleter(Deleter,LocalBase):
             for i in item.values():
                return False
          return True    
-     
+
+from zopache.zmi.interfaces import IURLSegment
+from zopache.pages.interfaces import INotebook     
+@crom.adapter
+@crom.sources(INotebook)
+@crom.target(IURLSegment)
+class IPNotebookAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'source'        

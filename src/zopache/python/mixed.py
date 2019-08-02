@@ -18,7 +18,7 @@ from zopache.ttw.javascript import JavascriptFolder
 
 from here  import HERE
 from .utils import create_directory
-from zopache.python.filesystem import DirectoryBase
+from zopache.python.filesystem import FileBase,DirectoryBase, Directory
 from zopache.python.interfaces import IPythonFolder,IMixed
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw import actions as ttwactions
@@ -54,63 +54,126 @@ class MixedBase(object):
     def setLastPath(self):
         self.lastPath = self.path
 
-    def deleteLastPath(self,view):        
-        subrpocess.call(['rm','-r', self.lastPath])
-
-class MixedObject(MixedBase):
-
-    def preDeleteProcess(self,view):
-        self.delete(view)
-        self.deleteJavascriptObject(view)
-        
-    def postEditProcess(self,view):
-        self.exportSource(self.source)
-        self.compile(view)
+#ZODB  Object plus a file.                 
+class ObjectFile(MixedBase,FileBase):
 
     def postAddProcess (self,view):
-        FileBase.__init__(self)        
-        self.exportSource(self.source)
+        self.setMimeType(self)        
+        self.exportSource()
         self.compile(view)
-
-    def preMoveProcess(self,view):
-        self.deleteJavascriptObject(view)
-        self.delete(view)
-        self.setLastPath()
         
-    def postMoveProcess(self,view):    
+    def postEditProcess(self,view):
         self.exportSource()
         self.compile(view)
 
+    def preMoveProcess(self,view):
+        self.setLastPath()
         
-#This is a folder which contains both ZODB and File System Objects
-#It is a separate class, just to make it easier to understrand. 
-class MixedFolder(MixedObject):
-
-    def __contains__(self, key):
-        return (key in self._data  or 
-                key in self.fileSystemKeys())
+    def postMoveProcess(self,view):
+        subprocess.call(['mv',self.lastPath,self.path])
+        
+    def preDeleteProcess(self,view):
+        self.delete(view)
+               
+        
+#ZODB plus a directory
+class MixedDirectoryBase(MixedBase):
     
     def get(self,name,default=None):
         return self.__getitem__(name,default = default)
-    
-    def __getitem__(self,name,default=None):
-        
-      if name in self._data:
-         return self._data[name]
-     
 
-      if name in self.fileSystemKeys():
-          return self.getFileOrDirectory(name)
-
-      # IF ALL ELSE FAILS
-      return default
-  
     def valuesAsList(self):
         result = []
         for item in self.values():
             result.append (item)
         return result
     
+    def postAddProcess(self,view):
+        create_directory(self.path)
+
+    #Move is also used for rename.    
+    def preMoveProcess(self,view):
+        self.setLastPath()
+        
+    def postMoveProcess(self,view):
+        subprocess.call(['mv',self.lastPath,self.path])
+
+    def preDeleteProcess(self,view):
+        self.delete(view)
+
+#ZODB Leaf plus a directory        
+class ObjectDirectory(Directory,MixedDirectoryBase):
+    def postAddProcess (self,view):
+        self.exportSource()
+        self.compile(view)
+
+    def postEditProcess(self,view):
+        self.exportSource()
+        self.compile(view)
+        
+    def __contains__(self, key):
+       return key in self.fileSystemKeys()
+    
+    def __getitem__(self,name,default=None):        
+      if name in self.fileSystemKeys():
+          return self.getFileOrDirectory(name)
+
+      # IF ALL ELSE FAILS
+      return default
+  
+    def __delitem__(self,name,default=None):
+      if name in self.fileSystemKeys():
+         self[name].delete()
+         return
+     
+      # IF ALL ELSE FAILS
+      raise Exception("Failed to Delete")
+  
+    def values(self):
+        for item in self.uniqueFileSystemKeys():
+              yield self.getFileOrDirectory(item)  
+
+    def keys(self):
+        yield (self.uniqueFileSystemKeys())
+        
+    #There are two Python objects, one on the file system.
+    #We only want the one in the zodb.      
+    def uniqueFileSystemKeys(self):    
+        for item in self.fileSystemKeys():
+               yield(item)
+        
+        
+#This is a Continer plus a directory
+class ContainerDirectory(MixedDirectoryBase):
+
+    def __contains__(self, key):
+        return (key in self._data  or 
+                key in self.fileSystemKeys())
+    
+    def __getitem__(self,name,default=None):
+        
+      if name in self._data:
+         return self._data[name]
+     
+      if name in self.fileSystemKeys():
+          return self.getFileOrDirectory(name)
+
+      # IF ALL ELSE FAILS
+      return default
+  
+    def __delitem__(self,name,default=None):
+        
+      if name in self._data:
+         BTreeContainer.__delitem__(self,name)
+         return
+     
+      if name in self.fileSystemKeys():
+         self[name].delete()
+         return
+     
+      # IF ALL ELSE FAILS
+      raise Exception("Failed to Delete")
+  
     def values(self):
         for item in BTreeContainer.values(self):
             yield (item)
@@ -129,21 +192,9 @@ class MixedFolder(MixedObject):
             if item not in self._data:
                yield(item)
 
-    def preDeleteProcess(self,view):
-        self.delete(view)
-        
-    def postAddProcess(self,view):
-        create_directory(self.path)
-
-    def preMoveProcess(self,view):
-        self.setLastPath()
-        
-    def postMoveProcess(self,view):
-        subprocess.call(['mv',self.lastPath,self.path])
-        
 
 @implementer(IPythonFolder)
-class PythonFolder(MixedFolder,JavascriptFolder,DirectoryBase):
+class PythonFolder(ContainerDirectory,JavascriptFolder):
     icon="ttwicons/JavascriptFolder.svg"    
 
     def isPythonFolder(self):

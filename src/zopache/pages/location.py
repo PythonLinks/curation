@@ -1,3 +1,4 @@
+
 from .interfaces import ILocation, ILocationBase,IMap
 from zopache.pages.page import PageBase
 from zopache.pages.interfaces import IPage , IRootPage

@@ -8,6 +8,7 @@ from zope.schema import TextLine,URI
 from dolmen.forms.base import Actions
 from cromlech.file import FileField
 
+from zopache.ttw.html import AceEdit, CkEdit
 from zopache.core.viewdecorators import *
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zope.schema._field import Choice
@@ -17,6 +18,10 @@ from zopache.core.viewdecorators import *
 from zopache.crud.forms import BaseEditForm
 from zopache.ttw.interfaces import IInternalPrincipal, ISupport
 from zopache.ttw.treewidget import TreeField
+from zopache.pages.interfaces import IPage
+from zopache.core.interfaces import ITreeSecurity
+
+
 
 def possibleItems():
     terms = []
@@ -81,6 +86,25 @@ class EditPrincipal(BaseEditForm):
         if 'Manage' in self.request.principal.permissions:
            return 
         raise Unauthorized()
+
+
+@form_component
+@name (u'aceedit')
+@context(IInternalPrincipal)
+@implementer(ITreeSecurity)
+class AceEditPrincipal(AceEdit):
+    title = 'Ace Edit Your Profile'
+    interface = IPage
+    fields = Fields(IPage)
+
+@form_component
+@name (u'ckedit')
+@context(IInternalPrincipal)
+@implementer(ITreeSecurity)
+class CkEditPrincipal(CkEdit):
+    title = 'CkEdit Your Profile'
+    interface = IPage
+    fields = Fields(IPage)        
 
 
 @form_component

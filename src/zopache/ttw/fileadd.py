@@ -32,10 +32,11 @@ class AddImage(AddFile):
     subTitle='Add an Image'
     interface = IImage
     ignoreContent = True
-
     @property
     def actions(self):
         return Actions(
-              AddImageAction("Add Image","Add Image"),   
-              formactions.Cancel("Cancel","Cancel"))    
+              AddAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
+              AddAndView(_("Add and View","Add -> View"), self.factory),
+              formactions.Cancel("Cancel","Cancel"))
+    
 

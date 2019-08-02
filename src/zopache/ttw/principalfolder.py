@@ -33,13 +33,16 @@ from zopache.ttw.file import FileBase
 class DuplicateIDError(ValidationError):
     pass
 
+from zopache.pages.page import Page
 @implementer(IInternalPrincipal)
-class InternalPrincipal(Container,FileBase):
+class InternalPrincipal(FileBase,Page):
     _handle  = ''
     _email = ''
     _password = ''
     title = "Your Profile"
     talkURL =""
+    source = ""
+    description = ""
     permissions = ['Vote']
     chatPermission = False
     newsPermission = False
@@ -49,13 +52,15 @@ class InternalPrincipal(Container,FileBase):
     hirePermission = False
     recruitPermission = False
     contentType = "text/plain"
-
+    webClass = 'Person'
+    
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()
-        Container.__init__(self)
+        Page.__init__(self)
         FileBase.__init__(self)
-        
+
+
     def logout(self,session=None):
         if session is None:
             session = getSession()
@@ -159,7 +164,12 @@ def key(item):
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
+    title = "Principal Folder"
+    description = "This is where the user details are stored. "
+    def html (self) :
+        return ""
     icon="ttwicons/Container.svg"
+    webClass = "PrincipalFolder"
     def __init__(self):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()

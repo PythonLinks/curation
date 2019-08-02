@@ -30,6 +30,7 @@ class ManageBase(Form,Contents):
     subTitle='Rename Videos. Cut and Paste them.  '
 
     template = tal_template('manage.pt')
+
     """
     #TEMPLATE IS NOW DEFINED ON THE FILE SYSTEM
     def update(self):
@@ -90,7 +91,7 @@ class ManageDemo(ManageBase):
 @form_component
 @name('manage')
 @context(IDirectory)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class ManageDirectory (ManageDemo): 
     def breadcrumbs(self):
         return self.breadcrumbsManage()       

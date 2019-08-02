@@ -11,9 +11,8 @@ from crom import target, order
 from cromlech.container.interfaces import IOrderedContainer
 from zopache.business.interfaces import ICompany
 
-from zopache.categories.treewidget import IConference, IConferenceContainer
 try:
-    pass
+    from zopache.categories.treewidget import IConference, IConferenceContainer
 except:
     pass
 

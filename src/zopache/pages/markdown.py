@@ -1,8 +1,10 @@
-from zopache.pages.page import Page
-from zopache.pages.interfaces import IMarkdown
 from zope.interface import implementer
 
 import mistune
+
+from zopache.pages.page import Page
+from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IMarkdown
 
 @implementer (IMarkdown)
 class Markdown (Page):
@@ -13,6 +15,7 @@ class Markdown (Page):
     def html(self):
         return self._html
       
+
 
 
 

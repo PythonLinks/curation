@@ -97,3 +97,15 @@ class AceEditJSON(AceScripts,AceEditForm):
 @permissions('Manage')
 class ManageJSON(AceEditJSON):    
    pass
+
+from zopache.pages.interfaces import INotebook
+@view_component
+@name('source')
+@context(INotebook)
+class Source(View):
+    responseFactory = Response
+    make_response = makeResponse
+        
+    def render(self):
+               return self.context.source           
+

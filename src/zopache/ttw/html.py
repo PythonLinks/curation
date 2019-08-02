@@ -52,6 +52,8 @@ class HTMLBase(object):
     title=u'HTML Page'
     source=''
 
+    def html(self):
+        return self.source    
 
     def getTitle(self):
         if hasattr(self,'title') and self.title!= None and len(self.title)>0:
@@ -276,8 +278,6 @@ class AceEdit(BaseAceEdit):
 #HERE IS THE ACE EDIT FORM
 @form_component
 @context(IAceHTML)
-@target(ITab)
-@title("AceEdit")
 @name("aceedit")
 @permissions('Manage')
 class AceEditForm(AceEdit):
