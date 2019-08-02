@@ -30,7 +30,7 @@ class AddAndEdit(Add):
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
 
-class AddAbdView(Add):
+class AddAndView(Add):
     parentClass=Add
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
@@ -39,6 +39,11 @@ class Edit (Edit):
     parentClass=Edit
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
+    
+class EditAndView (Edit):
+    parentClass=Edit
+    def newURL(self,baseURL):
+        return baseURL    
     
 @form_component
 @name('addMarkdown')
@@ -97,6 +102,6 @@ class AceEdit(AceScripts,AceEditForm):
         return Actions(action1,action2,action3)
 
     def postProcess(self):
-        self.context.postEditProcess(self)
+        self.context.postEditProcess()
 
 

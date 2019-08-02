@@ -183,7 +183,7 @@ class Deleter(BaseClass):
         # HAVE TO DESCRIE BEFORE DELETING OTHERWISE NO NAME AVAILABLE
         self.describeTransaction(" Deleted ", obj)
         if hasattr(obj,'preDeleteProcess'):
-            obj.postMoveProcess(view)                
+            obj.preDeleteProcess(view)                
         del container[name]
         if view.request.principal == obj:
            obj.logout()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import subprocess
 import stat
 import shutil
 from mimetypes import guess_type
@@ -26,6 +27,23 @@ class FileAndDirectoryBase(object):
     
     _p_mtime = property (getMTime)    
 
+    def exportSource(self, path = None):
+
+        if not path:
+           path = self.path
+        if not os.path.exists(os.path.dirname(path)):
+            try:
+                os.makedirs(os.path.dirname(path))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                   raise
+        self.exportSourceCore(path)
+        
+    def exportSourceCore(self,path):    
+        with open(path,'w') as theFile:
+             theFile.write(self.source)
+    
+    
 class FileIterator(object):
     chunk_size = CHUNK_SIZE
 
@@ -53,14 +71,11 @@ class FileBase(FileAndDirectoryBase):
 
     def delete(self,view):        
         subprocess.call(['rm', self.path])            
-        self.displayresult(result,view)
+        #self.displayresult(result,view)
 
     def __iter__(self):
         return iter(self.iterator(open(self.path, 'rb')))
 
-    def exportSource(self,value):
-        with open(self.path,'w') as theFile:
-             theFile.write(value)
 
 @implementer (IJavascriptFile)
 class File (FileBase):
@@ -78,7 +93,9 @@ class File (FileBase):
 
     def getJavascript(self):
         return self.source
-    
+
+    def delete (self,view):
+        os.remove(self.path)
 
 @implementer(IPythonFile)    
 class PythonFile(File):
@@ -136,11 +153,13 @@ class DirectoryBase(FileAndDirectoryBase):
 
     def fileSystemKeys(self):
         path  = self.path
+        if not os.path.isdir(path):
+            return []
         return sorted(os.listdir(self.path))
 
-    def delete(self,view):        
-        result = subrpocess.call(['rm','-r', self.path])
-        self.displayresult(result,view)
+    def delete(self,view):
+        subprocess.call(['rm','-r', self.path])
+        #self.displayresult(result,view)
         
     def rename(self, src, dst):
         dst = os.path.basename(dst)
@@ -157,10 +176,7 @@ class DirectoryBase(FileAndDirectoryBase):
 
 @implementer (IDirectory)        
 class Directory(DirectoryBase):
-    def __init__(self, path,mkdir=False):
-        self.path = path
-
-    def __contains__(self, name):
+    def contains__(self, name):
         return self.containsFileOrDirectory(name)
     
     def __getitem__(self, name, default = None):

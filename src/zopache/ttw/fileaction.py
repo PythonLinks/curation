@@ -39,11 +39,8 @@ class AddFileAction(Action):
         self.message()
         baseURL = self.form.url(self.form.context)
         url = baseURL + self.nextView
-        self.new.postAddProcess()
+        self.new.postAddProcess(form)
         return SuccessMarker('Added', True, url=url,code=307)
-
-
-
         
     def message(self):    
         message(u"File Uplaoded")        

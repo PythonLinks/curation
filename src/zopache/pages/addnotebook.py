@@ -5,17 +5,21 @@ from dolmen.forms.base import Actions
 
 from zopache.core.viewdecorators import *
 from zopache.crud.actions import Cancel
-from zopache.crud.actions import Add,Edit
+from zopache.crud.actions import AddByTitle, Edit
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from cromlech.webob.response import Response
 from dolmen.view import  make_view_response
+from dolmen.container import IBTreeContainer
 
 from zopache.crud import actions as formactions, i18n as _
 from zopache.ttw.acescripts import AceScripts
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm
+from zopache.crud.forms import AddForm
 from zopache.pages.notebook import Notebook
 from zopache.pages.interfaces import INotebook,IPage
 from zopache.core import View
+from zopache.core.page  import  Page
+from zopache.pages.notebook import Notebook
+from zopache.pages.interfaces import INotebook, IAddNotebook
 
 class  AceScripts(AceScripts):
     def  footerScripts(self):
@@ -24,29 +28,49 @@ class  AceScripts(AceScripts):
         </script>
         """
 
-class AddAndEdit(Add):
-    parentClass=Add
+class AddAndEdit(AddByTitle):
+    parentClass=AddByTitle
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
 
-class AddAndView(Add):
-    parentClass=Add
+class AddAndView(AddByTitle):
+    parentClass=AddByTitle
     def newURL(self,baseURL):
-        return baseURL + '/aceedit'
+        return baseURL 
 
 class Edit (Edit):
     parentClass=Edit
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
 
-    
-from zopache.categories.interfaces import ICategory    
-@view_component
+
+from zopache.crud.forms import AddByTitleForm
+@form_component
 @name('addNotebook')
-@context(ICategory)
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddNotebook(AddByTitleForm):
+    subTitle='Upload a Notebook'
+    interface = IAddNotebook
+    ignoreContent = True
+    factory = Notebook
+    
+    @property
+    def actions(self):
+        return Actions(
+              AddAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
+              #AddAndView(_("Add and View","Add -> View"), self.factory),
+              formactions.Cancel("Cancel","Cancel"))
+    
+    
+    
+"""
+@view_component
+@name('addNotebook2')
+@context(IPage)
 @target(IView)
 @permissions('Manage')
-class AddNotebook(AceScripts,AceAddForm):
+class AddNotebook2(AceScripts,AddByTitleForm):
     subTitle = "Add a Read-Only Jupyter Notebook"
     interface = INotebook
     ignoreContent = True
@@ -64,19 +88,19 @@ class AddNotebook(AceScripts,AceAddForm):
               AddAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
               AddAndView(_("Add and View","Add -> View"), self.factory),
               Cancel(_("Cancel","Cancel")))
+"""
 
 @view_component
 @name('index')
 @context(INotebook)
-@title("View")
-class Index(View):
+class Index(Page):
     responseFactory = Response
-    make_response = make_view_response
+
+    ake_response = make_view_response
         
     def render(self):
-        fileName = self.__name__ + '.html'
-        return self.context[fileName].getSource()
-"""
+        return self.context['inde.html'].getSource()
+
 from zopache.crud.forms import EditDemoForm
 @form_component
 @context(INotebook)
@@ -101,5 +125,4 @@ class AceEdit(AceScripts,AceEditForm):
 
     def postProcess(self):
         self.context.postEditProcess(self)
-"""
 

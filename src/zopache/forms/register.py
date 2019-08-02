@@ -58,7 +58,8 @@ class Register(Form):
         return Actions(Add("Sign Me Up!",self))
     
     def newURL(self,new):
-        newURL = '/' + new.__name__ + "/support"
+        #newURL = '/' + new.__name__ + "/support"
+        newURL = "."
         return newURL
 
 """    

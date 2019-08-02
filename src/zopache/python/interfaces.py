@@ -32,7 +32,7 @@ class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI):
         default = u'',
     )
 
-class IDirectory(ISearchable, IZMI):
+class IDirectory(IZMI):
      pass
 
 class IFile (Interface):

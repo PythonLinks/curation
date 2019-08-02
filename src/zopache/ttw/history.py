@@ -38,8 +38,6 @@ def getHistory(item, size=40):
 class History(Page, Breadcrumbs):
        label=''
        subTitle='Historic Versions'
-       def __call__(self ):
-           return Page.__call__(self)
            
        def results(self):
            return getHistory(self.context,last=200)

@@ -5,8 +5,11 @@ from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 from cromlech.browser.interfaces import IPublicationRoot
 
+from zopache.ttw.interfaces import ISourceLeaf
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.python.interfaces import IDirectory
+from zopache.ttw.interfaces import ISourceLeaf
+from cromlech.file import FileField
 
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
@@ -15,8 +18,11 @@ class IRecent(Interface):
 class ICountable(Interface):
       pass
 
-class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical):
+class IContent(ICanonical):
+    pass
 
+class IPage(IContent, IContainer, IOrdered, IBTreeContainer, IUntrustedHTML):
+    
     title = schema.TextLine(
         title = u'Page Name',
         description = u'Describe this page.',
@@ -44,12 +50,49 @@ class IPage(IContainer,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonical):
         default = u'',
     )
 
-class IMarkdown (IPage):
+class IMarkdown (ISourceLeaf,IDirectory):
     pass
 
 from zopache.ttw.interfaces import IJSON
-class INotebook (IJSON,IDirectory):
-    pass
+class INotebookBase(Interface):
+    title = schema.TextLine(
+        title = u'Notebook Title',
+        description = u'What is the name of this notebook?.',
+        required = True,
+    )
+    
+    description= schema.Text(
+        title = u'Description',
+        description = """A brief introduction of this Notebook.  
+                        This is used by the search functions.""",
+        required = False,
+        default = u'',
+    )
+    
+from zopache.ttw.interfaces import IJSON
+class INoteboko(INotebookBase,IJSON):
+    source= schema.Text(
+        title = u'Notebook Source:',
+        description = u'This is the JSON  which defines the Notebook.',
+        required = False,
+        default = u'',
+    )
+    
+class IAddNotebook(INotebookBase):    
+    _v_source = FileField(
+                    title=u'Upload a .pynib file',
+                    required = True,
+                      )    
+
+
+class INotebook (ISourceLeaf,IDirectory):
+    description= schema.Text(
+        title = u'Description',
+        description = """A brief introduction of this Notebook.  
+                        This is used by the search functions.""",
+        required = False,
+        default = u'',
+    )
 
 class INews (IPage,IRecent):
     pass

@@ -28,7 +28,7 @@ Node  <span class="caret"></span></a>
 <li tal:condition="view.implements('dolmen.container.IBTreeContainer')">
 <a href="./manage">Manage</a></li>
 
-<li tal:condition="view.implements('zopache.ttw.interfaces.IAceHTML')"><a href="./aceedit">AceEdit</a></li>
+<li tal:condition="view.implements('zopache.ttw.interfaces.IAceEdit')"><a href="./aceedit">AceEdit</a></li>
 
 <li tal:condition="view.implements('zopache.ttw.interfaces.ICkHTML')"><a href="./ckedit">CkEdit</a></li>
 

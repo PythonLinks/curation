@@ -18,7 +18,6 @@ from zopache.crud.interfaces import IMoveable
 class ITreeField(Interface):
       pass
 
-
 vote = """Vote Permission.  After the conference I will email you 
 asking you to vote on the best talks. """
 
@@ -26,6 +25,8 @@ oneString = """Permission to process your professional information to
 run a chat and voting server"""
 
 from cromlech.file import FileField
+
+
 
 class IFile(ILeaf):
     title = schema.TextLine(
@@ -35,7 +36,7 @@ class IFile(ILeaf):
     )      
     data = FileField(title=u'Upload a File')
 
-class IImage(ILeaf):
+class IImage(IFile):
     title = schema.TextLine(
         title = u'Image Desciption',
         description = u'Describe this Image.',
@@ -45,7 +46,9 @@ class IImage(ILeaf):
 
 class ICanonical (Interface):
       pass   
-    
+
+
+
 class ITestURL(Interface):    
     testURL = schema.TextLine(
         title = u'Test URL',
@@ -126,9 +129,7 @@ class ISearchSchema(Interface):
         default=u'',
         missing_value=u'')
 
-class IInternalPrincipal(IFile,IContainer, ICanonical,ICromlechPrincipal):
-    """Principal information"""
-    pass
+
 
 class ILogin(Interface):
 
@@ -174,6 +175,7 @@ class IMutableWebClass(IWebClass,IContainer):
 class IProducts(IBranch,IWebClass):
     pass
 
+
 class ISource(ILeaf):      
 
     title = schema.TextLine(
@@ -189,9 +191,11 @@ class ISource(ILeaf):
         default = u'',
     )
 
+class IAceEdit(Interface):
+          pass
 
 #NO DISPLAYALE, IT RETURNS SOME VERSION OF SOURCE
-class ISourceLeaf(ISource,ILeaf):
+class ISourceLeaf(ISource,ILeaf,IAceEdit):
       pass
 
 
@@ -243,7 +247,7 @@ class IIndexHTML(Interface):
 class ICkHTML (ISource):
      pass
 
-class IAceHTML(ISource): 
+class IAceHTML(ISource,IAceEdit): 
     pass
 
 class ISecureHTML(IAceHTML):
@@ -308,6 +312,10 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable
 
 class IUntrustedHTML(IHTML):
    pass
+
+class IInternalPrincipal(IFile,IContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
+    """Principal information"""
+    pass
 
 
 #This file is copied from my production servers.

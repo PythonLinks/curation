@@ -51,7 +51,7 @@ class File(FileBase,Leaf):
     def postProcess(self):
         pass
 
-    def postAddProcess(self):
+    def postAddProcess(self,view):
         pass
 
 @implementer(IImage)

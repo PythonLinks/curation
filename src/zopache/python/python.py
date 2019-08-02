@@ -35,18 +35,19 @@ from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts
 from zopache.python.interfaces import IPython
-from zopache.python.filesystem import FileBase
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
-from   zopache.python.folder import MixedObject
+from   zopache.python.mixed import ObjectFile
+from zopache.python.mixed import ObjectFile
 from zopache.python.interfaces import IPythonFolder, IPythonIndex
 from zopache.ttw.javascript import SourceBase
+from zopache.python.filesystem import Directory
 
 @implementer(IPython)
-class Python(SourceBase,Leaf,MixedObject,FileBase):
+class Python(SourceBase,ObjectFile):
     def __init__(self):
         Leaf.__init__(self)
     icon="ttwicons/Python.svg"
-
+        
     def getJavascriptSource(self):
         javascriptObject = self.javascriptObject()
         if javascriptObject:
@@ -63,8 +64,13 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
         return self.__name__[:-3] + '.js'
         
     def javascriptFolder(self):
-        return self.__parent__["__target__"]
-
+        parent = self.__parent__
+        if not "__target__" in parent:
+           path = os.path.join (parent.path,'__target__') 
+           Directory(path,mkdir = True)
+           
+        return parent["__target__"]
+       
     def javascriptFolderPath(self):
         return self.javascriptFolder().path
 
@@ -86,7 +92,24 @@ class Python(SourceBase,Leaf,MixedObject,FileBase):
         os.system(cmd)
 
     def deleteJavascriptObject(self,view):
-        self.javascriptObject.delete(view)
+        try:
+            self.javascriptObject().delete(view) 
+        except:
+            pass
+        
+    def preMoveProcess(self,view):
+        self.deleteJavascriptObject(view)
+        self.delete(view)
+        self.setLastPath()
+        
+    def postMoveProcess(self,view):    
+        self.exportSource()
+        self.compile(view)
+
+    def preDeleteProcess(self,view):
+        self.delete(view)
+        self.deleteJavascriptObject(view)    
+
         
 class  AceScripts(AceScripts):
     def  footerScripts(self):

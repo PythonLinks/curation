@@ -1,32 +1,45 @@
 import os
+import subprocess
+from zope import schema
 from zope.interface import implementer
 
+from zopache.core import Leaf
 from zopache.pages.page import Page
 from zopache.pages.interfaces import INotebook
-from zopache.python.filesystem import Directory
-from zopache.python.folder import MixedObject
+from zopache.python.mixed import ObjectDirectory
+from zopache.python.mixed import ObjectDirectory
 
 import mistune
 
 @implementer (INotebook)
-class Notebook (Directory,MixedObject,Page):
+class Notebook (Leaf,ObjectDirectory):
     #No need to create the directory,
     #Saving the file will create it. 
-    def __init__(self):
-        Page.__init__(self)
-        
-    def compile(self):
-        cmd = ""
-        os.system(cmd)
+    title = ""
+    webClass = "Notebook"
+    def compile(self,view):
+        path = os.path.join(self.path, self.fileName())        
+        cmd = "jupyter nbconvert --template basic --to html " + path
+        #subprocess.call(cmd)
+        os.system (cmd)
+        pass
+    
 
     def html(self):
-        return self._html
+        name = self.fileName()[0:-6] + ".html"        
+        return self[name].getSource()
 
-    #THIS IS USED BY Python / TRANSCRYPT OBJECTS
-    def deleteJavascriptObject(self,view):
-        pass
+    def fileName (self):
+        return "notebook.ipynb"
+    
+    def exportSource(self):
+        path = os.path.join(self.path,self.fileName())
+        super(Notebook,self).exportSource(path = path)
 
-
-
-
-
+    def postAddProcess(self,view):
+        fileUpload =  view.request.form['form.field._v_source']
+        data = fileUpload.file.read()
+        data = data.decode("utf-8")
+        self.source = data
+        self.exportSource()
+        self.compile(view)

@@ -3,7 +3,7 @@ import os
 from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from zopache.pages.interfaces import IPage , IRootPage, INews
+from zopache.pages.interfaces import IContent,IPage , IRootPage, INews
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from zopache.core.breadcrumbs import parentWhichImplements
@@ -27,7 +27,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def valuesAsList(self):
         result = []
         for item in self.values():
-            if IPage.providedBy(item):            
+            if IContent.providedBy(item):            
                result.append (item)
         return result
 
