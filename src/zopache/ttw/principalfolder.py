@@ -34,6 +34,8 @@ class DuplicateIDError(ValidationError):
     pass
 
 from zopache.pages.page import Page
+
+
 @implementer(IInternalPrincipal)
 class InternalPrincipal(FileBase,Page):
     _handle  = ''
@@ -54,6 +56,14 @@ class InternalPrincipal(FileBase,Page):
     contentType = "text/plain"
     webClass = 'Person'
     
+    """
+    from persistent.list import PersistentList
+    def makeOrdered(self):
+        self._order = PersistentList()
+        for item in self:
+               self._order.append(item)
+    """           
+        
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()

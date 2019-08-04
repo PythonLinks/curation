@@ -169,7 +169,7 @@ class IPrincipalFolder(IImutable):
 class IWebClass(IImutable, ICanonical):
     pass
 
-class IMutableWebClass(IWebClass,IContainer):
+class IMoveableWebClass(IWebClass,IMoveable):
     pass
 
 class IProducts(IBranch,IWebClass):

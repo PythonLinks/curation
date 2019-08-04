@@ -5,7 +5,7 @@ from dolmen.forms.base import action, name, context, form_component
 from cromlech.browser.directives import title
 
 from zopache.core import Container
-from .interfaces import IWebClass, IProducts, IMutableWebClass
+from .interfaces import IWebClass, IProducts, IMoveableWebClass
 from .container import ContainerAddForm
 from zopache.ttw.interfaces import IWeb    
 
@@ -33,11 +33,11 @@ class BaseWebClass (Container):
     def postProcess(self):
         pass
     
-@implementer(IWebClass)
+@implementer(IMoveableWebClass)
 class WebClass (BaseWebClass):
     pass
 
-@implementer(IMutableWebClass)
+@implementer(IMoveableWebClass)
 class ImutableWebClass (BaseWebClass):
     pass
 
