@@ -27,6 +27,7 @@ from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import IWeb
 from dolmen.view import name, context, view_component
 from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML
+from zopache.ttw.interfaces import IAceHTMLPage
 
 """
 HTML is a very important base class.  It has a field called source.  It 
@@ -131,7 +132,11 @@ class HTML(TrustedHTML,Leaf):
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
 
-
+@implementer(IAceHTMLPage)
+class HTMLPage(TrustedHTML,Leaf):
+    icon="ttwicons/HTML.svg"    
+    webClass = "Category"
+    
 @implementer(ISecureHTML)
 class SecureHTML(AceHTML):
     icon="ttwicons/SecureHTML.svg"

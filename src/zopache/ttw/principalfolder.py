@@ -55,6 +55,7 @@ class InternalPrincipal(FileBase,Page):
     recruitPermission = False
     contentType = "text/plain"
     webClass = 'Person'
+    branchSize = 1
     
     """
     from persistent.list import PersistentList
@@ -176,6 +177,7 @@ class PrincipalFolder(Container):
     """
     title = "Principal Folder"
     description = "This is where the user details are stored. "
+    branchSize = 1
     def html (self) :
         return ""
     icon="ttwicons/Container.svg"

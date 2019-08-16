@@ -286,6 +286,9 @@ class IHTMLClass(ICkHTML, IAceHTML, IIndexHTML,ILeaf):
 
 class IAceHTMLClass(IAceHTML, IIndexHTML,ILeaf):
     pass
+    
+class IAceHTMLPage(IAceHTML, IIndexHTML,ILeaf):
+    pass
 
   
 #A COUNTAINER WITHOUT DISPLAYABLE

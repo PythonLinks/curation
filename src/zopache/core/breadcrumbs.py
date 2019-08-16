@@ -161,12 +161,15 @@ class Breadcrumbs(UniqueName):
         if args:
           fred = args
           item = args [0]
-      
+          
     def implements (self,dottedName):
+        return self.itemImplements(self.context,dottedName)
+    
+    def itemImplements(self, item, dottedName):
         myInterface = locate(dottedName)
         if myInterface == None:
             return False
-        result = myInterface.providedBy(self.context)
+        result = myInterface.providedBy(item)
         return result
 
     def isAuthenticated(self):
@@ -326,6 +329,9 @@ class Breadcrumbs(UniqueName):
 
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
+ 
+    def viewHref(self,obj,view,name):
+        return self.href(self.url(obj)+ '/' + view, name)   
     
     def href(self,url,name,target=False):  
            result ='<a href=\"'
@@ -339,10 +345,11 @@ class Breadcrumbs(UniqueName):
            result +='</a>'
            return result
 
-    def divBreadcrumbs(self, node,viewName ='',widget= False):     
+    def divBreadcrumbs(self, node,viewName ='',widget= False,start = 1):
+        import pdb; pdb.set_trace()
         items=list(parents(node))
         items.reverse()
-        items = items [1:]
+        items = items [start:]
         length = len(items)
         if length > 50:
             return "ERROR IN DIV BREADCRUMBS"
