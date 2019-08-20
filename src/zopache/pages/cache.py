@@ -172,6 +172,12 @@ class MixIn(object):
         if (self.__parent__.__name__ ==
             "the-best-lightning-talks-of-pycon-usa-2019"):
             listLength = 15
+        if (self.__parent__.__name__ ==
+            "europython-2019-lightning-talks"):
+            listLength = 27
+
+
+            
         if (len(aHeap)> listLength ):
             heapq.heappushpop(aHeap,(getattr(self,sortKey),self.__name__,self))
         else:
