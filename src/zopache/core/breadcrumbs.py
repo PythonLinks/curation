@@ -346,7 +346,6 @@ class Breadcrumbs(UniqueName):
            return result
 
     def divBreadcrumbs(self, node,viewName ='',widget= False,start = 1):
-        import pdb; pdb.set_trace()
         items=list(parents(node))
         items.reverse()
         items = items [start:]

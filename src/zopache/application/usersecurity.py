@@ -12,6 +12,9 @@ class UserSecurity(object):
     def check(self):
         if 'Manage' in self.view.request.principal.permissions:
             return True
-        if not self.__parent__ is self.view.request.principal:
-                raise Unauthorized()        
-        return True
+        if self.view.context is self.view.request.principal:
+            return True 
+        if self.view.context.__parent__ is self.view.request.principal:
+            return True       
+        raise Unauthorized()        
+

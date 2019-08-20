@@ -186,6 +186,9 @@ class PrincipalFolder(Container):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()
+        
+    def setJson(self):
+        pass
 
     def values(self):
         all = []
