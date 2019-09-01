@@ -20,7 +20,7 @@ class BaseAction(Action):
         if errors:
             form.submissionError = errors
             return FAILURE
-        
+                
         branch=self.upload(formData)
         context = form.context
         self.processImport(context,branch)

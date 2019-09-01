@@ -11,7 +11,7 @@ import time
 So what do we have here?
 There are six different caches.  3 for categories, 3 for videos. 
 They are dictionaires indexed by item key. 
-The 2 score caches for ideos.   wilson score and most recent.
+The 2 score caches for videos.   wilson score and most recent.
 Noo need to cache creation date.
 
 The 3 for categories cache the __name__ of the top 10 videos in that
@@ -23,7 +23,7 @@ We only cache the results that someone has asked for.
 Cache is accessible from multiple threads. 
 Caches will also be deleted upon edits. 
 
-I do ont want to sort huge lists of objects, so I use heapq 
+I do not want to sort huge lists of objects, so I use heapq 
 to just keep track of the 10 best items in any category. 
 So sorting scales linearly with branch size, not n log (n)
 
@@ -46,9 +46,11 @@ class Cache:
             self.wilsonScoreBest = {}
             self.myScoreBest = {}
             self.mostRecentBest = {}
+            self.voteTotalsBest = {}            
             self.wilsonScoreCache = {}
             self.myScoreCache = {}
-
+            self.voteTotalsCache = {}
+           
     def get(self, name, key, default=None):
             cache = getattr(self, name)
             return cache.get(key, default=default)
@@ -185,6 +187,16 @@ class MixIn(object):
                heapq.heappush(aHeap,(getattr(self,sortKey),self.__name__,self))
             except:
                pass
+
+
+    @cache('voteTotalsCache')                       
+    def getVoteTotals (self):
+                ups = self.upVotes()
+                downs = self.downVotes()
+                n = ups - downs           
+                return n
+
+    voteTotals = property (getVoteTotals)        
            
     @cache('wilsonScoreCache')                       
     def getWilsonScore (self):

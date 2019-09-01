@@ -2,7 +2,8 @@
 <div class="container-fluid">
 <ul class="nav navbar-nav">
 
-
+<li tal:condition="not view.implements('zopache.ttw.interfaces.IWebClass')">
+<a href="${view.url(context)}">View</a></li>
 
 <li class="dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -47,8 +48,7 @@ Node  <span class="caret"></span></a>
 </ul>
 </li>
 
-<li tal:condition="not view.implements('zopache.ttw.interfaces.IWebClass')">
-<a href="${view.url(context)}">View</a></li>
+
 
 
 
