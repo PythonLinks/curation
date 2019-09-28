@@ -112,7 +112,13 @@ class Manage (ManageBase):
         act5 = CopyObjects ("Copy", "Copy")
         act6 = PasteObjects("Paste","Paste")
         act7 = DeleteObjects("Delete", "Delete") 
-        actionList = [act1,act2, act4,act5]
+        actionList = [act1,act2]
+
+        if INotPage.providedBy(self.context):                         
+            actionList.append(act3)                       
+        actionList.append(act4) 
+        actionList.append(act5)                     
+
         if self.hasClipboardContents():
            actionList.append (act6)
         actionList.append (act7)

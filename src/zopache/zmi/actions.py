@@ -1,4 +1,5 @@
-from slugify import slugify
+from slugify import slugify, SLUG_OK
+
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 
@@ -67,9 +68,12 @@ class ReTitleAndName(BaseAction):
         result = self.reTitle(form)
         if not hasattr(form.context, "valuesAsList"):
             return result
-        for item in form.context.valuesAsList():
+        
+        for item in form.context.allValuesAsList():
             if hasattr(item, "title"):
-                newName = slugify(item.title,ok=SLUG_OK+'.', lower= True)
+                newId = slugify(item.title,ok=SLUG_OK+'.', lower= True)
+            import pdb; pdb.set_trace()
+            print (newId,item.__name__)
             if newId != item.__name__:
                 renamer = IObjectRenamer(item)
                 renamer.renameItem(item.__name__, newId,form)
