@@ -12,7 +12,7 @@ from cromlech.container.interfaces import IOrderedContainer
 from zopache.business.interfaces import ICompany
 
 try:
-    from zopache.categories.treewidget import IConference, IConferenceContainer
+    from zopache.categories.interfaces import IConference, IConferenceContainer
 except:
     pass
 

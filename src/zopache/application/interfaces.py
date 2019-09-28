@@ -6,10 +6,21 @@ from cromlech.browser.interfaces import IPublicationRoot
 from zope.interface import implementer, Interface
 from dolmen.container import BTreeContainer,IBTreeContainer
 from cromlech.browser import IView
-from zope.schema import Text, TextLine, Password
+from zope import schema
+from zope.schema import Text, TextLine, Password , DottedName
 from zopache.ttw.interfaces import ILeaf, IHTMLContainer
 from zopache.ttw.interfaces import IHTML
 from zopache.crud.interfaces import IRootContainer
+
+class IVirtualHost(ILeaf):
+    """Map domains to paths"""
+    mapping = schema.Dict(
+        title = u'Virtual Host Definitions',
+        description = u'Map from domain names to child directory name.',
+        required = False,
+        key_type = DottedName(max_dots = 0) ,
+        value_type = DottedName(max_dots = 0) , 
+    )
 
 class ITab(IView):
     pass

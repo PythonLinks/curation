@@ -79,8 +79,8 @@ install_requires = [
     'dm.historical',
     'dolmen.forms.base >= 2.0',
     'fanstatic',
-    'pyramid_mailer'
     'pillow',
+    'repoze.sendmail',
     'setuptools',
     'zope.cachedescriptors',
     'z3c.schema',

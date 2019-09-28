@@ -9,7 +9,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 from zope.interface import implementer
 from zope.location import Location
 
-
+"""
 @implementer(IPublicationRoot)
 class Auth(dict, Location):
 
@@ -20,9 +20,13 @@ class Auth(dict, Location):
                 session['user'] = userName
                 return True
         return False
+"""
 
 
-
+#THE IDEA HERE IS THAT THE END USER
+#CAN SPECIFY THE ROOT
+#NO NEED TO DO IN NGINX
+virtualHosts = {}
 
 def secured(app):
 
@@ -35,6 +39,12 @@ def secured(app):
             conn = environ["zodb.connection"]
             root=conn.root()
             root=root["applicationRoot"]
+
+            host = environ["HTTP_HOST"].lower()
+            if host in virtualHosts:
+               path = virtualHosts [host] 
+               root = root [path]
+               
             principalFolder = root["person"]
             principal = principalFolder.getPrincipalByUserName(userName)
         return app(environ, start_response, principal)

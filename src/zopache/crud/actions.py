@@ -74,6 +74,10 @@ class Add(Action, UniqueName):
     def newURL(self,baseURL):
         return baseURL
 
+class AddNamed(Add):
+    def newName(self,data):
+        return 'MailHost'
+
 class AddByTitle (Add):
     def newName(self,data):    
         name =  data['title']

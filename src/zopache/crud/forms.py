@@ -44,6 +44,17 @@ class AddForm(Form):
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
 
+class AddNamedForm(AddForm):
+    @property
+    def fields(self):
+        return  Fields(self.interface)
+    
+    @property
+    def actions(self):
+        return Actions(
+            formactions.AddNamed(_("Add","Add"), self.factory),
+            formactions.Cancel(_("Cancel","Cancel")))
+    
 class AddByTitleForm(AddForm):
     @property
     def fields(self):
