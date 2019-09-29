@@ -55,7 +55,8 @@ class IZMI(IRenameable,
 #Not HTML
 class IContainer(IZMI,
                  IBTreeContainer,
-                 IAddContainer               ): 
+                 IAddContainer
+                 ): 
      pass
 
 class IEditableContainer(IContainer,IEditable):

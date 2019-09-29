@@ -130,7 +130,43 @@ class Manage (ManageBase):
 @context(IBTreeContainer)
 @permissions('Manage')
 class Fix(Manage):
+    def newRoot(self):
+         parent = self.request.environment['zodb.connection'].root()
+         name = "applicationRoot"
+         oldRoot = self.context
+         person = oldRoot['person']
+         products = oldRoot ['Products' ]
+         del oldRoot ['Products']
+         del oldRoot ['person']
+         del parent [name]
+         
+         from zopache.application.root import RootContainer
+         newRoot = RootContainer()
+         parent [name] = newRoot
+         newRoot ['Products'] = products
+         newRoot ['person'] = person
+         import pdb; pdb.set_trace()
+         pass
 
+    def replace (self,name,class):
+        context = self.context
+        child = context [name]
+        items = child.allValuesAsList()
+        new = Class()
+        for item in items:
+            itemName = item.name
+            del context [itemName]
+            new [itemName] = item
+        del context [name]
+        context [name] = new
+
+    def moveTo(self,childName)
+        self.moveItem('personCopy1',childName,'person')
+       
+    def moveItem(self, name, childName, newName)
+        item = self.context [name]
+        self.context[childName][newName] = item
+            
     def update(self):
         Manage.update(self)
         item=self.context

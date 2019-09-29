@@ -171,7 +171,7 @@ class InternalPrincipal(FileBase,Page):
 def key(item):
     return item._p_mtime
 
-@implementer(IPrincipalFolder,IImutable)
+@implementer(IPrincipalFolder)
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
