@@ -148,11 +148,13 @@ class Fix(Manage):
          import pdb; pdb.set_trace()
          pass
 
-    def replace (self,name,class):
+    def replace (self,name,aClass):
         context = self.context
         child = context [name]
         items = child.allValuesAsList()
-        new = Class()
+        new = aClass()
+        new.description = context.description
+        new.source = context.source
         for item in items:
             itemName = item.name
             del context [itemName]
@@ -160,10 +162,10 @@ class Fix(Manage):
         del context [name]
         context [name] = new
 
-    def moveTo(self,childName)
+    def moveTo(self,childName):
         self.moveItem('personCopy1',childName,'person')
        
-    def moveItem(self, name, childName, newName)
+    def moveItem(self, name, childName, newName):
         item = self.context [name]
         self.context[childName][newName] = item
             
