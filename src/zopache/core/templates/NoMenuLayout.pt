@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    ${structure: view.headerScripts()}
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <title>${view.acquireTitle() + ' ' + view.subTitle}</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <style>
+      .navbar {
+      padding-bottom:0px;
+      margin-bottom:0px;      
+      }
+      #footer {
+          color: white;
+	  background-color: #464c4a;
+	  margin-top: 2em
+      }
+
+      #footer a {
+	  color: white;
+	  font-weight: bold;
+      }
+
+      .form-group.required label:after {
+          content: "•";
+          color: red;
+	  font-weight: bold;
+      }
+    </style>
+  </head>
+  <body class="bg-secondary">
+    
+    <div class="container">
+      <h1>${view.acquireTitle()}</h1>
+    </div>
+    <a name="content"></a>
+     <a name="manage"></a>
+    <div id="wrapper">
+      <div class="container" id="page-content-wrapper">
+	<div id="main">
+	  <div id="content">
+	    <div tal:condition="hasattr(view,'error')"
+		 style="color:red;">${view.error} </div>
+	  <div tal:replace="structure content" />
+	  </div>
+	</div>
+      </div>
+      <div id="footer">
+	${structure: view.footerScripts()}
+      </div>
+    </div>
+  </body>
+</html>
+    
