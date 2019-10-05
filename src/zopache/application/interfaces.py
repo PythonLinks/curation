@@ -12,6 +12,7 @@ from zopache.ttw.interfaces import ILeaf, IHTMLContainer
 from zopache.ttw.interfaces import IHTML
 from zopache.crud.interfaces import IRootContainer
 
+
 class IVirtualHost(ILeaf):
     """Map domains to paths"""
     mapping = schema.Dict(
@@ -22,12 +23,8 @@ class IVirtualHost(ILeaf):
         value_type = DottedName(max_dots = 0) , 
     )
 
-class ITab(IView):
-    pass
-
 
 class ILogin(Interface):
-
     email = TextLine(
         title='Username', required=True)
 

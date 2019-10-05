@@ -13,7 +13,7 @@ from zope.interface import Interface
 from dolmen.container import IBTreeContainer
 from cromlech.browser.interfaces import IURL, IPublicationRoot
 from zopache.crud.interfaces import IRootContainer
-from ..interfaces import ITab,IContent
+
 
 
 from zopache.core.page  import  Page

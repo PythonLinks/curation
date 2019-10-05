@@ -9,7 +9,7 @@ from cromlech.security import permissions
 from cromlech.webob.response import Response
 from dolmen.viewlet import ViewletManager, viewlet_manager
 from zope.interface import Interface
-
+from dolmen.forms.base import name
 from . import tal_template
 
 
@@ -79,3 +79,11 @@ class LiteLayout(object):
             raise NotImplementedError("Template is not defined.")
         return self.template.render(
             self, target_language=self.target_language, **environ)
+
+
+@crom.component
+@name("NoMenuLayout")
+@crom.sources(IRequest, Interface)
+@crom.target(ILayout)
+class NoMenuLayout(LiteLayout):
+    template = tal_template('NoMenuLayout.pt')

@@ -8,14 +8,14 @@ from zopache.ttw.gloginactions  import GoogleRegisterAction
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.pages.interfaces import INotPage
 
-from zopache.ttw.interfaces import IName, IContainer, ILeaf, IGRegister
+from zopache.ttw.interfaces import IName, IContainer, ILeaf
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
 
 from zopache.crud.forms import AddForm
 from dolmen.forms.base.markers import HIDDEN
 
-from zopache.ttw.interfaces import IRegister
+from zopache.forms.interfaces import IRegister, IGRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 

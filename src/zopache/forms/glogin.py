@@ -9,7 +9,8 @@ from cromlech.i18n import translate
 
 from cromlech.security import getSecurityGuards, permissions
 
-from zopache.ttw.interfaces import IName, IContainer, ILeaf, IGLogin
+from zopache.ttw.interfaces import IName, IContainer, ILeaf
+from zopache.forms.interfaces import IGLogin, IRegister
 from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
 
@@ -22,7 +23,6 @@ from cromlech.webob import Response
 from zopache.core.baseform import Form
 
 from cromlech.browser.directives import title
-from zopache.ttw.interfaces import IRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 
