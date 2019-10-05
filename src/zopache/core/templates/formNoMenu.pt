@@ -1,0 +1,62 @@
+<form action="." tal:attributes="action view.action_url;
+                                 id view.htmlId();
+                                 method view.formMethod;
+                                 enctype view.enctype">
+
+  <h1 tal:condition="view.label"
+      tal:content="view.label">Label</h1>
+  
+  <p tal:condition="view.description"
+     tal:content="view.description">Description</p>
+  
+  <p class="form-status"
+     tal:condition="view.status"
+     tal:content="view.status">Status</p>
+  
+  <div class="form-error"
+       tal:condition="view.errors">
+    <ul tal:condition="view.formErrors"
+        tal:repeat="error view.formErrors">
+      <li> <span tal:replace="error.title" /> </li>
+    </ul>
+  </div>
+
+  <div class="form-error"
+       tal:condition="view.errors">
+    <ul tal:condition="view.submissionError"
+        tal:repeat="error view.submissionError">
+      <li> <span tal:replace="error" /> </li>
+    </ul>
+  </div>
+
+  <span style= "max-width:40em" tal:condition="hasattr(view,'preamble')">
+  <p>${view.preamble}</p><br></span>
+
+  <tal:fields condition="view.fieldWidgets">
+    <div tal:attributes="class widget.required and 'form-group required' or 'form-group'"
+	 tal:repeat="widget view.bootstrap_widgets()">
+      <span tal:content="structure view.before(widget)"></span>	 
+      <tal:widget  tal:condition= "view.isBool(widget)"  tal:content="structure widget.render()" />
+      <label for="#"
+             tal:attributes="for widget.htmlId()"
+             tal:content="widget.title"
+             tal:condition="widget.visible" />
+      <p tal:condition="widget.description"
+	 tal:content="widget.description"
+	 class="field-description" />
+      <p class="field-error"
+	 tal:define="error widget.error"
+	 tal:condition="error"
+	 tal:content="error.title" />
+      <div tal:condition="widget.htmlId()=='form-field-source'" name="editorDiv" id="editorDiv"></div>
+      <tal:widget  tal:condition= " not view.isBool(widget)"  tal:content="structure widget.render()" />
+    </div>
+  </tal:fields>
+  <tal:actions tal:condition="view.actionWidgets">
+    <tal:widget tal:content="structure widget.render()"
+		tal:repeat="widget view.bootstrapActionWidgets()" />
+  </tal:actions>
+</form>
+<br>
+  <p style= "max-width:40em" tal:condition="hasattr(view,'postamble')">
+  ${view.postamble}</p>
