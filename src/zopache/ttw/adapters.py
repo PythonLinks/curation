@@ -18,6 +18,17 @@ class IHTMLContainerAdaptor(object):
     def getSegment(self):
         return 'manage'
 
+
+from zopache.ttw.interfaces import IMailHost    
+@crom.adapter
+@crom.sources(IMailHost)
+@crom.target(IURLSegment)
+class IHTMLContainerAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+    def getSegment(self):
+        return 'edit'    
+
 from .coffeescript import ICoffeeScript    
 @crom.adapter
 @crom.sources(ICoffeeScript)

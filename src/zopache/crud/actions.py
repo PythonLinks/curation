@@ -52,15 +52,19 @@ class Add(Action, UniqueName):
         newName = self.newName(data)
         newName = slugify(newName ,ok=SLUG_OK+'.', lower = False)
         context[newName]=obj
+        obj.__parent__ = context
         message(_(u"Content created"))
-        baseURL = str(IURL(obj, form.request))    
+        baseURL = self.form.url (obj)
+        #baseURL = str(IURL(obj, form.request))    
         url=self.newURL(baseURL)
-        form.new.postProcess()
+
         if hasattr(form.new,'postAddProcess'):
-            try: 
+            try:
                form.new.postAddProcess(view=form)
             except:
-               form.new.postAddProcess()                
+               form.new.postAddProcess()
+        else:
+            form.new.postProcess(form)            
         form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 
@@ -73,6 +77,10 @@ class Add(Action, UniqueName):
     
     def newURL(self,baseURL):
         return baseURL
+
+class AddNamed(Add):
+    def newName(self,data):
+        return 'MailHost'
 
 class AddByTitle (Add):
     def newName(self,data):    

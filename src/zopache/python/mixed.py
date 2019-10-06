@@ -25,6 +25,7 @@ from zopache.ttw import actions as ttwactions
 
 from zopache.ttw.interfaces import IJavascript
 from zopache.python.interfaces import IPython
+from zopache.python.filesystem import DirectoryBase
 
 #OBJECTS WHICH EXIST BOTH IN THE ZODB AND IN THE FILE SYSTEM.
 class MixedBase(object):
@@ -57,7 +58,7 @@ class MixedBase(object):
 #ZODB  Object plus a file.                 
 class ObjectFile(MixedBase,FileBase):
 
-    def postAddProcess (self,view):
+    def postAddProcess (self,view=None):
         self.setMimeType(self)        
         self.exportSource()
         self.compile(view)
@@ -88,26 +89,26 @@ class MixedDirectoryBase(MixedBase):
             result.append (item)
         return result
     
-    def postAddProcess(self,view):
+    def postAddProcess(self,view=None):
         create_directory(self.path)
 
     #Move is also used for rename.    
-    def preMoveProcess(self,view):
+    def preMoveProcess(self,view=None):
         self.setLastPath()
         
     def postMoveProcess(self,view):
         subprocess.call(['mv',self.lastPath,self.path])
 
     def preDeleteProcess(self,view):
-        self.delete(view)
+         self.delete(view)
 
 #ZODB Leaf plus a directory        
 class ObjectDirectory(Directory,MixedDirectoryBase):
-    def postAddProcess (self,view):
+    def postAddProcess (self,view=None):
         self.exportSource()
         self.compile(view)
 
-    def postEditProcess(self,view):
+    def postEditProcess(self,view=None):
         self.exportSource()
         self.compile(view)
         
@@ -144,7 +145,7 @@ class ObjectDirectory(Directory,MixedDirectoryBase):
         
         
 #This is a Continer plus a directory
-class ContainerDirectory(MixedDirectoryBase):
+class ContainerDirectory(MixedDirectoryBase,DirectoryBase):
 
     def __contains__(self, key):
         return (key in self._data  or 

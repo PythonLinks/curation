@@ -101,7 +101,7 @@ class DeleteObjects(BaseAction):
     def __call__(self,form):
         """Remove objects specified in a list of object ids"""
         ids = self.getValues(form,
-                          "You did not select any objects to delete")
+                    "You did not select any objects to delete")
         container = form.context
         for id in ids:
             item= container [id]
