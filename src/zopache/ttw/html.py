@@ -19,7 +19,6 @@ from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer, BTreeContainer
 from crom import target, order
-from zopache.application.interfaces import ITab
 from cromlech.browser.directives import title
 from cromlech.security import permissions
 from zopache.core import Leaf
@@ -27,6 +26,7 @@ from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import IWeb
 from dolmen.view import name, context, view_component
 from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML
+from zopache.ttw.interfaces import IAceHTMLPage
 
 """
 HTML is a very important base class.  It has a field called source.  It 
@@ -131,7 +131,11 @@ class HTML(TrustedHTML,Leaf):
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
 
-
+@implementer(IAceHTMLPage)
+class HTMLPage(TrustedHTML,Leaf):
+    icon="ttwicons/HTML.svg"    
+    webClass = "Category"
+    
 @implementer(ISecureHTML)
 class SecureHTML(AceHTML):
     icon="ttwicons/SecureHTML.svg"
@@ -286,7 +290,6 @@ class AceEditForm(AceEdit):
 #AND HERE IS THE DEMO ACE EDIT FORM
 @form_component
 @context(IAceHTML)
-@target(ITab)
 @title("Ace Demo")
 @name("acedemo")
 class AceDemoHTML(BaseAceEdit):
@@ -322,7 +325,6 @@ class CkEdit(BaseCkEdit):
 #HERE IS THE CKEDIT FORM
 @form_component
 @context(ICkHTML)
-@target(ITab)
 @name('ckedit')
 @title("CkEdit")
 @permissions('Manage')
@@ -333,7 +335,6 @@ class CkEditForm(CkEdit):
 #AND HERE IS THE CkDemo Form
 @form_component
 @context(ICkHTML)
-@target(ITab)
 @name('ckdemo')
 @title("CkEdit")
 class CkDemoHTML(BaseCkEdit):
@@ -344,7 +345,6 @@ class CkDemoHTML(BaseCkEdit):
 """    
 @form_component
 @context(IHTMLClass)
-@target(ITab)
 @name('manage')
 @implementer(IWeb)
 @title("Manage")
@@ -355,7 +355,6 @@ class ManageHTML(CkEditHTML):
 
 @form_component
 @context(IAceHTMLClass)
-@target(ITab)
 @name('manage')
 @implementer(IWeb)
 @title("Manage")

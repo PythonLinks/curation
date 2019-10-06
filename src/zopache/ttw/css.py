@@ -14,7 +14,7 @@ from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.crud.forms import EditDemoForm
 from zopache.ttw.acescripts import AceScripts
-from zopache.application.interfaces import ITab
+
 
 class ICSS(ISourceLeaf):
     """Basic CSS CRUD"""
@@ -48,7 +48,6 @@ class  AceScripts(AceScripts):
 @form_component
 @name('addCSS')
 @context(IBTreeContainer)
-#@target(ITab)
 @title("Add CSS")
 @permissions('Manage')
 class AddCSS(AceScripts,AceAddForm):
@@ -78,7 +77,6 @@ class Index(View):
 #HERE IS THE ACE EDIT FORM
 @form_component
 @context(ICSS)
-@crom.target(ITab)
 @title("AceEdit")
 @name("aceedit")
 @permissions('Manage')
@@ -89,7 +87,6 @@ class AceEditCSS(AceScripts,AceEditForm):
 #AND HERE IS THE ACE DEMO FORM
 @form_component
 @context(ICSS)
-@crom.target(ITab)
 @title("Ace Demo")
 @name("acedemo")
 class AceDemoCSS(AceScripts,EditDemoForm):
@@ -98,7 +95,6 @@ class AceDemoCSS(AceScripts,EditDemoForm):
 
 @form_component
 @context(ICSS)
-@crom.target(ITab)
 @name('manage')
 @title("Manage")
 @permissions('Manage')

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-#This software is subject to the CV and Zope Public Licenses.
 from zope.interface import Interface
 from zope.interface import implementer
 
@@ -19,7 +18,8 @@ from zopache.crud.utilities import title_or_name
 from zopache.core.baseform import Form
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.crud.interfaces import IName, IContainer, ILeaf
-from .interfaces import ILogin , IPrincipalFolder
+from zopache.ttw.interfaces import IPrincipalFolder
+from zopache.forms.interfaces import ILogin
 from dolmen.forms.base.errors import Error
 from cromlech.browser.exceptions import HTTPFound
 from zopache.core import getRoot
@@ -56,7 +56,8 @@ class LoginAction(Action):
 class LoginForm(Form):
     """ Used to login
     """
-    title='PythonLinks.info'
+    layoutName = "NoMenuLayout"
+    title='Log in '
     subTitle='Please Login'
     fields = Fields(ILogin)
     ignoreContent = True

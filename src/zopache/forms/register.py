@@ -22,7 +22,7 @@ from cromlech.webob import Response
 from zopache.core.baseform import Form
 
 from cromlech.browser.directives import title
-from zopache.ttw.interfaces import IRegister
+from zopache.forms.interfaces import IRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 
@@ -31,6 +31,7 @@ from zopache.ttw import tal_template
 @context(Interface)
 @title("Register")
 class Register(Form):
+    layoutName = "NoMenuLayout"
     fields = Fields(IRegister)
     factory = InternalPrincipal
     title='PythonLinks.info'

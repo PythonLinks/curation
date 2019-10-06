@@ -10,7 +10,6 @@ from cromlech.security import getSecurityGuards, permissions
 from zope.interface import implementedBy
 
 from . import tal_template
-from ..interfaces import ITab 
 from zopache.core.layout import SiteHeader, AdminHeader, ContextualActions
 from zopache.core.layout import Footer, Breadcrumbs
 from dolmen.breadcrumbs import BreadcrumbsRenderer
@@ -79,7 +78,7 @@ class Tabs(Viewlet):
         return result        
 
     def update(self):
-        tabs = ITab.all_components(self.context, self.request)
+        #tabs = ITab.all_components(self.context, self.request)
         predict, _ = getSecurityGuards()
         if predict is not None:
             tabs = (

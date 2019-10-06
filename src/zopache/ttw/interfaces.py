@@ -5,7 +5,6 @@ from zope.interface import Interface
 from zope import schema
 from zope.schema import Password, TextLine
 from zope.schema import Text, TextLine, Choice, Bool, DottedName
-from z3c.schema.email  import RFC822MailAddress as Email
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal as ICromlechPrincipal
 #from cromlech.file.interfaces import IFile as IFileBase
@@ -87,52 +86,6 @@ class ITestURL(Interface):
     )
 
     
-class IGLogin(Interface):
-        idtoken= Text(
-        title="Token",
-        description= "",
-        required = True)
-        
-
-class IHandle(Interface):
-
-    handle = DottedName(
-        title="User Name",
-        description= "You can log in with this.  No spaces.",
-        required = True)
-
-class IEmail(Interface):    
-    email = Email(
-        title="Your Email Address",
-        description ="",
-
-        required = True)
-    
-    password = Password(
-        title="Password",
-        description = "Be Strong",
-        required = True)
-    
-class IPermissions(Interface):            
-    chatPermission = Bool(
-        title = "Run this web server.",
-        required = True,
-        default = False)
-    chatPermission.text = """ <p> I give permission 
-to process my professional information for the following  
-purposes:</p>"""
-        
-    newsPermission = Bool(
-        title = "Please recommend good videos.",
-        required = False,
-        default = False)    
-
-
-class IGRegister (IGLogin,IHandle,IPermissions):        
-   pass
-
-class IRegister(IHandle, IEmail, IPermissions):
-   pass
 
 class ISupport (Interface):
     hirePermission = Bool(
@@ -159,14 +112,6 @@ class ISearchSchema(Interface):
         missing_value=u'')
 
 
-
-class ILogin(Interface):
-
-    email  = TextLine(
-        title='Username', required=True)
-
-    password = Password(
-        title='Password', required=True)
 
 class IBranch (IBTreeContainer):
     pass
@@ -198,7 +143,7 @@ class IPrincipalFolder(IImutable):
 class IWebClass(IImutable, ICanonical):
     pass
 
-class IMutableWebClass(IWebClass,IContainer):
+class IMoveableWebClass(IWebClass,IMoveable):
     pass
 
 class IProducts(IBranch,IWebClass):
@@ -314,6 +259,9 @@ class IHTMLClass(ICkHTML, IAceHTML, IIndexHTML,ILeaf):
     pass
 
 class IAceHTMLClass(IAceHTML, IIndexHTML,ILeaf):
+    pass
+    
+class IAceHTMLPage(IAceHTML, IIndexHTML,ILeaf):
     pass
 
   

@@ -12,7 +12,7 @@ from cromlech.security import unauthenticated_principal as anonymous
 from cromlech.webob.request import Request
 from cromlech.browser import setSession
 
-from .auth import Auth, secured
+from .auth import  secured
 from .security import secure_query_view
 
 

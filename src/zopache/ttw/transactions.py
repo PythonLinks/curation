@@ -14,7 +14,6 @@ from zopache.core.page  import  Page
 from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from crom import target, order
-from zopache.application.interfaces import ITab
 from zope.interface import implementer
 from zopache.ttw.interfaces import IHistoricDetails
 from cromlech import browser
@@ -28,7 +27,6 @@ from zopache.core import getRoot
 @view_component
 @name('undo')
 @title("Undo")
-@target(ITab)
 @permissions('Manage')
 @context(Interface)
 class Transactions(Page):
@@ -74,7 +72,6 @@ class Transactions(Page):
 
 @view_component
 @name('reverse')
-@target(ITab)
 @permissions('Manage')
 @context(Interface)
 class Restore(Page):

@@ -1,9 +1,8 @@
 from zopache.core.viewdecorators import *
 from .interfaces import ISecureHTML , IWeb
-from .html import Index, SecureHTML
+from .html import Index, SecureHTML, HTMLPage
 
-
-@form_component
+@view_component
 @name (u'index')
 @context(ISecureHTML)
 @title("SecureIndex")
@@ -12,17 +11,24 @@ from .html import Index, SecureHTML
 class SecureIndex(Index):
      pass
 
-
 from dolmen.container import IBTreeContainer
-from .html import AddAceHTML 
+from .html import AddAceHTML
+
 @form_component
 @name (u'addSecureHTML')
 @context(IBTreeContainer)
-@title("Add SecureHTML")
 @permissions('Manage')
-@implementer(IWeb)  
 class AddSecureHTML(AddAceHTML):
     subTitle="Add a Secure HTML Object"
     factory=SecureHTML
+
+
+@form_component
+@name (u'addHtmlPage')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddHTMLPage(AddAceHTML):
+    subTitle="Add an HTML Page"
+    factory=HTMLPage
 
  

@@ -15,7 +15,6 @@ from zope.interface import implementer
 from dolmen.forms.base import action, name, context, form_component
 from dolmen.container import IBTreeContainer
 from crom import target, order
-from zopache.application.interfaces import ITab
 from cromlech.browser.directives import title
 from cromlech.security import permissions
 from zopache.core import Leaf
@@ -199,7 +198,6 @@ class EditPythonAndTest(EditPython):
 @form_component
 @name('addPython')
 @context(IBTreeContainer)
-#@target(ITab)
 @title("Add Python")
 @permissions('Manage')
 @implementer(IPython)
@@ -251,7 +249,6 @@ class Index(View):
 
 @form_component
 @context(IPython)
-@target(ITab)
 @title("AceEit")
 @name("aceedit")
 @permissions('Manage')

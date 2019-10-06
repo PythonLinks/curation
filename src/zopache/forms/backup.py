@@ -19,15 +19,15 @@ class Index(View):
     make_response = make_file_response
             
     def render(self):
-
+            
             import tempfile
             context = self.context
             parent = context.__parent__
             context.__parent__ = None
             with tempfile.TemporaryFile(prefix="DUP") as f:
                 f = context._p_jar.exportFile(context._p_oid, f)
+                context.__parent__ = parent
                 f.seek (0)
                 return f.read()
-            context.__parent__ = parent
-            assert context.__parent__!=None            
+
 

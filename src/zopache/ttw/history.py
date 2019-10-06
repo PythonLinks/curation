@@ -9,7 +9,6 @@ from zopache.core.page  import  Page
 from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from crom import target, order
-from zopache.application.interfaces import ITab
 from zope.interface import implementer
 from zopache.ttw.interfaces import IHistoricDetails
 from cromlech import browser
@@ -32,7 +31,6 @@ def getHistory(item, size=40):
 @view_component
 @name('history')
 @title("History")
-@target(ITab)
 @permissions('Manage')
 @context(ISource)
 class History(Page, Breadcrumbs):
@@ -57,7 +55,6 @@ class History(Page, Breadcrumbs):
 @permissions('Manage')
 @name('historicindex')
 @title("Historic Index")
-@target(ITab)
 @context(IHistoryItem)
 @implementer (IHistoricDetails)
 class HistoricIndex(Page):
@@ -71,7 +68,6 @@ class HistoricIndex(Page):
 @view_component
 @name('historicview')
 @title("Historic View")
-@target(ITab)
 @context(IHistoryItem)
 @permissions('Manage')
 @implementer (IHistoricDetails)
@@ -82,7 +78,6 @@ class HistoricView (Page):
 
 @view_component
 @name('restore')
-@target(ITab)
 @permissions('Manage')
 @context(IHistoryItem)
 @implementer (IHistoricDetails)

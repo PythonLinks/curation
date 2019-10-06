@@ -81,6 +81,7 @@ install_requires = [
     'dolmen.forms.base >= 2.0',
     'fanstatic',
     'pillow',
+    'repoze.sendmail',
     'setuptools',
     'zope.cachedescriptors',
     'z3c.schema',

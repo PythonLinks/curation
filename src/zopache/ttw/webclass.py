@@ -5,7 +5,7 @@ from dolmen.forms.base import action, name, context, form_component
 from cromlech.browser.directives import title
 
 from zopache.core import Container
-from .interfaces import IWebClass, IProducts, IMutableWebClass
+from .interfaces import IWebClass, IProducts, IMoveableWebClass
 from .container import ContainerAddForm
 from zopache.ttw.interfaces import IWeb    
 
@@ -26,18 +26,17 @@ class BaseWebClass (Container):
            return marker
         #AND NOW REPEAT THE LOOP WITH THE PARENT WEBCLASS
         #if self.__parent__ == None:
-        #    import pdb; pdb.set_trace()
         return self.__parent__.getFromWebClass(name,marker)
 
         
     def postProcess(self):
         pass
     
-@implementer(IWebClass)
+@implementer(IMoveableWebClass)
 class WebClass (BaseWebClass):
     pass
 
-@implementer(IMutableWebClass)
+@implementer(IMoveableWebClass)
 class ImutableWebClass (BaseWebClass):
     pass
 

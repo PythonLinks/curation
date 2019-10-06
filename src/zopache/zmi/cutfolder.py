@@ -2,7 +2,8 @@ from dolmen.container import BTreeContainer
 from cromlech.security.principal import UnauthenticatedPrincipal
 
 class CutFolder (BTreeContainer):
-    pass
+    def getFromWebClass(self, name, marker=None):
+        return marker
 
 def cutFolder(view):
         principal = view.request.principal

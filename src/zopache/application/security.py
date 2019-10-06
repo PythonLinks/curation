@@ -8,8 +8,9 @@ from cromlech.security import getSecurityGuards
 from cromlech.security.interfaces import ISecurityPredicate
 from cromlech.security.meta import permissions
 from zope.interface import Interface
-from zopache.core.interfaces import ITreeSecurity
-from zopache.application.treesecurity import TreeSecurity    
+from zopache.core.interfaces import ITreeSecurity, IUserSecurity
+from zopache.application.treesecurity import TreeSecurity
+from zopache.application.usersecurity import UserSecurity
 
 def getPermissions(principal):
           if principal.id == 'user.unauthenticated':
@@ -50,5 +51,8 @@ def secure_query_view(request, context, name=""):
 
     if ITreeSecurity.providedBy(view):
         TreeSecurity(view).check()  
+
+    if IUserSecurity.providedBy(view):
+        UserSecurity(view).check()          
 
     return view

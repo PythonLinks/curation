@@ -34,6 +34,8 @@ class DuplicateIDError(ValidationError):
     pass
 
 from zopache.pages.page import Page
+
+
 @implementer(IInternalPrincipal)
 class InternalPrincipal(FileBase,Page):
     _handle  = ''
@@ -53,7 +55,16 @@ class InternalPrincipal(FileBase,Page):
     recruitPermission = False
     contentType = "text/plain"
     webClass = 'Person'
+    branchSize = 1
     
+    """
+    from persistent.list import PersistentList
+    def makeOrdered(self):
+        self._order = PersistentList()
+        for item in self:
+               self._order.append(item)
+    """           
+        
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()
@@ -166,6 +177,7 @@ class PrincipalFolder(Container):
     """
     title = "Principal Folder"
     description = "This is where the user details are stored. "
+    branchSize = 1
     def html (self) :
         return ""
     icon="ttwicons/Container.svg"
@@ -174,6 +186,9 @@ class PrincipalFolder(Container):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()
+        
+    def setJson(self):
+        pass
 
     def values(self):
         all = []

@@ -19,7 +19,7 @@ from zopache.zmi.interfaces import IURLSegment
 from zopache.core.interfaces import ITreeSecurity
 from zopache.zmi.actions import (
     ReName,CopyObjects, CutObjects, DeleteObjects,
-    ReTitle,PasteObjects)
+    ReTitle,ReTitleAndName,PasteObjects)
 from zopache.core.baseform import Form
 from zopache.pages.interfaces import INotPage
 from zopache.python.interfaces import IDirectory
@@ -107,14 +107,21 @@ class Manage (ManageBase):
     def actions(self):
         act1 = ReName("ReName","ReName")
         act2 = ReTitle("ReTitle","ReTitle")
-        act3 = CutObjects  ("Cut", "Cut")
-        act4 = CopyObjects ("Copy", "Copy")
-        act5 = PasteObjects("Paste","Paste")
-        act6 = DeleteObjects("Delete", "Delete") 
-        actionList = [act1,act2,act3, act4]
+        act3 = ReTitleAndName("ReBoth","ReBoth")        
+        act4 = CutObjects  ("Cut", "Cut")
+        act5 = CopyObjects ("Copy", "Copy")
+        act6 = PasteObjects("Paste","Paste")
+        act7 = DeleteObjects("Delete", "Delete") 
+        actionList = [act1,act2]
+
+        if INotPage.providedBy(self.context):                         
+            actionList.append(act3)                       
+        actionList.append(act4) 
+        actionList.append(act5)                     
+
         if self.hasClipboardContents():
-           actionList.append (act5)
-        actionList.append (act6)
+           actionList.append (act6)
+        actionList.append (act7)
         return Actions(*actionList)        
             
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    

@@ -1,4 +1,5 @@
-from slugify import slugify
+from slugify import slugify, SLUG_OK
+
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 
@@ -19,6 +20,22 @@ class BaseAction(Action):
             form.error += message
             return []
         return ids
+
+    def reTitle(self,form):    
+        """Given a sequence of tuples of old, new ids we rename"""
+        ids = self.getValues(form,
+               "You did not specify any object to reTitle")
+        newTitles = self.getValues(form,
+                            "You did not specify any new Titles",
+                            which = 'newTitleValue_list')
+        if (len (ids) != len (newTitles)):
+            form.error += "Lengs of Ids and Titles do not match. "
+            return
+        for id , newTitle in zip (ids, newTitles):        
+            item = form.context[id]
+            reTitler = IObjectRetitler(item)
+            reTitler.retitleItem(item,newTitle,form)   
+        return SuccessMarker('Retitled', True)
     
 class ReName(BaseAction):
     def __call__(self,form):
@@ -43,21 +60,28 @@ class ReName(BaseAction):
     
 class ReTitle(BaseAction):                
     def __call__(self,form):
-        """Given a sequence of tuples of old, new ids we rename"""
-        ids = self.getValues(form,
-               "You did not specify any object to reTitle")
-        newTitles = self.getValues(form,
-                            "You did not specify any new Titles",
-                            which = 'newTitleValue_list')
-        if (len (ids) != len (newTitles)):
-            form.error += "Lengs of Ids and Titles do not match. "
-            return
-        for id , newTitle in zip (ids, newTitles):        
-            item = form.context[id]
-            reTitler = IObjectRetitler(item)
-            reTitler.retitleItem(item,newTitle,form)   
-        return SuccessMarker('Retitled', True)
+        return self.reTitle(form)
+    
 
+class ReTitleAndName(BaseAction):
+    def __call__(self,form):
+        result = self.reTitle(form)
+        if not hasattr(form.context, "valuesAsList"):
+            return result
+        
+        for item in form.context.allValuesAsList():
+            if hasattr(item, "title"):
+                newId = slugify(item.title,ok=SLUG_OK+'.', lower= True)
+            import pdb; pdb.set_trace()
+            print (newId,item.__name__)
+            if newId != item.__name__:
+                renamer = IObjectRenamer(item)
+                renamer.renameItem(item.__name__, newId,form)
+        cache.resetCache()
+        return SuccessMarker('Renamed', True)
+    
+
+    
 class CopyObjects(BaseAction):
     def __call__(self,form):
         """Copy objects specified in a list of object ids"""
