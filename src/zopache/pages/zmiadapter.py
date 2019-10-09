@@ -1,7 +1,7 @@
     
 import crom
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
-from zopache.core import getRoot
+from zopache.core import getSiteRoot
 from zopache.pages.interfaces import IPage
 from zopache.zmi.cutcopypaste import BaseClass, Cutter, Copier, Deleter
 from zopache.zmi.cutcopypaste import Paster, Renamer
@@ -11,18 +11,18 @@ from zopache.pages.uniquename import UniquePageName
 from zopache.zmi.interfaces import IObjectDeleter
 from zopache.zmi.cutfolder import cutFolder
 
-from zopache.core import getRoot
+
 from zopache.zmi.interfaces import IObjectCutter
 from zopache.zmi.interfaces import IObjectDeleter
 from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 from zopache.core.transactionnote import TransactionNote
-from zopache.pages.cache import cache
+from zopache.core.getroot import getSiteRoot
 
 class LocalBase(BaseClass):
     def printToken(self,obj, message):
-        root = getRoot(obj)
+        root = getSiteRoot(obj)
         valuesByToken = root.valuesByToken
         name = obj.__name__
 
@@ -34,7 +34,7 @@ class LocalBase(BaseClass):
     #Delete token first, then add item
     def deleteToken(self,item):
         name = item.__name__
-        root = getRoot(item)
+        root = getSiteRoot(item)
         parent = item.__parent__
         valuesByToken = root.valuesByToken
 
@@ -51,7 +51,7 @@ class LocalBase(BaseClass):
     def addToken (self, item):
         if not IPage.providedBy(item.__parent__):
            self.view.error += item.__name__ +  "NOT ADDED TO valuesByToken "
-        root = getRoot(item)
+        root = getSiteRoot(item)
         valuesByToken = root.valuesByToken
         name = item.__name__
         if name in valuesByToken:
@@ -83,8 +83,8 @@ class CategoryCutter(LocalBase,Cutter):
             self.view.error = obj.__name__ + " CUT IN NOT ALLOWED"
             return
         self.deleteToken(obj)
-        super().cut(view) 
-        cache.resetCache()
+        super().cut(view
+        cache.resetCache(view.context)
         
 @crom.adapter
 @crom.sources(IPage)
@@ -99,7 +99,6 @@ class CategoryPaster(LocalBase,Paster,UniquePageName):
         fromFolder=cutFolder(view)
         #Modifying a BTree while iterating over it does not work. 
         items=[]
-        root = getRoot(self)
         items = list( fromFolder.values())                   
         for item in items:
             if not self.allowed(item):
@@ -109,7 +108,8 @@ class CategoryPaster(LocalBase,Paster,UniquePageName):
             new_name=self.uniqueName(toContainer,orig_name,"Copy")
             self.moveFrom(fromFolder, orig_name, toContainer, new_name)
             #self.addToken(item)  
-        cache.resetCache()
+        cache.resetCache(view.context)
+
             
 class ItemNotFoundError(Exception):
     pass
@@ -150,7 +150,6 @@ class CategoryDeleter(Deleter,LocalBase):
             self.view.error += " Maybe it still contains something"
             return
 
-        root = getRoot(contained)
         #OKAY NOW DO THE WORK
         # DELETE THE CANNONICAL NAME
         # HAVE TO DO THIS FIRST
@@ -167,9 +166,10 @@ class CategoryDeleter(Deleter,LocalBase):
            
         # UNLESS IT IS THE ROOT CATEGORY, RECALCULATE THE JSON   
         # THIS SHOULD ALWAYS BE TRUE
-        if IPage.providedBy (container):   
+        if IPage.providedBy (container):
+           root = getSiteRoot(contained)
            root.recalculateRootJSON()
-        cache.resetCache()        
+        cache.resetCache(view.context)
 
 #THIS IS NEEDED FOR PRIVATE PARTS
 #              if hasattr(item,'privatePart') and item.privatePart!=None:

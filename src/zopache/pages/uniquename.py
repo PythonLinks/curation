@@ -1,9 +1,10 @@
 from zopache.core.uniquename import UniqueName 
 from slugify import slugify
+from zopache.core.getroot import getSiteRoot
 
 class UniquePageName (UniqueName):
     def uniqueName(self,container,newName,ofType = ""):
-        root = container.getRoot()
+        root = getSiteRoot(container)
         valuesByToken = root.valuesByToken
         oldName =""
         while (newName!=oldName):

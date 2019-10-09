@@ -27,7 +27,8 @@ from cromlech.security import unauthenticated_principal as anonymous
 from zopache.core import Container
 from zopache.crud.interfaces import IImutable, IContainer
 from zopache.ttw.interfaces import IPrincipalFolder, IInternalPrincipal
-from zopache.core import getPrincipalFolder, getRoot
+from zopache.core import getPrincipalFolder, getSiteRoot
+, getProducts
 from zopache.ttw.file import FileBase
 
 class DuplicateIDError(ValidationError):
@@ -220,8 +221,8 @@ class PrincipalFolder(Container):
         
     def getPrincipalById(self,id):
         return self[id]
-        result = getRoot(self)[id]
-        return result
+        #result = getSiteRoot(self)[id]
+        #return result
     
     def notifyEmailChanged(self, oldEmail,  principal):
         """Notify the Container about changed email or handle of a user.
@@ -258,7 +259,7 @@ class PrincipalFolder(Container):
     def unRegisterUser(self,principal):	
         del self.idByEmail[principal.email]
         del self.idBySlugifiedHandle[principal.slugifiedHandle()]
-        root = getRoot(self)
+        root = getSiteRoot(self)
         root.deleteItem(principal)
         return
     
@@ -290,18 +291,3 @@ class PrincipalFolder(Container):
         aSlug = slugify(handle) 
         return self.idBySlugifiedHandle.get(aSlug,None)
 
-"""
-
-A partial test script for adding admin. 
-from zopache.core import getRoot
-
-root = getRoot(item)
-
-for key in item.idByEmail.keys():     print (key)
-
-for key in item.idBySlufifiedHandle.keys():     print (key)
-
-item["5886196134148338085"].__name__
- item["5886196134148338085"].__name__
- 
-"""

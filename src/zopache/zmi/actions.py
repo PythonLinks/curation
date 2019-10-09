@@ -55,7 +55,7 @@ class ReName(BaseAction):
             if newId != oldId:
                 renamer = IObjectRenamer(item)
                 renamer.renameItem(oldId, newId,form)
-        cache.resetCache()
+        cache.resetCache(form.context)
         return SuccessMarker('Renamed', True)
     
 class ReTitle(BaseAction):                
@@ -77,7 +77,7 @@ class ReTitleAndName(BaseAction):
             if newId != item.__name__:
                 renamer = IObjectRenamer(item)
                 renamer.renameItem(item.__name__, newId,form)
-        cache.resetCache()
+        cache.resetCachea(form.context)
         return SuccessMarker('Renamed', True)
     
 
@@ -110,7 +110,7 @@ class CutObjects(BaseAction):
                                " Cannot be Cut")
                 return
             cutter.cut(form)
-        cache.resetCache()    
+        cache.resetCache(form.context)    
         return SuccessMarker('Cut', True)
     
 class PasteObjects(BaseAction):            
@@ -118,7 +118,7 @@ class PasteObjects(BaseAction):
         target = form.context
         paster = IObjectPaster(target)
         paster.paste(form)
-        cache.resetCache()
+        cache.resetCache(form.context)
         return SuccessMarker('Pasted', True)
     
 class DeleteObjects(BaseAction):        
@@ -131,7 +131,7 @@ class DeleteObjects(BaseAction):
             item= container [id]
             deleter = IObjectDeleter(item)
             deleter.deleteItem(form)
-        cache.resetCache()
+        cache.resetCache(form.context)
         return SuccessMarker('Deleted', True)
 
 

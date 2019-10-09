@@ -23,7 +23,8 @@ from zopache.zmi.actions import (
 from zopache.core.baseform import Form
 from zopache.pages.interfaces import INotPage
 from zopache.python.interfaces import IDirectory
-
+from zopache.application.root import RootContainer
+         
 class ManageBase(Form,Contents):
     supportsPaste = True
     label=''
@@ -32,10 +33,10 @@ class ManageBase(Form,Contents):
     template = tal_template('manage.pt')
 
     """
-    #TEMPLATE IS NOW DEFINED ON THE FILE SYSTEM
+    #USE THIS TO DEFINE MANAGFE TEMPLATES IN THE ZODB
     def update(self):
-          root = self.getRoot()
-          #self.template = root['Products']['Templates']['Manage.pt']
+          products = self.getProducts()
+          #self.template = products['Templates']['Manage.pt']
           self.template = root['Products']['Templates']
           try:
             self.template = self.template['EditTitles']
@@ -123,44 +124,17 @@ class Manage (ManageBase):
            actionList.append (act6)
         actionList.append (act7)
         return Actions(*actionList)        
-            
+
+        
+     
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @form_component
 @name('fix')
 @context(IBTreeContainer)
 @permissions('Manage')
 class Fix(Manage):
-    def newRoot(self):
-         parent = self.request.environment['zodb.connection'].root()
-         name = "applicationRoot"
-         oldRoot = self.context
-         person = oldRoot['person']
-         products = oldRoot ['Products' ]
-         del oldRoot ['Products']
-         del oldRoot ['person']
-         del parent [name]
-         
-         from zopache.application.root import RootContainer
-         newRoot = RootContainer()
-         parent [name] = newRoot
-         newRoot ['Products'] = products
-         newRoot ['person'] = person
-         import pdb; pdb.set_trace()
-         pass
 
-    def replace (self,name,aClass):
-        context = self.context
-        child = context [name]
-        items = child.allValuesAsList()
-        new = aClass()
-        new.description = context.description
-        new.source = context.source
-        for item in items:
-            itemName = item.name
-            del context [itemName]
-            new [itemName] = item
-        del context [name]
-        context [name] = new
+
 
     def moveTo(self,childName):
         self.moveItem('personCopy1',childName,'person')

@@ -138,8 +138,8 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
 
 class  AceScripts(AceScriptsBase):
     def update(self):
-        root = self.getRoot()
-        self.template = root['Products']['Templates']['TranspilerTemplate']
+        products = self.getProducts()
+        self.template = products['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
         result = AceScriptsBase.headerScripts(self)
@@ -157,8 +157,8 @@ class  AceScripts(AceScriptsBase):
 <script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
         """
         result += "<script>"
-        root= self.getRoot()
-        script = root['Products']['Templates']['PugScripts']
+        products = self.getProducts()
+        script = products['Templates']['PugScripts']
         result += script.getJavascript()
         result += "</script>"
         return result

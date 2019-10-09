@@ -12,7 +12,7 @@ from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 
-from zopache.core import getRoot
+from zopache.core.getroot import getSiteRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
 
@@ -174,7 +174,7 @@ class Delete(Action):
             if name in container:
                 try:
                     item = container[name]
-                    root = getRoot(item)
+                    root = getSiteRoot(item)
                     del container[name]
                     root.indexTree()
                     root.indexTree()

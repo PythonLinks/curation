@@ -13,7 +13,6 @@ from zopache.ttw.interfaces import IHTML
 from zopache.crud.interfaces import IRootContainer
 
 
-
 class IVirtualHost(ILeaf):
     """Map domains to paths"""
     mapping = schema.Dict(
@@ -45,6 +44,6 @@ class IContentContainer(IHTMLContainer):
 class IChat(IHTMLContainer):
     pass
     
-class IRootContentContainer(IRootContainer,IContentContainer):
-   pass
+#class IRootContentContainer(IRootContainer,IContentContainer):
+#   pass
 

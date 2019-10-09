@@ -9,9 +9,7 @@ from dolmen.forms.ztk.widgets.textline import  TextLineSchemaField
 from zopache.ttw.interfaces import ITreeField
 from zope.interface import Interface
 from zope import schema
-from zopache.pages.interfaces import IRootPage
 import crom
-from cromlech.browser.interfaces import IPublicationRoot
 
 from zopache.crud.interfaces import IContainer
 from zopache.zmi.interfaces import IURLSegment
@@ -20,7 +18,7 @@ from zopache.ttw.interfaces import IBranch
 from zopache.ttw.interfaces import ITreeField 
 from zope.interface import implementer  
 from zope.interface import implementer
-from zopache.core import getRoot
+
 
 @implementer (ITreeField)
 class  TreeField(schema.TextLine):
@@ -49,5 +47,4 @@ class TreeWidget(SchemaFieldWidget):
                                  'maxlength', 'pattern', 'placeholder',
                                  'size', 'style', 'disabled'])
     def update(self):
-        root = getRoot(self.form.context)
-        self.template = root['Products']['Templates']['fancytreewidget']
+        self.template = getProducts(self.form.context)['Templates']['fancytreewidget']

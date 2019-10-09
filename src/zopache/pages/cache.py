@@ -37,8 +37,7 @@ import inspect
 from functools import wraps
 
 
-class Cache:
-
+class SiteCache :
     def __init__(self):
             self.resetCache()
 
@@ -50,7 +49,15 @@ class Cache:
             self.wilsonScoreCache = {}
             self.myScoreCache = {}
             self.voteTotalsCache = {}
-           
+
+class Cache:
+    def __init__(self):
+        self.siteCaches = {}
+
+    def resetCache(self,context):
+        siteName = getSiteRoot(context).__name__
+        self.siteCaches[siteName]= SiteCache()
+        
     def get(self, name, key, default=None):
             cache = getattr(self, name)
             return cache.get(key, default=default)
@@ -70,7 +77,11 @@ class Cache:
             def caching(func):
                 @wraps(func)
                 def cached(target,*args, **kwargs):
-                    cache = getattr(self, name)
+                    siteName = getSiteRoot(target).__name__
+                    if not siteName in self.siteCaches:
+                       self.siteCaches [siteName]= SiteCache()
+                    cache = self.siteCaches[siteName]
+                    cache = getattr(self, name)                    
                     key = target.__name__
                     if key in cache:
                         value = cache.get(key)
@@ -87,9 +98,7 @@ class Cache:
                     return value
                 return cached
             return caching
-
-
-cache = Cache()
+cache = Cache()        
 
 
 
@@ -106,7 +115,7 @@ class MixIn(object):
     #The best caches have to cache __name__
     #So we have to convert back and forth to ids. 
     def convertNamesToObjects(self,list):
-       root = self.getRoot() 
+       root = self.getSiteRoot() 
        result = []
        for item in list:
            theItem = root.get (item)
@@ -126,7 +135,7 @@ class MixIn(object):
         return self.bestObjects('mostRecent',IPage)        
 
     def bestObjects(self,sortKey,whichInterface):
-        root = self.getRoot()
+        root = self.getSiteRoot()
         aHeap = []
 
         self.bestCategoryObjects(sortKey,root,aHeap, whichInterface)

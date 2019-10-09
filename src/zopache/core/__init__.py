@@ -15,7 +15,6 @@ from persistent import Persistent
 from dolmen.container import BTreeContainer
 from cromlech.browser.interfaces import IPublicationRoot
 
-from zopache.application.interfaces2 import IZodbRoot
 
 #THIS IS STUFF REQUIRED FOR ALL OBJECTS
 #Makes it possible to do .name, .parent
@@ -67,31 +66,7 @@ class Page(View):
            return get_absolute_url(self.context, self.request)
                         
 
-def getRoot(object,anInterface):
-        max = 9999
-        context=object
-        while context is not None:
-            if anInterface.providedBy(context):
-                return context
-            context = context.__parent__
-            max -= 1
-            if max < 1:
-                raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
-        raise TypeError("Parents needed to  determine location root")
 
-def getSiteRoot(object):
-    return getRoot(object, IPublicationRoot)
-
-def getZodbRoot(object):
-    return getRoot(object, IZodbRoot)
-
-
-def getPrincipalFolder(item):
-    root = getRoot(item)
-    if "person" in root:
-        return root["person"]
-    else:
-        return root.__parent__["person"] 
     
 
 class ErrorPage(Page):

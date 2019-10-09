@@ -2,7 +2,7 @@ from zope.location.location import LocationIterator
 from zope.interface import Interface
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IWebClass
-from zopache.core import getZodbRoot
+from zopache.core.getroot import getProducts
 
 #MAYBE THE WEBCLASS IS A STRING OR A POINTER       
 def webClassAcquire(context,name, marker = object):
@@ -13,8 +13,7 @@ def webClassAcquire(context,name, marker = object):
         if IWebClass.providedBy(context):
             webClass = context 
         elif isinstance(webClass, str):
-            root =getZodbRoot(context)
-            products = root["Products"]
+            products = getProducts(context)
             webClass = products[webClass]
         else:
             raise Exception("Something is Wrong")
