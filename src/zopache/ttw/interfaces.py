@@ -261,7 +261,7 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable
 class IUntrustedHTML(IHTML):
    pass
 
-class IInternalPrincipal(IFile,IContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
+class IInternalPrincipal(IFile,IBTreeContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
     """Principal information"""
     pass
 

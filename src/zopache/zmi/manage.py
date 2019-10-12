@@ -137,6 +137,22 @@ class Fix(Manage):
         import pdb; pdb.set_trace()
         pass
 
+
+from zopache.ttw.interfaces import IInternalPrincipal
+#for users
+#USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
+@form_component
+@name('manage')
+@context(IInternalPrincipal)
+@permissions('Manage')
+class FixUsers(Manage):
+
+    def update(self):
+        Manage.update(self)
+
+
+
+
 @form_component
 @name('visitChildren')
 @context(IBTreeContainer)
