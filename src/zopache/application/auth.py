@@ -9,24 +9,23 @@ from cromlech.browser.interfaces import IPublicationRoot
 from zope.interface import implementer
 from zope.location import Location
 
-"""
-@implementer(IPublicationRoot)
-class Auth(dict, Location):
-
-    def authenticate(self, userName, password):
-        if userName in self:
-            if password == self[userName]:
-                session = getSession()
-                session['user'] = userName
-                return True
-        return False
-"""
-
 
 #THE IDEA HERE IS THAT THE END USER
 #CAN SPECIFY THE ROOT
 #NO NEED TO DO IN NGINX
-virtualHosts = {}
+virtualHosts = {'dev.pythonlinks.info':'python',
+                'pythonlinks.info':'python',
+                'desktop.pythonlinks.info':'python',
+                'rights.men':'mens-rights',
+                'desktop.rights.men':'mens-rights',
+                'climatevideos.info':'climate-change', 
+                'desktop.climatevideos.info':'climate-change',               
+                'cloud-native.pg':'golang',
+                'desktop.cloud-native.pg':'golang',                
+                'forestwiki.com':'forestwiki',
+                'desktop.forestwiki.com':'forestwiki'                
+            
+}
 
 def secured(app):
 
@@ -38,15 +37,18 @@ def secured(app):
             environ['REMOTE_USER'] = userName = session['user']
             conn = environ["zodb.connection"]
             root=conn.root()
-            root=root["applicationRoot"]
+            realRoot=root["applicationRoot"]
 
             host = environ["HTTP_HOST"].lower()
             if host in virtualHosts:
                path = virtualHosts [host] 
-               root = root [path]
-               
-            principalFolder = root["person"]
-            principal = principalFolder.getPrincipalByUserName(userName)
+               root = realRoot [path]
+            try:              
+                principalFolder = root["person"]
+                principal = principalFolder.getPrincipalByUserName(userName)
+            except:
+                principalFolder = realRoot["person"]
+                principal = principalFolder.getPrincipalByUserName(userName)                
         return app(environ, start_response, principal)
 
     return secure_application
