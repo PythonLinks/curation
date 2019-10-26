@@ -11,7 +11,31 @@ from zopache.pages.interfaces import IRootPage
 from zopache.crud.forms import AddNamedForm, EditForm
 from zopache.application.interfaces import IVirtualHost
 
-    
+
+#THE IDEA HERE IS THAT THE END USER
+#CAN SPECIFY THE ROOT
+#NO NEED TO DO IN NGINX
+virtualHosts = {'dev.pythonlinks.info':'python',
+                'pythonlinks.info':'python',
+                'desktop.pythonlinks.info':'python',
+                'rights.men':'mens-rights',
+                'desktop.rights.men':'mens-rights',
+                'climatevideos.info':'climate-change', 
+                'desktop.climatevideos.info':'climate-change',               
+                'cloud-native.pg':'golang',
+                'desktop.cloud-native.pg':'golang',                
+                'forestwiki.com':'forestwiki',
+                'desktop.forestwiki.com':'forestwiki'                
+            
+}    
+
+def getSiteRoot ( environ, root):      
+            host = environ["HTTP_HOST"].lower()
+            if host in virtualHosts:
+               path = virtualHosts [host] 
+               root = root [path]
+            return root   
+
 
 @implementer (IVirtualHost)
 class VirtualHost(Leaf):
