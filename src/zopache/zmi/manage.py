@@ -134,9 +134,12 @@ class Fix(Manage):
     def update(self):
         Manage.update(self)
         item=self.context
-        import pdb; pdb.set_trace()
-        pass
         breakpoint()
+        from zopache.zmi.replaceRoot import newRoot
+        newRoot(self)
+        #import pdb; pdb.set_trace()
+        pass
+
         pass
 
 
