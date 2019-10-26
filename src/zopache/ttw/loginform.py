@@ -22,7 +22,7 @@ from zopache.crud.interfaces import IName, IContainer, ILeaf
 from .interfaces import ILogin , IPrincipalFolder
 from dolmen.forms.base.errors import Error
 from cromlech.browser.exceptions import HTTPFound
-from zopache.core.getroot import getprincipalFolder
+from zopache.core.getroot import getPrincipalFolder
 
   
 class LoginAction(Action):

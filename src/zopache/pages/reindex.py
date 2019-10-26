@@ -2,7 +2,7 @@ from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IBranch
 from zopache.core.baseform import Form
 from zopache.ttw.interfaces import IBranch
-from zopache.core import getSiteRoot, getProducts
+from zopache.core.getroot import getSiteRoot, getProducts
 @form_component
 @context(IBranch)
 @crom.target(IView)

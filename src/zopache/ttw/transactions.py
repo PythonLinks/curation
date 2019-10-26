@@ -22,7 +22,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.ttw.interfaces import IHistoryItem
 from dm.historical import getHistory
 from cromlech.security import permissions
-from zopache.core import getZodbRoot
+from zopache.core.getroot import getZodbRoot
 
 
 @view_component

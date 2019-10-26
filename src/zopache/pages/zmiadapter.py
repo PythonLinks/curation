@@ -1,7 +1,7 @@
     
 import crom
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
-from zopache.core import getSiteRoot
+from zopache.core.getroot import getSiteRoot
 from zopache.pages.interfaces import IPage
 from zopache.zmi.cutcopypaste import BaseClass, Cutter, Copier, Deleter
 from zopache.zmi.cutcopypaste import Paster, Renamer
@@ -83,7 +83,7 @@ class CategoryCutter(LocalBase,Cutter):
             self.view.error = obj.__name__ + " CUT IN NOT ALLOWED"
             return
         self.deleteToken(obj)
-        super().cut(view
+        super().cut(view)
         cache.resetCache(view.context)
         
 @crom.adapter

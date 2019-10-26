@@ -27,8 +27,7 @@ from cromlech.security import unauthenticated_principal as anonymous
 from zopache.core import Container
 from zopache.crud.interfaces import IImutable, IContainer
 from zopache.ttw.interfaces import IPrincipalFolder, IInternalPrincipal
-from zopache.core import getPrincipalFolder, getSiteRoot
-, getProducts
+from zopache.core.getroot import getPrincipalFolder, getSiteRoot, getProducts
 from zopache.ttw.file import FileBase
 
 class DuplicateIDError(ValidationError):
