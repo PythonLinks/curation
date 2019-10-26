@@ -136,6 +136,8 @@ class Fix(Manage):
         item=self.context
         import pdb; pdb.set_trace()
         pass
+        breakpoint()
+        pass
 
 
 from zopache.ttw.interfaces import IInternalPrincipal
