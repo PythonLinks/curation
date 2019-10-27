@@ -40,6 +40,6 @@ class IContentContainer(IHTMLContainer):
 class IChat(IHTMLContainer):
     pass
     
-class IRootContentContainer(IRootContainer,IContentContainer):
-   pass
+#class IRootContentContainer(IRootContainer,IContentContainer):
+#   pass
 

@@ -4,6 +4,7 @@ from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import IContent,IPage , IRootPage, INews
+from zopache.core.getroot import getSiteRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from zopache.core.breadcrumbs import parentWhichImplements
@@ -40,7 +41,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def postProcess(self):
         self.recalculateRootJSON()
-        cache.resetCache()
+        cache.resetCache(self)
         
     def postAddProcess(self):
         self.postProcess()
@@ -54,8 +55,12 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
          self.creationTime=time.time()
          self.modificationTime=time.time()
 
-    def getRoot(self):
-         return parentWhichImplements(self,IRootPage)
+    def getSiteRoot(self):
+        return getSiteRoot(self)
+
+    def getZodbRoot(self):
+        return getZodbRoot (self)
+
      
     def blogParents(self):
          return parentsUpTo(self,IRootPage)
@@ -152,13 +157,14 @@ class News (Page,RecentMixIn):
     webClass = 'News'
     pass
 
+from zopache.pages.cache import Cache
 @implementer(IRootPage)
 class RootPage(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     def __init__(self):
        Branch.__init__(self)
        PageBase.__init__(self)
-
+       cache = Cache()
     
 
     

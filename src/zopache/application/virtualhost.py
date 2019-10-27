@@ -26,18 +26,23 @@ virtualHosts = {'dev.pythonlinks.info':'python',
                 'desktop.cloud-native.pg':'golang',                
                 'forestwiki.com':'forestwiki',
                 'desktop.forestwiki.com':'forestwiki'                
-            
 }
 
-virtualHosts = {}
 
-def getSiteRoot ( environ, root):      
-            host = environ["HTTP_HOST"].lower()
+
+def getSiteRootCore(host,root):            
             if host in virtualHosts:
                path = virtualHosts [host] 
                root = root [path]
-            return root   
+            return root
 
+def getSiteRootFromRequest(request,root):
+            host = request.domain
+            return getSiteRootCore (host,root)
+
+def getSiteRoot ( environ, root):      
+            host = environ["HTTP_HOST"].lower()
+            return getSiteRootCore (host,root)
 
 @implementer (IVirtualHost)
 class VirtualHost(Leaf):
@@ -64,3 +69,6 @@ class AddHost(AddNamedForm):
 @permissions('Manage')
 class EditHost(EditForm):
     subTitle='Edit the VirtualHost Object'    
+
+
+

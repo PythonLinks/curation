@@ -1,5 +1,5 @@
 import crom
-from zopache.core import getPrincipalFolder
+from zopache.core.getroot import getPrincipalFolder
 from zopache.zmi.cutcopypaste import Renamer, Deleter , Copier
 from zopache.ttw.interfaces import IInternalPrincipal as IPrincipal
 

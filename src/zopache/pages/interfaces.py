@@ -1,6 +1,6 @@
 from zope.interface import Interface
 from zope import schema
-from zopache.crud.interfaces import IContainer
+from zopache.crud.interfaces import IContainer , IZodbRoot
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 from cromlech.browser.interfaces import IPublicationRoot
@@ -97,7 +97,7 @@ class INotebook (ISourceLeaf,IDirectory):
 class INews (IPage,IRecent):
     pass
 
-class IRootPage(IBranch,IPublicationRoot,IPage):
+class IRootPage(IBranch,IPublicationRoot,IZodbRoot,IPage):
     pass
 
 class INotPage (Interface):

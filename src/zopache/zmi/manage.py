@@ -23,7 +23,8 @@ from zopache.zmi.actions import (
 from zopache.core.baseform import Form
 from zopache.pages.interfaces import INotPage
 from zopache.python.interfaces import IDirectory
-
+from zopache.application.root import RootContainer
+         
 class ManageBase(Form,Contents):
     supportsPaste = True
     label=''
@@ -32,10 +33,10 @@ class ManageBase(Form,Contents):
     template = tal_template('manage.pt')
 
     """
-    #TEMPLATE IS NOW DEFINED ON THE FILE SYSTEM
+    #USE THIS TO DEFINE MANAGFE TEMPLATES IN THE ZODB
     def update(self):
-          root = self.getRoot()
-          #self.template = root['Products']['Templates']['Manage.pt']
+          products = self.getProducts()
+          #self.template = products['Templates']['Manage.pt']
           self.template = root['Products']['Templates']
           try:
             self.template = self.template['EditTitles']
@@ -123,7 +124,9 @@ class Manage (ManageBase):
            actionList.append (act6)
         actionList.append (act7)
         return Actions(*actionList)        
-            
+
+        
+     
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @form_component
 @name('fix')
@@ -131,6 +134,15 @@ class Manage (ManageBase):
 @permissions('Manage')
 class Fix(Manage):
 
+
+
+    def moveTo(self,childName):
+        self.moveItem('personCopy1',childName,'person')
+       
+    def moveItem(self, name, childName, newName):
+        item = self.context [name]
+        self.context[childName][newName] = item
+            
     def update(self):
         Manage.update(self)
         item=self.context

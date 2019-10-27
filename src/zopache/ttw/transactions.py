@@ -21,7 +21,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.ttw.interfaces import IHistoryItem
 from dm.historical import getHistory
 from cromlech.security import permissions
-from zopache.core import getRoot
+from zopache.core.getroot import getZodbRoot
 
 
 @view_component
@@ -34,7 +34,7 @@ class Transactions(Page):
        subTitle='Transactions'
 
        def results(self):
-           root = getRoot(self.context)
+           root = getZodbRoot(self.context)
            db = root._p_jar.db()
            log=db.undoLog(0, sys.maxsize)
            return list(log) [:200]
@@ -76,7 +76,7 @@ class Transactions(Page):
 @context(Interface)
 class Restore(Page):
     def update(self):
-           root = getRoot(self.context)
+           root = getZodbRoot(self.context)
            db = root._p_jar.db()
            id =  self.request.form ['id']
            self.id = id

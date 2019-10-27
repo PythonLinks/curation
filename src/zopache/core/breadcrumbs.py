@@ -9,7 +9,6 @@ from cromlech.location import lineage_chain
 from cromlech.location import resolve_url
 from cromlech.location import get_absolute_url
 from dolmen.container import IBTreeContainer
-from cromlech.browser.interfaces import IPublicationRoot
 from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.core.uniquename import UniqueName
 
@@ -145,10 +144,6 @@ class Breadcrumbs(UniqueName):
             return "ERROR IN SAFE PARENTAL ACQUIRE"
 
             
-    def getRoot(self):
-           return (self.request.environ['zodb.connection'].root()
-                   ['applicationRoot'])
-
     def hasTrueAttribute(self,attribute):
         if (hasattr(self.context, attribute) and
             getattr(self.context,attribute)):

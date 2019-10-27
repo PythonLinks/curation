@@ -7,6 +7,9 @@ from zope.schema import TextLine, Text,  DottedName
 from dolmen.container.interfaces import IBTreeContainer
 from zopache.zmi.interfaces import IZMI
 
+class IZodbRoot(Interface):
+    pass
+
 #Views that are in the app menu.
 #That menu is to be modified by users/developers. 
 class IApp(Interface):
@@ -55,7 +58,8 @@ class IZMI(IRenameable,
 #Not HTML
 class IContainer(IZMI,
                  IBTreeContainer,
-                 IAddContainer               ): 
+                 IAddContainer
+                 ): 
      pass
 
 class IEditableContainer(IContainer,IEditable):
@@ -76,7 +80,7 @@ class IEditableImutable(IImutable,IEditable):
 #The Root Container also has to implement IPublicationRoot      
 #But you cannot delete or rename the root container
 #So no IDeletable or IRenameable
-class IRootContainer(IPublicationRoot,IImutable,IZMI):
+class IRootContainer(IPublicationRoot,IImutable,IZMI,IZodbRoot):
      pass
 
 class IEditableRootContainer(IRootContainer, IEditable):

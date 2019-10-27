@@ -12,7 +12,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
-from zopache.core import getPrincipalFolder, getRoot
+from zopache.core.getroot import getPrincipalFolder, getSiteRoot
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from zopache.pages.interfaces import INotPage
 
@@ -47,7 +47,7 @@ class Add(Action):
         context = form.context
         newPerson= form.factory()
         newPerson.__parent__ = context
-        root = getRoot(context)
+        root = getSiteRoot(context)
         newName = root.getUniqueNumberString()
         newPerson.__name__= newName
         root.addItem(newPerson)

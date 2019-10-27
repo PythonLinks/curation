@@ -7,7 +7,6 @@ def replace (context,childName,aClass):
         new.description = child.description
         new.source = child.source
         items = child.allValuesAsList()
-        breakpoint()
         for item in items:                
             itemName = item.name
             print (itemName)
@@ -15,14 +14,11 @@ def replace (context,childName,aClass):
                del new ['person']
             del child[itemName]
             new [itemName] = item
-        fred = 2
-        import pdb; pdb.set_trace()
-        breakpoint()
         del context [childName]             
         context [childName] = new
+        new.__name__ = childName
 
 def newRoot(self):
-         import pdb; pdb.set_trace()
          connRoot = self.request.environment['zodb.connection'].root()
          name = "applicationRoot"
          parent = connRoot 
