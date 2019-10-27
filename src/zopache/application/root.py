@@ -1,4 +1,4 @@
-\1;95;0cfrom zope.interface import implementer
+from zope.interface import implementer
 
 from zopache.core import Container
 from zopache.crud.interfaces import IRootContainer

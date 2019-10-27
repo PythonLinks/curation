@@ -26,7 +26,7 @@ class Publisher (DawnlightPublisher):
         if crumbs:
            aType, name=crumbs.popleft()
            if not name in context:
-              if not name == 'manage': 
+              if not name in ['manage','fix']: 
                  context = getSiteRootFromRequest(request,context) 
         traverser=Traverser(self.view_locator)
         
