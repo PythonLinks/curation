@@ -18,7 +18,7 @@ from zopache.ttw.interfaces import IBranch
 from zopache.ttw.interfaces import ITreeField 
 from zope.interface import implementer  
 from zope.interface import implementer
-
+from zopache.core.getroot import getProducts
 
 @implementer (ITreeField)
 class  TreeField(schema.TextLine):

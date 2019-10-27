@@ -6,6 +6,7 @@ import heapq
 import math
 import arrow
 import time
+from zopache.core.getroot import getSiteRoot
 
 """
 So what do we have here?
@@ -59,6 +60,7 @@ class Cache:
         self.siteCaches[siteName]= SiteCache()
         
     def get(self, name, key, default=None):
+            import pdb; pdb.set_trace()
             cache = getattr(self, name)
             return cache.get(key, default=default)
 
@@ -81,7 +83,7 @@ class Cache:
                     if not siteName in self.siteCaches:
                        self.siteCaches [siteName]= SiteCache()
                     cache = self.siteCaches[siteName]
-                    cache = getattr(self, name)                    
+                    cache = getattr(cache, name)                    
                     key = target.__name__
                     if key in cache:
                         value = cache.get(key)

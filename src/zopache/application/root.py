@@ -8,7 +8,8 @@ from zopache.ttw.principalfolder import PrincipalFolder
 class RootContainer(Container):
     icon="ttwicons/Container.svg"
     webClass = "Container"
-
+    __name__ = "applicationRoot"
+    branchSize = 0
     def __init__(self):
         Container.__init__(self)
         self['person'] = PrincipalFolder()

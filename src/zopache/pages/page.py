@@ -41,7 +41,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def postProcess(self):
         self.recalculateRootJSON()
-        cache.resetCache()
+        cache.resetCache(self)
         
     def postAddProcess(self):
         self.postProcess()
