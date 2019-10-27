@@ -10,6 +10,8 @@ from zopache.ttw.addeditforms import AceAddForm, PugEditForm
 from zopache.crud.forms import EditDemoForm
 from dolmen.container import IBTreeContainer
 
+
+from zopache.core.getroot import getProducts
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
@@ -138,7 +140,7 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
 
 class  AceScripts(AceScriptsBase):
     def update(self):
-        products = self.getProducts()
+        products = getProducts(self.context)
         self.template = products['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
@@ -157,7 +159,7 @@ class  AceScripts(AceScriptsBase):
 <script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
         """
         result += "<script>"
-        products = self.getProducts()
+        products = getProducts(self.context)
         script = products['Templates']['PugScripts']
         result += script.getJavascript()
         result += "</script>"
