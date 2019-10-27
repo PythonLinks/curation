@@ -50,14 +50,13 @@ class Add(Action, UniqueName):
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
         newName = self.newName(data)
-        newName = slugify(newName ,ok=SLUG_OK+'.', lower = False)
+        #newName = slugify(newName ,ok=SLUG_OK+'.', lower = False)
         context[newName]=obj
         obj.__parent__ = context
         message(_(u"Content created"))
         baseURL = self.form.url (obj)
         #baseURL = str(IURL(obj, form.request))    
         url=self.newURL(baseURL)
-
         if hasattr(form.new,'postAddProcess'):
             try:
                form.new.postAddProcess(view=form)
@@ -100,7 +99,6 @@ class Update(Action):
     """
 
     def __call__(self, form):
-
         self.form=form
         data, errors = form.extractData()
         if errors:

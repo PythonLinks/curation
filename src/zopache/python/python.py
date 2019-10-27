@@ -33,7 +33,7 @@ from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 
 
 from zopache.core import Leaf
-from zopache.ttw.acescripts import AceScripts
+from zopache.python.acescripts import AceScripts
 from zopache.python.interfaces import IPython
 from zopache.ttw.addeditforms import AceEditForm
 from   zopache.python.mixed import ObjectFile
@@ -97,37 +97,33 @@ class Python(Leaf,SourceBase,ObjectFile):
             self.javascriptObject().delete(view) 
         except:
             pass
-        
-    def postAddProcess (self,view=None):
-        self.exportSource()
-        self.compile(view)
-        
+
+    def postAddProcess (self,view):
+       if IPythonFolder.providedBy (self.__parent__): 
+           self.exportSource(self.source)
+           self.compile()
+
     def postEditProcess(self,view = None):
-        self.exportSource()
-        self.compile(view)
+       if IPythonFolder.providedBy (self.__parent__):
+           self.exportSource()
+           self.compile(view)
         
     def preMoveProcess(self,view):
-        self.deleteJavascriptObject(view)
-        self.delete(view)
-        self.setLastPath()
-        
+       if IPythonFolder.providedBy (self.__parent__):
+           self.deleteJavascriptObject(view)
+           self.delete(view)
+           self.setLastPath()
+
+    # BUG IF MOVING BETWEEN REGULAR FOLDER AND TRANSCRYPT FOLDER       
     def postMoveProcess(self,view):    
-        self.exportSource()
-        self.compile(view)
+       if IPythonFolder.providedBy (self.__parent__):
+           self.exportSource()
+           self.compile(view)
 
     def preDeleteProcess(self,view):
-        self.delete(view)
-        self.deleteJavascriptObject(view)    
-
-        
-class  AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/python");
-        </script>
-        """
-
-
+       if IPythonFolder.providedBy (self.__parent__):
+           self.delete(view)
+           self.deleteJavascriptObject(view)    
 
 class EditPython (Edit):
     parentClass=Edit
@@ -139,8 +135,6 @@ class EditPythonAndTest(EditPython):
     parentClass=Edit
     def newURL(self,baseURL):
         return self.form.context.testURL        
-
-
 
 def make_python_response(view, result, *args, **kwargs):
         response = view.responseFactory()

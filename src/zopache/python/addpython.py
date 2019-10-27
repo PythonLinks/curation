@@ -1,6 +1,6 @@
 from zope.interface import Interface
 from zope.schema import TextLine
-
+from zope.schema.interfaces import ValidationError
 from dolmen.forms.base import Actions
 
 from zopache.ttw.addeditforms import AceAddForm
@@ -13,12 +13,19 @@ from zopache.crud import actions as formactions, i18n as _
 from zopache.crud.actions import Cancel
 from zopache.python.python import AceScripts
 
+from zope.schema.interfaces import ValidationError
+from dolmen.container import IBTreeContainer
+
+class PythonError(ValidationError):
+    """ Python object names must end in '.py' """
+    pass
+
 class PyLine (TextLine):
     def validate (self,value):
         if ((len(value) <3) or
            (value [-3:] != '.py')
             ):
-           raise ValueError( value, ": Python File Names must end in .py,")
+           raise PythonError( value, ": Python File Names must end in .py,")
             
         return TextLine.validate(self,value)    
 
@@ -28,12 +35,11 @@ class IName(Interface):
            description = "Will be made web-safe.", 
            required=True,
            default=None)
-
-
-      
-class AddPythonAndEdit(Add):
+ 
+class AddPythonAndEdit(AceScripts,Add):
     parentClass=Add
     def newURL(self,baseURL):
+        import pdb; pdb.set_trace()
         return baseURL + '/aceedit'
 
 class AddPythonAndTest(Add):
@@ -44,7 +50,7 @@ class AddPythonAndTest(Add):
     
 @form_component
 @name('addPython')
-@context(IPythonFolder)
+@context(IBTreeContainer)
 @title("Add Python")
 @permissions('Manage')
 @implementer(IPython)
