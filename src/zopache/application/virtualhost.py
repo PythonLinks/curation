@@ -18,12 +18,13 @@ from zopache.application.interfaces import IVirtualHost
 virtualHosts = {'dev.pythonlinks.info':'python',
                 'pythonlinks.info':'python',
                 'desktop.pythonlinks.info':'python',
+                'js.pythonlinks.info':'python',                
                 'rights.men':'mens-rights',
                 'desktop.rights.men':'mens-rights',
                 'climatevideos.info':'climate-change', 
                 'desktop.climatevideos.info':'climate-change',               
-                'cloud-native.pg':'golang',
-                'desktop.cloud-native.pg':'golang',                
+                'cloud-native.pl':'golang',
+                'desktop.cloud-native.pl':'golang',                
                 'forestwiki.com':'forestwiki',
                 'desktop.forestwiki.com':'forestwiki'                
 }

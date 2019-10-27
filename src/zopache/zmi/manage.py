@@ -5,6 +5,7 @@ from zope import schema
 from zope import interface
 from dolmen.container import IBTreeContainer
 from dolmen.forms.base import Actions
+from cromlech.browser.interfaces import IPublicationRoot
 
 from .contents import Contents
 from zopache.core.page  import  Page
@@ -47,9 +48,13 @@ class ManageBase(Form,Contents):
  
     def getManageURL(self,item):
         try:
+            
            url = self.url(item)
            segment =  IURLSegment(item).getSegment()
+           if IPublicationRoot.providedBy (item):
+               return  '/' + item.__name__ + '/'+ segment
            return url + '/' + segment
+       
         except:
            return "BROKEN-URL"
                 
