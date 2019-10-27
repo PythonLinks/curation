@@ -14,6 +14,35 @@ from zopache.crud.interfaces import ILeaf
 from zopache.crud.interfaces import IImutable
 from zopache.crud.interfaces import IMoveable
 
+class IMailHost(ILeaf):
+    """Basic Mail CRUD"""
+    host = schema.TextLine(
+        title = u'Host Name',
+        description = u'Which Mail Server are you using?',
+        required = True,
+    )
+    
+    port = schema.Int(
+        title = u'Port',
+        description = u'MailHost Port Number',
+        required = True,
+        default = 25,
+    )
+
+    username= schema.TextLine(
+        title = u'username',
+        description = u'Who is the user sending the email',
+        required = True,
+    )
+
+    password= schema.Password(
+        title = 'password',
+        description = 'The password used to send mail.',
+        required = True,
+    )
+
+    
+
 class ITreeField(Interface):
       pass
 

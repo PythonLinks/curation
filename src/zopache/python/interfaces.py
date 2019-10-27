@@ -15,7 +15,7 @@ class IMixed(Interface):
 class IPythonIndex(Interface):
      pass
 
-class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI):
+class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
     """Basic Python  FORM with CRUD"""
 
     title = schema.TextLine(
@@ -31,6 +31,13 @@ class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI):
         required = False,
         default = u'',
     )
+    
+    sideBySide = schema.Bool(
+        title = 'Side By Side',
+        description = 'Show Text Areas Side By Side?',
+        required = False,
+        default = True,
+    )        
 
 class IDirectory(IZMI):
      pass

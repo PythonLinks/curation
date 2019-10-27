@@ -14,6 +14,7 @@ from here  import HERE
 from zopache.python.interfaces import IPython, IPythonIndex,IPythonFile
 from zopache.python.interfaces import IDirectory, IJavascriptFile
 from zopache.ttw.interfaces import IJavascript, IJavascriptIndex
+from zopache.python.utils import assert_directory_access
 
 CHUNK_SIZE = 1 << 12
 
@@ -27,21 +28,6 @@ class FileAndDirectoryBase(object):
     
     _p_mtime = property (getMTime)    
 
-    def exportSource(self, path = None):
-
-        if not path:
-           path = self.path
-        if not os.path.exists(os.path.dirname(path)):
-            try:
-                os.makedirs(os.path.dirname(path))
-            except OSError as exc: # Guard against race condition
-                if exc.errno != errno.EEXIST:
-                   raise
-        self.exportSourceCore(path)
-        
-    def exportSourceCore(self,path):    
-        with open(path,'w') as theFile:
-             theFile.write(self.source)
     
     
 class FileIterator(object):
@@ -68,6 +54,22 @@ class FileBase(FileAndDirectoryBase):
     
     def setMimeType(self, mime=None):
              self.mime = mime or guess_type(self.__name__)    
+
+    def exportSource(self, path = None):
+
+        if not path:
+           path = self.path
+        if not os.path.exists(os.path.dirname(path)):
+            try:
+                os.makedirs(os.path.dirname(path))                
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                   raise
+        self.exportSourceCore(path)
+        
+    def exportSourceCore(self,path):    
+        with open(path,'w') as theFile:
+             theFile.write(self.source)
 
     def delete(self,view):        
         subprocess.call(['rm', self.path])            
@@ -107,6 +109,9 @@ class JavascriptFile(File):
 
 
 class DirectoryBase(FileAndDirectoryBase):
+    #def __init__(self, path, mkdir = False):
+    #    assert_directory_access(path, mkdir=mkdir)
+        
     def getTitle(self):
         return self.path
     
@@ -143,7 +148,8 @@ class DirectoryBase(FileAndDirectoryBase):
 
             #NOT A FILE, MUST BE A FOLDER
             else:
-                   new = Directory(path,mkdir = False)           
+                   new = Directory()
+                   new.path = path
                    new.__name__ = name
                
             new.__parent__ = self

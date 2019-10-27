@@ -1,0 +1,8 @@
+Mixed Base
+   Objects which exist in both ZODB and the file system
+
+
+ObjectFile
+    A leaf object and a file.
+
+ 

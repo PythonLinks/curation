@@ -63,7 +63,8 @@ class AddNotebook(AddByTitleForm):
               formactions.Cancel("Cancel","Cancel"))
     
     
-    
+
+#THIS ONE WAS LIKE JSON FORM.     
 """
 @view_component
 @name('addNotebook2')

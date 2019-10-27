@@ -66,6 +66,7 @@ install_requires = [
     'dolmen.widget.file',
     'googlemaps',
     'unicode-slugify',
+    'pyramid_mailer',
     'setuptools',
     'zopache',
     'zopache.copy',

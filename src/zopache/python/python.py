@@ -16,7 +16,7 @@ from dolmen.forms.base.interfaces import ActionError
 
 from zopache.crud.actions import Cancel
 from zopache.ttw import actions  as ttwactions
-from zopache.crud.actions import Add,Edit
+from zopache.crud.actions import Edit
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from dolmen.view import name, context, view_component
 from dolmen.view import View
@@ -33,9 +33,9 @@ from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 
 
 from zopache.core import Leaf
-from zopache.ttw.acescripts import AceScripts
+from zopache.python.acescripts import AceScripts
 from zopache.python.interfaces import IPython
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm
+from zopache.ttw.addeditforms import AceEditForm
 from   zopache.python.mixed import ObjectFile
 from zopache.python.mixed import ObjectFile
 from zopache.python.interfaces import IPythonFolder, IPythonIndex
@@ -43,7 +43,7 @@ from zopache.ttw.javascript import SourceBase
 from zopache.python.filesystem import Directory
 
 @implementer(IPython)
-class Python(SourceBase,ObjectFile):
+class Python(Leaf,SourceBase,ObjectFile):
     def __init__(self):
         Leaf.__init__(self)
     icon="ttwicons/Python.svg"
@@ -65,14 +65,15 @@ class Python(SourceBase,ObjectFile):
         
     def javascriptFolder(self):
         parent = self.__parent__
-        if not "__target__" in parent:
-           path = os.path.join (parent.path,'__target__') 
-           Directory(path,mkdir = True)
-           
+        path = self.javascriptFolderPath()
+        if not os.path.exists(path):
+            os.makedirs(path)
         return parent["__target__"]
        
     def javascriptFolderPath(self):
-        return self.javascriptFolder().path
+        parent = self.__parent__
+        path = os.path.join (parent.path,'__target__') 
+        return path           
 
     def outputPath(self):
         jsPath =  self.javascriptFolder().path
@@ -96,39 +97,33 @@ class Python(SourceBase,ObjectFile):
             self.javascriptObject().delete(view) 
         except:
             pass
+
+    def postAddProcess (self,view):
+       if IPythonFolder.providedBy (self.__parent__): 
+           self.exportSource(self.source)
+           self.compile()
+
+    def postEditProcess(self,view = None):
+       if IPythonFolder.providedBy (self.__parent__):
+           self.exportSource()
+           self.compile(view)
         
     def preMoveProcess(self,view):
-        self.deleteJavascriptObject(view)
-        self.delete(view)
-        self.setLastPath()
-        
+       if IPythonFolder.providedBy (self.__parent__):
+           self.deleteJavascriptObject(view)
+           self.delete(view)
+           self.setLastPath()
+
+    # BUG IF MOVING BETWEEN REGULAR FOLDER AND TRANSCRYPT FOLDER       
     def postMoveProcess(self,view):    
-        self.exportSource()
-        self.compile(view)
+       if IPythonFolder.providedBy (self.__parent__):
+           self.exportSource()
+           self.compile(view)
 
     def preDeleteProcess(self,view):
-        self.delete(view)
-        self.deleteJavascriptObject(view)    
-
-        
-class  AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/python");
-        </script>
-        """
-
-
-
-class AddPythonAndEdit(Add):
-    parentClass=Add
-    def newURL(self,baseURL):
-        return baseURL + '/aceedit'
-
-class AddPythonAndTest(Add):
-    parentClass=Add
-    def newURL(self,baseURL):
-        return self.form.new.testURL
+       if IPythonFolder.providedBy (self.__parent__):
+           self.delete(view)
+           self.deleteJavascriptObject(view)    
 
 class EditPython (Edit):
     parentClass=Edit
@@ -140,31 +135,6 @@ class EditPythonAndTest(EditPython):
     parentClass=Edit
     def newURL(self,baseURL):
         return self.form.context.testURL        
-    
-@form_component
-@name('addPython')
-@context(IPythonFolder)
-@title("Add Python")
-@permissions('Manage')
-@implementer(IPython)
-class AddPython(AceScripts,AceAddForm):
-    subTitle = "Add  a Python Object"
-    interface = IPython
-    ignoreContent = True
-    factory=Python
-    
-    def footerScripts(self):
-        return AceScripts.footerScripts(self)
-
-    def headerScripts(self):
-          return AceScripts.headerScripts(self)    
-    
-    @property
-    def actions(self):
-        return Actions(
-              AddPythonAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
-              #AddPythonAndTest(("Add and Test","Add -> Test"), self.factory),
-              Cancel(_("Cancel","Cancel")))
 
 def make_python_response(view, result, *args, **kwargs):
         response = view.responseFactory()
