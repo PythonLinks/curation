@@ -7,6 +7,7 @@ from zope.interface.interfaces import ComponentLookupError
 from zopache.ttw.historyitem import HistoryTraverser
 
 from cromlech.dawnlight.publish import shortcuts, PublicationError
+from zopache.application.virtualhost import getSiteRootFromRequest
 
 class Publisher (DawnlightPublisher):
     """Traverses model objects, and looks up views. 
@@ -18,10 +19,18 @@ class Publisher (DawnlightPublisher):
     def publish(self, request, root,handle_errors):
         view=None
         path = self.base_path(request)
-        crumbs = dawnlight.parse_path(path, shortcuts)
-        traverser=Traverser(self.view_locator)
-        context=root
 
+        #Maybe traverse to a lower level SiteRoot
+        crumbs = dawnlight.parse_path(path, shortcuts)
+        context=root
+        if crumbs:
+           aType, name=crumbs.popleft()
+           if not name in context:
+              if not name in ['manage','fix']: 
+                 context = getSiteRootFromRequest(request,context) 
+        traverser=Traverser(self.view_locator)
+        
+        crumbs = dawnlight.parse_path(path, shortcuts)        
         while crumbs:
            aType, name=crumbs.popleft()
            #import pdb; pdb.set_trace()

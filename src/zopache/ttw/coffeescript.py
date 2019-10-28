@@ -60,8 +60,7 @@ class CoffeeScript(JavascriptBase,Leaf):
 
 class  AceScripts(AceScriptsBase):
     def update(self):
-        root = self.getRoot()
-        self.template = root['Products']['Templates']['TranspilerTemplate']
+        self.template = self.getProducst()['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
         result = AceScriptsBase.headerScripts(self)
@@ -76,8 +75,7 @@ class  AceScripts(AceScriptsBase):
 <script  src="/fanstatic/ttwicons/coffeescript.js"></script>
     """
         result += "<script>"
-        root= self.getRoot()
-        script = root['Products']['Templates']['TranspilerScripts']
+        script = self.getProducts()['Templates']['TranspilerScripts']
         result += """
                   var transpiler = 'CoffeeScript';
                   """

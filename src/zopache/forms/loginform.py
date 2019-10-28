@@ -22,7 +22,7 @@ from zopache.ttw.interfaces import IPrincipalFolder
 from zopache.forms.interfaces import ILogin
 from dolmen.forms.base.errors import Error
 from cromlech.browser.exceptions import HTTPFound
-from zopache.core import getRoot
+from zopache.core.getroot import getPrincipalFolder
 
   
 class LoginAction(Action):
@@ -46,8 +46,7 @@ class LoginAction(Action):
         #raise HTTPFound(url)
 
     def getContext(self,form):
-      root = getRoot(form.context)
-      return root ["person"]
+        return getPrincipalFolder(form.context)
 
 @form_component
 @name (u'login')

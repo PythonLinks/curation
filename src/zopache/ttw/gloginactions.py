@@ -14,7 +14,7 @@ from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
-from zopache.core import getRoot
+from zopache.core.getroot import getPrincipalFolder
 
 def message(message):
     send(message)
@@ -81,8 +81,8 @@ class GoogleLoginAction(Action):
             # Invalid token
             return "Invalide Token"
         
-        root = getRoot(form.context)
-        people = root ['person']
+
+        people = getPrincipalFolder( form.context)
         userId = data['sub'] 
         self.innerCall(userId,people)
         

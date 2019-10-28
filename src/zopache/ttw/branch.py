@@ -19,6 +19,7 @@ from zopache.ttw.interfaces import IInternalPrincipal
 
 @implementer (IBranch)
 class Branch(object):
+    branchSize = 0
     def __init__(self):
        self.valuesByToken = OOBTree()
        #self.tokensByValue = {}

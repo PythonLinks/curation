@@ -9,7 +9,6 @@ from zope.interface.interfaces import ComponentLookupError
 from copy import copy 
 from dolmen.container import IBTreeContainer
 from .interfaces import IAceHTML
-from zopache.core import getRoot
 from zopache.ttw.interfaces import IWebClass
 from zopache.ttw.acquisition import webClassAcquire
 from zopache.python.interfaces import IDirectory

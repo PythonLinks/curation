@@ -116,7 +116,7 @@ class ISearchSchema(Interface):
 class IBranch (IBTreeContainer):
     pass
 
-class IPrincipalFolder(IImutable):
+class IPrincipalFolder(ICopyable,IImutable):
     pass
 
 #    def getIdByEmail(self,email):
@@ -290,7 +290,7 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable
 class IUntrustedHTML(IHTML):
    pass
 
-class IInternalPrincipal(IFile,IContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
+class IInternalPrincipal(IFile,IBTreeContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
     """Principal information"""
     pass
 

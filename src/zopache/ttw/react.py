@@ -60,8 +60,8 @@ class React(JavascriptBase,Leaf):
 
 class  AceScripts(AceScriptsBase):
     def update(self):
-        root = self.getRoot()
-        self.template = root['Products']['Templates']['TranspilerTemplate']
+        products = getProducts(self.context)
+        self.template = products ['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
         result = AceScriptsBase.headerScripts(self)
@@ -76,8 +76,8 @@ class  AceScripts(AceScriptsBase):
 <script  src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
     """
         result += "<script>"
-        root= self.getRoot()
-        script = root['Products']['Templates']['TranspilerScripts']
+        products= getProducts(self.context)
+        script =  products ['Templates']['TranspilerScripts']
         result += """
                   var transpiler = 'React';
                   """
