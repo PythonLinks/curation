@@ -25,6 +25,7 @@ from cromlech.browser.directives import title
 from zopache.forms.interfaces import IRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
+from zopache.crud.actions import Cancel
 
 @form_component
 @name (u'signup')
@@ -56,7 +57,9 @@ class Register(Form):
 
     @property
     def actions(self):
-        return Actions(Add("Sign Me Up!",self))
+        return Actions(Add("Sign Me Up!",self),
+               Cancel("Cancel","Cancel")
+        )
     
     def newURL(self,new):
         #newURL = '/' + new.__name__ + "/support"

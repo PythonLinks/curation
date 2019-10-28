@@ -186,7 +186,16 @@ class PrincipalFolder(Container):
         super(PrincipalFolder, self).__init__()
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()
-        
+
+    def convert (self):
+        del self.idByEmail
+        del self.idBySlugifiedHandle
+        self.emailIndex= OOBTree()
+        self.slugifiedHandleIndex = OOBTree()
+        for item in self.values():
+            self.emailIndex[item.email]= item
+            self.slugifiedHandleIndex [item.slugifiedHandle()] = item
+            
     def setJson(self):
         pass
 

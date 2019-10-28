@@ -1,5 +1,12 @@
 from zopache.categories.category import RootCategory
 from zopache.application.root import RootContainer
+from zopache.categories.interfaces import IRootCategory
+
+def updatePrincipalFolders(self):
+    for item in self.context.values():
+        if IRootCategory.providedBy(item):
+           item['person'].convert()     
+
 def replace (context,childName,aClass):
         child = context [childName]
         new = aClass()

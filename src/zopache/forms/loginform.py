@@ -23,7 +23,7 @@ from zopache.forms.interfaces import ILogin
 from dolmen.forms.base.errors import Error
 from cromlech.browser.exceptions import HTTPFound
 from zopache.core.getroot import getPrincipalFolder
-
+from zopache.crud.actions import Cancel
   
 class LoginAction(Action):
 
@@ -65,5 +65,7 @@ class LoginForm(Form):
     @property
     def actions(self):
         return Actions(
-            LoginAction("Log In","Log In"))
+            LoginAction("Log In","Log In"),
+            Cancel("Cancel", "Cancel")
+        )
             
