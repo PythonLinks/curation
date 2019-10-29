@@ -52,10 +52,12 @@
       <tal:widget  tal:condition= " not view.isBool(widget)"  tal:content="structure widget.render()" />
     </div>
   </tal:fields>
+  <div>
   <tal:actions tal:condition="view.actionWidgets">
     <tal:widget tal:content="structure widget.render()"
 		tal:repeat="widget view.bootstrapActionWidgets()" />
   </tal:actions>
+  </div>
 </form>
 <br>
   <p style= "max-width:40em" tal:condition="hasattr(view,'postamble')">

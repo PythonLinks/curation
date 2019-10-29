@@ -39,7 +39,7 @@ class Register(Form):
     subTitle='Register Locally'
     ignoreContent = True
     igrnoreRequest = False
-    
+    count = 0
     
     def postAddProcess(self):
        if len(self.new.__parent__)==1:

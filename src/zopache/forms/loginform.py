@@ -39,7 +39,7 @@ class LoginAction(Action):
                 identifier=self.prefix,
             ))
             return FAILURE
-        raise HTTPFound(".")
+        raise HTTPFound("..")
 ##
         #return SuccessMarker('Added', True, url="..",code=307)
 
@@ -61,7 +61,7 @@ class LoginForm(Form):
     fields = Fields(ILogin)
     ignoreContent = True
     submissionError = []
-
+    count = 0 
     @property
     def actions(self):
         return Actions(

@@ -39,23 +39,24 @@ class IEmail(Interface):
         required = True)
     
 class IPermissions(Interface):            
-    chatPermission = schema.Bool(
-        title = "Run this web server.",
-        required = True,
-        default = False)
-    chatPermission.text = """ <p> I give permission 
-to process my professional information for the following  
-purposes:</p>"""
-        
+
     frequencyPermission = schema.Choice(
         vocabulary=SimpleVocabulary.fromValues(
                   ['Daily','Weekly','Monthly','Seldom','Never'],
                   ),
-        title = "And to send me the news:",
+        title = "To send me the news:",
         required = False,
         default = 'Never',
     )    
+    frequencyPermission.text = """ <p> I give permission 
+to process my professional information for the following  
+purposes:</p>"""
 
+    chatPermission = schema.Bool(
+        title = "And to run this web server.",
+        required = True,
+        default = False)
+        
 
 class IGRegister (IGLogin,IHandle,IPermissions):        
    pass
