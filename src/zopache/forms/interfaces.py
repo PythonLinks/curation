@@ -56,7 +56,7 @@ purposes:</p>"""
         title = "And to run this web server.",
         required = True,
         default = False)
-        
+    chatPermission.text = """ <br>  """        
 
 class IGRegister (IGLogin,IHandle,IPermissions):        
    pass
