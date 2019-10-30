@@ -43,7 +43,7 @@ class IPermissions(Interface):
         title = "Run this web server.",
         required = True,
         default = False)
-    chatPermission.text = """ <p> I give permission 
+    chatPermission.text = """ <p> I am legally an adult, and I give permission 
 to process my professional information for the following  
 purposes:</p>"""
         

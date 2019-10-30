@@ -25,9 +25,15 @@ class AddCompany(AddPageBase):
     interface = ICompany
     label="Add a Company"
     factory = Company
+    
     def postAddProcess(self):
         self.new.webApproved = False
-
+        self.new.poastAddProcess(self)
+        
+    def update (self):
+        if self.getHost() in ['rights.men','dev.pythonlinks.info']
+            self.fields = self.fields.omit('jobURL')
+            
     @property
     def actions(self):
         return Actions(
@@ -36,7 +42,7 @@ class AddCompany(AddPageBase):
     
         
 @view_component
-@name('addMap2')
+@name('addCompanyMap')
 @title("Add Map")
 @target(IView)
 @permissions('AddContent')

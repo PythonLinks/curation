@@ -23,7 +23,7 @@ from zopache.ttw.interfaces import IMailHost
 @crom.adapter
 @crom.sources(IMailHost)
 @crom.target(IURLSegment)
-class IHTMLContainerAdaptor(object):
+class IMailHostAdaptor(object):
     def __init__(self,context):
         self.context=context   
     def getSegment(self):
