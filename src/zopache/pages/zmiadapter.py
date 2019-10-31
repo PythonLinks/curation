@@ -158,6 +158,9 @@ class CategoryDeleter(Deleter,LocalBase):
         self.deleteToken(contained)
         # DELETE THE OBJECT
         container=contained.__parent__
+        #Have to do this before deleting the __parent__ Pointer. 
+        if IPage.providedBy (container):
+            root = getSiteRoot(contained)
         del container[name]
         
         # IF IT IS A VIDEO DELETE IT FROM THE CONFERENCE
@@ -168,7 +171,6 @@ class CategoryDeleter(Deleter,LocalBase):
         # UNLESS IT IS THE ROOT CATEGORY, RECALCULATE THE JSON   
         # THIS SHOULD ALWAYS BE TRUE
         if IPage.providedBy (container):
-           root = getSiteRoot(contained)
            root.recalculateRootJSON()
         cache.resetCache(view.context)
 

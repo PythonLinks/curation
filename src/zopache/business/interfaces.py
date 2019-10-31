@@ -32,14 +32,6 @@ class ICompany (ILocationBase,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonica
         required = False,
     )        
 
-    description= schema.Text(
-        title = u'Description (200 Characters)',
-        description = "A short description of the company. ",
-        required = False,
-        max_length = 200,
-        default = '',
-    )
-
     spacialization= schema.Text(
         title = u'Specialization (20 characters)',
         description = " Why is this Company special?",
@@ -48,6 +40,14 @@ class ICompany (ILocationBase,IOrdered ,IBTreeContainer,IUntrustedHTML,ICanonica
         default = '',
     )    
      
+    description= schema.Text(
+        title = u'Description (200 Characters)',
+        description = "A short description of the company. ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+
     source= schema.Text(
         title = u'Content',
         description = u'Please describe this company further.',

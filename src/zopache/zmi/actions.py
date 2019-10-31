@@ -127,6 +127,7 @@ class DeleteObjects(BaseAction):
         ids = self.getValues(form,
                     "You did not select any objects to delete")
         container = form.context
+        breakpoint()
         for id in ids:
             item= container [id]
             deleter = IObjectDeleter(item)
