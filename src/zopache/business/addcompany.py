@@ -14,7 +14,7 @@ from zopache.business.company import Company
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
-from zopache.crud.interfaces import IName
+
 
 @view_component
 @name('addCompany')
@@ -29,7 +29,7 @@ class AddCompany(AddPageBase):
     
     @property
     def fields(self):
-        fields = Fields(IName,self.interface)
+        fields = Fields(self.interface)
         if self.getHost() in ['rights.men','dev.pythonlinks.info']:
             fields = fields.omit('jobURL')        
         return  fields
