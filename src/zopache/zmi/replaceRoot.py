@@ -1,4 +1,4 @@
-from zopache.categories.category import RootCategory
+
 from zopache.application.root import RootContainer
 from zopache.categories.interfaces import IRootCategory
 
@@ -24,7 +24,8 @@ def replace (context,childName,aClass):
         del context [childName]             
         context [childName] = new
         new.__name__ = childName
-
+"""
+from zopache.categories.category import RootCategory        
 def newRoot(self):
          connRoot = self.request.environment['zodb.connection'].root()
          name = "applicationRoot"
@@ -38,3 +39,4 @@ def newRoot(self):
          python = context ['python']
          #del python ['person']
          python ['person'] = people
+"""

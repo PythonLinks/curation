@@ -20,7 +20,7 @@ class ICompany (ILocationBase,IContainer,IOrdered ,IBTreeContainer,IUntrustedHTM
         required = True,
     )
 
-    url = schema.TextLine(
+    url = schema.URI(
         title = u'The Company URL',
         description = 'Please link to the Company.',
         required = False,
@@ -33,12 +33,20 @@ class ICompany (ILocationBase,IContainer,IOrdered ,IBTreeContainer,IUntrustedHTM
     )        
 
     description= schema.Text(
-        title = u'Specialization (20 characters)',
-        description = " Why is this Company special?",
+        title = u'Description (200 Characters)',
+        description = "A short description of the company. ",
         required = False,
-        max_length = 20,
+        max_length = 200,
         default = '',
     )
+
+    spacialization= schema.Text(
+        title = u'Specialization (20 characters)',
+        description = " Why is this Company special?",
+        required = True,
+        max_length = 20,
+        default = '',
+    )    
      
     source= schema.Text(
         title = u'Content',

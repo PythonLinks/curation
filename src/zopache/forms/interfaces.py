@@ -39,7 +39,6 @@ class IEmail(Interface):
         required = True)
     
 class IPermissions(Interface):            
-
     frequencyPermission = schema.Choice(
         vocabulary=SimpleVocabulary.fromValues(
                   ['Daily','Weekly','Monthly','Seldom','Never'],

@@ -313,6 +313,10 @@ class Breadcrumbs(UniqueName):
     def getDomain(self):
         return self.domain(self.context)
 
+    def getHost(self):
+        return self.request.host_url.lower().split('://')[1]
+    
+    #Maybe he next one should be reitued, just use getHost
     def domain(self,item):
         if IPublicationRoot.providedBy(item):
            result = self.request.application_url[8:]

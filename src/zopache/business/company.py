@@ -14,6 +14,11 @@ class Company  (Category,LocationBase):
          if self.hidden:
             return "Hidden"
          return self.title
+
+    def getSpecialization(self):
+        if hasattr(self,'specialization') and self.specialization != '':
+           return self.specialization
+        return self.description [0:20]
     
     def canView(self,view):
          if (self.hidden and

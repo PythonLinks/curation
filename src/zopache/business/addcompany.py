@@ -13,8 +13,9 @@ from zopache.business.interfaces import IMap, ICompany
 from zopache.business.company import Company
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
+from zopache.pages.interfaces import IPage
+from zopache.crud.interfaces import IName
 
-        
 @view_component
 @name('addCompany')
 @title("Add Company")
@@ -25,9 +26,18 @@ class AddCompany(AddPageBase):
     interface = ICompany
     label="Add a Company"
     factory = Company
+    
+    @property
+    def fields(self):
+        fields = Fields(IName,self.interface)
+        if self.getHost() in ['rights.men','dev.pythonlinks.info']:
+            fields = fields.omit('jobURL')        
+        return  fields
+    
     def postAddProcess(self):
         self.new.webApproved = False
-
+        self.new.postAddProcess(self)
+        
     @property
     def actions(self):
         return Actions(
@@ -36,11 +46,11 @@ class AddCompany(AddPageBase):
     
         
 @view_component
-@name('addMap2')
+@name('addCompanyMap')
 @title("Add Map")
 @target(IView)
 @permissions('AddContent')
-@context(IMap)    
+@context(IPage)    
 class AddMap(AddPageBase):
     subTitle = 'Add a map'
     interface = IMap

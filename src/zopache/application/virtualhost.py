@@ -33,8 +33,11 @@ virtualHosts = {'dev.pythonlinks.info':'python',
 
 def getSiteRootCore(host,root):            
             if host in virtualHosts:
-               path = virtualHosts [host] 
-               root = root [path]
+               path = virtualHosts [host]
+               #When using Forest Wiki on Dev.PythonLinks.info,
+               #There will not  be a python Rootcatgegory.
+               if path in root:
+                  root = root [path]
             return root
 
 def getSiteRootFromRequest(request,root):

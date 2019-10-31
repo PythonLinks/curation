@@ -19,6 +19,7 @@ from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 from zopache.core.transactionnote import TransactionNote
 from zopache.core.getroot import getSiteRoot
+from zopache.pages.cache import cache
 
 class LocalBase(BaseClass):
     def printToken(self,obj, message):
