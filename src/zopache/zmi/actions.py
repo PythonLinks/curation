@@ -72,8 +72,6 @@ class ReTitleAndName(BaseAction):
         for item in form.context.allValuesAsList():
             if hasattr(item, "title"):
                 newId = slugify(item.title,ok=SLUG_OK+'.', lower= True)
-            import pdb; pdb.set_trace()
-            print (newId,item.__name__)
             if newId != item.__name__:
                 renamer = IObjectRenamer(item)
                 renamer.renameItem(item.__name__, newId,form)
@@ -127,7 +125,6 @@ class DeleteObjects(BaseAction):
         ids = self.getValues(form,
                     "You did not select any objects to delete")
         container = form.context
-        breakpoint()
         for id in ids:
             item= container [id]
             deleter = IObjectDeleter(item)
