@@ -32,7 +32,7 @@ from zopache.crud.actions import Cancel
 @context(Interface)
 @title("Register")
 class Register(Form):
-    layoutName = "NoMenuLayout"
+    layoutName = "UserMenu"
     fields = Fields(IRegister)
     factory = InternalPrincipal
     title='PythonLinks.info'

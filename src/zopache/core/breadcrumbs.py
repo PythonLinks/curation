@@ -15,7 +15,7 @@ from zopache.core.uniquename import UniqueName
 from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 from zopache.zmi.interfaces import IURLSegment
-
+from zopache.crud.interfaces import IZodbRoot
 
 
 _safe = '@+'  # Characters that we don't want to have quoted
@@ -207,7 +207,8 @@ class Breadcrumbs(UniqueName):
                                      showTitles=showTitles)
     
     #AND HERE WE HAVE THE WORKHORSE                
-    def breadcrumbsCore(self,item,
+    def breadcrumbsCore(self,
+                        item,
                         viewName='',
                         showTitles=True,
                         resolver=nameAndTitle):
@@ -219,15 +220,16 @@ class Breadcrumbs(UniqueName):
             for ancestor in parents:
                 name, title = resolver(ancestor,showTitles)
                 slashViewName = self.slashViewName(ancestor,viewName)
-                isRoot =IPublicationRoot.providedBy(ancestor)
-                if isRoot:
-                   base_url=resolve_url(ancestor,self.request)
+                isSiteRoot =IPublicationRoot.providedBy(ancestor)
+                isZodbRoot = IZodbRoot.providedBy (ancestor)
+                if isZodbRoot:
+                   base_url = ''
+                elif isSiteRoot:
+                   base_url = '/' + ancestor.__name__
                 else:
-                    base_url += '/'
-                    base_url+=quote(name.encode('utf-8'), _safe)
-                if  not (isRoot and viewName ==''):    
-                    newURL= base_url + slashViewName
-                    result.append( self.href(newURL,title))
+                   base_url=resolve_url(ancestor,self.request)
+                newURL= base_url + slashViewName
+                result.append( self.href(newURL,title))
         return ' / '+' / '.join(result)
 
     

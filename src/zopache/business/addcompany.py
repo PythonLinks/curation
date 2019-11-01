@@ -9,33 +9,20 @@ from zopache.ttw.html import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.business.interfaces import IMap, ICompany
-from zopache.business.company import Company
+from zopache.business.interfaces import IMap, ICompany, IOrganization
+from zopache.business.company import Company, Organization
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
 
 
-@view_component
-@name('addCompany')
-@title("Add Company")
-@target(IView)
-@permissions('Vote')
-@context(IMap)    
-class AddCompany(AddPageBase):
-    interface = ICompany
-    label="Add a Company"
-    factory = Company
-    
-    @property
-    def fields(self):
-        fields = Fields(self.interface)
-        if self.getHost() in ['rights.men','dev.pythonlinks.info']:
-            fields = fields.omit('jobURL')        
-        return  fields
+class AddBase(AddPageBase):
+    count = 0 
+    layoutName = "UserMenu"
     
     def postAddProcess(self):
         self.new.webApproved = False
+        self.new.hidden = True        
         self.new.postAddProcess(self)
         
     @property
@@ -43,6 +30,32 @@ class AddCompany(AddPageBase):
         return Actions(
               AddAndView("Add and View", self.factory),
               formactions.Cancel("Cancel","Cancel"))
+    
+    
+@view_component
+@name('addCompany')
+@title("Add Company")
+@target(IView)
+@permissions('Vote')
+@context(IMap)    
+class AddCompany(AddBase):
+    interface = ICompany
+    label="Add a Company"
+    factory = Company
+    title = "Add a Company"
+    subTitle = "All submissions are reviewed before being approved. "
+    
+@view_component
+@name('addOrganization')
+@title("Add Organization")
+@target(IView)
+@permissions('Vote')
+@context(IMap)    
+class AddOrganization(AddBase):
+    interface = IOrganization
+    factory = Organization
+    title = "Add an Organization"
+    subTitle = "All submissions are reviewed before being approved. "
     
         
 @view_component

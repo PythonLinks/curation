@@ -36,9 +36,7 @@ class JsonObject(object):
          text+= ',\n   '
          name='class'
          text += '\"'+name+'\": \"'
-         webClass = self.webClass
-         if webClass in ["GoogleMap","HomePage"]:
-             webClass = "Category"
+         webClass = self.getClientClass()
          text += webClass
          text += '\"' 
          
@@ -207,7 +205,6 @@ class JsonObject(object):
             firstLine=True
             for item in self.values():
                 if (IPage.providedBy(item) and
-                   (not ICompany.providedBy(item)) and
                    item.webApproved):
                    if not firstLine:
                       result+=',' 

@@ -8,12 +8,15 @@ def possibleItems():
     terms = []
     #term = SimpleVocabulary.createTerm('None','None','None')
     #terms.append(term)    
-    for item in [                'Manage',
+    for item in [
+                'Add',
                 'AddContent',
+                'Approve',
+                'Edit',
                 'EditContent',
-                'Vote',
-                 'Edit',                
-                 'Add']:
+                'Manage',
+                'Vote'
+                ]:
         term = SimpleVocabulary.createTerm(item,item,item)
         terms.append(term)
     return SimpleVocabulary(terms)
@@ -23,7 +26,7 @@ class IPermissions(Interface):
     permissions = Set(
         value_type =Choice(source=possibleItems()),
         title="Permissions",
-        description= "What is this user allowed to do",
+        description= "What is this user allowed to do?",
         required = False)                
 
     

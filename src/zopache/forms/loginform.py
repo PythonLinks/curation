@@ -55,7 +55,7 @@ class LoginAction(Action):
 class LoginForm(Form):
     """ Used to login
     """
-    layoutName = "NoMenuLayout"
+    layoutName = "UserMenu"
     title='Log in '
     subTitle='Please Login'
     fields = Fields(ILogin)

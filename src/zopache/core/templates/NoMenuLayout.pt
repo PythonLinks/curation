@@ -4,7 +4,7 @@
     ${structure: view.headerScripts()}
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8" />
-    <title>${view.acquireTitle() + ' ' + view.subTitle}</title>
+    <title>${view.title}</title>
 
     <!-- Include Bootstrap  library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -42,7 +42,9 @@
     ${structure: view.webClassAcquire('navbar.py')(view)}
      
     <div class="container">
-      <h1>${view.acquireTitle()}</h1>
+      <h1>${view.title}</h1>
+      <h2>${view.subTitle}</h2>      
+
     </div>
     <a name="content"></a>
      <a name="manage"></a>

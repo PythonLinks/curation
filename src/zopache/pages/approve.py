@@ -7,12 +7,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
 from zopache.pages.interfaces import IPage
-
-class IApprove (Interface):
-    webApproved = Bool(
-        title = "Approved for publication on the web.",
-        required = False,
-        default = False)
+from zopache.forms.interfaces import IApprove
 
 @form_component
 @name ('approve')

@@ -6,20 +6,11 @@ from zope.schema import Text, TextLine, Bool
 
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
-from zopache.business.interfaces import ICompany
+from zopache.business.interfaces import ICompanyBase
 from cromlech.browser.exceptions import HTTPFound
+from zopache.forms.interfaces import IApprove
 
-class IAddress(Interface):
-    webApproved = Bool(
-        title = "Approved for publication on the web.",
-        required = False,
-        default = False)
-
-    hidden = Bool(
-        title = "Hidden.",
-        required = False,
-        default = False)
-
+class IAddress(IApprove):    
     address= Text(
         title = u'Address (For the map).',
         description = u'Where is this office located?',
@@ -29,7 +20,7 @@ class IAddress(Interface):
 
 @form_component
 @name ('editAddress')
-@context(ICompany)
+@context(ICompanyBase)
 class EditAddress (EditForm):
     title = 'Edit the company office address.'
     subTitle = 'This is used to geocode lattitude and longitude.'

@@ -1,13 +1,12 @@
-from .interfaces import ICompany, IMap
+from .interfaces import ICompany, IMap, IOrganization
 from zope.interface import implementer
 from zopache.pages.location import LocationBase
 from zopache.categories.category import Category
 from cromlech.security import Unauthorized
 
-@implementer (ICompany)
-class Company  (Category,LocationBase):
+
+class Base (Category,LocationBase):
     hidden = False
-    webClass = "Company"
     longitude = 0.
     lattitude = 0.
     def getTitle(self):
@@ -37,7 +36,15 @@ class Company  (Category,LocationBase):
                 result.append(item)
             if (IMap.providedBy(item)):
                 item.getCompaniesRecursively(result)
-                
         return result
-        
-        
+
+@implementer (ICompany)
+class Company  (Base):
+    webClass = "Company"
+    clientClass = "category"
+
+@implementer (IOrganization)
+class Organization  (Base):        
+    webClass = "Company"
+    clientClass = "Category"
+
