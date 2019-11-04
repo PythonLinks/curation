@@ -1,13 +1,18 @@
-from .interfaces import ICompany, IMap
 from zope.interface import implementer
-from zopache.pages.location import LocationBase
-from zopache.categories.category import Category
+
 from cromlech.security import Unauthorized
 
-@implementer (ICompany)
-class Company  (Category,LocationBase):
+from zopache.pages.location import LocationBase
+from zopache.categories.category import Category
+from zopache.business.interfaces import (ICompany, IMap,
+                               IOrganization, ICompanyBase)
+from zopache.business.geocoding import GeoCode
+from zopache.pages.page import Page
+from zopache.business.geocoding import Address
+
+
+class Base (GeoCode,LocationBase):
     hidden = False
-    webClass = "Company"
     longitude = 0.
     lattitude = 0.
     def getTitle(self):
@@ -32,12 +37,26 @@ class Company  (Category,LocationBase):
     def getCompaniesRecursively(self,result):
         values = self.values()
         for item in values:
-            if (ICompany.providedBy(item) and
+            if (ICompanyBase.providedBy(item) and
                 item.webApproved):
                 result.append(item)
-            if (IMap.providedBy(item)):
+            elif (IMap.providedBy(item)):
                 item.getCompaniesRecursively(result)
-                
         return result
-        
-        
+
+    def postAddProcess(self):
+        self.new.webApproved = False
+        self.new.hidden = True
+        Address.postAddProcess(self.new)
+        Page.postAddProcess(self.new)
+    
+@implementer (ICompany)
+class Company  (Base):
+    webClass = "Company"
+    clientClass = "category"
+
+@implementer (IOrganization)
+class Organization  (Base):        
+    webClass = "Company"
+    clientClass = "Category"
+

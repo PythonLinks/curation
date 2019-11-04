@@ -15,7 +15,7 @@ from zopache.application.interfaces import IVirtualHost
 #THE IDEA HERE IS THAT THE END USER
 #CAN SPECIFY THE ROOT
 #NO NEED TO DO IN NGINX
-virtualHosts = {'dev.pythonlinks.info':'python',
+virtualHosts = {'dev.pythonlinks.info':'mens-rights',
                 'pythonlinks.info':'python',
                 'desktop.pythonlinks.info':'python',
                 'js.pythonlinks.info':'python',                
@@ -31,7 +31,7 @@ virtualHosts = {'dev.pythonlinks.info':'python',
 
 
 
-def getSiteRootCore(host,root):            
+def getSiteRootCore(host,root):
             if host in virtualHosts:
                path = virtualHosts [host]
                #When using Forest Wiki on Dev.PythonLinks.info,

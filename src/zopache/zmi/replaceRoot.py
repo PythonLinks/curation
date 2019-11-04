@@ -1,5 +1,6 @@
 
 from zopache.application.root import RootContainer
+
 def replace (context,childName,aClass):
         child = context [childName]
         new = aClass()
@@ -18,6 +19,14 @@ def replace (context,childName,aClass):
         context [childName] = new
         new.__name__ = childName
 """
+from zopache.categories.interfaces import IRootCategory
+
+def updatePrincipalFolders(self):
+    for item in self.context.values():
+        if IRootCategory.providedBy(item):
+           item['person'].convert()     
+
+
 from zopache.categories.category import RootCategory        
 def newRoot(self):
          connRoot = self.request.environment['zodb.connection'].root()

@@ -82,7 +82,7 @@ class LiteLayout(object):
 
 
 @crom.component
-@name("NoMenuLayout")
+@name("UserMenu")
 @crom.sources(IRequest, Interface)
 @crom.target(ILayout)
 class NoMenuLayout(LiteLayout):

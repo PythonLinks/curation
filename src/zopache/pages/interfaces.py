@@ -103,13 +103,13 @@ class IRootPage(IBranch,IPublicationRoot,IZodbRoot,IPage):
 class INotPage (Interface):
      pass
 
-
     
-
-class ILocationBase(IPage):    
+class ILocationBase(Interface):    
     pass
 
-class ILocationBase2(ILocationBase):    
+
+
+class ILocationBase2(ILocationBase,IPage):    
     lattitude = schema.Float(
         title = u'Lattitude',
         description = u'Lattitude',

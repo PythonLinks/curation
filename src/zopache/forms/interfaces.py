@@ -3,6 +3,21 @@ from zope import schema
 from z3c.schema.email  import RFC822MailAddress as Email
 from zope.schema.vocabulary import SimpleVocabulary,SimpleTerm
 
+
+class IApprove(Interface):
+    webApproved = schema.Bool(
+        title = "Approved for publication on the web.",
+        required = False,
+        default = False)
+
+    hidden = schema.Bool(
+        title = "Hidden from the public.Login Required.",
+        description = """When this is checked, unauthorized viewers get a message "You are not permitted to view that page."  This discourages spammers.  For 
+        publicly visible pages, this should be unchecked. """,
+        required = False,
+        default = False)
+
+
 class ILogin(Interface):
 
     email  = schema.TextLine(
@@ -39,23 +54,23 @@ class IEmail(Interface):
         required = True)
     
 class IPermissions(Interface):            
-    chatPermission = schema.Bool(
-        title = "Run this web server.",
-        required = True,
-        default = False)
-    chatPermission.text = """ <p> I am legally an adult, and I give permission 
-to process my professional information for the following  
-purposes:</p>"""
-        
     frequencyPermission = schema.Choice(
         vocabulary=SimpleVocabulary.fromValues(
                   ['Daily','Weekly','Monthly','Seldom','Never'],
                   ),
-        title = "And to send me the news:",
+        title = "To send me the news:",
         required = False,
         default = 'Never',
     )    
+    frequencyPermission.text = """ <p> I give permission 
+to process my professional information for the following  
+purposes:</p>"""
 
+    chatPermission = schema.Bool(
+        title = "And to run this web server.",
+        required = True,
+        default = False)
+    chatPermission.text = """ <br>  """        
 
 class IGRegister (IGLogin,IHandle,IPermissions):        
    pass

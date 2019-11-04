@@ -49,6 +49,7 @@ class MapBase(LocationBase):
     mapHeight=0.
     mapWidth=0.
     webClass = 'GoogleMap'
+    clientClass = 'Category'
     icon="ttwicons/Map.svg"
     
       

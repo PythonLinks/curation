@@ -25,20 +25,21 @@ from cromlech.browser.directives import title
 from zopache.forms.interfaces import IRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
+from zopache.crud.actions import Cancel
 
 @form_component
 @name (u'signup')
 @context(Interface)
 @title("Register")
 class Register(Form):
-    layoutName = "NoMenuLayout"
+    layoutName = "UserMenu"
     fields = Fields(IRegister)
     factory = InternalPrincipal
     title='PythonLinks.info'
     subTitle='Register Locally'
     ignoreContent = True
     igrnoreRequest = False
-    
+    count = 0
     
     def postAddProcess(self):
        if len(self.new.__parent__)==1:
@@ -56,7 +57,9 @@ class Register(Form):
 
     @property
     def actions(self):
-        return Actions(Add("Sign Me Up!",self))
+        return Actions(Add("Sign Me Up!",self),
+               Cancel("Cancel","Cancel")
+        )
     
     def newURL(self,new):
         #newURL = '/' + new.__name__ + "/support"

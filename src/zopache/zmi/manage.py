@@ -139,8 +139,6 @@ class Manage (ManageBase):
 @permissions('Manage')
 class Fix(Manage):
 
-
-
     def moveTo(self,childName):
         self.moveItem('personCopy1',childName,'person')
        
@@ -152,10 +150,6 @@ class Fix(Manage):
         Manage.update(self)
         item=self.context
         breakpoint()
-        from zopache.zmi.replaceRoot import replace
-        #import pdb; pdb.set_trace()
-        pass
-
         pass
 
 

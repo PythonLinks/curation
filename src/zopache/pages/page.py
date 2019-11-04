@@ -39,6 +39,13 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         return result
 
 
+    def getClientClass(self):
+        if (hasattr(self,'clientClass') and
+           self.clientClass != ""):
+           return self.clientClass
+        else:
+           return self.webClass
+       
     def postProcess(self):
         self.recalculateRootJSON()
         cache.resetCache(self)

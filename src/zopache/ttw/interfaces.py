@@ -14,6 +14,9 @@ from zopache.crud.interfaces import ILeaf
 from zopache.crud.interfaces import IImutable
 from zopache.crud.interfaces import IMoveable
 
+class IUserHTML(Interface):
+    pass
+
 class IMailHost(ILeaf):
     """Basic Mail CRUD"""
     host = schema.TextLine(
