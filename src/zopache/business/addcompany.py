@@ -31,7 +31,7 @@ class AddCompany(AddPageBase):
         self.new.poastAddProcess(self)
         
     def update (self):
-        if self.getHost() in ['rights.men','dev.pythonlinks.info']
+        if self.getHost() in ['rights.men','dev.pythonlinks.info']:
             self.fields = self.fields.omit('jobURL')
             
     @property
