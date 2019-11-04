@@ -68,9 +68,11 @@ class AddEvemt(AddBase):
     title = "Add an Event"
     subTitle = ""
 
-
-        
-
+    @property
+    def actions(self):
+        return Actions(
+              AddAndView("Add and View", self.factory),
+              formactions.Cancel("Cancel","Cancel"))
     
         
 @view_component

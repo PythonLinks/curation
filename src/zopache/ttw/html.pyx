@@ -27,6 +27,8 @@ from zopache.ttw.interfaces import IWeb
 from dolmen.view import name, context, view_component
 from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML
 from zopache.ttw.interfaces import IAceHTMLPage
+from zopache.ttw.interfaces import IUserHTML
+from zopache.core.interfaces import ITreeSecurity
 
 """
 HTML is a very important base class.  It has a field called source.  It 
@@ -279,12 +281,20 @@ class AceEdit(BaseAceEdit):
                 return Actions(action1,action2,action3,action4,action5)
         return Actions(action1,action2,action4,action5)                
         
-#HERE IS THE ACE EDIT FORM
+#HERE IS THE DEVELOPER ACE EDIT FORM
 @form_component
 @context(IAceHTML)
 @name("aceedit")
 @permissions('Manage')
 class AceEditForm(AceEdit):
+    pass
+
+#HERE IS THE USER ACE EDIT FORM
+@form_component
+@context(IUserHTML)
+@name("aceedit")
+@implementer (ITreeSecurity)
+class UserAceEditForm(AceEdit):
     pass
 
 #AND HERE IS THE DEMO ACE EDIT FORM
@@ -326,9 +336,15 @@ class CkEdit(BaseCkEdit):
 @form_component
 @context(ICkHTML)
 @name('ckedit')
-@title("CkEdit")
 @permissions('Manage')
 class CkEditForm(CkEdit):
+        layoutName = "UserMenu"
+
+@form_component
+@context(IUserHTML)
+@name('ckedit')
+@implementer (ITreeSecurity)
+class UserCkEditForm(CkEdit):
     pass    
 
 

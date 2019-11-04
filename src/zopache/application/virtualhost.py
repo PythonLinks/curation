@@ -31,7 +31,7 @@ virtualHosts = {'dev.pythonlinks.info':'mens-rights',
 
 
 
-def getSiteRootCore(host,root):            
+def getSiteRootCore(host,root):
             if host in virtualHosts:
                path = virtualHosts [host]
                #When using Forest Wiki on Dev.PythonLinks.info,

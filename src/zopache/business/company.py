@@ -7,6 +7,8 @@ from zopache.categories.category import Category
 from zopache.business.interfaces import (ICompany, IMap,
                                IOrganization, ICompanyBase)
 from zopache.business.geocoding import GeoCode
+from zopache.pages.page import Page
+from zopache.business.geocoding import Address
 
 
 class Base (GeoCode,LocationBase):

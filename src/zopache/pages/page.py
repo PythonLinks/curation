@@ -42,7 +42,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def getClientClass(self):
         if (hasattr(self,'clientClass') and
            self.clientClass != ""):
-           return clientClass
+           return self.clientClass
         else:
            return self.webClass
        

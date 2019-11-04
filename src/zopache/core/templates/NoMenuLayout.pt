@@ -39,7 +39,7 @@
     </style>
   </head>
   <body class="bg-secondary">
-    ${structure: view.webClassAcquire('navbar.py')(view)}
+    $ {structure: view.webClassAcquire('navbar.py')(view)}
      
     <div class="container">
       <h1>${view.title}</h1>
