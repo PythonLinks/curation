@@ -3,6 +3,7 @@
 import urllib.parse
 from urllib.parse import quote
 from urllib.parse import quote_plus
+import json
 
 from cromlech.browser import IPublicationRoot
 from cromlech.location import lineage_chain
@@ -105,6 +106,25 @@ class Breadcrumbs(UniqueName):
     except:
         pass
 
+    def parameters(self):
+        parameters = {}
+        self["webPageName"] = self.context.__name__        
+        if self.isAuthenticated():
+            parameters["isAuthenticated"] = True
+            principal = self.request.principal
+            parameters["handle"]= principal.handle
+            parameters["email"]= principal.email
+            parameters["userId"] = principal.__name__
+            parameters["permissions"]= principal.permissions
+        else:
+            parameters["isAuthenticated"] = False            
+            parameters["handle"]= 'Anonymous'
+            parameters["email"]= ''
+            parameters["userId"] = ''            
+            parameters["permissions"]= []
+        result = json.dumps(parameters)
+        return result
+    
     def parents(self, item=None):
         if item == None:
            item = self.context

@@ -10,19 +10,19 @@ from zopache.ttw.html import AddCkHTMLBase
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
 from zopache.business.interfaces import IMap, ICompany, IOrganization
+from zopache.business.interfaces import ICompanyBase, IEvent
+
 from zopache.business.company import Company, Organization
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
-
+from zopache.core.interfaces import ITreeSecurity
+from zopache.business.event import Event
 
 class AddBase(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
-    
     def postAddProcess(self):
-        self.new.webApproved = False
-        self.new.hidden = True        
         self.new.postAddProcess(self)
         
     @property
@@ -30,7 +30,6 @@ class AddBase(AddPageBase):
         return Actions(
               AddAndView("Add and View", self.factory),
               formactions.Cancel("Cancel","Cancel"))
-    
     
 @view_component
 @name('addCompany')
@@ -43,7 +42,7 @@ class AddCompany(AddBase):
     label="Add a Company"
     factory = Company
     title = "Add a Company"
-    subTitle = "All submissions are reviewed before being approved. "
+    subTitle = "All submissions are reviewed before becoming being publicly visible."
     
 @view_component
 @name('addOrganization')
@@ -55,7 +54,23 @@ class AddOrganization(AddBase):
     interface = IOrganization
     factory = Organization
     title = "Add an Organization"
-    subTitle = "All submissions are reviewed before being approved. "
+    subTitle = "All submissions are reviewed before becoming publicly visible. "
+
+#ADD AN EVENT
+@view_component
+@name('addEvent')
+@target(IView)
+@context(ICompanyBase)
+@implementer (ITreeSecurity)
+class AddEvemt(AddBase):
+    interface = IEvent
+    factory = Event
+    title = "Add an Event"
+    subTitle = ""
+
+
+        
+
     
         
 @view_component

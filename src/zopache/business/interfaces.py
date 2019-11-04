@@ -13,8 +13,31 @@ from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.pages.interfaces  import ICountable
 from zopache.ttw.interfaces import IUserHTML
 from z3c.schema.email  import RFC822MailAddress as Email
+from zopache.business.geocoding import Address
+from zopache.pages.interfaces import IPage
 
-class ICompanyBase (IUserHTML,ILocationBase, IOrdered, IBTreeContainer ,
+class IAddress(Interface):
+       pass
+
+
+class IEvent(IAddress,IPage):    
+    date = schema.Date(title='Date',
+                           description = "On what day will the event take place?",
+                           required = True)
+
+    time = schema.Time(title='Time',
+                           description = "At what time will the event take place?",
+                           required = True)
+    
+    address= Address(
+        title = u'Event Address',
+        description = """This is used to 
+                 locate the event on the map. """,
+           required = True,
+    )
+    
+class ICompanyBase (IAddress, IUserHTML,ILocationBase,
+                    IOrdered, IBTreeContainer ,
                     ICanonical, ICountable
 ):
     pass
@@ -39,13 +62,13 @@ class ICompany(ICompanyBase):
         required = False,
     )
 
-    spacialization= schema.Text(
+    specialization= schema.Text(
         title = u'Specialization (20 characters)',
         description = " Why is this Company special?",
         required = True,
         max_length = 20,
         default = '',
-    )    
+    )
      
     description= schema.Text(
         title = u'Description (200 Characters)',
@@ -62,12 +85,12 @@ class ICompany(ICompanyBase):
         default = '',
     )
 
-    address= schema.Text(
+    address= Address(
         title = u'Company Address',
         description = """This is used to 
                  locate the company on the map. List more than just the town, or else all the companies will just have one shared map pin. """,
-        required = False,
-        default = '',
+        required = True
+
     )    
 
 class IOrganization (ICompanyBase):
@@ -79,18 +102,18 @@ class IOrganization (ICompanyBase):
 
     url = schema.URI(
         title = u'The Organization URL',
-        description = """Please link to a web page, maybe twitter, or gab.com, 
+        description = """Please link to a web page, maybe twitter or gab.com 
 . Include  'https://'""",
         required = False,
     )
 
-    spacialization= schema.Text(
+    specialization= schema.Text(
         title = u'Specialization (20 characters)',
         description = " Why is this groups focus?",
         required = True,
         max_length = 20,
         default = '',
-    )    
+    )
      
     description= schema.Text(
         title = u'Description (200 Characters)',
@@ -110,15 +133,14 @@ class IOrganization (ICompanyBase):
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you?',
-        required = False,
+        required = True,
     )    
 
-    address= schema.Text(
+    address= Address(
         title = u'Company Address',
         description = """This is used to 
                  locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,
-        required = False,
-        default = '',
+        required = False
     )    
     
 
