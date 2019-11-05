@@ -22,9 +22,10 @@ from zopache.business.event import Event
 class AddBase(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
-    def postAddProcess(self):
-        self.new.postAddProcess(self)
-        
+    subTitle = "All submissions are reviewed before becoming being publicly visible."
+    #def postAddProcess(self):
+    #    self.new.postAddProcess(self)
+    
     @property
     def actions(self):
         return Actions(
@@ -42,7 +43,7 @@ class AddCompany(AddBase):
     label="Add a Company"
     factory = Company
     title = "Add a Company"
-    subTitle = "All submissions are reviewed before becoming being publicly visible."
+
     
 @view_component
 @name('addOrganization')

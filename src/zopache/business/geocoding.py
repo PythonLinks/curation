@@ -6,7 +6,8 @@ from zopache.ttw.html import UserCkEditForm
 class GeoCode(object):
     postAmble = """ When you submit the form, please be patient, 
             the server has to contact Google GeoCoding to 
-            convert the address into a lattitude and longitude"""
+            convert the address into a lattitude and longitude.  That   
+            takes a few seconds. """
     
     def getLatLong(self,data):   
         gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
@@ -30,7 +31,6 @@ class GeoCodingError(ValidationError):
         
 class Address (Text,GeoCode):
      def _validate (self,data):
-         import pdb; pdb.set_trace()
          Text._validate(self,data)
          try:
              self.getLatLong(data)

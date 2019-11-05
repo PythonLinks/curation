@@ -8,7 +8,7 @@ from zopache.business.interfaces import (ICompany, IMap,
                                IOrganization, ICompanyBase)
 from zopache.business.geocoding import GeoCode
 from zopache.pages.page import Page
-from zopache.business.geocoding import Address
+from zopache.business.geocoding import GeoCode
 
 
 class Base (GeoCode,LocationBase):
@@ -47,7 +47,7 @@ class Base (GeoCode,LocationBase):
     def postAddProcess(self):
         self.new.webApproved = False
         self.new.hidden = True
-        Address.postAddProcess(self.new)
+        GeoCode.postAddProcess(self.new)
         Page.postAddProcess(self.new)
     
 @implementer (ICompany)

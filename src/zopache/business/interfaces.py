@@ -21,9 +21,6 @@ class IAddress(Interface):
 
 
 class IEvent(IAddress,IPage):    
-    date = schema.Date(title='Date',
-                           description = "On what day will the event take place?",
-                           required = True)
 
     time = schema.Time(title='Time',
                            description = "At what time will the event take place?",

@@ -1,7 +1,6 @@
 from zope.interface import Interface
 from zope import schema
 from zopache.core.viewdecorators import *
-from .interfaces import IConferenceVideo
 from zopache.crud.forms import EditForm
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary

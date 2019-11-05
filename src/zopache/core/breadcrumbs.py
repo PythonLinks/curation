@@ -367,8 +367,7 @@ class Breadcrumbs(UniqueName):
            return result
 
     def divBreadcrumbs(self, node,viewName ='',widget= False,start = 1):
-        items=list(parents(node))
-        items.reverse()
+        items = reversedParents(self.context)
         items = items [start:]
         length = len(items)
         if length > 50:
