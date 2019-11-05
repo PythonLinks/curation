@@ -25,8 +25,13 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')
-    
 
+    #Just copied from dolmen.forms.base.BaseForm
+    #Setting the parent makes life easier. 
+    def __init__(self, context, request, **kwargs):
+        BaseForm.__init__(self, context, request, **kwargs)
+        self.__parent__ = context
+                      
     def before(self,widget):
         field = widget.component._field
         result = ""

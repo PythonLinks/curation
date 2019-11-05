@@ -1,18 +1,20 @@
 from zopache.ttw.acescripts import AceScripts
+from zopache.core.getroot import getProducts
+
 class AceScripts (AceScripts):
     def update(self):
-        root = self.getRoot()
-        self.template = root['Products']['Templates']['TranspilerTemplate']
+        products = getProducts(self.context)
+        self.template = products['Templates']['TranspilerTemplate']
 	
     def  footerScripts(self):
         result = self.aceEditorFooter
         result += """   <script type="text/javascript" src="https://pyodide.cdn.iodide.io/pyodide.js"></script>"""
 
         result += "<script> //BEGIN"
-        root = self.getRoot()
-        scripts = root['Products']['Templates']['PythonScripts']
+        products = getProducts(self.context)        
+        scripts = products['Templates']['PythonScripts']
         result += scripts.getJavascript()
-        scripts = root['Products']['Templates']['TranspilerScripts']
+        scripts = products['Templates']['TranspilerScripts']
         result += scripts.getJavascript()
 
         result = result + "//END</script>"
