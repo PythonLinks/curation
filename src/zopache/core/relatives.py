@@ -1,4 +1,4 @@
-
+from cromlech.location import lineage_chain
 
 class Parents(object):
     def __init__(self,context):
@@ -12,3 +12,7 @@ class Parents(object):
                        result.append(item)
              item=item.__parent__
            return result    
+
+def parents(item):
+    return lineage_chain(item)
+       

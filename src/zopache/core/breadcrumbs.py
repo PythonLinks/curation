@@ -17,13 +17,12 @@ from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 from zopache.zmi.interfaces import IURLSegment
 from zopache.crud.interfaces import IZodbRoot
-
+from zopache.application.treesecurity import TreeSecurity
+from zopache.core.relatives import parents
 
 _safe = '@+'  # Characters that we don't want to have quoted
 
 
-def parents(item):
-    return lineage_chain(item)
             
 def parentWhichImplements(self,interface):
           item=self
@@ -105,7 +104,27 @@ class Breadcrumbs(UniqueName):
         return cython.compiled
     except:
         pass
+    
+    def templateParentalAcquire(self, name):
+        result = ParentalAcquire(self.zopacheTemplate)
+        return result [name]
+    
+    def treeSecurity(self):
+        tree = TreeSecurity(self)
+        if (self.isAuthenticated() and
+           tree.hasEditorPermission()):
+            return True
+        return False
 
+    def hasPermission(self, aPermission):
+        if (self.isAuthenticated() and
+           aPermission in self.request.principal.permissions):
+           return True
+        return False
+
+    def isManager(self):
+        return self.hasPermission('Manage')
+    
     def parameters(self):
         parameters = {}
         self["webPageName"] = self.context.__name__        

@@ -71,7 +71,7 @@ class Add(Action, UniqueName):
         name =  data['__name__']
         name = slugify(name, ok=SLUG_OK+'.', lower = False)
         context = self.form.context
-        newName=self.uniqueName(context,name,ofType="#")
+        newName=self.uniqueContainerName(context,name,ofType="#")
         return newName
     
     def newURL(self,baseURL):
@@ -86,7 +86,10 @@ class AddByTitle (Add):
         name =  data['title']
         name = slugify(name,lower=True)
         context = self.form.context
-        newName=self.uniqueName(context,name,ofType="-")
+        newName=self.uniqueSiteName(context,name,ofType="-")
+        self.new.__name__ = newName
+        root = getSiteRoot(self.form.context)
+        root.addItem(self.new)
         return newName
     
     

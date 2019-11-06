@@ -1,4 +1,4 @@
-from zopache.business.interfaces import IMap, ICompany
+from zopache.business.interfaces import IMap, ICompanyOrOrganization
 from zope.interface import implementer
 from zopache.pages.location import MapBase
 from zopache.categories.category import Category
@@ -16,7 +16,7 @@ class Map  (Category,MapBase):
     def getCompaniesRecursively(self,result):
         values = self.values()        
         for item in values:
-            if (ICompany.providedBy(item) and
+            if (ICompanyOrOrganization.providedBy(item) and
                 item.webApproved):
                 result.append(item)
             if (IMap.providedBy(item)):

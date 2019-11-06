@@ -12,19 +12,19 @@ class GeoCode(object):
     def getLatLong(self,data):   
         gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
         # Geocoding an address
-        geocode_result = gmaps.geocode(self.context.address)
+        geocode_result = gmaps.geocode(data)
         result=geocode_result[0][u'geometry'] [u'location']
         lat = float(result [u'lat'])
         lng = float(result [u'lng'])
         return lat, lng
 
-    def postAddProcess(self,view):
-        self.postProcess(view)
+    def postAddProcess(self,view=None):
+        GeoCode.postProcess(self,view=view)
         
-    def postProcess (self,view):
-         lat, lng = self.getLatLong()
-         self.context.lattitude=lat 
-         self.context.longitude=lng     
+    def postProcess (self,view=None):
+         lat, lng = self.getLatLong(self.address)
+         self.lattitude=lat 
+         self.longitude=lng     
 
 class GeoCodingError(ValidationError):
         __doc__ ="""That address is invalid."""

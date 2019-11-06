@@ -1,5 +1,5 @@
 #JSON VIEWS ON OBJECTS
-from zopache.pages.interfaces import IPage,IRootPage
+from zopache.pages.interfaces import IJSONInclude,IPage
 from zopache.core.viewdecorators import *
 import datetime
 from dolmen.container import IBTreeContainer
@@ -9,7 +9,7 @@ from dolmen.view import name, context, view_component
 from cromlech.browser.directives import title
 from crom import target, order
 from cromlech.container.interfaces import IOrderedContainer
-from zopache.business.interfaces import ICompany
+from zopache.business.interfaces import ICompanyOrOrganization
 
 try:
     from zopache.categories.interfaces import IConference, IConferenceContainer
@@ -192,7 +192,7 @@ class JsonObject(object):
         #NOW GET THE CONTAINED OBJECTS
         valuesLength=len(list(self.values()))
 
-        if (IPage.providedBy(self)):
+        if (IJSONInclude.providedBy(self)):
              if (valuesLength> 0):
                  result+=',\n \"folder\":true'
 
@@ -204,7 +204,7 @@ class JsonObject(object):
         if IOrderedContainer.providedBy(self):
             firstLine=True
             for item in self.values():
-                if (IPage.providedBy(item) and
+                if (IJSONInclude.providedBy(item) and
                    item.webApproved):
                    if not firstLine:
                       result+=',' 
@@ -238,7 +238,7 @@ def make_json_response(view, result, *args, **kwargs):
 @name('json')
 @title("JSON")
 @target(IView)
-@context(IPage)
+@context(IJSONInclude)
 class MYJSON(View):
     responseFactory = Response
     make_response = make_json_response

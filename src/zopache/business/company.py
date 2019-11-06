@@ -35,6 +35,7 @@ class Base (GeoCode,LocationBase):
         return self.getCompaniesRecursively(result)
 
     def getCompaniesRecursively(self,result):
+        breakpoint()
         values = self.values()
         for item in values:
             if (ICompanyBase.providedBy(item) and
@@ -44,12 +45,18 @@ class Base (GeoCode,LocationBase):
                 item.getCompaniesRecursively(result)
         return result
 
-    def postAddProcess(self):
-        self.new.webApproved = False
-        self.new.hidden = True
-        GeoCode.postAddProcess(self.new)
-        Page.postAddProcess(self.new)
-    
+    def postProcess(self,view=None):
+        GeoCode.postAddProcess(self, view = view)
+        Page.postAddProcess(self, view = view)
+        Page.postProcess(self, view = view)
+        
+    def postAddProcess(self,view=None):
+        self.webApproved = False
+        self.hidden = True
+        GeoCode.postAddProcess(self,view=view)
+        Page.postAddProcess(self, view = view)
+        self.editors=[view.request.principal.__name__]
+        
 @implementer (ICompany)
 class Company  (Base):
     webClass = "Company"
@@ -57,6 +64,6 @@ class Company  (Base):
 
 @implementer (IOrganization)
 class Organization  (Base):        
-    webClass = "Company"
+    webClass = "Organization"
     clientClass = "Category"
 

@@ -1,5 +1,6 @@
 from slugify import slugify
 from slugify import slugify
+from zopache.core.getroot import getSiteRoot
 
 class UniqueName(object):
     def uniqueContainerName(self, container, new_name,ofType="-"):
@@ -11,6 +12,7 @@ class UniqueName(object):
                new_name=copyName+str(count)
         return new_name
 
-    def uniqueName(self, container, new_name,ofType="-"):
-        return self.uniqueContainerName ( container, new_name,ofType)
+    def uniqueSiteName(self, container, new_name,ofType="-"):
+        siteRoot = getSiteRoot(container)
+        return self.uniqueContainerName ( siteRoot, new_name,ofType)
 

@@ -21,7 +21,11 @@ class ICountable(Interface):
 class IContent(ICanonical):
     pass
 
-class IPage(IContent, IContainer, IOrdered, IBTreeContainer, IUntrustedHTML):
+class IJSONInclude(Interface):
+    pass
+
+class IPage(IContent, IContainer, IOrdered, IJSONInclude, IBTreeContainer,
+            IUntrustedHTML):
     
     title = schema.TextLine(
         title = u'Page Name',
@@ -52,6 +56,7 @@ class IPage(IContent, IContainer, IOrdered, IBTreeContainer, IUntrustedHTML):
 
 class IMarkdown (ISourceLeaf,IDirectory):
     pass
+
 
 from zopache.ttw.interfaces import IJSON
 class INotebookBase(Interface):

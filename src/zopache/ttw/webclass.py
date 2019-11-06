@@ -8,7 +8,7 @@ from zopache.core import Container
 from .interfaces import IWebClass, IProducts, IMoveableWebClass
 from .container import ContainerAddForm
 from zopache.ttw.interfaces import IWeb    
-
+from zopache.core.getroot import getProducts
 
 class BaseWebClass (Container):
     webClass = True #But not a string. 
@@ -28,6 +28,8 @@ class BaseWebClass (Container):
         #if self.__parent__ == None:
         return self.__parent__.getFromWebClass(name,marker)
 
+    def postAddProcess(self,view=None):
+        getProducts(self).indexTree()
         
     def postProcess(self):
         pass

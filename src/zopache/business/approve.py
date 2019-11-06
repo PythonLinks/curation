@@ -8,6 +8,7 @@ from zopache.business.interfaces import IAddress
 from zopache.business.geocoding import GeoCode
 from zope.schema import Text
 from zopache.business.geocoding import Address
+from zopache.business.interfaces import ICompanyOrOrganization
 
 class IApproveCompany(IApprove):
     address= Address(
@@ -28,7 +29,7 @@ class EditAddress (UserCkEditForm,GeoCode):
 
 @form_component
 @name ('approve')
-@context(ICompanyBase)
+@context(ICompanyOrOrganization)
 class Apparove (UserCkEditForm,GeoCode):
     title = 'Edit the company address.'
     subTitle = """This is used to geocode lattitude and longitude.

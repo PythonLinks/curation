@@ -28,8 +28,9 @@ from zopache.application.root import RootContainer
          
 class ManageBase(Form,Contents):
     supportsPaste = True
-    label=''
-    subTitle='Rename Videos. Cut and Paste them.  '
+    label='managelabel'
+    title = "Forest Wiki Management Interface"
+    subTitle='Rename and Retitle Objects. Cut, Copy and Paste them.  '
 
     template = tal_template('manage.pt')
 

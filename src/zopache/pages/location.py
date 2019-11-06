@@ -65,6 +65,7 @@ class MapBase(LocationBase):
 
 
     def getLocationsRecursively(self,firstItem,result):
+
         for item in self.values():
              if not ILocationBase.providedBy(item):
                    continue

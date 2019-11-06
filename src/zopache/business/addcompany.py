@@ -9,8 +9,8 @@ from zopache.ttw.html import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.business.interfaces import IMap, ICompany, IOrganization
-from zopache.business.interfaces import ICompanyBase, IEvent
+from zopache.business.interfaces import IMap, IAddCompany, IAddOrganization
+from zopache.business.interfaces import ICompanyOrOrganization, IEvent
 
 from zopache.business.company import Company, Organization
 from zopache.business.map import Map
@@ -39,7 +39,7 @@ class AddBase(AddPageBase):
 @permissions('Vote')
 @context(IMap)    
 class AddCompany(AddBase):
-    interface = ICompany
+    interface = IAddCompany
     label="Add a Company"
     factory = Company
     title = "Add a Company"
@@ -52,7 +52,7 @@ class AddCompany(AddBase):
 @permissions('Vote')
 @context(IMap)    
 class AddOrganization(AddBase):
-    interface = IOrganization
+    interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
     subTitle = "All submissions are reviewed before becoming publicly visible. "
@@ -61,7 +61,7 @@ class AddOrganization(AddBase):
 @view_component
 @name('addEvent')
 @target(IView)
-@context(ICompanyBase)
+@context(ICompanyOrOrganization)
 @implementer (ITreeSecurity)
 class AddEvemt(AddBase):
     interface = IEvent

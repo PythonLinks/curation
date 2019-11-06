@@ -6,8 +6,12 @@ from zopache.pages.page import Page
 
 @implementer (IEvent)
 class Event (GeoCode,Page):
-    webClass = "Company"
+    count = 0
+    webClass = "Event"
     clientClass = "Category"
     def postAddProcess(self,view):
-        GeoCode.postAddProcess(self.new)
-        Page.postAddProcess(self.new)
+        GeoCode.postAddProcess(self, view = view)
+        Page.postAddProcess(self, view = view)
+        
+    def canView(self,view):
+        pass

@@ -63,7 +63,7 @@ class Renamer(BaseClass):
                view.error += oldName + "WAS NOT FOUND <br>"
         if not self.allowed(obj):
                      return
-        newName=self.uniqueName(container,newName)
+        newName=self.uniqueContainerName(container,newName)
         newName = slugify(newName,ok=SLUG_OK+'.', lower= False)
         if hasattr(obj,'preMoveProcess'):
             obj.preMoveProcess(view)
@@ -95,7 +95,7 @@ class Cutter(BaseClass):
         oldName=obj.__name__
         toFolder=cutFolder(view)
 
-        newName=self.uniqueName(toFolder,oldName)
+        newName=self.uniqueContainerName(toFolder,oldName)
         container = obj.__parent__
         if hasattr(obj,'preMoveProcess'):
             obj.preMoveProcess(view)        
@@ -120,7 +120,7 @@ class Copier(BaseClass):
                 return
         toFolder=cutFolder(view)
         oldName=obj.__name__
-        newName=self.uniqueName(toFolder,oldName)
+        newName=self.uniqueContainerName(toFolder,oldName)
         parent = obj.__parent__
         obj.__parent__ = None
         toFolder[newName]= copy(obj)
@@ -151,7 +151,7 @@ class Paster(BaseClass):
             items.append(item)
         for item in items:    
            orig_name = item.__name__
-           new_name=self.uniqueName(toContainer,orig_name)
+           new_name=self.uniqueContainerName(toContainer,orig_name)
            if not self.allowed(item):
                self.view.error +=orig_name + " WAS NOT PASTED <br>"
                continue 

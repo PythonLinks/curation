@@ -2,7 +2,7 @@
 #Basically this file imposes security based on a branch of the tree.
 
 from cromlech.security import Unauthorized
-from zopache.core.breadcrumbs import parents
+from zopache.core.relatives import parents
 from cromlech.security.principal import UnauthenticatedPrincipal 
 
 class TreeSecurity(object):

@@ -24,7 +24,10 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     branchSize=1
     description = ''
     webApproved = True
-
+    
+    def canView(self):
+        return True
+    
     def allValuesAsList(self):
         result = []
         for item in self.values():
@@ -46,12 +49,12 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         else:
            return self.webClass
        
-    def postProcess(self):
+    def postProcess(self,view=None):
         self.recalculateRootJSON()
         cache.resetCache(self)
         
-    def postAddProcess(self):
-        self.postProcess()
+    def postAddProcess(self,view=None):
+        Page.postProcess(self,view=view)
     
     # NOT YET SERVING JSON
     def recalculateRootJSON(self):
