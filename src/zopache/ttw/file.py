@@ -40,26 +40,22 @@ class FileBase(object):
         except POSKeyError as error:
             return error.args[0]
 
-
-
-
-
     data = property(getData,setData)
     
 @implementer(IFile)
 class File(FileBase,Leaf):    
-    def postProcess(self):
+    def postProcess(self,view = None):
         pass
 
-    def postAddProcess(self,view):
+    def postAddProcess(self,view = None):
         pass
 
 @implementer(IImage)
 class Image (File):
     icon="ttwicons/Image.svg"
 
-    def postAddProcess(self):
-           self.postProcess()
+    def postAddProcess(self,view = None):
+           self.postProcess(view)
     
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()

@@ -13,7 +13,6 @@ from zopache.core.viewdecorators import *
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zope.schema._field import Choice
 from zope.schema import Text, Set, List
-from zopache.core.breadcrumbs import parents
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import BaseEditForm
 from zopache.ttw.interfaces import IInternalPrincipal, ISupport

@@ -49,15 +49,11 @@ class ManageBase(Form,Contents):
  
     def getManageURL(self,item):
         try:
-            
-           url = self.url(item)
+           url = self.getZodbURL(item)
            segment =  IURLSegment(item).getSegment()
-           if IPublicationRoot.providedBy (item):
-               return  '/' + item.__name__ + '/'+ segment
            return url + '/' + segment
-       
         except:
-           return "BROKEN-URL"
+           return "BROKEN-URL-AT-" + item.__name__
                 
     def breadcrumbs(self):
         return self.breadcrumbsManage()

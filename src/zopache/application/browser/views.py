@@ -27,7 +27,7 @@ from cromlech.security import unauthenticated_principal as anonymous
 @title("Logout")
 @context(Interface)
 class Logout(Page):
-
+    layoutName = "UserMenu"
     def update(self):
         principal = self.request.principal
         if principal != anonymous:

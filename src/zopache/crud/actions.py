@@ -29,6 +29,15 @@ class Cancel(Action):
         url = str(IURL(content, form.request))
         return SuccessMarker('Aborted', True, url=url)
 
+class View(Action):
+    """ View the object.
+    """
+
+    def __call__(self, form):
+        content = form.getContentData().getContent()
+        url = str(IURL(content, form.request))
+        return SuccessMarker('Aborted', True, url=url)    
+
 
 class Add(Action, UniqueName):
     """Add action for an IAdding context.

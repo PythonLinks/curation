@@ -98,9 +98,17 @@ class BaseEditForm(Form):
 
     
 class EditDemoForm(BaseEditForm):
+    layoutName = "UserMenu"    
     @property
     def actions(self):
         return Actions()
+    @property
+    def actions(self):
+        return Actions(
+            formactions.View(("View","View")),
+            formactions.Cancel(("Cancel","Cancel")))
+
+
     
 #@form_component
 #@name (u'edit')

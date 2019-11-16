@@ -25,7 +25,8 @@ class AddFileAction(Action):
     """Add action for files.
     """
     
-    def __init__(self, title,factory):
+    def __init__(self, title):
+        self.title = title
         super(AddFileAction, self).__init__(title)
 
     def __call__(self, form):
@@ -37,11 +38,15 @@ class AddFileAction(Action):
 
         self.upload(formData)
         self.message()
+        nextURL = self.nextURL()
+        self.new.postAddProcess(view=form)
+        return SuccessMarker('Added', True, url=nextURL ,code=307)
+
+    def nextURL(self):
+        breakpoint()
         baseURL = self.form.url(self.form.context)
-        url = baseURL + self.nextView
-        self.new.postAddProcess(form)
-        return SuccessMarker('Added', True, url=url,code=307)
-        
+        return baseURL + "/manage"
+
     def message(self):    
         message(u"File Uplaoded")        
 
@@ -49,7 +54,7 @@ class AddFileAction(Action):
         file = self.createFile(formData)
         name=formData['__name__']
         context = self.form.context
-        newName=self.form.uniqueName(context,name)        
+        newName=self.form.uniqueContainerName(context,name)        
         context[newName] = file
         self.new = file
         return file

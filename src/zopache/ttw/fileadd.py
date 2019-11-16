@@ -5,13 +5,14 @@ from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IFile, IImage
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import AddForm
+from zopache.core.uniquename import UniqueName
 
 @form_component
 @name('addFile')
 @context(IBTreeContainer)
 @title("Add File")
 @permissions('Manage')
-class AddFile(AddForm):
+class AddFile(AddForm,UniqueName):
     subTitle='Add a File'
     interface = IFile
     ignoreContent = True
@@ -19,7 +20,7 @@ class AddFile(AddForm):
     @property
     def actions(self):
         return Actions(
-              AddFileAction("Add File","Add File"),   
+              AddFileAction("Add File"),   
               formactions.Cancel("Cancel","Cancel"))
 
 
@@ -35,8 +36,7 @@ class AddImage(AddFile):
     @property
     def actions(self):
         return Actions(
-              AddAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
-              AddAndView(_("Add and View","Add -> View"), self.factory),
+              AddImageAction("Add and View"),
               formactions.Cancel("Cancel","Cancel"))
     
 
