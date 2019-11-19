@@ -18,9 +18,10 @@ from .interfaces import ITestURL
 from cromlech.webob.response import Response
 from .interfaces import IJavascript,IJavascriptIndex
 from zopache.core.relatives import Parents
-
+from zopache.core.interfaces import ITreeSecurity
 from zopache.ttw.interfaces import IJavascriptFolder,ISearchable
 
+@title("Add JavascriptFolder")
 class SourceBase(object):
     def getJavascriptObjects(self):
          return [self]
@@ -38,19 +39,27 @@ class SourceBase(object):
         return self.source
     
 class JavascriptBase(SourceBase):
-
-
-    def postProcess(self):
+    
+    def getJavascript(self):
+        return self.source
+    
+    def postProcess(self,view=None):    
         self.createJavascriptCaches()
 
-    def postAddProcess(self):
-        self.postProcess()
+    def postEditProcess(self,view=None):    
+        self.postProcess(view=view)
+        
+    def postAddProcess(self,view=None):    
+        self.postProcess(view=view)
 
     def createJavascriptCaches(self):
         parentJavascriptFolders=Parents(self
-                         ).parentsWhichImplement(IJavascriptFolder)
+                         ).parentsWhichImplement(ISearchable)
         for folder in parentJavascriptFolders:
-             folder.sourceCache=jsmin(folder.getJavascript())
+             folder.sourceCache= folder.getCompressedCode()
+
+    def getCompressedCode(self):
+        return jsmin(self.getJavascript())
 
     def __call__(self,view,**args):
             return self.getJavascript()       
@@ -61,26 +70,23 @@ class Javascript(JavascriptBase,Leaf):
     source =u''
     title=u''
     className='Javascript'
-    def getJavascript(self):
-        return self.source
+
 
 
 
                 
-@implementer(IJavascriptFolder)
-class JavascriptFolder(Javascript,BTreeContainer):
+class JavascriptFolderBase (BTreeContainer):   
     source =u''
     sourceCache=u''
-    className='Javascript Folder'
-    icon="ttwicons/JavascriptFolder.svg"    
     def cacheSource(self):
         self.sourceCache=self.getJavascript()
 
     def getJavascript(self):
         result = self.source or ' '
         for item in self.values():
-            result +=item.getJavascript()
-            result += '\n'
+            if hasattr(item, 'getJavascript'):
+                result +=item.getJavascript()
+                result += '\n'
         return result
 
     def getSource(self):
@@ -121,7 +127,12 @@ class JavascriptFolder(Javascript,BTreeContainer):
 
          return result
 
+@implementer(IJavascriptFolder)
+class JavascriptFolder(JavascriptFolderBase,Javascript):
+    className='Javascript Folder'
+    icon="ttwicons/JavascriptFolder.svg"    
 
+     
 class  AceScripts(AceScripts):
     def  footerScripts(self):
         return self.aceEditorFooter + """ 
@@ -141,8 +152,8 @@ class AddJavascript(AceScripts,AceAddForm):
     ignoreContent = True
     factory=Javascript
 
-    def postProcess(self):
-        self.new.postProcess()
+    def postProcess(self,view=None):
+        self.new.postProcess(view=view)
 
 
     
@@ -170,7 +181,6 @@ def make_javascript_response(view, result, *args, **kwargs):
 @view_component
 @name('index')
 @context(IJavascriptIndex)
-@title("View Javascript")
 class JavascriptIndex(Page):
     responseFactory = Response
     make_response = make_javascript_response

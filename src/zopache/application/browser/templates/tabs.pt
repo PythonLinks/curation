@@ -65,6 +65,7 @@ Node  <span class="caret"></span></a>
 <li><a href="./addAceHTML">Ace HTML</a></li>
 <li><a href="./addSecureHTML">Secure HTML</a></li>
 <li><a href="./addCSS">CSS</a></li>
+<li><a href="./addCSSFolder">CSS Folder</a></li>
 <li><a href="./addImage">Image</a></li>
 <li><a href="./addFile">File</a></li>
 </ul>

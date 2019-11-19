@@ -43,7 +43,6 @@ class AddFileAction(Action):
         return SuccessMarker('Added', True, url=nextURL ,code=307)
 
     def nextURL(self):
-        breakpoint()
         baseURL = self.form.url(self.form.context)
         return baseURL + "/manage"
 

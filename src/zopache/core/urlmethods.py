@@ -60,6 +60,8 @@ class URLMethods(object):
                 result.append( self.href(newURL,title))
         return ' / '+' / '.join(result)
 
+    def getLongURL(self,item):
+        return self.getZodbURL(item)
     def getZodbURL(self,item):
         isZodbRoot = IZodbRoot.providedBy (item)
         if isZodbRoot:

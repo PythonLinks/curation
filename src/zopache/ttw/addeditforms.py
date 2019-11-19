@@ -19,6 +19,16 @@ class AceAddForm (AddForm):
               formactions.Cancel(_("Cancel","Cancel")))
 
 
+class AddAndSearchForm (AddForm):
+    @property
+    def actions(self):
+        return Actions(
+              ttwactions.AddAndSearch(_("Add and Search",
+                                          "Add -> Search"),
+                                        self.factory),
+              formactions.Cancel(_("Cancel","Cancel")))
+
+
 
 class AceEditForm(EditForm):
     @property

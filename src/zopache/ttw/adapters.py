@@ -108,14 +108,7 @@ class ICSSAdaptor(object):
         return 'aceedit'    
 """
 
-@crom.adapter
-@crom.sources(IJavascriptFolder)
-@crom.target(IURLSegment)
-class IJavascriptFolderAdaptor(object):
-    def __init__(self,context):
-        self.context=context   
-    def getSegment(self):
-        return 'search'    
+
 """
 @crom.adapter
 @crom.sources(IPython)    

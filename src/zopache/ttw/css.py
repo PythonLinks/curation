@@ -9,14 +9,25 @@ from dolmen.view import View, make_view_response
 from dolmen.container import IBTreeContainer
 
 from zopache.core import Leaf
-from zopache.ttw.interfaces import ISourceLeaf
+from zopache.ttw.interfaces import ISourceLeaf, ISearchable
 from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.crud.forms import EditDemoForm
 from zopache.ttw.acescripts import AceScripts
+from zope.interface import Interface
+from zopache.ttw.javascript import JavascriptBase, JavascriptFolderBase
+from zopache.core.interfaces import ITreeSecurity
+from dolmen.container import IBTreeContainer
 
+class ICSSBase(Interface):
+    """ For CSS Leaves and Folders."""
+    pass
 
-class ICSS(ISourceLeaf):
+class ICSSFolder(ISearchable, ICSSBase, IBTreeContainer):
+    """ For CSS Leaves and Folders."""
+    pass
+
+class ICSS(ICSSBase, ISourceLeaf):
     """Basic CSS CRUD"""
 
     title = schema.TextLine(
@@ -34,7 +45,7 @@ class ICSS(ISourceLeaf):
 
 
 @implementer(ICSS)
-class CSS(Leaf):
+class CSS(JavascriptBase,Leaf):
     icon="ttwicons/CSS.svg"
 
 class  AceScripts(AceScripts):
@@ -65,20 +76,18 @@ def make_css_response(view, result, *args, **kwargs):
 
 @view_component
 @name('index')
-@context(ICSS)
-@title("View CSS")
+@context(ICSSBase)
 class Index(View):
     responseFactory = Response
     make_response = make_css_response
         
     def render(self):
-               return self.context.source
+               return self.context.getJavascript()
 
 #HERE IS THE ACE EDIT FORM
 @form_component
 @context(ICSS)
-@title("AceEdit")
-@name("aceedit")
+@name('aceedit')
 @permissions('Manage')
 class AceEditCSS(AceScripts,AceEditForm):
     subTitle='Edit a CSS Object'
@@ -87,16 +96,54 @@ class AceEditCSS(AceScripts,AceEditForm):
 #AND HERE IS THE ACE DEMO FORM
 @form_component
 @context(ICSS)
-@title("Ace Demo")
 @name("acedemo")
 class AceDemoCSS(AceScripts,EditDemoForm):
     subTitle='Edit a CSS Object'
 
 
+@implementer(ICSSFolder)
+class CSSFolder(JavascriptFolderBase,CSS):
+    className='CSSFolder'
+    icon="ttwicons/CSS.svg"    
+    title = ""
+    
+    def getCompressedCode(self):
+        return self.getJavascript()
+    
+    def getJavascript(self):
+        result =  ' '
+        for item in self.values():
+            if ICSS.providedBy(item):
+                result +=item.getJavascript()
+                result += '\n'
+        return result
+
+from zopache.ttw.addeditforms import AddAndSearchForm    
+from zopache.ttw.interfaces import IName, IContainer, ILeaf    
 @form_component
-@context(ICSS)
-@name('manage')
-@title("Manage")
+@name('addCSSFolder')
+@context(IBTreeContainer)
+@target(IView)
 @permissions('Manage')
-class ManageCSS(AceEditCSS):    
-   pass
+class AddCSSFolder(AceScripts,AddAndSearchForm):
+    title= 'Add a CSS Folder'
+    subTitle = 'To organize multiple CSS objects'
+    interface = IContainer
+    ignoreContent = True
+    factory=CSSFolder    
+
+    def postProcess(self,view=None):
+        self.new.postProcess(view=view)
+
+        
+import crom
+from zopache.zmi.interfaces import IURLSegment
+@crom.adapter
+@crom.sources(ICSSFolder)
+@crom.target(IURLSegment)
+class ICSSFolderAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+
+    def getSegment(self):
+        return 'search'

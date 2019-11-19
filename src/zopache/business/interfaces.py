@@ -203,4 +203,9 @@ class IAddOrganization(IOrganizationBase):
 
 
 class IMap (IMapBase):
-    pass
+    showCities = Bool(
+	    title = "Show Cities?",
+	    title = "Should the table of companies show the city name?",           
+	    required = False,
+	    default = False)   
+

@@ -35,7 +35,6 @@ class Base (GeoCode,LocationBase):
         return self.getCompaniesRecursively(result)
 
     def getCompaniesRecursively(self,result):
-        breakpoint()
         values = self.values()
         for item in values:
             if (ICompanyBase.providedBy(item) and
