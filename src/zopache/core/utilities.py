@@ -1,3 +1,4 @@
+import json
 from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
@@ -22,14 +23,14 @@ class Utilities (object):
     
     def parameters(self):
         parameters = {}
-        self["webPageName"] = self.context.__name__        
+        parameters["webPageName"] = self.context.__name__        
         if self.isAuthenticated():
             parameters["isAuthenticated"] = True
             principal = self.request.principal
             parameters["handle"]= principal.handle
             parameters["email"]= principal.email
             parameters["userId"] = principal.__name__
-            parameters["permissions"]= principal.permissions
+            parameters["permissions"]= list(principal.permissions)
         else:
             parameters["isAuthenticated"] = False            
             parameters["handle"]= 'Anonymous'
