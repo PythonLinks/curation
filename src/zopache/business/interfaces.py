@@ -203,9 +203,9 @@ class IAddOrganization(IOrganizationBase):
 
 
 class IMap (IMapBase):
-    showCities = Bool(
+    showCities = schema.Bool(
 	    title = "Show Cities?",
-	    title = "Should the table of companies show the city name?",           
+	    description = "Should the table of companies show the city name?",           
 	    required = False,
 	    default = False)   
 

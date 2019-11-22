@@ -15,7 +15,7 @@ from zopache.application.interfaces import IVirtualHost
 #THE IDEA HERE IS THAT THE END USER
 #CAN SPECIFY THE ROOT
 #NO NEED TO DO IN NGINX
-virtualHosts = {'dev.pythonlinks.info':'climate-change',
+virtualHosts = {'dev.pythonlinks.info':'python',
                 'pythonlinks.info':'python',
                 'desktop.pythonlinks.info':'python',
                 'js.pythonlinks.info':'python',                
