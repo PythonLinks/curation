@@ -27,6 +27,8 @@ class Utilities (object):
         context = self.context
         title = context.title if hasattr(context,'title') else ''
         parameters["webPageTitle"] = title
+        parameters ["parents"] =list(map(lambda x: x.__name__,
+                                         self.parentsUpToSiteRoot()))
         if self.isAuthenticated():
             parameters["isAuthenticated"] = True
             principal = self.request.principal
