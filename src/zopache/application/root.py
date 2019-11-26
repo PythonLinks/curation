@@ -3,6 +3,8 @@ from zope.interface import implementer
 from zopache.core import Container
 from zopache.crud.interfaces import IRootContainer
 from zopache.ttw.principalfolder import PrincipalFolder
+from zopache.pages.interfaces import IContent
+
 
 @implementer(IRootContainer)
 class RootContainer(Container):
@@ -14,3 +16,9 @@ class RootContainer(Container):
         Container.__init__(self)
         self['person'] = PrincipalFolder()
 
+    def valuesAsList(self):
+        result = []
+        for item in self.values():
+            if IContent.providedBy(item):            
+               result.append (item)
+        return result
