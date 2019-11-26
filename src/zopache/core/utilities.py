@@ -23,7 +23,10 @@ class Utilities (object):
     
     def parameters(self):
         parameters = {}
-        parameters["webPageName"] = self.context.__name__        
+        parameters["webPageName"] = self.context.__name__
+        context = self.context
+        title = context.title if hasattr(context,'title') else ''
+        parameters["webPageTitle"] = title
         if self.isAuthenticated():
             parameters["isAuthenticated"] = True
             principal = self.request.principal
@@ -33,7 +36,7 @@ class Utilities (object):
             parameters["permissions"]= list(principal.permissions)
         else:
             parameters["isAuthenticated"] = False            
-            parameters["handle"]= 'Anonymous'
+            parameters["handle"]= 'Guest'
             parameters["email"]= ''
             parameters["userId"] = ''            
             parameters["permissions"]= []

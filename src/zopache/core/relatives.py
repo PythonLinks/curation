@@ -27,7 +27,13 @@ class Parents(object):
            item=item.__parent__      
         return parents
 
-        
+
+
+    def parentsUpToSiteRoot(self):
+        parents = self.reversedParentsUpToSiteRoot(self.context)
+        parents.reverse()
+        return parents
+    
     def reversedParentsUpToSiteRoot(self,item):
         return self.reversedParentsUpTo(item,IPublicationRoot)
 

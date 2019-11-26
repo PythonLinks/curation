@@ -12,6 +12,11 @@ def getRoot(object,anInterface):
         while context is not None:
             if anInterface.providedBy(context):
                 return context
+            #IF YOU GET TO ZODB ROOT AND STILL NO STIE ROOT,
+            #RETURN NONE
+            if ((IZodbRoot.providedBy(context)) and
+               (anInterface == SiteRoot)):
+               return None
             context = context.__parent__
             max -= 1
             if max < 1:
@@ -27,10 +32,11 @@ def getZodbRoot(object):
 
 def getPrincipalFolder(item):
     root = getSiteRoot(item)
-    if "person" in root:
+    if ((root != None) and
+       ("person" in root)):
         return root["person"]
     else:
-        return root.__parent__["person"]
+        return root['python']["person"]
 
 def getProducts(item):
     root = getZodbRoot(item)
