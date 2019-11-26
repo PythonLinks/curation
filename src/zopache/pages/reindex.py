@@ -13,7 +13,8 @@ class ReIndex(Form):
     label = 'ReIndex'
     def update(self):
            root = getSiteRoot (self.context)
-           root.indexTree()
+           if hasattr(root, 'indexTree'):
+              root.indexTree()
            products = getProducts (self.context)
            products.indexTree()
            self.status='Branch was indexed'

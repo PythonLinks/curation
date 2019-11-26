@@ -23,11 +23,12 @@ def getRoot(object,anInterface):
                 raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
         raise TypeError("Parents needed to  determine location root")
 
-def getSiteRoot(object):
-    return getRoot(object, IPublicationRoot)
+def getSiteRoot(item):
+    root = getRoot(item, IPublicationRoot)
+    return root
 
-def getZodbRoot(object):
-    return getRoot(object, IZodbRoot)
+def getZodbRoot(item):
+    return  getRoot(item, IZodbRoot)
 
 
 def getPrincipalFolder(item):

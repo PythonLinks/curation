@@ -3,9 +3,27 @@ from zopache.crud.interfaces import IZodbRoot
 
 class BreadcrumbsCore(object):
 
+
+    #AND HERE WE HAVE THE WORKHORSE                
+    def breadcrumbsCore(self,
+                        item,
+                        viewName='',
+                        showTitles=True,
+                        ):
+
+        parents = self.parentsUpToSiteRoot()
+        result=[]
+        if parents:
+            for ancestor in parents:
+                name, title = self.nameAndTitle(ancestor,showTitles)
+                slashViewName = self.slashViewName(ancestor,viewName)
+                base_url = self.getLongURL(ancestor)
+                newURL= base_url + slashViewName
+                result.append( self.href(newURL,title))
+        return ' / '+' / '.join(result)
              
     def divBreadcrumbs(self, node,viewName ='',widget= False,start = 1):
-        items = self.reversedParentsUpToSiteRoot(self.context)
+        items = self.parentsUpToSiteRoot()
         items = items [start:]
         length = len(items)
         if length > 50:
@@ -39,7 +57,6 @@ class BreadcrumbsCore(object):
         result += "</div>"
         return result
     
-
     def breadcrumbsIndex(self,item):
         return self.breadcrumbsView(item,viewName='',showTitles=True)
 

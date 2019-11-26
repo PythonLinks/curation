@@ -1,3 +1,4 @@
+
 import urllib.parse
 from urllib.parse import quote
 from urllib.parse import quote_plus
@@ -40,25 +41,6 @@ class URLMethods(object):
             return name, title
         return name, name
 
-
-    #AND HERE WE HAVE THE WORKHORSE                
-    def breadcrumbsCore(self,
-                        item,
-                        viewName='',
-                        showTitles=True,
-                        ):
-
-        parents = self.lineage(item)
-        result=[]
-        if parents:
-            parents.reverse()
-            for ancestor in parents:
-                name, title = self.nameAndTitle(ancestor,showTitles)
-                slashViewName = self.slashViewName(ancestor,viewName)
-                base_url = self.getLongURL(ancestor)
-                newURL= base_url + slashViewName
-                result.append( self.href(newURL,title))
-        return ' / '+' / '.join(result)
 
     def getLongURL(self,item):
         return self.getZodbURL(item)
