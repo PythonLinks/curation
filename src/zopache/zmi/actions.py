@@ -63,18 +63,28 @@ class ReTitle(BaseAction):
         return self.reTitle(form)
     
 
-class ReTitleAndName(BaseAction):
+class ReBoth(BaseAction):
     def __call__(self,form):
+        breakpoint()
         result = self.reTitle(form)
         if not hasattr(form.context, "valuesAsList"):
             return result
-        
-        for item in form.context.allValuesAsList():
-            if hasattr(item, "title"):
-                newId = slugify(item.title,ok=SLUG_OK+'.', lower= True)
+
+        ids = self.getValues(form,
+               "You did not specify any object to reTitle")
+        newTitles = self.getValues(form,
+                            "You did not specify any new Titles",
+                            which = 'newTitleValue_list')
+        if (len (ids) != len (newTitles)):
+            form.error += "Lengs of Ids and Titles do not match. "
+            return
+        for id , newTitle in zip (ids, newTitles):        
+            item = form.context[id]
+            newId = slugify(newTitle,ok=SLUG_OK+'.', lower= True)
             if newId != item.__name__:
                 renamer = IObjectRenamer(item)
-                renamer.renameItem(item.__name__, newId,form)
+                renamer.renameItem(item.__name__, newId,form)       
+        return SuccessMarker('Retitled', True)        
         cache.resetCache(form.context)
         return SuccessMarker('Renamed', True)
     

@@ -20,7 +20,7 @@ from zopache.zmi.interfaces import IURLSegment
 from zopache.core.interfaces import ITreeSecurity
 from zopache.zmi.actions import (
     ReName,CopyObjects, CutObjects, DeleteObjects,
-    ReTitle,ReTitleAndName,PasteObjects)
+    ReTitle,ReBoth,PasteObjects)
 from zopache.core.baseform import Form
 from zopache.pages.interfaces import INotPage
 from zopache.python.interfaces import IDirectory
@@ -110,7 +110,7 @@ class Manage (ManageBase):
     def actions(self):
         act1 = ReName("ReName","ReName")
         act2 = ReTitle("ReTitle","ReTitle")
-        act3 = ReTitleAndName("ReBoth","ReBoth")        
+        act3 = ReBoth("ReBoth","ReBoth")        
         act4 = CutObjects  ("Cut", "Cut")
         act5 = CopyObjects ("Copy", "Copy")
         act6 = PasteObjects("Paste","Paste")
