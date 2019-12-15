@@ -241,3 +241,16 @@ class Search(Page):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
 
+
+import crom
+from zopache.zmi.interfaces import IURLSegment
+@crom.adapter
+@crom.sources(IJavascriptFolder)
+@crom.target(IURLSegment)
+class IJavascriptFolderAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+
+    def getSegment(self):
+        return 'search'
+    

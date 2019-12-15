@@ -75,7 +75,7 @@ class ReTitleAndName(BaseAction):
             if newId != item.__name__:
                 renamer = IObjectRenamer(item)
                 renamer.renameItem(item.__name__, newId,form)
-        cache.resetCachea(form.context)
+        cache.resetCache(form.context)
         return SuccessMarker('Renamed', True)
     
 
