@@ -98,7 +98,8 @@ class AddByTitle (Add):
         newName=self.uniqueSiteName(context,name,ofType="-")
         self.new.__name__ = newName
         root = getSiteRoot(self.form.context)
-        root.addItem(self.new)
+        if hasattr(root,'addItem'):
+            root.addItem(self.new)
         return newName
     
     

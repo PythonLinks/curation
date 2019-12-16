@@ -16,6 +16,9 @@ from zopache.application.interfaces import IVirtualHost
 #CAN SPECIFY THE ROOT
 #NO NEED TO DO IN NGINX
 virtualHosts = {'dev.pythonlinks.info':'python',
+                'mqttchat.info':'mqtt',
+                'golangchat.info':'golang',                
+                'superwifi.pl':'superwifi',
                 'pythonlinks.info':'python',
                 'desktop.pythonlinks.info':'python',
                 'js.pythonlinks.info':'python',                
