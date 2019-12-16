@@ -58,4 +58,14 @@ class Parents(object):
        
     def lineage (self,item):
         return lineage_chain(item)
-       
+
+    def siblings (self,item):
+        breakpoint()
+        if item.__parent__ == None:
+            return []
+        if not hasattr(item.__parent__,'childCategories'):
+            return []
+        siblings = item.__parent__.childCategories()
+        siblings.remove (item)        
+        return siblings
+
