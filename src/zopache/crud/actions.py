@@ -58,9 +58,7 @@ class Add(Action, UniqueName):
         context=form.context
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
-        newName = self.newName(data)
-        #newName = slugify(newName ,ok=SLUG_OK+'.', lower = False)
-        context[newName]=obj
+        self.actuallyAdd(obj,data)
         obj.__parent__ = context
         message(_(u"Content created"))
         baseURL = self.form.url (obj)
@@ -73,7 +71,6 @@ class Add(Action, UniqueName):
                form.new.postAddProcess()
         else:
             form.new.postProcess(form)            
-        form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newName(self,data):    
@@ -83,10 +80,18 @@ class Add(Action, UniqueName):
         newName=self.uniqueContainerName(context,name,ofType="#")
         return newName
     
+    def actuallyAdd(self,item,data):
+        newName = self.newName(data)
+        self.context[newName]=item            
+    
     def newURL(self,baseURL):
         return baseURL
 
 class AddNamed(Add):
+    def actuallyAdd(self,item,data):
+        newName = self.newName(data)
+        self.form.context[newName]=item
+        
     def newName(self,data):
         return 'MailHost'
 
@@ -95,13 +100,18 @@ class AddByTitle (Add):
         name =  data['title']
         name = slugify(name,lower=True)
         context = self.form.context
+        
+        #THERE COULD BE A LOCAL OBJECT WITH THE SAME NAME
+        newName=self.uniqueContainerName(context,name,ofType="#")        
         newName=self.uniqueSiteName(context,name,ofType="-")
-        self.new.__name__ = newName
+        return newName
+    
+    def actuallyAdd(self,item,data):
+        newName = self.newName(data)
+        self.form.context[newName]=item        
         root = getSiteRoot(self.form.context)
         if hasattr(root,'addItem'):
             root.addItem(self.new)
-        return newName
-    
     
 class AddAndView(Add):
     def newURL(self,baseURL):
