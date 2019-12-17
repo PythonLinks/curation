@@ -82,7 +82,7 @@ class Add(Action, UniqueName):
     
     def actuallyAdd(self,item,data):
         newName = self.newName(data)
-        self.context[newName]=item            
+        self.form.context[newName]=item            
     
     def newURL(self,baseURL):
         return baseURL

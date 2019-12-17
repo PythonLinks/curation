@@ -89,7 +89,7 @@ class AddFileAction(Action):
                file.__name__ = fileName
                file.data = data
                nextView = '/manage'
-
+            file.contentType = contentType
             self.nextView=nextView
             return file
 

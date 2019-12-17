@@ -16,20 +16,13 @@ class FileBase(object):
         return self.blob.getSize()
 
     def setData(self, data):
-        dataFile = data.file
-        bits =  dataFile.read()        
+        bits = data
         if len(bits) == 0:
             return
-
         if not hasattr(self,'blob'):
             self.blob = Blob()
-
         with self.blob.open(mode ="w") as blobFile:
-
            blobFile.write(bits)
-           self.contentType = data.headers.get_content_type()
-        blobFile.close()
-
         
     def getData(self):
         if not hasattr(self,'blob'):
