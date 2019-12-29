@@ -27,7 +27,10 @@ class Publisher (DawnlightPublisher):
            aType, name=crumbs.popleft()
            if not name in context:
               if not name in ['manage','fix','editors','addRootCategory']: 
-                 context = getSiteRootFromRequest(request,context) 
+                 context = getSiteRootFromRequest(request,context)
+        else:
+                 context = getSiteRootFromRequest(request,context)
+                 
         traverser=Traverser(self.view_locator)
         
         crumbs = dawnlight.parse_path(path, shortcuts)        
