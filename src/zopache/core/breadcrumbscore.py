@@ -22,7 +22,8 @@ class BreadcrumbsCore(object):
                 result.append( self.href(newURL,title))
         return ' / '+' / '.join(result)
              
-    def divBreadcrumbs(self, node,viewName ='',widget= False,start = 1):
+    def divBreadcrumbs(self, node,viewName ='',widget= False,start = 0):
+        breakpoint()
         items = self.parentsUpToSiteRoot()
         items = items [start:]
         length = len(items)

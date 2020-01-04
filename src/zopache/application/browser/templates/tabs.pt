@@ -3,7 +3,7 @@
 <ul class="nav navbar-nav">
 
 <li tal:condition="not view.implements('zopache.ttw.interfaces.IWebClass')">
-<a href="${view.url(context)}">View</a></li>
+<a href=".">View</a></li>
 
 <li class="dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#">

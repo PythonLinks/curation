@@ -99,7 +99,7 @@ class URLMethods(object):
             return "BROKEN-URL-IN-BREADCRUMBS"
         
     def contextURL(self, name=''):
-        itemURL = self.simpleURL(self.context)
+        itemURL = self.simpleUrl(self.context)
         if name:
             itemURL += '/' + name
         return itemURL

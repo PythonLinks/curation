@@ -1,7 +1,6 @@
 #THERE IS A COPY OF THIS IN zopache.core  as well       
 from cromlech.browser.interfaces import IPublicationRoot
 from zopache.crud.interfaces import IZodbRoot
-
 def getDBRoot(self):
            return (self.request.environ['zodb.connection'].root()
                    ['applicationRoot'])
@@ -15,7 +14,7 @@ def getRoot(object,anInterface):
             #IF YOU GET TO ZODB ROOT AND STILL NO STIE ROOT,
             #RETURN NONE
             if ((IZodbRoot.providedBy(context)) and
-               (anInterface == SiteRoot)):
+               (anInterface == IPublicationRoot)):
                return None
             context = context.__parent__
             max -= 1

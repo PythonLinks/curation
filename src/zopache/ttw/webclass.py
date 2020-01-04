@@ -11,6 +11,7 @@ from zopache.ttw.interfaces import IWeb
 from zopache.core.getroot import getProducts
 
 class BaseWebClass (Container):
+    title = "A Web Class"
     webClass = True #But not a string. 
     icon="ttwicons/Container.svg"
     def __init__(self):

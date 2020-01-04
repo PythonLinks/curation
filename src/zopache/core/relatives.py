@@ -5,7 +5,7 @@ from zopache.crud.interfaces import IZodbRoot
 
 
 def parentsUpTo(self,anInterface):
-    return reversed(reversedParentsUpTo(self,anInterface))
+    return self.reversedParentsUpTo(self,anInterface).reverse()
 
 class Parents(object):
     def __init__(self,context):
@@ -26,7 +26,6 @@ class Parents(object):
               break
            item=item.__parent__      
         return parents
-
 
 
     def parentsUpToSiteRoot(self):
@@ -52,8 +51,7 @@ class Parents(object):
     def parents(self, item=None):
         if item == None:
            item = self.context
-        result  = parents(item)
-        result.reverse()
+        result  = self.parentsUpToSiteRoot()
         return result
        
     def lineage (self,item):
