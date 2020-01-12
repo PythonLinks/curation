@@ -42,6 +42,7 @@ class Register(Form):
     count = 0
     
     def postAddProcess(self):
+       self.new.editors = {self.new.__name__} 
        if len(self.new.__parent__)==1:
            self.new.permissions = ['AddContent','EditContent',
             'Manage','Vote','Edit','Add']

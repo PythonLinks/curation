@@ -126,8 +126,8 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     className='Pug'
 
     def postProcess(self):
-        TrustedHTML.postProcess(self)
-        JavascriptBase.postProcess(self)
+        TrustedHTML.postProcess(self,self)
+        JavascriptBase.postProcess(self,view = self)
         
     def getHTML(self):
         return self.html

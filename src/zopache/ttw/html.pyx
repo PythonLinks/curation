@@ -338,7 +338,7 @@ class CkEdit(BaseCkEdit):
 @name('ckedit')
 @permissions('Manage')
 class CkEditForm(CkEdit):
-        layoutName = "UserMenu"
+      pass
 
 @form_component
 @context(IUserHTML)

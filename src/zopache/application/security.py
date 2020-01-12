@@ -19,7 +19,6 @@ def getPermissions(principal):
                 
 
 def check_permissions(component, interaction):
-    #return      
     perms = permissions.get(component) or tuple()
     if not perms:
         return

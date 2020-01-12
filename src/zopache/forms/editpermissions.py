@@ -28,7 +28,6 @@ class IPermissions(Interface):
         title="Permissions",
         description= "What is this user allowed to do?",
         required = False)                
-
     
 
 from zopache.core.viewdecorators import *
@@ -38,7 +37,6 @@ from zopache.crud.forms import EditForm
 @form_component
 @name ('permissions')
 @context(IInternalPrincipal)
-@title("Edit Permissions")
 @permissions('Manage')
 class EditPermissions (EditForm):
     title = 'Edit User Permissions'

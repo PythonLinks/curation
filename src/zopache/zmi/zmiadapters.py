@@ -70,5 +70,5 @@ class IPrincipalAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'permissions'    
+        return 'manage'    
     

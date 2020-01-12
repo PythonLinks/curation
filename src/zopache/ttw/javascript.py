@@ -145,7 +145,8 @@ class  AceScripts(AceScripts):
 @context(IBTreeContainer)
 @target(IView)
 @title("Add Javascript")
-@permissions('Manage')
+#@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddJavascript(AceScripts,AceAddForm):
     subTitle='Add a Javascript Object'
     interface = IJavascript
@@ -162,7 +163,8 @@ class AddJavascript(AceScripts,AceAddForm):
 @context(IBTreeContainer)
 @target(IView)
 @title("Add JavascriptFolder")
-@permissions('Manage')
+#@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddJavascriptFolder(AceScripts,AceAddForm):
     subTitle= 'Add a Javascript Folder'
     interface = IJavascriptFolder
@@ -212,7 +214,8 @@ class BaseJavascript(AceScripts):
 @target(IView)
 @title("AceEdit")
 @name("aceedit")
-@permissions('Manage')
+#@permissions('Manage')Q
+@implementer(ITreeSecurity)
 class AceEditJavascript(BaseJavascript,AceEditForm):
     pass
 
@@ -220,7 +223,6 @@ class AceEditJavascript(BaseJavascript,AceEditForm):
 @form_component
 @context(IJavascript)
 @target(IView)
-@title("Ace Demo")
 @name("acedemo")
 class AceDemoJavascript(BaseJavascript,EditDemoForm):
       pass

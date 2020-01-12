@@ -29,7 +29,7 @@ class Traverser(object):
         #FIRST, IF YOU HAVE A TEMPLATE, SEE THE VIEW
         if self.zopacheTemplate != None :
            zopacheTemplate = self.zopacheTemplate
-           try: 
+           try:
               view = self.view_lookup(request, zopacheTemplate, name)
            except ComponentLookupError:
 

@@ -5,13 +5,19 @@ from zope import interface
 from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
+
+from dolmen.container import IBTreeContainer,BTreeContainer
+from dolmen.container import IBTreeContainer
+from cromlech.webob.response import Response
+
+
 from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.crud.forms import EditDemoForm
-from dolmen.container import IBTreeContainer
+from zopache.core.getroot import getProducts
+
 from .interfaces import IJavascript
 from zopache.core.viewdecorators import *
-from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts as AceScriptsBase
 from .interfaces import ISourceContainer
@@ -19,7 +25,6 @@ from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
 from zopache.ttw.interfaces import IWeb
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
-from cromlech.webob.response import Response
 from .javascript import JavascriptBase
 
 class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
@@ -60,7 +65,7 @@ class CoffeeScript(JavascriptBase,Leaf):
 
 class  AceScripts(AceScriptsBase):
     def update(self):
-        self.template = self.getProducst()['Templates']['TranspilerTemplate']
+        self.template = getProducts(self)['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
         result = AceScriptsBase.headerScripts(self)
@@ -75,7 +80,7 @@ class  AceScripts(AceScriptsBase):
 <script  src="/fanstatic/ttwicons/coffeescript.js"></script>
     """
         result += "<script>"
-        script = self.getProducts()['Templates']['TranspilerScripts']
+        script = getProducts(self)['Templates']['TranspilerScripts']
         result += """
                   var transpiler = 'CoffeeScript';
                   """

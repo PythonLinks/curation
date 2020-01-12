@@ -60,7 +60,8 @@ class  AceScripts(AceScripts):
 @name('addCSS')
 @context(IBTreeContainer)
 @title("Add CSS")
-@permissions('Manage')
+#@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddCSS(AceScripts,AceAddForm):
     subTitle='Add a CSS Object'
     interface = ICSS
@@ -84,21 +85,29 @@ class Index(View):
     def render(self):
                return self.context.getJavascript()
 
+
+
+#AND HERE IS THE ACE DEMO FORM
+
+#HERE IS THE ACE EDIT FORM
+@form_component
+@context(ICSS)
+@name('acedemo')
+class AceDemoCSS(AceScripts,EditDemoForm):
+    subTitle='Edit a CSS Object, saving disabled'
+
+
+
 #HERE IS THE ACE EDIT FORM
 @form_component
 @context(ICSS)
 @name('aceedit')
-@permissions('Manage')
+#@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditCSS(AceScripts,AceEditForm):
     subTitle='Edit a CSS Object'
 
 
-#AND HERE IS THE ACE DEMO FORM
-@form_component
-@context(ICSS)
-@name("acedemo")
-class AceDemoCSS(AceScripts,EditDemoForm):
-    subTitle='Edit a CSS Object'
 
 
 @implementer(ICSSFolder)
@@ -124,7 +133,8 @@ from zopache.ttw.interfaces import IName, IContainer, ILeaf
 @name('addCSSFolder')
 @context(IBTreeContainer)
 @target(IView)
-@permissions('Manage')
+#@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddCSSFolder(AceScripts,AddAndSearchForm):
     title= 'Add a CSS Folder'
     subTitle = 'To organize multiple CSS objects'

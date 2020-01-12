@@ -80,11 +80,11 @@ class TrustedHTML(HTMLBase):
                  self._v_compiledTemplate = PageTemplate(source)
                  return self._v_compiledTemplate
 
-    def postProcess(self):
+    def postProcess(self,form):
             self.compileTemplate()
 
-    def postAddProcess(self):
-            self.postProcess()
+    def postAddProcess(self,form):
+            self.postProcess(form)
             
     #So here we pass the context into the template    
     def __call__(self,view,**args):
@@ -125,6 +125,34 @@ class TrustedHTML(HTMLBase):
                            template=template,
                            )
 
+
+@implementer (IUntrustedHTML)
+class UntrustedHTMLBase(HTMLBase):
+
+    def setTemplate(self):
+        pass
+
+    def compileTemplate(self):
+        pass
+
+    def postProcess(self,form):
+        pass
+
+    def __call__(self,view,**args):
+            return self.source
+
+class UntrustedHTML(UntrustedHTMLBase,Leaf):
+    source = """
+<html>
+  <head>
+  </head>
+  <body>
+    Hello World
+  </body>
+</html>
+"""
+
+    
 @implementer(IHTMLClass)
 class HTML(TrustedHTML,Leaf):
    pass
@@ -179,7 +207,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
           return CkScripts.headerScripts(self)
 
     def postProcess(self):
-        self.context.postProcess()
+        self.context.postProcess(self)
         
     @property
     def actions(self):
@@ -191,9 +219,8 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 
 
 @form_component
-@name ('addHTML')
+@name ('addChameleon')
 @context(IBTreeContainer)
-@title("Add CkHTML.")
 @permissions('Manage')
 @implementer(IWeb)
 class AddCkHTML(AddCkHTMLBase,AddForm):
@@ -217,22 +244,29 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
               formactions.Cancel(_("Cancel","Cancel")))
 
     def postProcess(self):
-        self.new.postProcess()                    
+        self.new.postProcess(self)                    
 
 @form_component
-@name (u'addAceHTML')
+@name (u'addAceChameleon')
 @context(IBTreeContainer)
-@title("Add Ace HTML")
 @permissions('Manage')
 @implementer(IWeb)  
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
 
+@form_component
+@name ('addHTML')
+@context(IBTreeContainer)
+@permissions('Manage')
+@implementer(IWeb)  
+class AddAceHTML (AddAceHTMLBase,AddForm):
+    factory = UntrustedHTML 
+    subTitle="Add an HTML Object"
+
 @view_component
 @name('index')
 @context(IIndexHTML)
-@title("View HTML")
 class Index(View,Breadcrumbs):
     count=0
     responseFactory = Response
@@ -261,7 +295,7 @@ class BaseAceEdit(AceScripts,BaseEditForm):
           return AceScripts.headerScripts(self)    
 
     def postProcess(self):
-        self.context.postProcess()
+        self.context.postProcess(self)
 
 class AceEdit(BaseAceEdit):
     @property
@@ -300,7 +334,6 @@ class UserAceEditForm(AceEdit):
 #AND HERE IS THE DEMO ACE EDIT FORM
 @form_component
 @context(IAceHTML)
-@title("Ace Demo")
 @name("acedemo")
 class AceDemoHTML(BaseAceEdit):
     @property
@@ -318,7 +351,7 @@ class BaseCkEdit(CkScripts,BaseEditForm):
           return CkScripts.headerScripts(self)    
 
     def postProcess(self):
-        self.context.postProcess()
+        self.context.postProcess(self)
 
 class CkEdit(BaseCkEdit):
     @property
@@ -352,7 +385,6 @@ class UserCkEditForm(CkEdit):
 @form_component
 @context(ICkHTML)
 @name('ckdemo')
-@title("CkEdit")
 class CkDemoHTML(BaseCkEdit):
     @property
     def actions(self):
@@ -363,7 +395,6 @@ class CkDemoHTML(BaseCkEdit):
 @context(IHTMLClass)
 @name('manage')
 @implementer(IWeb)
-@title("Manage")
 @permissions('Manage')
 class ManageHTML(CkEditHTML):    
    pass
@@ -373,7 +404,6 @@ class ManageHTML(CkEditHTML):
 @context(IAceHTMLClass)
 @name('manage')
 @implementer(IWeb)
-@title("Manage")
 @permissions('Manage')
 class ManageAceHTML(AceEditHTML):    
    pass
@@ -382,7 +412,6 @@ class ManageAceHTML(AceEditHTML):
 @view_component
 @name('viewsource')
 @context(IIndexHTML)
-@title("HTML Source")
 class ViewSource(Index):
     def render(self):
             top="<html><head></head><body>"
@@ -390,97 +419,11 @@ class ViewSource(Index):
             bottom="</body></html>"
             return top+middle+bottom
 
+@view_component
+@name('index')
+@context(IUntrustedHTML)
+class ViewSource(Index):
+    def render(self):
+        return self.context.source
 
 
-
-
-
-#This stuff is used in my production servers,
-#but has not been ported over to here.
-
-@implementer (IUntrustedHTML)
-class UntrustedHTMLBase(HTMLBase):
-
-    def setTemplate(self):
-        pass
-
-    def compileTemplate(self):
-        pass
-
-    def postProcess(self):
-        pass
-
-    def __call__(self,view,**args):
-            return self.source
-
-class UntrustedHTML(UntrustedHTMLBase):
-   pass
-
-
-"""
-class AddUntrustedHTML(AceScripts,Add):
-    grok.require("zopache.Untrusted")
-    grok.context(IZopache)
-    grok.name('addTTWHTML')
-    label = 'Add an HTML  Page TTW'
-
-
-    def commands(self):
-        manual=self.liHref('http://www.zopache.com/baseicwebobjects/html','HTML  Manual')
-        return manual
-
-
-    def newClass(self):
-       return TTWHTML()
-
-
-
-class EditUntrustedHTML(BaseEdit,AceScripts):
-    grok.context(IUntrustedHTML)
-    grok.require("zopache.Untrusted")
-    grok.template ("default_template_form")
-    label = 'Edit HTML Object TTW.'
-    grok.name('aceedit')
-
-    def breadcrumbs(self):
-       return self.breadcrumbsFor('/manage',3,1,False)
-
-    @grok.action('Save ')
-    def edit(self, **data):
-        self.baseEdit(**data)
-        self.context.setTemplate()
-
-    @grok.action('Save And View')
-    def saveAndView(self, **data):
-        self.baseEdit(**data)
-        self.context.setTemplate()
-        return self.redirect(self.url(self.context)+'/index')
-
-    @grok.action('Reset')
-    def reset(self, **data):
-        self.status='Content Reset'
-
- #       self.context.source=""
-<html>
-  <head>
-  </head>
-  <body>
-    Hello World
-  </body>
-</html>
-#        ""
-        self.context.setTemplate()
-
-
-
-
-class ManageUntrustedHTML(CkScripts,EditTTWHTML):
-    grok.require("zopache.Untrusted")
-    grok.name('manage')
-
-#This is used to throw up a login form. 
-class IndexSecure(Index):
-       grok.context(IHTMLIndex)
-       grok.require('privacv.login')
-       grok.name('indexsecure')
-"""

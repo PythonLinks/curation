@@ -13,7 +13,7 @@ from zopache.zmi.cutfolder import cutFolder
 from . import tal_template
 
 from zopache.zmi.interfaces import IObjectRetitler
-from zopache.zmi.interfaces import IZMI
+from zopache.pages.interfaces import IPage
 
 from zopache.core.viewdecorators import *
 from zopache.zmi.interfaces import IURLSegment
@@ -84,8 +84,7 @@ class ManageBase(Form,Contents):
 #THE MANAGE DEMO
 @form_component
 @name('managedemo')
-@title("Manage")
-@context(IZMI)
+@context(IPage)
 class ManageDemo(ManageBase):
     def breadcrumbs(self):
         return self.breadcrumbsIndex(self.context)    
@@ -95,6 +94,7 @@ class ManageDemo(ManageBase):
 @name('manage')
 @context(IDirectory)
 @implementer(ITreeSecurity)
+#@permissions('Manage')
 class ManageDirectory (ManageDemo): 
     def breadcrumbs(self):
         return self.breadcrumbsManage()       
@@ -103,7 +103,8 @@ class ManageDirectory (ManageDemo):
 @form_component
 @name('manage')
 @context(Interface)
-@permissions('Manage')
+@implementer(ITreeSecurity)
+#@permissions('Manage')
 class Manage (ManageBase):
     
     @property
@@ -150,21 +151,6 @@ class Fix(Manage):
         pass
 
 
-from zopache.ttw.interfaces import IInternalPrincipal
-#for users
-#USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
-@form_component
-@name('manage')
-@context(IInternalPrincipal)
-@permissions('Manage')
-class FixUsers(Manage):
-
-    def update(self):
-        Manage.update(self)
-
-
-
-
 @form_component
 @name('visitChildren')
 @context(IBTreeContainer)
@@ -200,6 +186,19 @@ class FixParents(VisitChildren):
     fix = True
     result = "Fixing Parents\n"    
      
+
+#WITHOUT THIS CANNOT MANAGE INTERNAL PRINCIPALS
+# BECAUSE IT UPDATES MANAGE, RATHER THAN INTRNAL PRINCIPAL. 
+from zopache.ttw.interfaces import IInternalPrincipal
+@form_component
+@name('manage')
+@context(IInternalPrincipal)
+#@permissions('Manage')
+@implementer(ITreeSecurity)
+class FixUsers(Manage):
+
+    def update(self):
+        Manage.update(self)
 
 
 

@@ -62,8 +62,9 @@ Node  <span class="caret"></span></a>
 <li tal:condition="view.safeMethod('isPage')"><a href="./addPage">Page</a></li>
 <li><a href="./addContainer">Container</a></li>
 <li><a href="./addHTML">HTML</a></li>
-<li><a href="./addAceHTML">Ace HTML</a></li>
-<li><a href="./addSecureHTML">Secure HTML</a></li>
+<li><a href="./addChameleon">Chameleon</a></li>
+<li><a href="./addAceChameleon">Ace Chameleon</a></li>
+<li><a href="./addSecureChameleon">Secure Chameleon</a></li>
 <li><a href="./addCSS">CSS</a></li>
 <li><a href="./addCSSFolder">CSS Folder</a></li>
 <li><a href="./addImage">Image</a></li>

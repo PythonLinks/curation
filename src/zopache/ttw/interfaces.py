@@ -294,6 +294,9 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable
 class IUntrustedHTML(IHTML):
    pass
 
+class IUntrustedAceHTML(IAceHTML):
+   pass
+
 class IInternalPrincipal(IFile,IBTreeContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
     """Principal information"""
     pass
