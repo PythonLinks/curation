@@ -3,15 +3,19 @@ from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 class Acquisition(object):
 
-    #THIS ONE IS BEING DEPRECATED
-    #NOT QUITE CLEAR WHAT IT DOES
+    #WITH ZOPACHE TEMPLATES THE CONTEXT
+    #CAN BE DIFFERENT THAN THE PARENT
+    #VIEW -> PARENT
     def acquire(self,name, context=None):
+        if (context == None):
+           context = self        
         return self.parentalAcquire(name,context)
-      
-    def parentalAcquire (self,name,context=None):  
-            if (context == None):
-               context = self
-            return ParentalAcquire(context)[name]
+
+    #VIEW -> CONTEXT
+    def parentalAcquire (self,name,context=None):
+        if (context == None):
+            context = self.context
+        return ParentalAcquire(context)[name]
           
     def webClassAcquire(self,name,context=None):
         if context == None:
