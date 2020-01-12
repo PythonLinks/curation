@@ -29,6 +29,7 @@ class ParentalAcquire (object):
       self.context=context
       
   def __getitem__(self,name,default=object) :
+     breakpoint()
      context=self.context
      _marker = default  
 

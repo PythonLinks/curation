@@ -80,11 +80,11 @@ class TrustedHTML(HTMLBase):
                  self._v_compiledTemplate = PageTemplate(source)
                  return self._v_compiledTemplate
 
-    def postProcess(self,form):
+    def postProcess(self,view=None):
             self.compileTemplate()
 
-    def postAddProcess(self,form):
-            self.postProcess(form)
+    def postAddProcess(self,view=None):
+            self.postProcess(view=view)
             
     #So here we pass the context into the template    
     def __call__(self,view,**args):
@@ -135,7 +135,7 @@ class UntrustedHTMLBase(HTMLBase):
     def compileTemplate(self):
         pass
 
-    def postProcess(self,form):
+    def postProcess(self,view=None):
         pass
 
     def __call__(self,view,**args):
@@ -206,8 +206,8 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
     def headerScripts(self):
           return CkScripts.headerScripts(self)
 
-    def postProcess(self):
-        self.context.postProcess(self)
+    def postProcess(self, view=None):
+        self.context.postProcess(view=self)
         
     @property
     def actions(self):
@@ -243,8 +243,8 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),
               formactions.Cancel(_("Cancel","Cancel")))
 
-    def postProcess(self):
-        self.new.postProcess(self)                    
+    def postProcess(self, view=None):
+        self.new.postProcess(view=view)                    
 
 @form_component
 @name (u'addAceChameleon')
@@ -294,8 +294,8 @@ class BaseAceEdit(AceScripts,BaseEditForm):
     def headerScripts(self):
           return AceScripts.headerScripts(self)    
 
-    def postProcess(self):
-        self.context.postProcess(self)
+    def postProcess(self, view = None):
+        self.context.postProcess(view=self)
 
 class AceEdit(BaseAceEdit):
     @property
@@ -350,8 +350,8 @@ class BaseCkEdit(CkScripts,BaseEditForm):
     def headerScripts(self):
           return CkScripts.headerScripts(self)    
 
-    def postProcess(self):
-        self.context.postProcess(self)
+    def postProcess(self, view = None):
+        self.context.postProcess(view=self)
 
 class CkEdit(BaseCkEdit):
     @property
