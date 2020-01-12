@@ -15,8 +15,9 @@ from cromlech import browser
 from cromlech.browser.exceptions import HTTPFound
 from zopache.ttw.interfaces import IHistoryItem
 from dm.historical import getHistory
-from cromlech.security import permissions
 from zopache.core.breadcrumbs import Breadcrumbs
+from zopache.core.interfaces import ITreeSecurity
+
 """
 #Maybe this is a much simpler versin for more recent zodb. 
 def getHistory(item, size=40):
@@ -30,9 +31,8 @@ def getHistory(item, size=40):
 """
 @view_component
 @name('history')
-@title("History")
-@permissions('Manage')
 @context(ISource)
+@implementer(ITreeSecurity)
 class History(Page, Breadcrumbs):
        label=''
        subTitle='Historic Versions'
@@ -52,7 +52,6 @@ class History(Page, Breadcrumbs):
                 return result
          
 @view_component
-@permissions('Manage')
 @name('historicindex')
 @title("Historic Index")
 @context(IHistoryItem)
@@ -69,7 +68,6 @@ class HistoricIndex(Page):
 @name('historicview')
 @title("Historic View")
 @context(IHistoryItem)
-@permissions('Manage')
 @implementer (IHistoricDetails)
 class HistoricView (Page):
        def render(self ):
@@ -78,7 +76,6 @@ class HistoricView (Page):
 
 @view_component
 @name('restore')
-@permissions('Manage')
 @context(IHistoryItem)
 @implementer (IHistoricDetails)
 class Restore(Page):

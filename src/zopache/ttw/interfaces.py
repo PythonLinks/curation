@@ -13,7 +13,7 @@ from zopache.crud.interfaces import *
 from zopache.crud.interfaces import ILeaf
 from zopache.crud.interfaces import IImutable
 from zopache.crud.interfaces import IMoveable
-
+from zopache.core.interfaces import ITreeSecurity
 
 class IUserHTML(Interface):
     pass
@@ -246,7 +246,8 @@ class IWeb(Interface):
 class IHistoryItem(Interface):
       pass
 
-class IHistoricDetails(Interface):
+  
+class IHistoricDetails(ITreeSecurity):
       pass
 
 

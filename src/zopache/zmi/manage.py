@@ -84,10 +84,24 @@ class ManageBase(Form,Contents):
 #THE MANAGE DEMO
 @form_component
 @name('managedemo')
-@context(IPage)
+@context(IBTreeContainer)
 class ManageDemo(ManageBase):
+    subTitle='Editing is disabled in the demo interface.'    
     def breadcrumbs(self):
-        return self.breadcrumbsIndex(self.context)    
+        return self.breadcrumbsIndex(self.context)
+
+from cromlech.security import Unauthorized
+from zopache.ttw.interfaces import IPrincipalFolder
+#DO NOT WANT TO SHOW CONTENTS OF
+#PRINCIPAL FOLDER TO THE PUBLIC
+@form_component
+@name('managedemo')
+@context(IPrincipalFolder)
+class ManageDemoPrincipalFolder(ManageBase):
+    def update (self):
+        if not self.isManager():
+            raise Unauthorized()    
+
 
 #MANAGE FILE SYSTEM DIRECTORY
 @form_component

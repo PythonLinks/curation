@@ -62,9 +62,9 @@ Node  <span class="caret"></span></a>
 <li tal:condition="view.safeMethod('isPage')"><a href="./addPage">Page</a></li>
 <li><a href="./addContainer">Container</a></li>
 <li><a href="./addHTML">HTML</a></li>
-<li><a href="./addChameleon">Chameleon</a></li>
-<li><a href="./addAceChameleon">Ace Chameleon</a></li>
-<li><a href="./addSecureChameleon">Secure Chameleon</a></li>
+<li tal:condition = "view.isManager()"><a href="./addChameleon">Chameleon</a></li>
+<li tal:condition = "view.isManager()" ><a href="./addAceChameleon">Ace Chameleon</a></li>
+<li tal:condition = "view.isManager()"><a href="./addSecureChameleon">Secure Chameleon</a></li>
 <li><a href="./addCSS">CSS</a></li>
 <li><a href="./addCSSFolder">CSS Folder</a></li>
 <li><a href="./addImage">Image</a></li>
@@ -84,7 +84,7 @@ Node  <span class="caret"></span></a>
    <a href="./addPython">Python</a></li>
 <li tal:condition="view.safeMethod('isBTreeContainer') or view.safeMethod('isPythonFolder')">
    <a href="./addPythonFolder">Transcyprt Folder</a></li>
-<li><a href="./addPug">Pug</a></li>
+<li tal:condition = "view.isManager()"><a href="./addPug">Pug</a></li>
 <li><a href="./addJSON">JSON</a></li>
 </ul>
 </li>

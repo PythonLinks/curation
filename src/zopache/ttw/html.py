@@ -258,9 +258,8 @@ class AddAceHTML (AddAceHTMLBase,AddForm):
 @form_component
 @name ('addHTML')
 @context(IBTreeContainer)
-@permissions('Manage')
-@implementer(IWeb)  
-class AddAceHTML (AddAceHTMLBase,AddForm):
+@implementer(ITreeSecurity)
+class AddUntrustedHTML (AddAceHTMLBase,AddForm):
     factory = UntrustedHTML 
     subTitle="Add an HTML Object"
 
@@ -324,6 +323,7 @@ class AceEditForm(AceEdit):
     pass
 
 #HERE IS THE USER ACE EDIT FORM
+#USED BY BUSINESS CLASS, CAN REALLY BE GOTTEN RID OF
 @form_component
 @context(IUserHTML)
 @name("aceedit")
@@ -336,6 +336,7 @@ class UserAceEditForm(AceEdit):
 @context(IAceHTML)
 @name("acedemo")
 class AceDemoHTML(BaseAceEdit):
+    subTitle = "Saving is disabled in this demo."            
     @property
     def actions(self):
         return Actions()
@@ -373,6 +374,8 @@ class CkEdit(BaseCkEdit):
 class CkEditForm(CkEdit):
       pass
 
+#USED BY BUSINESS CLASSES
+#CAN REALLY BE GOTTEN RID OF
 @form_component
 @context(IUserHTML)
 @name('ckedit')
@@ -386,6 +389,7 @@ class UserCkEditForm(CkEdit):
 @context(ICkHTML)
 @name('ckdemo')
 class CkDemoHTML(BaseCkEdit):
+    subTitle = "Saving is disabled in this demo."    
     @property
     def actions(self):
         return Actions()

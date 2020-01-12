@@ -13,7 +13,6 @@ class Acquisition(object):
 
     #VIEW -> CONTEXT
     def parentalAcquire (self,name,context=None):
-        breakpoint()
         if (context == None):
             context = self.context
         return ParentalAcquire(context)[name]

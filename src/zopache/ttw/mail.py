@@ -14,6 +14,7 @@ from zopache.crud.interfaces import ILeaf
 from zopache.pages.interfaces import IRootPage
 from zopache.crud.forms import AddNamedForm, EditForm
 from zopache.ttw.interfaces import IMailHost
+from zopache.core.interfaces import ITreeSecurity
 
 
     
@@ -38,7 +39,7 @@ class MailHost(Leaf):
 @form_component
 @name('addMailHost')
 @context(IRootPage)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddMailHost(AddNamedForm):
     subTitle='Add a MailHost'
     interface = IMailHost
@@ -51,6 +52,6 @@ class AddMailHost(AddNamedForm):
 @form_component
 @context(IMailHost)
 @name("edit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class EditMailHost(EditForm):
     subTitle='Edit the MailHost Object'    

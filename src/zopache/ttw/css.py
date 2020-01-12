@@ -60,7 +60,6 @@ class  AceScripts(AceScripts):
 @name('addCSS')
 @context(IBTreeContainer)
 @title("Add CSS")
-#@permissions('Manage')
 @implementer(ITreeSecurity)
 class AddCSS(AceScripts,AceAddForm):
     subTitle='Add a CSS Object'
@@ -102,7 +101,6 @@ class AceDemoCSS(AceScripts,EditDemoForm):
 @form_component
 @context(ICSS)
 @name('aceedit')
-#@permissions('Manage')
 @implementer(ITreeSecurity)
 class AceEditCSS(AceScripts,AceEditForm):
     subTitle='Edit a CSS Object'
@@ -133,7 +131,6 @@ from zopache.ttw.interfaces import IName, IContainer, ILeaf
 @name('addCSSFolder')
 @context(IBTreeContainer)
 @target(IView)
-#@permissions('Manage')
 @implementer(ITreeSecurity)
 class AddCSSFolder(AceScripts,AddAndSearchForm):
     title= 'Add a CSS Folder'

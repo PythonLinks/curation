@@ -26,6 +26,7 @@ from zopache.ttw.interfaces import IWeb
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
 from .javascript import JavascriptBase
+from zopache.core.interfaces import ITreeSecurity
 
 class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
     "Basic CoffeeScript Form"
@@ -93,8 +94,7 @@ class  AceScripts(AceScriptsBase):
 @context(IBTreeContainer)
 @target(IView)
 @title("Add CoffeeScript")
-@permissions('Manage')
-@implementer(IWeb)
+@implementer(ITreeSecurity)
 class AddCoffeeScript(AceScripts,AceAddForm):
     subTitle='Add a Coffeecript Object'
     interface = ICoffeeScript
@@ -139,7 +139,7 @@ class BaseCoffeeScriptForm(AceScripts):
 @target(IView)
 @title("AceEdit")
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditCoffeeScript(BaseCoffeeScriptForm,AceEditForm):
     subTitle = "Ace Edit a Coffescript Object."
     title = "CoffeeScript Editor"

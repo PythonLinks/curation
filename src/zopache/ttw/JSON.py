@@ -15,7 +15,7 @@ from zopache.ttw.acescripts import AceScripts
 
 from zopache.ttw.interfaces import IJSON
 from zopache.ttw.javascript import JavascriptBase
-
+from zopache.core.interfaces import ITreeSecurity
 
 @implementer(IJSON)
 class JSON(JavascriptBase,Leaf):
@@ -49,8 +49,7 @@ class  AceScripts(AceScripts):
 @form_component
 @name('addJSON')
 @context(IBTreeContainer)
-@title("Add JSON")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddJSON(AceScripts,AceAddForm):
     subTitle='Add a JSON Object'
     interface = IJSON
@@ -67,7 +66,6 @@ def makeResponse(view, result, *args, **kwargs):
 @view_component
 @name('index')
 @context(IJSON)
-@title("View JSON")
 class Index(View):
     responseFactory = Response
     make_response = makeResponse
@@ -78,9 +76,8 @@ class Index(View):
 
 @form_component
 @context(IJSON)
-@title("AceEdit JSON")
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditJSON(AceScripts,AceEditForm):
     subTitle='Edit a JSON Object'
 
@@ -93,8 +90,7 @@ class AceEditJSON(AceScripts,AceEditForm):
 @form_component
 @context(IJSON)
 @name('manage')
-@title("Manage")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class ManageJSON(AceEditJSON):    
    pass
 

@@ -5,7 +5,7 @@ from zope.interface import Interface, implementer
 from dolmen.container import OrderedBTreeContainer
 from zopache.core import Leaf
 from zopache.ttw.interfaces import IFile, IImage
-
+from zopache.core.interfaces import ITreeSecurity
           
 
 class FileBase(object):    
@@ -89,7 +89,7 @@ from zopache.ttw.interfaces import IInternalPrincipal
 @name('index')
 @context(IInternalPrincipal)
 @title("View CV")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class IndexCV(View):
     responseFactory = Response
     make_response = make_file_response

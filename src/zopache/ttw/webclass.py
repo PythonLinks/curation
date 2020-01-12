@@ -9,6 +9,8 @@ from .interfaces import IWebClass, IProducts, IMoveableWebClass
 from .container import ContainerAddForm
 from zopache.ttw.interfaces import IWeb    
 from zopache.core.getroot import getProducts
+from zopache.core.interfaces import ITreeSecurity
+
 
 class BaseWebClass (Container):
     title = "A Web Class"
@@ -49,8 +51,7 @@ class ImutableWebClass (BaseWebClass):
 @context(IWebClass)
 #@target(ITab)
 @title("Add WebClass")
-@permissions('Manage')
-@implementer(IWeb)
+@implementer(ITreeSecurity)
 class AddWebClass(ContainerAddForm):
     subTitle='Add a WebClass  (Manually Fix the ZClass)'
     interface = IWebClass
