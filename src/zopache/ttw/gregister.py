@@ -24,9 +24,11 @@ from zopache.ttw import tal_template
 @context(Interface)
 @title("Google Register")
 class GoogleRegister(AddForm):
+    count = 0
+    layoutName = "UserMenu"    
     factory = InternalPrincipal
     title='PythonLinks.info'
-    subTitle='Register'
+    subTitle='Add your user id and GDPR permissions.'
     fields = Fields(IGRegister)
     ignoreContent = True
     igrnoreRequest = False

@@ -23,7 +23,6 @@ class BreadcrumbsCore(object):
         return ' / '+' / '.join(result)
              
     def divBreadcrumbs(self, node,viewName ='',widget= False,start = 0):
-        breakpoint()
         items = self.parentsUpToSiteRoot()
         items = items [start:]
         length = len(items)
