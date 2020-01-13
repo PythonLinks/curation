@@ -222,7 +222,6 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 @name ('addChameleon')
 @context(IBTreeContainer)
 @permissions('Manage')
-@implementer(IWeb)
 class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 
@@ -250,7 +249,6 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 @name (u'addAceChameleon')
 @context(IBTreeContainer)
 @permissions('Manage')
-@implementer(IWeb)  
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
@@ -318,7 +316,7 @@ class AceEdit(BaseAceEdit):
 @form_component
 @context(IAceHTML)
 @name("aceedit")
-@permissions('Manage')
+@implementer (ITreeSecurity)
 class AceEditForm(AceEdit):
     pass
 
@@ -370,7 +368,7 @@ class CkEdit(BaseCkEdit):
 @form_component
 @context(ICkHTML)
 @name('ckedit')
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class CkEditForm(CkEdit):
       pass
 
@@ -393,25 +391,6 @@ class CkDemoHTML(BaseCkEdit):
     @property
     def actions(self):
         return Actions()
-
-"""    
-@form_component
-@context(IHTMLClass)
-@name('manage')
-@implementer(IWeb)
-@permissions('Manage')
-class ManageHTML(CkEditHTML):    
-   pass
-
-
-@form_component
-@context(IAceHTMLClass)
-@name('manage')
-@implementer(IWeb)
-@permissions('Manage')
-class ManageAceHTML(AceEditHTML):    
-   pass
-"""
 
 @view_component
 @name('viewsource')
