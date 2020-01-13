@@ -16,6 +16,18 @@ from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 from zopache.core.getroot import getPrincipalFolder
 
+#import functools
+#@functools.lru_cache(maxsize=40)
+def validateToken(token,form,clientId):
+        try:
+          idinfo = id_token.verify_oauth2_token(token,Request(),clientId)
+        except:
+               raise ValueError('Trouble')            
+        legit =['accounts.google.com', 'https://accounts.google.com']
+        if  not (idinfo['iss'] in legit):
+               raise ValueError('Wrong issuer.')
+        return idinfo
+
 def message(message):
     send(message)
 
@@ -50,20 +62,6 @@ class GoogleLoginAction(Action):
         else:
             raise ValueError('Bad Domain')
         return clientId
-    
-    def validateToken(self,token,form):
-        try:
-          clientId = self.getClientId(form)
-          # Specify the CLIENT_ID of the app that accesses the backend:
-          idinfo = id_token.verify_oauth2_token(token,Request(),clientId)
-        except:
-               raise ValueError('Trouble')            
-
-        legit =['accounts.google.com', 'https://accounts.google.com']
-        if  not (idinfo['iss'] in legit):
-               raise ValueError('Wrong issuer.')
-        return idinfo
-
         
     def __call__(self, form):
         self.form = form
@@ -76,14 +74,20 @@ class GoogleLoginAction(Action):
                return FAILURE
         token = data ['idtoken']
         try : 
-            self.data = data = self.validateToken(token,form)
+            clientId = self.getClientId(form)
+            if isinstance (token,list):
+                token = token [0]
+
+            print ("BEGOM TOKEN---------------------")
+            print (token)
+            print ("---------------------")
+
+            self.data = data = validateToken(token,form,clientId)
         except ValueError:
             # Invalid token
             return "Invalide Token"
-        
-
         people = getPrincipalFolder( form.context)
-        userId = data['sub'] 
+        userId = data['sub']
         self.innerCall(userId,people)
         
     def innerCall(self,userId,people):
@@ -91,6 +95,15 @@ class GoogleLoginAction(Action):
             person = people[userId]    
             people.loginUser(person)   
             self.form.loggedIn = True
+
+#SO BASICALLY IT NEEDS TO GO TO A LOGIN FORM
+#IF THE USER EXISTS, LOG HIM IN AND REDIRECT.
+#IF THE USER DOES NOT EXIST, SEND HIM TO THE
+#REGISTER FORM.
+#MY SCRIPT IS TOO COMPLEX
+#WHAT MY SCRIPT DOES IS TRY TO LOG HIM IN
+#ON SUCCESS REDIRECT TO PARENT
+#ON FAILURE GO TO REGISTER PAGE
             
 class GoogleRegisterAction(GoogleLoginAction):
     def innerCall(self,userId,people):
@@ -116,6 +129,6 @@ class GoogleRegisterAction(GoogleLoginAction):
            obj.handle=data['given_name']+data['family_name']
         except:
            obj.handle = data['name']
-        nextURL = form.nextURL()   
+        nextURL = ".."  
         raise HTTPFound(nextURL)
 
