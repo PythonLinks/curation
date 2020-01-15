@@ -171,6 +171,13 @@ class IOrganizationBase (ICompanyOrOrganization):
         default = '',
     )
 
+    source= schema.Text(
+        title = u'Longer Description',
+        description = u'Please describe this organization further.',
+        required = False,
+        default = '',
+    )    
+
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
         description = u'Can they call you?',
@@ -181,7 +188,7 @@ class IOrganizationBase (ICompanyOrOrganization):
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
-        required = True,
+        required = False,
     )    
 
 class IOrganization(IOrganizationBase):    
