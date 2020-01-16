@@ -59,6 +59,10 @@ class GoogleLoginAction(Action):
             clientId = '901181416018-8sh20u10e5tltf00jc4o8qfpq1jhmvh0.apps.googleusercontent.com'
         elif (domain == 'rights.men'):
             clientId = '901181416018-il4qps4qiqafom0uhmrppvcf9ao7ve07.apps.googleusercontent.com'
+        elif (domain == 'golangvideos.com'):
+            clientId = '901181416018-f6c7p85thdp79l9c6c3joccj9ffb5jug.apps.googleusercontent.com'
+        elif (domain == 'stopsmog.info'):
+            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'            
         else:
             raise ValueError('Bad Domain')
         return clientId
