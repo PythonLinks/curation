@@ -54,11 +54,11 @@ class GoogleLoginAction(Action):
         if (domain == 'pythonlinks.info'):
             clientId= '901181416018-8c8n8knds3b6koqkottchj7ivpncf409.apps.googleusercontent.com'
         elif (domain == 'dev.pythonlinks.info'):
-            clientId = '461800128463-7s2kmmm3h7npkvu14lltv8dp1c58p3ie.apps.googleusercontent.com'
-        elif (domain == 'climatevideos.info'):
-            clientId = '982806744490-cvmnqkl4ovn9550sk56a1i6qjcean489.apps.googleusercontent.com'
-        elif (domain == 'golangvideos.pl'):
-            clientId = '333894959182-47b2vl06t1es006spak42gk7lvig490v.apps.googleusercontent.com'
+            clientId = '901181416018-npba3s080378saoc1umjkn5jo7lipa1q.apps.googleusercontent.com'
+        elif (domain == 'forestwiki.com'):
+            clientId = '901181416018-8sh20u10e5tltf00jc4o8qfpq1jhmvh0.apps.googleusercontent.com'
+        elif (domain == 'rights.men'):
+            clientId = '901181416018-il4qps4qiqafom0uhmrppvcf9ao7ve07.apps.googleusercontent.com'
         else:
             raise ValueError('Bad Domain')
         return clientId
