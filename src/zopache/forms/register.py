@@ -2,36 +2,39 @@
 
 #This software is subject to the CV and Zope Public Licenses.
 from zope.interface import Interface
-from dolmen.forms.base import DISPLAY
-from zopache.ttw.adduseractions  import Add
-from zopache.crud.utils import getFactoryFields, getAllFields
-from cromlech.i18n import translate
-
-from cromlech.security import getSecurityGuards, permissions
-
-from zopache.ttw.interfaces import IName, IContainer, ILeaf
-from dolmen.container import BTreeContainer, IBTreeContainer
 from zope.interface import implementer
-
+from dolmen.forms.base import DISPLAY
+from cromlech.i18n import translate
+from dolmen.container import BTreeContainer, IBTreeContainer
+from cromlech.security import getSecurityGuards, permissions
+from cromlech.webob import Response
 from dolmen.forms.base import Actions
 from dolmen.forms.base import Fields
 from dolmen.forms.base import action, name, context, form_component
+from cromlech.browser.directives import title
+
+
+from zopache.ttw.adduseractions  import Add
+from zopache.crud.utils import getFactoryFields, getAllFields
+
+from zopache.ttw.interfaces import IName, IContainer, ILeaf
+
 
 from zopache.crud.utilities import title_or_name    
-from cromlech.webob import Response
 from zopache.core.baseform import Form
 
-from cromlech.browser.directives import title
 from zopache.forms.interfaces import IRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 from zopache.crud.actions import Cancel
+from zopache.forms.validator import Validator
 
 @form_component
 @name (u'signup')
 @context(Interface)
 @title("Register")
 class Register(Form):
+    dataValidators = [Validator]
     layoutName = "UserMenu"
     fields = Fields(IRegister)
     factory = InternalPrincipal
@@ -40,7 +43,7 @@ class Register(Form):
     ignoreContent = True
     igrnoreRequest = False
     count = 0
-    
+
     def postAddProcess(self):
        self.new.editors = {self.new.__name__} 
        if len(self.new.__parent__)==1:

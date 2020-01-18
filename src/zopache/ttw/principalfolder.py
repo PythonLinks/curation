@@ -299,3 +299,7 @@ class PrincipalFolder(Container):
         aSlug = slugify(handle) 
         return self.idBySlugifiedHandle.get(aSlug,None)
 
+    #USED BY REGISTER VALIDATORS
+    def existsHandle(self,handle):           
+        aSlug = slugify(handle) 
+        return aSlug in self.idBySlugifiedHandle            
