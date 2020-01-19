@@ -36,7 +36,6 @@ class Publisher (DawnlightPublisher):
         crumbs = dawnlight.parse_path(path, shortcuts)        
         while crumbs:
            aType, name=crumbs.popleft()
-           #import pdb; pdb.set_trace()
            if (aType =='history'):
               # CALL THE HISTORY TRAVERSER
               historyTraverser=HistoryTraverser(context,None)

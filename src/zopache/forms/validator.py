@@ -5,10 +5,10 @@ from zope.schema import ValidationError
 
 class EmailExistsError (ValidationError):
     """ That email address already exists in the database"""
-
+    title = "Email Exists"
 class UserExistsError (ValidationError):
     """ That user name is already in use. """
-    
+    title = "User Exists"
 class Validator(object):
 
     def __init__(self, fields, form):
@@ -28,6 +28,6 @@ class Validator(object):
         handle = data['handle']
         if people.existsHandle (handle):
            error = UserExistsError ("That user already exists: " + handle)
-           errors.append(error)           
+           errors.append(error)
         return errors
 
