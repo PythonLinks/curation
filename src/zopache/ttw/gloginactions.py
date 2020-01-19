@@ -129,10 +129,6 @@ class GoogleRegisterAction(GoogleLoginAction):
         root.addItem(obj)
         people.loginUser(person)   
         message("You are Registered")
-        try:
-           obj.handle=data['given_name']+data['family_name']
-        except:
-           obj.handle = data['name']
         nextURL = ".."  
         raise HTTPFound(nextURL)
 
