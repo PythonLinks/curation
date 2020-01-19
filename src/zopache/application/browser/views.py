@@ -29,14 +29,18 @@ from cromlech.security import unauthenticated_principal as anonymous
 class Logout(Page):
     layoutName = "UserMenu"
     def update(self):
-        principal = self.request.principal
-        if principal != anonymous:
-           principal.logout()
-
+         principal = self.request.principal
+         if principal != anonymous:
+            principal.logout()
+#        newURL = ".."
+#        raise HTTPFound(newURL)
+    
     def render(self):
-        return "You have been logged out"
-        #newURL ='.'
-        #raise HTTPFound(location=newURL)
+         principal = self.request.principal        
+         if principal != anonymous:
+            principal.logout()        
+         return "You have been logged out. <br>You may want to reload the page to confirm it. "
+
 
 @view_component
 @name('logout2')
