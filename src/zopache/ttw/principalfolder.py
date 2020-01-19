@@ -43,6 +43,7 @@ class InternalPrincipal(FileBase,Page):
     _password = ''
     title = "Your Profile"
     talkURL =""
+    title = ""
     source = ""
     description = ""
     permissions = ['Vote']
@@ -113,11 +114,10 @@ class InternalPrincipal(FileBase,Page):
 
     def slugifiedHandle(self):
         return slugify(self.handle)
-           
-           
+                 
     def getTitle(self):
-        return self._handle
-
+        return self._handle 
+        
     def getId(self):
         return self._email    
     

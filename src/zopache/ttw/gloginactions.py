@@ -14,7 +14,7 @@ from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
-from zopache.core.getroot import getPrincipalFolder
+from zopache.core.getroot import getPrincipalFolder, getSiteRoot
 
 #import functools
 #@functools.lru_cache(maxsize=40)
@@ -82,10 +82,6 @@ class GoogleLoginAction(Action):
             if isinstance (token,list):
                 token = token [0]
 
-            print ("BEGOM TOKEN---------------------")
-            print (token)
-            print ("---------------------")
-
             self.data = data = validateToken(token,form,clientId)
         except ValueError:
             # Invalid token
@@ -125,10 +121,14 @@ class GoogleRegisterAction(GoogleLoginAction):
         for key,value in data.items():
             if key in ['iss','sub','azp','aud','iat']:
                continue
+            if key == 'name':
+               obj.nameFromGoogle = data ['name']
+               continue
             obj.__setattr__(key, value)
+        root = getSiteRoot(form.context)
+        root.addItem(obj)
         people.loginUser(person)   
         message("You are Registered")
-
         try:
            obj.handle=data['given_name']+data['family_name']
         except:
