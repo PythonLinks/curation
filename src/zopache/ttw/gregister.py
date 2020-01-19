@@ -14,18 +14,18 @@ from zope.interface import implementer
 
 from zopache.crud.forms import AddForm
 from dolmen.forms.base.markers import HIDDEN
-
+from dolmen.forms.base.errors import Errors, Error
 from zopache.forms.interfaces import IRegister, IGRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
-from zopache.forms.validator import Validator
+from zopache.forms.validator import GoogleValidator
 
 @form_component
 @name (u'gregister')
 @context(Interface)
 @title("Google Register")
 class GoogleRegister(AddForm):
-    dataValidators = [Validator]    
+    dataValidators = [GoogleValidator]    
     count = 0
     layoutName = "UserMenu"    
     factory = InternalPrincipal
@@ -36,6 +36,7 @@ class GoogleRegister(AddForm):
     igrnoreRequest = False
     successfulRegistration = False
     submissionError = ""
+    
     
     def updateWidgets(self):
         self.fields["idtoken"].mode = HIDDEN        
