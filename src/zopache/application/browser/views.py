@@ -35,11 +35,11 @@ class Logout(Page):
 
     
     def render(self):
-         return  "You have been logged out."
-
-junk =      """ 
-
-<p>To logout from both this server, and google sign-in, please shut down 
+         return    """ 
+<p>
+You are now correclty logged out of this server.  Reload the page to confirm. 
+</p>
+<p>To also logout from both  google sign-in, please restart 
 your browser.  Soon that will not be needed. 
 </p>
 
