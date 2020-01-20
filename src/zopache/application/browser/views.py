@@ -29,14 +29,30 @@ from cromlech.security import unauthenticated_principal as anonymous
 class Logout(Page):
     layoutName = "UserMenu"
     def update(self):
-        principal = self.request.principal
-        if principal != anonymous:
-           principal.logout()
+         principal = self.request.principal
+         if principal != anonymous:
+            principal.logout()
 
+    
     def render(self):
-        return "You have been logged out"
-        #newURL ='.'
-        #raise HTTPFound(location=newURL)
+         return  "You have been logged out."
+
+junk =      """ 
+
+<p>To logout from both this server, and google sign-in, please shut down 
+your browser.  Soon that will not be needed. 
+</p>
+
+<h3>         Click <a href =".."> here </a> to go back.
+</h3>
+"""
+junk = """    
+ <script src="https://apis.google.com/js/platform.js" async defer></script>
+ <script>
+gapi.auth2.getAuthInstance().signOut();
+</script>
+         """
+
 
 @view_component
 @name('logout2')

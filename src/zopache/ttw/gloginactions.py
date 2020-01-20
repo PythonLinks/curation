@@ -14,22 +14,8 @@ from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
-from zopache.core.getroot import getPrincipalFolder
-
-#import functools
-#@functools.lru_cache(maxsize=40)
-def validateToken(token,form,clientId):
-        try:
-          idinfo = id_token.verify_oauth2_token(token,Request(),clientId)
-        except:
-               raise ValueError('Trouble')            
-        legit =['accounts.google.com', 'https://accounts.google.com']
-        if  not (idinfo['iss'] in legit):
-               raise ValueError('Wrong issuer.')
-        return idinfo
-
-def message(message):
-    send(message)
+from zopache.core.getroot import getPrincipalFolder, getSiteRoot
+from zopache.forms.validator import AccessGoogle
 
 class Cancel(Action):
     """Cancel the current form and return on the default content view.
@@ -40,8 +26,8 @@ class Cancel(Action):
         url = str(IURL(content, form.request))
         return SuccessMarker('Aborted', True, url=url)
 
-    
-class GoogleLoginAction(Action):
+
+class GoogleLoginAction(Action,AccessGoogle):
     """Add action for an IAdding context.
     """
     def __init__(self, title, view):
@@ -49,45 +35,22 @@ class GoogleLoginAction(Action):
         self.factory = view.factory
         self.view = view
         
-    def getClientId(self,form):
-        domain = form.getDomain()
-        if (domain == 'pythonlinks.info'):
-            clientId= '901181416018-8c8n8knds3b6koqkottchj7ivpncf409.apps.googleusercontent.com'
-        elif (domain == 'dev.pythonlinks.info'):
-            clientId = '461800128463-7s2kmmm3h7npkvu14lltv8dp1c58p3ie.apps.googleusercontent.com'
-        elif (domain == 'climatevideos.info'):
-            clientId = '982806744490-cvmnqkl4ovn9550sk56a1i6qjcean489.apps.googleusercontent.com'
-        elif (domain == 'golangvideos.pl'):
-            clientId = '333894959182-47b2vl06t1es006spak42gk7lvig490v.apps.googleusercontent.com'
-        else:
-            raise ValueError('Bad Domain')
-        return clientId
         
     def __call__(self, form):
+
         self.form = form
-        try:
-             data  = {'idtoken' :form.request.form['form.field.idtoken']} 
-        except:
-            data, errors = form.extractData()
-            if errors:
-               form.submissionError = errors
-               return FAILURE
+        data, errors = form.extractData()
+        if errors:
+            form.submissionError = errors
+            return FAILURE
         token = data ['idtoken']
-        try : 
-            clientId = self.getClientId(form)
-            if isinstance (token,list):
-                token = token [0]
+        del data ['idtoken']
+        self.data = data
+                
+        self.getTokenData(token)
+        people = getPrincipalFolder(form.context)
+        userId = self.tokenData['sub']
 
-            print ("BEGOM TOKEN---------------------")
-            print (token)
-            print ("---------------------")
-
-            self.data = data = validateToken(token,form,clientId)
-        except ValueError:
-            # Invalid token
-            return "Invalide Token"
-        people = getPrincipalFolder( form.context)
-        userId = data['sub']
         self.innerCall(userId,people)
         
     def innerCall(self,userId,people):
@@ -110,25 +73,30 @@ class GoogleRegisterAction(GoogleLoginAction):
         if userId in people:
            raise Exception("THE USER ALREADY EXISTS")
         else:
-           self.createUser(self.form, self.data, people)
+           self.createUser(self.form, people)
 
 
-    def createUser(self,form, data, people):
+    def createUser(self,form, people):
         obj=person= form.factory()
         form.new=obj
-        newName = data ['sub']
+        newName = self.tokenData ['sub']
         people[newName]=obj
-        for key,value in data.items():
+
+        for key,value in self.tokenData.items():
             if key in ['iss','sub','azp','aud','iat']:
                continue
+            if key == 'name':
+               obj.nameFromGoogle = value
+               continue
             obj.__setattr__(key, value)
+            
+        for key,value in self.data.items():
+            print ("DATA ",key,value)    
+            obj.__setattr__(key, value)                
+        root = getSiteRoot(form.context)
+        root.addItem(obj)
         people.loginUser(person)   
-        message("You are Registered")
-
-        try:
-           obj.handle=data['given_name']+data['family_name']
-        except:
-           obj.handle = data['name']
+        send("You are Registered")
         nextURL = ".."  
         raise HTTPFound(nextURL)
 

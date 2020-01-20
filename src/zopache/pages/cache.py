@@ -60,7 +60,6 @@ class Cache:
         self.siteCaches[siteName]= SiteCache()
         
     def get(self, name, key, default=None):
-            import pdb; pdb.set_trace()
             cache = getattr(self, name)
             return cache.get(key, default=default)
 

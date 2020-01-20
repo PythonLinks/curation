@@ -39,7 +39,6 @@ class IName(Interface):
 class AddPythonAndEdit(AceScripts,Add):
     parentClass=Add
     def newURL(self,baseURL):
-        import pdb; pdb.set_trace()
         return baseURL + '/aceedit'
 
 class AddPythonAndTest(Add):

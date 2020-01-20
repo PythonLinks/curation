@@ -65,7 +65,6 @@ class ReTitle(BaseAction):
 
 class ReBoth(BaseAction):
     def __call__(self,form):
-        breakpoint()
         result = self.reTitle(form)
         if not hasattr(form.context, "valuesAsList"):
             return result

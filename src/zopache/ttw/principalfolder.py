@@ -43,6 +43,7 @@ class InternalPrincipal(FileBase,Page):
     _password = ''
     title = "Your Profile"
     talkURL =""
+    title = ""
     source = ""
     description = ""
     permissions = ['Vote']
@@ -71,14 +72,22 @@ class InternalPrincipal(FileBase,Page):
         Page.__init__(self)
         FileBase.__init__(self)
 
-
-    def logout(self,session=None):
+    def logout(self,session=None, view = None):
         if session is None:
             session = getSession()
         if 'user' in session:
             session.clear()
             return True
         return False
+
+    def logout(self,session=None, view = None):
+        if session is None:
+            session = getSession()
+            
+        if 'user' in session:
+            session.clear()
+
+
 
         
     """ Pricipals which are stored in the ZODB Principal Folder"""
@@ -113,11 +122,10 @@ class InternalPrincipal(FileBase,Page):
 
     def slugifiedHandle(self):
         return slugify(self.handle)
-           
-           
+                 
     def getTitle(self):
-        return self._handle
-
+        return self._handle 
+        
     def getId(self):
         return self._email    
     
@@ -299,3 +307,7 @@ class PrincipalFolder(Container):
         aSlug = slugify(handle) 
         return self.idBySlugifiedHandle.get(aSlug,None)
 
+    #USED BY REGISTER VALIDATORS
+    def existsHandle(self,handle):           
+        aSlug = slugify(handle) 
+        return aSlug in self.idBySlugifiedHandle            

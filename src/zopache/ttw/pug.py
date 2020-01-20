@@ -125,9 +125,9 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     title=u''
     className='Pug'
 
-    def postProcess(self):
-        TrustedHTML.postProcess(self,self)
-        JavascriptBase.postProcess(self,view = self)
+    def postProcess(self,view=None):
+        TrustedHTML.postProcess(self,view)
+        JavascriptBase.postProcess(self,view = view)
         
     def getHTML(self):
         return self.html
@@ -172,8 +172,8 @@ class BasePugForm(AceScripts):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
-    def postProcess(self):
-        self.context.postProcess()
+    def postProcess(self,view = None):
+        self.context.postProcess(view=view)
 
 @form_component
 @name('addPug')
@@ -188,8 +188,8 @@ class AddPug(AceScripts,AceAddForm):
     ignoreContent = True
     factory=Pug
 
-    def postProcess(self):
-        self.new.postProcess()
+    def postProcess(self,view=None):
+        self.new.postProcess(view=view)
 
 
         

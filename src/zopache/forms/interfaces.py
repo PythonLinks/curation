@@ -33,6 +33,14 @@ class IGLogin(Interface):
         description= "",
         required = True)
         
+class IGReg(Interface):
+        idtoken= schema.List(
+        title="Token",
+        description= "",
+        value_type=schema.ASCII(),
+        required = True)        
+
+        
 
 class IHandle(Interface):
 
@@ -72,7 +80,7 @@ purposes:</p>"""
         default = False)
     chatPermission.text = """ <br>  """        
 
-class IGRegister (IGLogin,IHandle,IPermissions):        
+class IGRegister (IGReg,IHandle,IPermissions):        
    pass
 
 class IRegister(IHandle, IEmail, IPermissions):

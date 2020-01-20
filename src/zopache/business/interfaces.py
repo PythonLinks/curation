@@ -12,9 +12,16 @@ from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.pages.interfaces  import ICountable
 from zopache.ttw.interfaces import IUserHTML
-from z3c.schema.email import RFC822MailAddress as Email
+from z3c.schema.email import RFC822MailAddress as EmailBase
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IJSONInclude
+
+class Email(EmailBase):
+    def _validate (self,data):
+       if data == "":
+          return
+       EmailBase._validate(self,data)
+
 
 class IAddress(Interface):
        pass
@@ -171,6 +178,13 @@ class IOrganizationBase (ICompanyOrOrganization):
         default = '',
     )
 
+    source= schema.Text(
+        title = u'Longer Description',
+        description = u'Please describe this organization further.',
+        required = False,
+        default = '',
+    )    
+
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
         description = u'Can they call you?',
@@ -181,7 +195,7 @@ class IOrganizationBase (ICompanyOrOrganization):
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
-        required = True,
+        required = False,
     )    
 
 class IOrganization(IOrganizationBase):    

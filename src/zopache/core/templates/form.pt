@@ -13,7 +13,7 @@
      tal:condition="view.status"
      tal:content="view.status">Status</p>
   
-  <div class="form-error"
+  <div class="text-danger"
        tal:condition="view.errors">
     <ul tal:condition="view.formErrors"
         tal:repeat="error view.formErrors">
@@ -21,11 +21,11 @@
     </ul>
   </div>
 
-  <div class="form-error"
+  <div class="text-danger"
        tal:condition="view.errors">
     <ul tal:condition="view.submissionError"
         tal:repeat="error view.submissionError">
-      <li> <span tal:replace="error" /> </li>
+      <li> <span tal:replace="error.title" /> </li>
     </ul>
   </div>
 
@@ -44,7 +44,7 @@
       <p tal:condition="widget.description"
 	 tal:content="widget.description"
 	 class="field-description" />
-      <p class="field-error"
+      <p class="text-danger"
 	 tal:define="error widget.error"
 	 tal:condition="error"
 	 tal:content="error.title" />
