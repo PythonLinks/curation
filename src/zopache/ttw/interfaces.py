@@ -292,7 +292,7 @@ class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable
         pass
 
 
-class IUntrustedHTML(IAceHTML):
+class IUntrustedHTML(IHTML):
    pass
 
 class IUntrustedAceHTML(IAceHTML):

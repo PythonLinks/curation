@@ -157,7 +157,7 @@ class IOrganizationBase (ICompanyOrOrganization):
 
     specialization= schema.Text(
         title = u'Specialization (20 characters)',
-        description = " Why is this groups focus?",
+        description = " What is this group's focus?",
         required = True,
         max_length = 20,
         default = '',
