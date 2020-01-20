@@ -31,14 +31,13 @@ class Logout(Page):
     def update(self):
          principal = self.request.principal
          if principal != anonymous:
-            principal.logout(view = self)
+            principal.logout()
 
     
     def render(self):
-         principal = self.request.principal
-         if principal != anonymous:
-            principal.logout(view = self)
-         return """ 
+         return  "You have been logged out."
+
+junk =      """ 
 
 <p>To logout from both this server, and google sign-in, please shut down 
 your browser.  Soon that will not be needed. 

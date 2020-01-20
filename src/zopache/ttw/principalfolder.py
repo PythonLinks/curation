@@ -77,7 +77,6 @@ class InternalPrincipal(FileBase,Page):
             session = getSession()
         if 'user' in session:
             session.clear()
-            setSession(session = session)
             return True
         return False
 
@@ -87,7 +86,7 @@ class InternalPrincipal(FileBase,Page):
             
         if 'user' in session:
             session.clear()
-            setSession(session)
+
 
 
         
