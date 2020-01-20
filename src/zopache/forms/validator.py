@@ -69,7 +69,9 @@ class AccessGoogle(object):
         elif (domain == 'golangvideos.com'):
             clientId = '901181416018-f6c7p85thdp79l9c6c3joccj9ffb5jug.apps.googleusercontent.com'
         elif (domain == 'stopsmog.info'):
-            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'            
+            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'
+        elif (domain == 'mqttchat.info'):
+            clientId = '901181416018-scjhce6o4m1ldhkqk1d1iv913qvtt3js.apps.googleusercontent.com'
         else:
             raise ValueError('Bad Domain')
         return clientId

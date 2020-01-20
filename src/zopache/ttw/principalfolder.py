@@ -72,14 +72,23 @@ class InternalPrincipal(FileBase,Page):
         Page.__init__(self)
         FileBase.__init__(self)
 
-
-    def logout(self,session=None):
+    def logout(self,session=None, view = None):
         if session is None:
             session = getSession()
         if 'user' in session:
             session.clear()
+            setSession(session = session)
             return True
         return False
+
+    def logout(self,session=None, view = None):
+        if session is None:
+            session = getSession()
+            
+        if 'user' in session:
+            session.clear()
+            setSession(session)
+
 
         
     """ Pricipals which are stored in the ZODB Principal Folder"""

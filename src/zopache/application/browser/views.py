@@ -31,15 +31,28 @@ class Logout(Page):
     def update(self):
          principal = self.request.principal
          if principal != anonymous:
-            principal.logout()
-#        newURL = ".."
-#        raise HTTPFound(newURL)
+            principal.logout(view = self)
+
     
     def render(self):
-         principal = self.request.principal        
+         principal = self.request.principal
          if principal != anonymous:
-            principal.logout()        
-         return "You have been logged out. <br>You may want to reload the page to confirm it. "
+            principal.logout(view = self)
+         return """ 
+
+<p>To logout from both this server, and google sign-in, please shut down 
+your browser.  Soon that will not be needed. 
+</p>
+
+<h3>         Click <a href =".."> here </a> to go back.
+</h3>
+"""
+junk = """    
+ <script src="https://apis.google.com/js/platform.js" async defer></script>
+ <script>
+gapi.auth2.getAuthInstance().signOut();
+</script>
+         """
 
 
 @view_component
