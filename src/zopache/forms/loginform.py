@@ -24,7 +24,8 @@ from dolmen.forms.base.errors import Error
 from cromlech.browser.exceptions import HTTPFound
 from zopache.core.getroot import getPrincipalFolder
 from zopache.crud.actions import Cancel
-  
+from zopache.forms.validator import LoginValidator
+
 class LoginAction(Action):
 
     def __call__(self,form):
@@ -55,6 +56,7 @@ class LoginAction(Action):
 class LoginForm(Form):
     """ Used to login
     """
+    dataValidators = [LoginValidator]    
     layoutName = "UserMenu"
     title='Log in '
     subTitle='Please Login'
