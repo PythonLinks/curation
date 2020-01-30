@@ -124,6 +124,6 @@ class AceEdit(AceScripts,AceEditForm):
         action3=Cancel("Cancel","Cancel")
         return Actions(action1,action3)
 
-    def postProcess(self):
+    def postProcess(self, view = None):
         self.context.postEditProcess(self)
 

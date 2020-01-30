@@ -12,7 +12,7 @@ class LocationBase (PageBase):
     longintude = 0.
     webClass = 'Location'
 
-    def postProcess(self):
+    def postProcess(self, view = None):
           #geoCache.geoCode(self.context.address)
           pass
 
