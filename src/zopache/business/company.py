@@ -9,12 +9,16 @@ from zopache.business.interfaces import (ICompany, IMap,
 from zopache.business.geocoding import GeoCode
 from zopache.pages.page import Page
 from zopache.business.geocoding import GeoCode
-
+from BTrees.OOBTree import OOBTree
 
 class Base (GeoCode,LocationBase):
     hidden = False
     longitude = 0.
     lattitude = 0.
+    def __init__(self):
+        LocationBase.__init__(self)
+        self.members = OOBTree()
+        
     def getTitle(self):
          if self.hidden:
             return "Hidden"

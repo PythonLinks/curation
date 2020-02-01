@@ -15,9 +15,55 @@ from zopache.pages.interfaces import IRootPage
 from zopache.crud.forms import AddNamedForm, EditForm
 from zopache.ttw.interfaces import IMailHost
 from zopache.core.interfaces import ITreeSecurity
+import os
 
 
+
+
+file = os.path.join(HERE, 'qp.config') 
+os.spawn ( os.P_NOWAIT, 'qp', file)
+           
+
+
+
+class Notify (object):
+    webmaster  = 'Christopher Lozinski <lozinski@PythonLinks.info>'
     
+    def notify (to, subject, content):
+
+        message = Message()
+        message['From'] = webmaster
+        message['To'] = webmaster
+        message['Subject'] = subject
+        message.set_payload("content")
+        #delivery = QueuedMailDelivery('path/to/queue')
+        mailer = self.parentalAcquire ("MailHost")
+        delivery = DirectMailDelivery(mailer)
+        delivery.send(from, [to], message)
+
+    def notifyUserNewUser(self):
+        subject = "Welcome"
+        url = view.url (self.new)
+        content = """ Thank you for signing up. """
+        self.notify (to, subject, content)
+ 
+    def notifyAdminsNewUser(self):
+        subject = "New User" 
+        url = view.url (self.new)       
+        content = F"Here is the new user {url}"
+        self.notify (to, subject, content)       
+
+ 
+    def notifyAdminsNewPage(self):
+        subject = "New Page"
+        content = view.url (self.new)
+        self.notify (to, subject, content)
+
+    def notifyAdminsPageDeleted(self):
+        subject = "Page Deleted"
+        content = view.request.url
+        self.notify (to, subject, content)        
+        
 
 @implementer (IMailHost)
 class MailHost(Leaf):

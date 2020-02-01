@@ -19,12 +19,13 @@ from zopache.forms.interfaces import IRegister, IGRegister
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 from zopache.forms.validator import GoogleValidator
+from zopache.ttw.mail import Notify
 
 @form_component
 @name (u'gregister')
 @context(Interface)
 @title("Google Register")
-class GoogleRegister(AddForm):
+class GoogleRegister(AddForm, Notify):
     dataValidators = [GoogleValidator]    
     count = 0
     layoutName = "UserMenu"    
@@ -60,4 +61,7 @@ class GoogleRegister(AddForm):
         else:
             newURL = '/'
         return newURL
-    
+
+    def postProcess (self, view =None):
+        self.notifyUserNewUser()
+        self.notifyAdminsNewUser()
