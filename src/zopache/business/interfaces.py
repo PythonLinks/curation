@@ -130,7 +130,7 @@ class ICompanyBase(ICompanyOrOrganization):
         default = '',
     )
 
-class ICompany(ICompanyOrOrganization):    
+class ICompany(ICompanyBase):    
     address= Address(
         title = u'Company Address',
         description = """This is used to 
@@ -139,7 +139,7 @@ class ICompany(ICompanyOrOrganization):
 
     )    
 
-class IAddCompany(ICompanyOrOrganization):    
+class IAddCompany(ICompany):    
     address= schema.Text(
         title = u'Company Address',
         description = """This is used to 

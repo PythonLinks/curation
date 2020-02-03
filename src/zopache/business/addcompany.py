@@ -49,7 +49,6 @@ class AddCompany(AddBase):
 @name('addOrganization')
 @title("Add Organization")
 @target(IView)
-@permissions('Vote')
 @context(IMap)    
 class AddOrganization(AddBase):
     interface = IAddOrganization
