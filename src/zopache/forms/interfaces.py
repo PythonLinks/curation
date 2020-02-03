@@ -34,10 +34,9 @@ class IGLogin(Interface):
         required = True)
         
 class IGReg(Interface):
-        idtoken= schema.List(
+        idtoken= schema.ASCII(
         title="Token",
         description= "",
-        value_type=schema.ASCII(),
         required = True)        
 
         

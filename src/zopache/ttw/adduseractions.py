@@ -63,9 +63,8 @@ class Add(Action):
         principalFolder.authenticate (data)
         message(_(u"You are Registered and Logged In"))
         newURL = form.newURL(newPerson)
-        if hasattr(form,'postAddProcess'):
-              form.new=newPerson            
-              form.postAddProcess()    
+        form.new=newPerson  
+        newPerson.postAddProcess(view=form)    
         raise HTTPFound(newURL)
 
     

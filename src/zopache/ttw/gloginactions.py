@@ -97,6 +97,7 @@ class GoogleRegisterAction(GoogleLoginAction):
         root.addItem(obj)
         people.loginUser(person)   
         send("You are Registered")
+        person.postAddProcess(view = form)
         nextURL = ".."  
         raise HTTPFound(nextURL)
 

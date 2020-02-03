@@ -62,6 +62,3 @@ class GoogleRegister(AddForm, Notify):
             newURL = '/'
         return newURL
 
-    def postProcess (self, view =None):
-        self.notifyUserNewUser()
-        self.notifyAdminsNewUser()

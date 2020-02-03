@@ -64,14 +64,17 @@ class Add(Action, UniqueName):
         baseURL = self.form.url (obj)
         #baseURL = str(IURL(obj, form.request))    
         url=self.newURL(baseURL)
+        
         if hasattr(form.new,'postAddProcess'):
             try:
                form.new.postAddProcess(view=form)
             except:
                form.new.postAddProcess()
         else:
-
-            form.new.postProcess(form)            
+            #if hasattr(form.'postAddProcess'):            
+            #   form.postAddProcess(form, view = self)
+            #else:
+               form.new.postProcess(form)                
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newName(self,data):    

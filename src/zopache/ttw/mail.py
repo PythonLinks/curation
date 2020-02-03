@@ -1,12 +1,12 @@
 
 #CURRENTLY JUST TO A SINGLE PERSON
 #CURRENTLY ONLY USES MAIL QUEUE
-
+from email.message import Message
 from zope import schema
 
 from repoze.sendmail.delivery import QueuedMailDelivery, DirectMailDelivery
 
-from here import HERE
+
 
 from zopache.core.viewdecorators import *
 from zopache.core import Leaf
@@ -15,54 +15,60 @@ from zopache.pages.interfaces import IRootPage
 from zopache.crud.forms import AddNamedForm, EditForm
 from zopache.ttw.interfaces import IMailHost
 from zopache.core.interfaces import ITreeSecurity
+from subprocess import Popen
 import os
 
-
-
-
-file = os.path.join(HERE, 'qp.config') 
-os.spawn ( os.P_NOWAIT, 'qp', file)
-           
-
-
-
+from here import HERE
+dataDir = os.path.join(HERE, 'data')
+spoolFile = os.path.join(dataDir, 'spool')
+configFile = os.path.join(dataDir, 'qp.config')
+runFile = os.path.join(dataDir, 'run2')         
+noreply  = '"DO NOT REPLY" <noreply@PythonLinks.info>'
+webmaster = '"Christopher Lozinski" <lozinski@PythonLinks.info> '
 class Notify (object):
-    webmaster  = 'Christopher Lozinski <lozinski@PythonLinks.info>'
-    
-    def notify (to, subject, content):
 
+    def notify (self,aFrom,to, subject, content):
         message = Message()
-        message['From'] = webmaster
-        message['To'] = webmaster
+        message['From'] = aFrom
+        message['To'] = to
         message['Subject'] = subject
-        message.set_payload("content")
-        #delivery = QueuedMailDelivery('path/to/queue')
-        mailer = self.parentalAcquire ("MailHost")
-        delivery = DirectMailDelivery(mailer)
-        delivery.send(from, [to], message)
-
+        #text = 'To: ' + to + ' \n'
+        #text +='From: ' + from + ' \n'
+        message.set_payload(content)
+        #mailer = self.parentalAcquire ("MailHost")
+        delivery = QueuedMailDelivery(spoolFile)
+        to = [to]
+        delivery.send(aFrom,to, message)
+ 
+    def sendTheMail(self):
+        Popen([runFile ])
+           
     def notifyUserNewUser(self):
         subject = "Welcome"
-        url = view.url (self.new)
-        content = """ Thank you for signing up. """
-        self.notify (to, subject, content)
+        url = self.url (self.new)
+        content = F"""Thank you for signing up. 
+                      Here is your user url: {url}"""
+        email = '"' + self.new.handle + '" <' + self.new.email + '>'
+        self.notify (noreply,email, subject, content)
  
     def notifyAdminsNewUser(self):
         subject = "New User" 
-        url = view.url (self.new)       
-        content = F"Here is the new user {url}"
-        self.notify (to, subject, content)       
-
- 
+        url = self.url (self.new)       
+        content = F"Here is the new user url {url}"
+        self.notify (noreply, webmaster, subject, content)       
+        self.sendTheMail()
+        
     def notifyAdminsNewPage(self):
         subject = "New Page"
-        content = view.url (self.new)
-        self.notify (to, subject, content)
+        content = self.url (self.new)
+        self.notify (noreply,webmaster, subject, content)
+        self.sendTheMail()
 
     def notifyAdminsPageDeleted(self):
         subject = "Page Deleted"
-        content = view.request.url
-        self.notify (to, subject, content)        
+        content = self.request.url
+        self.notify (noreply,webmaster, subject, content)        
+        self.sendTheMail()
         
 
 @implementer (IMailHost)

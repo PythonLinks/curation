@@ -44,6 +44,7 @@ class URLMethods(object):
 
     def getLongURL(self,item):
         return self.getZodbURL(item)
+    
     def getZodbURL(self,item):
         isZodbRoot = IZodbRoot.providedBy (item)
         if isZodbRoot:
@@ -91,7 +92,7 @@ class URLMethods(object):
     def url(self, *args):
         try:
           if len(args)==0:
-            return self.request.url
+            return self.request.path_url
           else:
             result =  self.simpleUrl((args)[0])
             return result
