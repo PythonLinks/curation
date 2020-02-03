@@ -1,4 +1,3 @@
-
 #CURRENTLY JUST TO A SINGLE PERSON
 #CURRENTLY ONLY USES MAIL QUEUE
 from email.message import Message
