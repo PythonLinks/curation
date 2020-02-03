@@ -34,9 +34,7 @@ class AddBase(AddPageBase):
     
 @view_component
 @name('addCompany')
-@title("Add Company")
 @target(IView)
-@permissions('Vote')
 @context(IMap)    
 class AddCompany(AddBase):
     interface = IAddCompany
