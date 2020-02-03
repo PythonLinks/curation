@@ -64,7 +64,6 @@ class Add(Action, UniqueName):
         baseURL = self.form.url (obj)
         #baseURL = str(IURL(obj, form.request))    
         url=self.newURL(baseURL)
-        breakpoint()
         if hasattr(form.new,'postAddProcess'):
             try:
                form.new.postAddProcess(view=form)
