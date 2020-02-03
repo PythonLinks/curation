@@ -59,6 +59,7 @@ class Notify (object):
         self.sendTheMail()
         
     def notifyAdminsNewPage(self):
+        #breakpoint()
         subject = "New Page"
         content = self.url (self.new)
         self.notify (noreply,webmaster, subject, content)

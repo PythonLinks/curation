@@ -65,10 +65,10 @@ class Add(Action, UniqueName):
         #baseURL = str(IURL(obj, form.request))    
         url=self.newURL(baseURL)
         if hasattr(form.new,'postAddProcess'):
-            try:
+            #try:
                form.new.postAddProcess(view=form)
-            except:
-               form.new.postAddProcess()
+            #except:
+            #   form.new.postAddProcess()
         else:
             #if hasattr(form.'postAddProcess'):            
             #   form.postAddProcess(form, view = self)
