@@ -18,7 +18,17 @@ class Base (GeoCode,LocationBase):
     def __init__(self):
         LocationBase.__init__(self)
         self.members = OOBTree()
-        
+
+    def isMember(self,view):
+        if not view.isAuthenticated():
+           return False
+        if not hasattr(self,'members'):
+           return False
+        name = view.request.principal.__name__
+        if name in self.members:
+            return True
+        return False
+    
     def getTitle(self):
          if self.hidden:
             return "Hidden"
