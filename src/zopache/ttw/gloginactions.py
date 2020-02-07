@@ -49,13 +49,15 @@ class GoogleLoginAction(Action,AccessGoogle):
                 
         self.getTokenData(token)
         people = getPrincipalFolder(form.context)
-        userId = self.tokenData['sub']
 
-        self.innerCall(userId,people)
+        email = self.tokenData['email']
+
+        self.innerCall(email,people)
         
-    def innerCall(self,userId,people):
-        if userId in people:
-            person = people[userId]    
+    def innerCall(self,email,people):
+        if email in people.idByEmail:
+            personId = people.idByEmail[email]
+            person = people [personId]
             people.loginUser(person)   
             self.form.loggedIn = True
 
@@ -69,8 +71,8 @@ class GoogleLoginAction(Action,AccessGoogle):
 #ON FAILURE GO TO REGISTER PAGE
             
 class GoogleRegisterAction(GoogleLoginAction):
-    def innerCall(self,userId,people):
-        if userId in people:
+    def innerCall(self,email,people):
+        if email in people.idByEmail:
            raise Exception("THE USER ALREADY EXISTS")
         else:
            self.createUser(self.form, people)
