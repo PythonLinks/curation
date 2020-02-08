@@ -40,7 +40,7 @@ class LocationBase (PageBase):
               
 
 @implementer (ILocation)
-class Location (LocationBase, RecentMixIn):
+class Location (LocationBase, PageMixIn):
     icon="ttwicons/Location.svg"
 
 import googlemaps

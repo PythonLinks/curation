@@ -24,6 +24,13 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     branchSize=1
     description = ''
     webApproved = True
+    #USED TO DISPLAY CHILDREN, BUT NOT HTML OBJECTS
+    def childCategories(self):
+        result =[]
+        for item in self.values():
+            if IPage.providedBy (item):
+               result.append (item)
+        return result
     
     def canView(self):
         return True
