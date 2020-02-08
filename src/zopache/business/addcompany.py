@@ -35,7 +35,7 @@ class AddBase(AddPageBase):
 @view_component
 @name('addCompany')
 @target(IView)
-@context(IMap)    
+@context(IPage)    
 class AddCompany(AddBase):
     interface = IAddCompany
     label="Add a Company"
@@ -47,7 +47,7 @@ class AddCompany(AddBase):
 @name('addOrganization')
 @title("Add Organization")
 @target(IView)
-@context(IMap)    
+@context(IPage)    
 class AddOrganization(AddBase):
     interface = IAddOrganization
     factory = Organization

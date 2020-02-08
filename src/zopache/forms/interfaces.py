@@ -74,7 +74,7 @@ to process my professional information for the following
 purposes:</p>"""
 
     chatPermission = schema.Bool(
-        title = "And to run this web server.",
+        title = "And to run this web server(registration, logins, cookies, and email notifications).",
         required = True,
         default = False)
     chatPermission.text = """ <br>  """        
