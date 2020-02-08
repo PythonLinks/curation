@@ -14,7 +14,7 @@ from zopache.pages.interfaces  import ICountable
 from zopache.ttw.interfaces import IUserHTML
 from z3c.schema.email import RFC822MailAddress as EmailBase
 from zopache.business.geocoding import Address
-from zopache.pages.interfaces import IJSONInclude
+from zopache.pages.interfaces import IPage
 
 class Email(EmailBase):
     def _validate (self,data):
@@ -27,10 +27,7 @@ class IAddress(Interface):
        pass
 
 
-class IEvent(IAddress, IUserHTML,ILocationBase,
-                    IOrdered, IBTreeContainer ,
-                    ICanonical, IJSONInclude
-):  
+class IEvent(IAddress, IPage,ILocationBase):  
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
@@ -81,10 +78,8 @@ class IEvent(IAddress, IUserHTML,ILocationBase,
     )
 
     
-class ICompanyOrOrganization (IAddress, IUserHTML,ILocationBase,
-                    IOrdered, IBTreeContainer ,
-                              ICanonical, ICountable, IJSONInclude
-):
+class ICompanyOrOrganization (IAddress, ILocationBase,
+                              IPage):
     pass
 
 class ICompanyBase(ICompanyOrOrganization):
