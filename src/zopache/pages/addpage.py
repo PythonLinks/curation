@@ -74,7 +74,7 @@ class AddLocation(AddPageBase):
 
 #MAP
 @view_component
-@name('addMap')
+@name('addSimpleMap')
 @title("Add Map")
 @target(IView)
 @permissions('AddContent')
