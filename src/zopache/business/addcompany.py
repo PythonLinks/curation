@@ -75,7 +75,6 @@ class AddEvemt(AddBase):
         
 @view_component
 @name('addCompanyMap')
-@title("Add Map")
 @target(IView)
 @permissions('AddContent')
 @context(IPage)    

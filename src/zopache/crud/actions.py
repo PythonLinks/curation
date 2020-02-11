@@ -62,8 +62,12 @@ class Add(Action, UniqueName):
         obj.__parent__ = context
         message(_(u"Content created"))
         baseURL = self.form.url (obj)
-        #baseURL = str(IURL(obj, form.request))    
-        url=self.newURL(baseURL)
+        #baseURL = str(IURL(obj, form.request))
+        if hasattr(form, 'newURL'):
+           url=self.form.newURL(baseURL)
+        else:
+           url=self.newURL(baseURL)
+        breakpoint()
         if hasattr(form.new,'postAddProcess'):
             #try:
                form.new.postAddProcess(view=form)
@@ -73,7 +77,7 @@ class Add(Action, UniqueName):
             #if hasattr(form.'postAddProcess'):            
             #   form.postAddProcess(form, view = self)
             #else:
-               form.new.postProcess(form)                
+               form.new.postProcess(view = form)                
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newName(self,data):    

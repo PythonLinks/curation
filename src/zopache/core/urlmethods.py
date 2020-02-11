@@ -106,11 +106,13 @@ class URLMethods(object):
         return itemURL
            
 
-    def secureShortURL(self):
+    def secureShortURL(self,context = None):
+        if context == None:
+           context = self.context
         result = 'https://'
         result += self.getDomain()
         result += '/'
-        result += self.context.__name__
+        result += context.__name__
         return result
 
     def shortURL(self,viewName=""):
@@ -143,6 +145,7 @@ class URLMethods(object):
  
     def viewHref(self,obj,view,name):
         return self.href(self.url(obj)+ '/' + view, name)   
+
     
     def href(self,url,name,target=False):  
            result ='<a href=\"'
