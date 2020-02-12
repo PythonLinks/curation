@@ -75,7 +75,10 @@ class Notify (object):
                       Here is your user url: {url}"""
         email = '"' + self.new.handle + '" <' + self.new.email + '>'
         self.notify (mailer.noReply,email, subject, content)
-        self.sendTheMail()
+        #DO NOT SEND THE MAIL
+        #IT Deletes the email.
+        #Wait unti notify admin new user. 
+        #self.sendTheMail()
         
     def notifyAdminsNewUser(self):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
