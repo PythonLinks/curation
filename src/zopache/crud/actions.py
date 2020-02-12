@@ -130,8 +130,8 @@ class Update(Action):
 
         apply_data_event(form.fields, form.getContentData(), data)
         message(_(u"Content updated"))
-        if hasattr(form.new,'postProcess'):
-               form.new.postProcess(view=form)
+        if hasattr(form.context,'postProcess'):
+               form.context.postProcess(view=form)
         else:
                form.postProcess(view = form)                
         baseURL = str(IURL(form.context, form.request))
