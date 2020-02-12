@@ -70,7 +70,7 @@ class Add(Action, UniqueName):
         if hasattr(form.new,'postAddProcess'):
                form.new.postAddProcess(view=form)
         else:
-               form.postAddProcess(view = form)                
+               form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newName(self,data):    
@@ -133,7 +133,7 @@ class Update(Action):
         if hasattr(form.context,'postProcess'):
                form.context.postProcess(view=form)
         else:
-               form.postProcess(view = form)                
+               form.postProcess()                
         baseURL = str(IURL(form.context, form.request))
         url=self.newURL(baseURL)
         if url == form.request.url:

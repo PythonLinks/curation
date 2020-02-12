@@ -75,7 +75,8 @@ class Notify (object):
                       Here is your user url: {url}"""
         email = '"' + self.new.handle + '" <' + self.new.email + '>'
         self.notify (mailer.noReply,email, subject, content)
- 
+        self.sendTheMail()
+        
     def notifyAdminsNewUser(self):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
         if mailer == None:
@@ -83,8 +84,9 @@ class Notify (object):
         subject = "New User" 
         url = self.secureShortURL (context = self.new)        
         content = F"Here is the new user url {url}"
-        self.notify (mailer.noReply, mailer.postMaster, subject, content)       
+        self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()
+
         
     def notifyAdminsNewPage(self):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
