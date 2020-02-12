@@ -93,7 +93,6 @@ class GoogleRegisterAction(GoogleLoginAction):
             obj.__setattr__(key, value)
             
         for key,value in self.data.items():
-            print ("DATA ",key,value)    
             obj.__setattr__(key, value)                
         root = getSiteRoot(form.context)
         root.addItem(obj)

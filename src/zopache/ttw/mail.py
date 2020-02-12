@@ -97,6 +97,7 @@ class Notify (object):
         self.notify (mailer.noReply,mailer.postMaster, subject, content)
         self.sendTheMail()
 
+        
     def notifyAdminsPageDeleted(self):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
         if mailer == None:
