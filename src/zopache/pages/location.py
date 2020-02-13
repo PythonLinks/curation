@@ -41,7 +41,6 @@ class LocationBase (PageBase):
               
     def getCompanies(self):
         result=[]
-        breakpoint()
         return self.getCompaniesRecursively(result)
 
     def getCompaniesRecursively(self,result):
