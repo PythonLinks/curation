@@ -1,17 +1,18 @@
 
 from .interfaces import ILocation, ILocationBase,IMap
-from zopache.pages.page import PageBase
-from zopache.pages.interfaces import IPage , IRootPage
 from zope.interface import implementer
 from .geo import geoCache
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
-
+from zopache.business.interfaces import IMap, ICompanyOrOrganization
+from zopache.pages.page import PageBase
+from zopache.pages.interfaces import IPage , IRootPage
 
 class LocationBase (PageBase):
     lattitude = 45.
     longintude = 0.
     webClass = 'Location'
-
+    specialization = ''
+    
     def postProcess(self, view = None):
           #geoCache.geoCode(self.context.address)
           pass
@@ -38,7 +39,26 @@ class LocationBase (PageBase):
                   result += ',"red"]'
                   return result, firstItem
               
+    def getCompanies(self):
+        result=[]
+        breakpoint()
+        return self.getCompaniesRecursively(result)
 
+    def getCompaniesRecursively(self,result):
+        values = self.values()        
+        for item in values:
+            if (ICompanyOrOrganization.providedBy(item) and
+                item.webApproved):
+                result.append(item)
+                
+            if (IMap.providedBy(item)):
+                item.getCompaniesRecursively(result)
+
+            if (ILocation.providedBy(item)):
+                item.getCompaniesRecursively(result)                
+
+        return result
+    
 @implementer (ILocation)
 class Location (LocationBase, PageMixIn):
     icon="ttwicons/Location.svg"

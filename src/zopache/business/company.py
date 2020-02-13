@@ -43,7 +43,7 @@ class Base (GeoCode,LocationBase):
          if (self.hidden and
              (not view.isAuthenticated())):
              raise Unauthorized 
-                        
+    """                        
     def getCompanies(self):
         result=[]
         return self.getCompaniesRecursively(result)
@@ -57,7 +57,8 @@ class Base (GeoCode,LocationBase):
             elif (IMap.providedBy(item)):
                 item.getCompaniesRecursively(result)
         return result
-
+    """
+    
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
         
