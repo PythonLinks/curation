@@ -55,6 +55,10 @@ class IMailHost(ILeaf):
         description = 'The password used to send mail.',
         required = True,
     )
+    debug = Bool(
+	    title = "Log Debugging Info.",
+	    required = False,
+	    default = False)       
 
 class IUserHTML(Interface):
     pass

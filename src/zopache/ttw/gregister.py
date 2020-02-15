@@ -20,6 +20,7 @@ from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 from zopache.forms.validator import GoogleValidator
 from zopache.ttw.mail import Notify
+from zopache.pages.interfaces import IPage
 
 @form_component
 @name (u'gregister')
@@ -58,7 +59,9 @@ class GoogleRegister(AddForm, Notify):
     def newURL(self,new):
         if new.hirePermission:
             newURL = '/' + new.__name__ + "/edit"
+        elif (IPage.providedBy(new)):    
+            newURL = '..'
         else:
-            newURL = '/'
+            newURL = "/"
         return newURL
 

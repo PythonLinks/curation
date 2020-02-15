@@ -57,8 +57,10 @@ class Notify (object):
                    '--hostname', mailer.smtpServer,
                    '--port',     str(mailer.port), 
                    '--username', mailer.userName, 
-                   '--password', mailer.password,
-                   self.spoolFile()]
+                   '--password', mailer.password]
+        if (mailer.debug):
+           command.append('--debug-smtp')            
+        command.append(self.spoolFile())
         print (' '.join (command))
         Popen(command)
      
@@ -113,6 +115,7 @@ class Notify (object):
 
 @implementer (IMailHost)
 class MailHost(Leaf):
+    debug = False
     pass
     
 @form_component
