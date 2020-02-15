@@ -16,6 +16,7 @@ from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 from zopache.core.getroot import getPrincipalFolder, getSiteRoot
 from zopache.forms.validator import AccessGoogle
+from zopache.pages.interfaces import IPage
 
 class Cancel(Action):
     """Cancel the current form and return on the default content view.
@@ -79,6 +80,7 @@ class GoogleRegisterAction(GoogleLoginAction):
 
 
     def createUser(self,form, people):
+        self.form = form
         obj=person= form.factory()
         form.new=obj
         newName = self.tokenData ['sub']
@@ -99,6 +101,15 @@ class GoogleRegisterAction(GoogleLoginAction):
         people.loginUser(person)   
         send("You are Registered")
         person.postAddProcess(view = form)
-        nextURL = ".."  
-        raise HTTPFound(nextURL)
+        newURL = self.newURL() 
+        raise HTTPFound(newURL)
 
+    def newURL(self):
+        if self.form.new.hirePermission:
+            newURL = '/' + new.__name__ + "/edit"
+        elif (IPage.providedBy(self.form.context)):    
+            newURL = self.form.shortURL()
+        else:
+            newURL = "/"
+        return newURL
+    
