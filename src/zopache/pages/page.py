@@ -35,8 +35,14 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def allTreeObjects(self):
         return AllBlogObjects(self)        
 
-    def allEventObjects(self):
-        return AllBlogObjects(self,interface = IEvent)
+    def listFutureEvents(self):
+        result = []
+        for item in self.allBlogObjects():
+            if (IEvent.providedBy (item)):
+                now = datetime.datetime.now()
+                if now < item.time: 
+                   result.append(item)
+        return result
 
     def hasFutureEvent(self):
         for item in self.allBlogObjects():
