@@ -9,6 +9,22 @@ from cromlech.security import unauthenticated_principal as anonymous
 from zopache.core.page  import  Page
 from zopache.business.interfaces import IJoin
 
+class Member(object):
+    def __init__ (self):
+        self.members = OOBTree()
+        
+    def isMember(self,view):
+        if not view.isAuthenticated():
+           return False
+        if not hasattr(self,'members'):
+           return False
+        name = view.request.principal.__name__
+        if name in self.members:
+            return True
+        return False
+    
+    
+
 class BaseMembers(Page):
     def addVariables (self):    
          if not hasattr(self.context,'members'):

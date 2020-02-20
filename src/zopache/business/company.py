@@ -9,26 +9,17 @@ from zopache.business.interfaces import (ICompany, IMap,
 from zopache.business.geocoding import GeoCode
 from zopache.pages.page import Page
 from zopache.business.geocoding import GeoCode
-from BTrees.OOBTree import OOBTree
+from zopache.business.subscribe import Member
 
-class Base (GeoCode,LocationBase):
+class Base (GeoCode,LocationBase,Member):
     hidden = False
     longitude = 0.
     lattitude = 0.
     def __init__(self):
         LocationBase.__init__(self)
-        self.members = OOBTree()
+        Member.__init__(self)
+        GeoCode.__init__(self)
 
-    def isMember(self,view):
-        if not view.isAuthenticated():
-           return False
-        if not hasattr(self,'members'):
-           return False
-        name = view.request.principal.__name__
-        if name in self.members:
-            return True
-        return False
-    
     def getTitle(self):
          if self.hidden:
             return "Hidden"
