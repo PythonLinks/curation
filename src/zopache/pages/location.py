@@ -36,7 +36,10 @@ class LocationBase (PageBase):
                   result +=  str(self.lattitude)  
                   result += ','    
                   result += str(self.longitude)
-                  result += ',"red"]'
+                  color = "red"
+                  if self.hasFutureEvent():
+                      color = "blue"
+                  result += ",'" + color + "']"
                   return result, firstItem
               
     def getCompanies(self):
@@ -44,7 +47,7 @@ class LocationBase (PageBase):
         return self.getCompaniesRecursively(result)
 
     def getCompaniesRecursively(self,result):
-        values = self.values()        
+        values = self.values()
         for item in values:
             if (ICompanyOrOrganization.providedBy(item) and
                 item.webApproved):
@@ -78,28 +81,27 @@ class MapBase(LocationBase):
         result=""   
         begin= "var locations =["
         end="\n];"
-        result, firstItem= self.getLocationsRecursively(
+        result, firstItem= self.getLocationsJSONCore(
                                 firstItem,result)
         return begin + result + end
 
 
-    def getLocationsRecursively(self,firstItem,result):
-
+    def getLocationsJSONCore(self,firstItem,result):
         for item in self.values():
              if not ILocationBase.providedBy(item):
                    continue
                
-             if ((item.lattitude == 0) and
+             elif ((item.lattitude == 0) and
                  item.longitude == 0):
                  continue
              
              # IF LOCATION GET THE JSON
-             if ( ILocationBase.providedBy(item)):
+             elif ( ILocationBase.providedBy(item)):
                 result, firstItem= item.getOneMarker(firstItem,result)
 
             #IF IF IS A MAP SHOW IT
             #OR SHOW A SINGLETON CHILD
-             if ( IMap.providedBy (item)): 
+             elif ( IMap.providedBy (item)): 
                   #location=item.onlyOneLocationIn()
                   #if (location!=None):
                   #   item = location
@@ -120,8 +122,7 @@ class MapBase(LocationBase):
                     company=item
          return company          
     
-    """
-    #NOT USED, BUT POTENTIALLY USEFUL
+
     def getLocations(self):
         values=self.values()
         result=[]
@@ -130,7 +131,7 @@ class MapBase(LocationBase):
                 item.webApproved):
                 result.append(item)
         return result
-     """
+
     
 @implementer (IMap)
 class Map(MapBase,PageMixIn):        

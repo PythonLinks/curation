@@ -1,5 +1,7 @@
 import time
 import os
+import datetime
+
 from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
@@ -17,6 +19,8 @@ from zopache.core.breadcrumbs import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
+from zopache.pages.allblogobjects import AllBlogObjects
+from zopache.business.interfaces import IEvent
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     title = ''
@@ -24,6 +28,30 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     branchSize=1
     description = ''
     webApproved = True
+    
+    def allBlogObjects(self):
+        return AllBlogObjects(self)
+
+    def allTreeObjects(self):
+        return AllBlogObjects(self)        
+
+    def allEventObjects(self):
+        return AllBlogObjects(self,interface = IEvent)
+
+    def hasFutureEvent(self):
+        for item in self.allBlogObjects():
+            if (IEvent.providedBy (item)):
+                now = datetime.datetime.now()
+                if now < item.time: 
+                   return True
+        return False
+                              
+    def allPagesAsList(self):
+        pages = []
+        for item in AllBlogObjects(self):
+            pages.append(item)
+        return pages
+    
     #USED TO DISPLAY CHILDREN, BUT NOT HTML OBJECTS
     def childCategories(self):
         result =[]
