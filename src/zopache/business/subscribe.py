@@ -7,7 +7,7 @@ from cromlech.security import Unauthorized
 from dolmen.view import name, context, view_component
 from cromlech.security import unauthenticated_principal as anonymous
 from zopache.core.page  import  Page
-from zopache.business.interfaces import IOrganization
+from zopache.business.interfaces import IJoin
 
 class BaseMembers(Page):
     def addVariables (self):    
@@ -20,7 +20,7 @@ class BaseMembers(Page):
     
 @view_component
 @name('join')
-@context(IOrganization)
+@context(IJoin)
 class Join(BaseMembers):
     def update(self):
          principal = self.request.principal
@@ -38,7 +38,7 @@ class Join(BaseMembers):
 
 @view_component
 @name('leave')
-@context(IOrganization)
+@context(IJoin)
 class Leave(BaseMembers):
     def update(self):
          principal = self.request.principal

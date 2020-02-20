@@ -26,8 +26,10 @@ class Email(EmailBase):
 class IAddress(Interface):
        pass
 
+class IJoin(Interface):
+    pass
 
-class IEvent(IAddress, IPage,ILocationBase):  
+class IEvent(IAddress, IPage,ILocationBase, IJoin):  
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
@@ -77,9 +79,8 @@ class IEvent(IAddress, IPage,ILocationBase):
            required = True,
     )
 
-    
 class ICompanyOrOrganization (IAddress, ILocationBase,
-                              IPage):
+                              IPage, IJoin):
     pass
 
 class ICompanyBase(ICompanyOrOrganization):
