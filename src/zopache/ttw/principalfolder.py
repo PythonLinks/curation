@@ -168,12 +168,17 @@ class InternalPrincipal(FileBase,Page):
             except ValueError:
                 self._handle = oldHandle
                 raise
+
+    def postAddProcess (self, view =None):
+        view.notifyUserNewUser()
+        view.notifyAdminsNewUser()
             
     password = property(getPassword, setPassword)
     title = property(getTitle)
     email = property(getEmail, setEmail)
     id = property(getId)
     handle = property(getHandle, setHandle)    
+
 
 
 def key(item):

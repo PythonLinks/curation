@@ -1,18 +1,19 @@
 
 from .interfaces import ILocation, ILocationBase,IMap
-from zopache.pages.page import PageBase
-from zopache.pages.interfaces import IPage , IRootPage
 from zope.interface import implementer
 from .geo import geoCache
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
-
+from zopache.business.interfaces import IMap, ICompanyOrOrganization
+from zopache.pages.page import PageBase
+from zopache.pages.interfaces import IPage , IRootPage
 
 class LocationBase (PageBase):
     lattitude = 45.
     longintude = 0.
     webClass = 'Location'
-
-    def postProcess(self):
+    specialization = ''
+    
+    def postProcess(self, view = None):
           #geoCache.geoCode(self.context.address)
           pass
 
@@ -35,12 +36,33 @@ class LocationBase (PageBase):
                   result +=  str(self.lattitude)  
                   result += ','    
                   result += str(self.longitude)
-                  result += ',"red"]'
+                  color = "red"
+                  if self.hasFutureEvent():
+                      color = "blue"
+                  result += ",'" + color + "']"
                   return result, firstItem
               
+    def getCompanies(self):
+        result=[]
+        return self.getCompaniesRecursively(result)
 
+    def getCompaniesRecursively(self,result):
+        values = self.values()
+        for item in values:
+            if (ICompanyOrOrganization.providedBy(item) and
+                item.webApproved):
+                result.append(item)
+                
+            if (IMap.providedBy(item)):
+                item.getCompaniesRecursively(result)
+
+            if (ILocation.providedBy(item)):
+                item.getCompaniesRecursively(result)                
+
+        return result
+    
 @implementer (ILocation)
-class Location (LocationBase, RecentMixIn):
+class Location (LocationBase, PageMixIn):
     icon="ttwicons/Location.svg"
 
 import googlemaps
@@ -59,28 +81,27 @@ class MapBase(LocationBase):
         result=""   
         begin= "var locations =["
         end="\n];"
-        result, firstItem= self.getLocationsRecursively(
+        result, firstItem= self.getLocationsJSONCore(
                                 firstItem,result)
         return begin + result + end
 
 
-    def getLocationsRecursively(self,firstItem,result):
-
+    def getLocationsJSONCore(self,firstItem,result):
         for item in self.values():
              if not ILocationBase.providedBy(item):
                    continue
                
-             if ((item.lattitude == 0) and
+             elif ((item.lattitude == 0) and
                  item.longitude == 0):
                  continue
              
              # IF LOCATION GET THE JSON
-             if ( ILocationBase.providedBy(item)):
+             elif ( ILocationBase.providedBy(item)):
                 result, firstItem= item.getOneMarker(firstItem,result)
 
             #IF IF IS A MAP SHOW IT
             #OR SHOW A SINGLETON CHILD
-             if ( IMap.providedBy (item)): 
+             elif ( IMap.providedBy (item)): 
                   #location=item.onlyOneLocationIn()
                   #if (location!=None):
                   #   item = location
@@ -101,8 +122,7 @@ class MapBase(LocationBase):
                     company=item
          return company          
     
-    """
-    #NOT USED, BUT POTENTIALLY USEFUL
+
     def getLocations(self):
         values=self.values()
         result=[]
@@ -111,7 +131,7 @@ class MapBase(LocationBase):
                 item.webApproved):
                 result.append(item)
         return result
-     """
+
     
 @implementer (IMap)
 class Map(MapBase,PageMixIn):        

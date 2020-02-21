@@ -42,8 +42,8 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     
     @property
     def action_url(self):
-        return self.request.url
-            
+        return self.url()
+    
     def widgetDictionary(self):
         return {c.htmlId():c for c in self.bootstrapWidgets()}
 

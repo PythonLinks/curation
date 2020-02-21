@@ -34,10 +34,8 @@ class AddBase(AddPageBase):
     
 @view_component
 @name('addCompany')
-@title("Add Company")
 @target(IView)
-@permissions('Vote')
-@context(IMap)    
+@context(IPage)    
 class AddCompany(AddBase):
     interface = IAddCompany
     label="Add a Company"
@@ -49,8 +47,7 @@ class AddCompany(AddBase):
 @name('addOrganization')
 @title("Add Organization")
 @target(IView)
-@permissions('Vote')
-@context(IMap)    
+@context(IPage)    
 class AddOrganization(AddBase):
     interface = IAddOrganization
     factory = Organization
@@ -78,7 +75,6 @@ class AddEvemt(AddBase):
         
 @view_component
 @name('addCompanyMap')
-@title("Add Map")
 @target(IView)
 @permissions('AddContent')
 @context(IPage)    

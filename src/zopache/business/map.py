@@ -5,21 +5,9 @@ from zopache.categories.category import Category
 
 @implementer (IMap)
 class Map  (Category,MapBase):
-    webClass = "CompanyMap"
+    webClass = "OpenStreetMap"
     hidden = False
     interface = IMap
     
-    def getCompanies(self):
-        result=[]
-        return self.getCompaniesRecursively(result)
 
-    def getCompaniesRecursively(self,result):
-        values = self.values()        
-        for item in values:
-            if (ICompanyOrOrganization.providedBy(item) and
-                item.webApproved):
-                result.append(item)
-            if (IMap.providedBy(item)):
-                item.getCompaniesRecursively(result)
-        return result
         

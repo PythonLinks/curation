@@ -34,10 +34,9 @@ class IGLogin(Interface):
         required = True)
         
 class IGReg(Interface):
-        idtoken= schema.List(
+        idtoken= schema.ASCII(
         title="Token",
         description= "",
-        value_type=schema.ASCII(),
         required = True)        
 
         
@@ -75,7 +74,7 @@ to process my professional information for the following
 purposes:</p>"""
 
     chatPermission = schema.Bool(
-        title = "And to run this web server.",
+        title = "And to run this web server(registration, logins, cookies, and email notifications).",
         required = True,
         default = False)
     chatPermission.text = """ <br>  """        

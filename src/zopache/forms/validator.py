@@ -11,13 +11,17 @@ class UserExistsError (ValidationError):
     """ That user name is already in use. """
     title = "User Exists"
 
+class NoPasswordError(ValidationError):
+    """ You need to login with Google Login """
+    title = "Please do a Google Login"
+    
 class Validator(object):
 
     def __init__(self, fields, form):
         self.form = form
 
     def getEmail(self):
-        email = self.form.data['email']
+        email = self.data['email']
         return email
     
     def validate(self, data):
@@ -38,8 +42,22 @@ class Validator(object):
            errors.append(error)
         return errors
 
+class LoginValidator(Validator):
+    def validate(self, data):
+        self.data = data
+        errors = []
+        people = getPrincipalFolder(self.form.context)        
+        anId = self.getEmail()
+        principal = people.getPrincipalByUserName(anId, default = None)
+        if ((principal != None )and
+            (principal._password == "")):
+           error = NoPasswordError("""Please Login using Google, 
+                                    not local login.""")           
+           errors.append(error)
+        return errors
 
 
+    
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from google.auth.transport.requests import Request

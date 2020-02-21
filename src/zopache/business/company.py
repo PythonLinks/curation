@@ -9,12 +9,17 @@ from zopache.business.interfaces import (ICompany, IMap,
 from zopache.business.geocoding import GeoCode
 from zopache.pages.page import Page
 from zopache.business.geocoding import GeoCode
+from zopache.business.subscribe import Member
 
-
-class Base (GeoCode,LocationBase):
+class Base (GeoCode,LocationBase,Member):
     hidden = False
     longitude = 0.
     lattitude = 0.
+    def __init__(self):
+        LocationBase.__init__(self)
+        Member.__init__(self)
+        GeoCode.__init__(self)
+
     def getTitle(self):
          if self.hidden:
             return "Hidden"
@@ -29,7 +34,7 @@ class Base (GeoCode,LocationBase):
          if (self.hidden and
              (not view.isAuthenticated())):
              raise Unauthorized 
-                        
+    """                        
     def getCompanies(self):
         result=[]
         return self.getCompaniesRecursively(result)
@@ -43,18 +48,18 @@ class Base (GeoCode,LocationBase):
             elif (IMap.providedBy(item)):
                 item.getCompaniesRecursively(result)
         return result
-
+    """
+    
     def postProcess(self,view=None):
-        GeoCode.postAddProcess(self, view = view)
-        Page.postAddProcess(self, view = view)
         Page.postProcess(self, view = view)
         
     def postAddProcess(self,view=None):
         self.webApproved = False
-        self.hidden = True
+        self.hidden = False
         GeoCode.postAddProcess(self,view=view)
         Page.postAddProcess(self, view = view)
-        self.editors=[view.request.principal.__name__]
+        
+        #self.editors=[view.request.principal.__name__]
         
 @implementer (ICompany)
 class Company  (Base):

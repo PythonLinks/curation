@@ -62,16 +62,15 @@ class Add(Action, UniqueName):
         obj.__parent__ = context
         message(_(u"Content created"))
         baseURL = self.form.url (obj)
-        #baseURL = str(IURL(obj, form.request))    
-        url=self.newURL(baseURL)
-        if hasattr(form.new,'postAddProcess'):
-            try:
-               form.new.postAddProcess(view=form)
-            except:
-               form.new.postAddProcess()
+        #baseURL = str(IURL(obj, form.request))
+        if hasattr(form, 'newURL'):
+           url=self.form.newURL(baseURL)
         else:
-
-            form.new.postProcess(form)            
+           url=self.newURL(baseURL)
+        if hasattr(form.new,'postAddProcess'):
+               form.new.postAddProcess(view=form)
+        else:
+               form.postAddProcess()                
         return SuccessMarker('Added', True, url=url,code=307)
 
     def newName(self,data):    
@@ -131,7 +130,10 @@ class Update(Action):
 
         apply_data_event(form.fields, form.getContentData(), data)
         message(_(u"Content updated"))
-        form.postProcess()
+        if hasattr(form.context,'postProcess'):
+               form.context.postProcess(view=form)
+        else:
+               form.postProcess()                
         baseURL = str(IURL(form.context, form.request))
         url=self.newURL(baseURL)
         if url == form.request.url:

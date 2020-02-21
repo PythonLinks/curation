@@ -3,7 +3,7 @@
 from zope import interface
 from zope.interface import Interface
 from zope import schema
-from zope.schema import Password, TextLine
+from zope.schema import Password, TextLine, Int
 from zope.schema import Text, TextLine, Choice, Bool, DottedName
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal as ICromlechPrincipal
@@ -15,35 +15,53 @@ from zopache.crud.interfaces import IImutable
 from zopache.crud.interfaces import IMoveable
 from zopache.core.interfaces import ITreeSecurity
 
-class IUserHTML(Interface):
-    pass
 
 class IMailHost(ILeaf):
     """Basic Mail CRUD"""
-    host = schema.TextLine(
-        title = u'Host Name',
+
+    postMaster = TextLine(
+        title="PostMaster Email Address",
+        description ="Who receives notifications.",
+        default = '"John Doe" <John.Doe@mydomain.com>' ,
+        required = True)
+
+    noReply = TextLine(
+        title="No Reply Email Address",
+        description ="Where do the emails come from.",
+        default = '"DO NOT REPLY" <noreply@yourdomain.com>' ,
+        required = True)
+    
+    smtpServer = DottedName(
+        title = u'SMTP Host Name',
         description = u'Which Mail Server are you using?',
         required = True,
     )
     
-    port = schema.Int(
+    port = Int(
         title = u'Port',
         description = u'MailHost Port Number',
         required = True,
         default = 25,
     )
 
-    username= schema.TextLine(
-        title = u'username',
-        description = u'Who is the user sending the email',
+    userName= TextLine(
+        title = 'User Name',
+        description = 'Who is the user sending the email',
         required = True,
     )
 
-    password= schema.Password(
-        title = 'password',
+    password= TextLine(
+        title = 'User Password',
         description = 'The password used to send mail.',
         required = True,
     )
+    debug = Bool(
+	    title = "Log Debugging Info.",
+	    required = False,
+	    default = False)       
+
+class IUserHTML(Interface):
+    pass
 
     
 
@@ -59,9 +77,8 @@ run a chat and voting server"""
 from cromlech.file import FileField
 
 
-
 class IFile(ILeaf):
-    title = schema.TextLine(
+    title = TextLine(
         title = u'File Desciption',
         description = u'Describe this File.',
         required = True,
@@ -69,7 +86,7 @@ class IFile(ILeaf):
     data = FileField(title=u'Upload a File')
 
 class IImage(IFile):
-    title = schema.TextLine(
+    title = TextLine(
         title = u'Image Desciption',
         description = u'Describe this Image.',
         required = True,

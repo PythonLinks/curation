@@ -16,6 +16,7 @@ from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 from zopache.core.getroot import getPrincipalFolder, getSiteRoot
 from zopache.forms.validator import AccessGoogle
+from zopache.pages.interfaces import IPage
 
 class Cancel(Action):
     """Cancel the current form and return on the default content view.
@@ -49,13 +50,15 @@ class GoogleLoginAction(Action,AccessGoogle):
                 
         self.getTokenData(token)
         people = getPrincipalFolder(form.context)
-        userId = self.tokenData['sub']
 
-        self.innerCall(userId,people)
+        email = self.tokenData['email']
+
+        self.innerCall(email,people)
         
-    def innerCall(self,userId,people):
-        if userId in people:
-            person = people[userId]    
+    def innerCall(self,email,people):
+        if email in people.idByEmail:
+            personId = people.idByEmail[email]
+            person = people [personId]
             people.loginUser(person)   
             self.form.loggedIn = True
 
@@ -69,14 +72,15 @@ class GoogleLoginAction(Action,AccessGoogle):
 #ON FAILURE GO TO REGISTER PAGE
             
 class GoogleRegisterAction(GoogleLoginAction):
-    def innerCall(self,userId,people):
-        if userId in people:
+    def innerCall(self,email,people):
+        if email in people.idByEmail:
            raise Exception("THE USER ALREADY EXISTS")
         else:
            self.createUser(self.form, people)
 
 
     def createUser(self,form, people):
+        self.form = form
         obj=person= form.factory()
         form.new=obj
         newName = self.tokenData ['sub']
@@ -91,12 +95,21 @@ class GoogleRegisterAction(GoogleLoginAction):
             obj.__setattr__(key, value)
             
         for key,value in self.data.items():
-            print ("DATA ",key,value)    
             obj.__setattr__(key, value)                
         root = getSiteRoot(form.context)
         root.addItem(obj)
         people.loginUser(person)   
         send("You are Registered")
-        nextURL = ".."  
-        raise HTTPFound(nextURL)
+        person.postAddProcess(view = form)
+        newURL = self.newURL() 
+        raise HTTPFound(newURL)
 
+    def newURL(self):
+        if self.form.new.hirePermission:
+            newURL = '/' + new.__name__ + "/edit"
+        elif (IPage.providedBy(self.form.context)):    
+            newURL = self.form.shortURL()
+        else:
+            newURL = "/"
+        return newURL
+    

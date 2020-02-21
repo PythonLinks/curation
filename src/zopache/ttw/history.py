@@ -45,7 +45,9 @@ class History(Page, Breadcrumbs):
     
        template = tal_template('history.pt')
        def humanizeTime(self,aTime):
-                result = arrow.get(aTime)
+                #Strange how the following line quite working. 
+                #result = arrow.get(aTime)
+                result = arrow.get(aTime.timeTime())                
                 result = result.humanize()
                 if (result [-3:] == 'ago'):
                    result = result [:-3]

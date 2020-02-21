@@ -44,6 +44,7 @@ class URLMethods(object):
 
     def getLongURL(self,item):
         return self.getZodbURL(item)
+    
     def getZodbURL(self,item):
         isZodbRoot = IZodbRoot.providedBy (item)
         if isZodbRoot:
@@ -91,7 +92,7 @@ class URLMethods(object):
     def url(self, *args):
         try:
           if len(args)==0:
-            return self.request.url
+            return self.request.path_url
           else:
             result =  self.simpleUrl((args)[0])
             return result
@@ -105,11 +106,13 @@ class URLMethods(object):
         return itemURL
            
 
-    def secureShortURL(self):
+    def secureShortURL(self,context = None):
+        if context == None:
+           context = self.context
         result = 'https://'
         result += self.getDomain()
         result += '/'
-        result += self.context.__name__
+        result += context.__name__
         return result
 
     def shortURL(self,viewName=""):
@@ -142,6 +145,7 @@ class URLMethods(object):
  
     def viewHref(self,obj,view,name):
         return self.href(self.url(obj)+ '/' + view, name)   
+
     
     def href(self,url,name,target=False):  
            result ='<a href=\"'

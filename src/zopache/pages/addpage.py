@@ -12,9 +12,9 @@ from zopache.crud.forms import AddByTitleForm
 from zopache.pages.interfaces import IMap, ILocation, INews, IPage
 from zopache.pages.page import Page, News
 from zopache.pages import Map, Location
+from zopache.ttw.mail import Notify
 
-
-class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
+class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
     def getSubTitle(self):
         return (
                 "To a " +  
@@ -31,7 +31,10 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
               AddAndAceEdit("Add and AceEdit", self.factory),
               formactions.Cancel("Cancel","Cancel"))
     
-
+    def postAddProcess(self,view = None):
+        Page.postAddProcess (self,view = self)
+        self.notifyAdminsNewPage()
+        
 @view_component
 @name('addPage')
 @title("Add Page")
@@ -42,6 +45,7 @@ class AddPage(AddPageBase):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
+    
 
 #ADD NEWS
 @view_component
@@ -70,7 +74,7 @@ class AddLocation(AddPageBase):
 
 #MAP
 @view_component
-@name('addMap')
+@name('addSimpleMap')
 @title("Add Map")
 @target(IView)
 @permissions('AddContent')
