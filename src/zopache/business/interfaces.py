@@ -54,7 +54,7 @@ class IEvent(IAddress, IPage,ILocationBase, IJoin):
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
-        required = True,
+        required = False,
     )    
 
     source= schema.Text(
