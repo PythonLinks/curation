@@ -10,7 +10,7 @@ from zopache.ttw.addeditforms import AceAddForm, PugEditForm
 from zopache.crud.forms import EditDemoForm
 from dolmen.container import IBTreeContainer
 
-
+from zopache.core.interfaces import ITreeSecurity
 from zopache.core.getroot import getProducts
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
@@ -128,6 +128,9 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     def postProcess(self,view=None):
         TrustedHTML.postProcess(self,view)
         JavascriptBase.postProcess(self,view = view)
+
+    def postAddProcess(self, view = None):
+        self.PostProcess(view=view)
         
     def getHTML(self):
         return self.html
@@ -172,24 +175,18 @@ class BasePugForm(AceScripts):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
-    def postProcess(self,view = None):
-        self.context.postProcess(view=view)
 
 @form_component
 @name('addPug')
 @context(IBTreeContainer)
 @target(IView)
 @title("Add Pug")
-@permissions('Manage')
-@implementer(IWeb)
+@implementer(ITreeSecurity)
 class AddPug(AceScripts,AceAddForm):
     subTitle='Add a Pug Object'
     interface = IPug
     ignoreContent = True
     factory=Pug
-
-    def postProcess(self,view=None):
-        self.new.postProcess(view=view)
 
 
         
@@ -197,9 +194,8 @@ class AddPug(AceScripts,AceAddForm):
 @form_component
 @context(IPug)
 @target(IView)
-@title("AceEdit")
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditPug(BasePugForm,PugEditForm):
     subTitle='Ace Edit this Pug Template.'
     pass

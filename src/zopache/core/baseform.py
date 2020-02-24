@@ -100,13 +100,6 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def isBTreeContainer(self):
          return  IBTreeContainer.providedBy(self.context)
 
-    #USED BY HTML TO COMPILE THE TEMPLATE
-    def postProcess(self):
-         pass
-
-    def postAddProcess(self):
-         pass     
-
     def breadcrumbs(self):
         return self.breadcrumbsManage()
 

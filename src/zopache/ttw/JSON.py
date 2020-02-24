@@ -81,10 +81,6 @@ class Index(View):
 class AceEditJSON(AceScripts,AceEditForm):
     subTitle='Edit a JSON Object'
 
-    def postProcess(self):
-        pass
-
-
 
 
 @form_component

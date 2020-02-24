@@ -101,9 +101,6 @@ class AddCoffeeScript(AceScripts,AceAddForm):
     ignoreContent = True
     factory=CoffeeScript
 
-    def postProcess(self):
-        self.new.postProcess()
-
             
 from .javascript import make_javascript_response, JavascriptBase
 
@@ -124,8 +121,6 @@ class BaseCoffeeScriptForm(AceScripts):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
-    def postProcess(self):
-        self.context.postProcess()
 
     #def footerScripts(self):
     #    return AceScriptsBase.footerScripts(self)

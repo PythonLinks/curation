@@ -54,7 +54,7 @@ class IPage(IContent, IContainer, IOrdered, IJSONInclude, IBTreeContainer,
         default = u'',
     )
 
-class IMarkdown (ISourceLeaf,IDirectory):
+class IMarkdown (ISourceLeaf):
     pass
 
 

@@ -139,9 +139,6 @@ class AddCSSFolder(AceScripts,AddAndSearchForm):
     ignoreContent = True
     factory=CSSFolder    
 
-    def postProcess(self,view=None):
-        self.new.postProcess(view=view)
-
         
 import crom
 from zopache.zmi.interfaces import IURLSegment

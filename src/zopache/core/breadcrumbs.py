@@ -73,12 +73,14 @@ from zopache.core.breadcrumbscore import BreadcrumbsCore
 from zopache.core.acquisition import Acquisition
 from zopache.core.urlmethods import URLMethods
 from zopache.core.relatives import Parents
+from zopache.core.getroot import Root
 
 class Breadcrumbs(UniqueName,
                   Utilities,
                   BreadcrumbsCore,
                   Acquisition,
                   URLMethods,
+                  Root,
                   Parents):
     try:   
       def isCompiledByCython(self):

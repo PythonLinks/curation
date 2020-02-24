@@ -60,10 +60,6 @@ class IMailHost(ILeaf):
 	    required = False,
 	    default = False)       
 
-class IUserHTML(Interface):
-    pass
-
-    
 
 class ITreeField(Interface):
       pass

@@ -1,5 +1,6 @@
 from cromlech.webob.response import Response
 from dolmen.view import  make_view_response
+from cromlech.security import unauthenticated_principal as anonymous
 
 from zopache.core import View
 from zopache.core.breadcrumbs import Breadcrumbs
@@ -27,7 +28,6 @@ from zopache.ttw.interfaces import IWeb
 from dolmen.view import name, context, view_component
 from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML
 from zopache.ttw.interfaces import IAceHTMLPage
-from zopache.ttw.interfaces import IUserHTML
 from zopache.core.interfaces import ITreeSecurity
 
 """
@@ -38,9 +38,9 @@ So those are two different views of the class.
 The ckEditor by default strips out the <html><head> and <body> tags. 
 That is great for a CMS, but for beginners might be better to leave it in. 
 
-We can imagine multiple versions of the html class.  Trusted HTML  allows 
-python scripts to be called.   Untrusted HTML does not. There could also 
-be an TrustedHTMLContainer, and an UntrustedHTML Containers
+Historically Trusted HTML used Chameleon Page Tempaltes. 
+UntrustedHTML just used html.  Now they are merging together, 
+with a trusted variable. 
 
 """ 
 class HTMLRecursionError(Exception):
@@ -51,9 +51,12 @@ from zopache.ttw.interfaces import ICkHTML
 
 
 class HTMLBase(object):
-    title=u'HTML Page'
+    trusted = False    
+    title=u'HTML Object'
     source=''
 
+    #THIS SHOULD BE RETIRED
+    #AND ONLY HTML USED. 
     def html(self):
         return self.source    
 
@@ -65,31 +68,45 @@ class HTMLBase(object):
 
 
 class TrustedHTML(HTMLBase):
+    trusted = True    
     icon="ttwicons/CkHTML.svg"
 
     def setTemplate(self):
+            if self.trusted == False:
+               return     
             if not hasattr(self,'_v_compiledTemplate'):
                self.compileTemplate()
-            return self._v_compiledTemplate 
+            #return self._v_compiledTemplate 
 
     def getHTML(self):
         return self.source
 
     def compileTemplate(self):
+                 if self.trusted == False:
+                    return     
                  source=self.getHTML()
                  self._v_compiledTemplate = PageTemplate(source)
-                 return self._v_compiledTemplate
+                 #return self._v_compiledTemplate
 
     def postProcess(self,view=None):
-            self.compileTemplate()
+            principal = view.request.principal
+            if principal == anonymous:
+               self.trusted = False
+               return
+       
+            if 'Python' in view.request.principal.permissions:
+               self.trusted = True
+               self.compileTemplate()
+            else:
+               self.trusted = False
 
     def postAddProcess(self,view=None):
             self.postProcess(view=view)
             
     #So here we pass the context into the template    
     def __call__(self,view,**args):
-       # return self.callCore(self,view,**args)
-       #def callCore(self,view,**args):
+        if self.trusted == False:
+           return self.getHTML()      
         try:
             view.count+= 1
             if view.count>50:
@@ -103,27 +120,22 @@ class TrustedHTML(HTMLBase):
             return result
     
     def render(self,extraArg,**args):
-
+            if self.trusted == False:
+               return self.getHTML()     
             self.setTemplate()
             return self._v_compiledTemplate(**args)
                                
-    
-    
+        
     def callWithContext(self,view,context,**args):
+            if self.trusted == False:
+               return self.getHTML()
+       
             self.setTemplate()
             return self._v_compiledTemplate(
                            context=context,
                            request=view.request,
                            view=view,
                            **args)
-
-    def callRecursive(self,view,context,template):
-            self.setTemplate()
-            return self._v_compiledTemplate(
-                           view=view,
-                           context=context,
-                           template=template,
-                           )
 
 
 @implementer (IUntrustedHTML)
@@ -135,11 +147,9 @@ class UntrustedHTMLBase(HTMLBase):
     def compileTemplate(self):
         pass
 
-    def postProcess(self,view=None):
-        pass
 
     def __call__(self,view,**args):
-            return self.source
+            return self.getHTML()
 
 class UntrustedHTML(UntrustedHTMLBase,Leaf):
     source = """
@@ -206,9 +216,6 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
     def headerScripts(self):
           return CkScripts.headerScripts(self)
 
-    def postProcess(self, view=None):
-        self.context.postProcess(view=self)
-        
     @property
     def actions(self):
         return Actions(
@@ -242,8 +249,6 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),
               formactions.Cancel(_("Cancel","Cancel")))
 
-    def postProcess(self, view=None):
-        self.new.postProcess(view=view)                    
 
 @form_component
 @name (u'addAceChameleon')
@@ -291,8 +296,6 @@ class BaseAceEdit(AceScripts,BaseEditForm):
     def headerScripts(self):
           return AceScripts.headerScripts(self)    
 
-    def postProcess(self, view = None):
-        self.context.postProcess(view=self)
 
 class AceEdit(BaseAceEdit):
     @property
@@ -320,14 +323,6 @@ class AceEdit(BaseAceEdit):
 class AceEditForm(AceEdit):
     pass
 
-#HERE IS THE USER ACE EDIT FORM
-#USED BY BUSINESS CLASS, CAN REALLY BE GOTTEN RID OF
-@form_component
-@context(IUserHTML)
-@name("aceedit")
-@implementer (ITreeSecurity)
-class UserAceEditForm(AceEdit):
-    pass
 
 #AND HERE IS THE DEMO ACE EDIT FORM
 @form_component
@@ -349,8 +344,6 @@ class BaseCkEdit(CkScripts,BaseEditForm):
     def headerScripts(self):
           return CkScripts.headerScripts(self)    
 
-    def postProcess(self, view = None):
-        self.context.postProcess(view=self)
 
 class CkEdit(BaseCkEdit):
     @property
@@ -371,15 +364,6 @@ class CkEdit(BaseCkEdit):
 @implementer(ITreeSecurity)
 class CkEditForm(CkEdit):
       pass
-
-#USED BY BUSINESS CLASSES
-#CAN REALLY BE GOTTEN RID OF
-@form_component
-@context(IUserHTML)
-@name('ckedit')
-@implementer (ITreeSecurity)
-class UserCkEditForm(CkEdit):
-    pass    
 
 
 #AND HERE IS THE CkDemo Form

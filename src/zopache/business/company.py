@@ -3,7 +3,6 @@ from zope.interface import implementer
 from cromlech.security import Unauthorized
 
 from zopache.pages.location import LocationBase
-from zopache.categories.category import Category
 from zopache.business.interfaces import (ICompany, IMap,
                                IOrganization, ICompanyBase)
 from zopache.business.geocoding import GeoCode

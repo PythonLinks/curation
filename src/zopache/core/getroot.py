@@ -56,3 +56,15 @@ def getRoot(object):
                 raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
         raise TypeError("Parents needed to  determine location root")
 """
+
+
+class Root(object):
+
+    def getSiteRoot(self):
+        return getSiteRoot(self)
+
+    def getZodbRoot(self):
+        return getZodbRoot(self)
+
+    def getPrincipalFolder(self):
+        return getPrincipalFolder(self)               

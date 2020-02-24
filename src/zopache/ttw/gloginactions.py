@@ -106,7 +106,7 @@ class GoogleRegisterAction(GoogleLoginAction):
 
     def newURL(self):
         if self.form.new.hirePermission:
-            newURL = '/' + new.__name__ + "/edit"
+            newURL = '/' + self.form.new.__name__ + "/edit"
         elif (IPage.providedBy(self.form.context)):    
             newURL = self.form.shortURL()
         else:
