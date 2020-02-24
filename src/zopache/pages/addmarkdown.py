@@ -17,6 +17,7 @@ from zopache.pages.markdown import Markdown
 from zopache.pages.interfaces import IMarkdown, IPage
 from zopache.core import View
 from zopache.ttw.mail import Notify
+from zopache.core.interfaces import ITreeSecurity
 
 class  AceScripts(AceScripts):
     def  footerScripts(self):
@@ -49,7 +50,7 @@ class EditAndView (Edit):
 @form_component
 @name('addMarkdown')
 @context(IPage)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddMarkdown(AceScripts,AceAddForm, Notify):
     subTitle = "Add a Markdown Page"
     interface = IMarkdown
@@ -91,7 +92,7 @@ class AceDemo(AceScripts,EditDemoForm):
 @form_component
 @context(IMarkdown)
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEdit(AceScripts,AceEditForm):
     subTitle= "Edit a Markdown Page"
 

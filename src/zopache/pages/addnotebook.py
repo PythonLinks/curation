@@ -20,6 +20,7 @@ from zopache.core import View
 from zopache.core.page  import  Page
 from zopache.pages.notebook import Notebook
 from zopache.pages.interfaces import INotebook, IAddNotebook
+from zopache.core.interfaces import ITreeSecurity
 
 class  AceScripts(AceScripts):
     def  footerScripts(self):
@@ -48,7 +49,7 @@ from zopache.crud.forms import AddByTitleForm
 @form_component
 @name('addNotebook')
 @context(IBTreeContainer)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddNotebook(AddByTitleForm):
     subTitle='Upload a Notebook'
     interface = IAddNotebook
@@ -113,7 +114,7 @@ class AceDemo(AceScripts,EditDemoForm):
 @form_component
 @context(INotebook)
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)         
 class AceEdit(AceScripts,AceEditForm):
     subTitle= "Edit a Notebook"
 

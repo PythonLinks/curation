@@ -13,6 +13,7 @@ from zopache.pages.interfaces import IMap, ILocation, INews, IPage
 from zopache.pages.page import Page, News
 from zopache.pages import Map, Location
 from zopache.ttw.mail import Notify
+from zopache.core.interfaces import ITreeSecurity
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
     def getSubTitle(self):
@@ -39,8 +40,8 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
 @name('addPage')
 @title("Add Page")
 @target(IView)
-@permissions('AddContent')
-@context(IPage)    
+@context(IPage)
+@implementer(ITreeSecurity)
 class AddPage(AddPageBase):
     interface = IPage
     label="Add a Wiki Page"
@@ -52,8 +53,8 @@ class AddPage(AddPageBase):
 @name('addNews')
 @title("Add News")
 @target(IView)
-@permissions('AddContent')
-@context(IPage)    
+@context(IPage)
+@implementer(ITreeSecurity)
 class AddNews(AddPageBase):
     interface = INews
     label="Add a News Item"
@@ -62,10 +63,9 @@ class AddNews(AddPageBase):
 #LOCAION
 @view_component
 @name('addLocation')
-@title("Add Location")
 @target(IView)
-@permissions('AddContent')
-@context(IMap)    
+@context(IMap)
+@implementer(ITreeSecurity)
 class AddLocation(AddPageBase):
     interface = ILocation
     label="Add a Location"
@@ -75,10 +75,9 @@ class AddLocation(AddPageBase):
 #MAP
 @view_component
 @name('addSimpleMap')
-@title("Add Map")
 @target(IView)
-@permissions('AddContent')
 @context(IPage)    
+@implementer(ITreeSecurity)
 class AddMap(AddPageBase):
     subTitle = 'Add a map'
     interface = IMap

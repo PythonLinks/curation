@@ -45,8 +45,8 @@ class PugEditForm(EditForm):
     def actions(self):
         return Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
-            #  formactions.SaveAndView(_("Save  and View","Save -> View")),
-            #  formactions.SaveAndViewJS(_("Save -> JS","Save -> JS")),
+              formactions.SaveAndView(_("Save  and View","Save -> View")),
+              formactions.SaveAndViewJS(_("Save -> JS","Save -> JS")),
               #formactions.SaveAndViewHTML(_("Save -> HTML","Save -> HTML")),
               #formactions.SaveAndTest(_("Save  and Test","Save -> Test")), 
               formactions.Cancel(_("Cancel","Cancel")))    

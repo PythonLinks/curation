@@ -15,6 +15,7 @@ from zopache.python.interfaces import IPython, IPythonIndex,IPythonFile
 from zopache.python.interfaces import IDirectory, IJavascriptFile
 from zopache.ttw.interfaces import IJavascript, IJavascriptIndex
 from zopache.python.utils import assert_directory_access
+from zopache.core.interfaces import ITreeSecurity
 
 CHUNK_SIZE = 1 << 12
 

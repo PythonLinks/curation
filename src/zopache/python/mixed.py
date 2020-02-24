@@ -15,6 +15,7 @@ from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
 from zopache.ttw.interfaces import ITestURL
 from zopache.ttw.javascript import JavascriptFolder
+from zopache.core.interfaces import ITreeSecurity
 
 from here  import HERE
 from .utils import create_directory
@@ -219,7 +220,7 @@ from zopache.ttw import actions as ttwactions
 @name('addPythonFolder')
 @context(IBTreeContainer)
 @target(IView)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddPythonFolder(AceScripts,AceAddForm):
     subTitle= 'Add a Python Folder'
     interface = IPythonFolder

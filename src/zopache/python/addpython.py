@@ -15,6 +15,8 @@ from zopache.python.python import AceScripts
 
 from zope.schema.interfaces import ValidationError
 from dolmen.container import IBTreeContainer
+from zopache.core.interfaces import ITreeSecurity
+
 
 class PythonError(ValidationError):
     """ Python object names must end in '.py' """
@@ -50,9 +52,8 @@ class AddPythonAndTest(Add):
 @form_component
 @name('addPython')
 @context(IBTreeContainer)
-@title("Add Python")
-@permissions('Manage')
 @implementer(IPython)
+@implementer(ITreeSecurity)
 class AddPython(AceScripts,AceAddForm):
     subTitle = "Add  a Python Object"
     interface = IPython

@@ -18,6 +18,7 @@ from .interfaces import IHTMLContainer
 from zopache.ttw.html import TrustedHTML
 from zopache.crud.forms import AddForm
 from zopache.ttw.interfaces import IWeb    
+from zopache.core.interfaces import ITreeSecurity
 
 @implementer(IHTMLContainer)
 class HTMLContainer(TrustedHTML,Container):
@@ -31,9 +32,7 @@ class HTMLContainer(TrustedHTML,Container):
 @form_component
 @name (u'addContainer')
 @context(IBTreeContainer)
-@title("Add TTWContainer.")
-@permissions('Manage')
-@implementer(IWeb)
+@implementer(ITreeSecurity)
 class ContainerAddForm(AddForm):
     subTitle = 'Add a Container'
     interface = Interface

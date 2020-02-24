@@ -6,12 +6,12 @@ from zopache.ttw.interfaces import IFile, IImage
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import AddForm
 from zopache.core.uniquename import UniqueName
+from zopache.core.interfaces import ITreeSecurity
 
 @form_component
 @name('addFile')
 @context(IBTreeContainer)
-@title("Add File")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddFile(AddForm,UniqueName):
     subTitle='Add a File'
     interface = IFile
@@ -23,12 +23,11 @@ class AddFile(AddForm,UniqueName):
               AddFileAction("Add File"),   
               formactions.Cancel("Cancel","Cancel"))
 
-
 @form_component
 @name('addImage')
 @context(IBTreeContainer)
 @title("Add File")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddImage(AddFile):
     subTitle='Add an Image'
     interface = IImage
