@@ -28,12 +28,12 @@ from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 from zopache.crud.actions import Cancel
 from zopache.forms.validator import Validator
-
+from zopache.ttw.mail import Notify
 @form_component
 @name (u'signup')
 @context(Interface)
 @title("Register")
-class Register(Form):
+class Register(Form,Notify):
     dataValidators = [Validator]
     layoutName = "UserMenu"
     fields = Fields(IRegister)
@@ -43,12 +43,6 @@ class Register(Form):
     ignoreContent = True
     igrnoreRequest = False
     count = 0
-
-    def postAddProcess(self):
-       self.new.editors = {self.new.__name__} 
-       if len(self.new.__parent__)==1:
-           self.new.permissions = ['AddContent','EditContent',
-            'Manage','Vote','Edit','Add']
 
     def acquireTitle(self):
        return 'Sign Up'

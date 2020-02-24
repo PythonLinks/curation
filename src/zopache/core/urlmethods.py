@@ -58,10 +58,10 @@ class URLMethods(object):
     def getSiteURL (self,item):
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
-        if isZodbRoot:
-            base_url = ''
-        elif isSiteRoot:
+        if isSiteRoot:
             base_url = '/' + item.__name__
+        elif isZodbRoot:
+            base_url = '/'
         else:
            container = item.__parent__
            base_url= self.getLongURL(container)+ '/' + item.__name__

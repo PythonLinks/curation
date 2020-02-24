@@ -1,5 +1,4 @@
 from zope.interface import implementer
-from zope.interface import implementer
 
 from dolmen.container import IBTreeContainer
 from cromlech.security import getSecurityGuards, permissions

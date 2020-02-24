@@ -35,11 +35,10 @@ class AddFileAction(Action):
         if errors:
             form.submissionError = errors
             return FAILURE
-
         self.upload(formData)
         self.message()
         nextURL = self.nextURL()
-        self.new.postAddProcess(view=form)
+        #self.new.postAddProcess(view=form)
         return SuccessMarker('Added', True, url=nextURL ,code=307)
 
     def nextURL(self):
@@ -99,11 +98,14 @@ class AddImageAction(AddFileAction):
 
 
     def createFile(self,formData):
+         breakpoint()
          self.nextView = '/manage'
          file = Image()
          imageData  = formData['data']
-         file.data = imageData  
+         file.data = imageData.file.read()
+         imageData.file.seek(0)
          image = PilImage.open(imageData.file, mode = 'r')
+         file.contentType = imageData.type
          file.width = image.width
          file.height = image.height
          return file

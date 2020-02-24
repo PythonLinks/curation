@@ -16,7 +16,8 @@ class FileBase(object):
         return self.blob.getSize()
 
     def setData(self, data):
-        bits = data
+        dataFile = data.file
+        bits =  dataFile.read()
         if len(bits) == 0:
             return
         if not hasattr(self,'blob'):
