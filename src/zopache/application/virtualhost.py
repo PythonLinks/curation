@@ -17,8 +17,10 @@ from zopache.application.interfaces import IVirtualHost
 #NO NEED TO DO IN NGINX
 virtualHosts = {'dev.pythonlinks.info':'python',
                 'mqttchat.info':'mqtt',
-                'climatechat.info': 'climate-change',
-                'stopsmog.info': 'smog',                
+                'climateactivists.info': 'climate-change',
+                'bernie-supporters.org': 'bernie-sanders',
+                'mensgroups.info': 'mens-groups',                
+                'stopsmog.info': 'smog',                                
                 'golangchat.info':'golang',                
                 'superwifi.pl':'superwifi',
                 'pythonlinks.info':'python',
