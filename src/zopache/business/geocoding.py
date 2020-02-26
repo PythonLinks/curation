@@ -1,7 +1,6 @@
 import googlemaps
 from zope.schema import Text
 from zope.schema import ValidationError
-from zopache.ttw.html import UserCkEditForm
 
 class GeoCode(object):
     postAmble = """ When you submit the form, please be patient, 

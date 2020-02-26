@@ -18,7 +18,7 @@ from zopache.application.interfaces import IVirtualHost
 virtualHosts = {'dev.pythonlinks.info':'python',
                 'mqttchat.info':'mqtt',
                 'climatechat.info': 'climate-change',
-                'stopsmog.info': 'climate-change',                
+                'stopsmog.info': 'smog',                
                 'golangchat.info':'golang',                
                 'superwifi.pl':'superwifi',
                 'pythonlinks.info':'python',
