@@ -28,12 +28,13 @@ from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 from zopache.crud.actions import Cancel
 from zopache.forms.validator import Validator
+from zopache.ttw.mail import Notify
 
 @form_component
 @name (u'signup')
 @context(Interface)
 @title("Register")
-class Register(Form):
+class Register(Form,Notify):
     dataValidators = [Validator]
     layoutName = "UserMenu"
     fields = Fields(IRegister)
