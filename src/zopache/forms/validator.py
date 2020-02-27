@@ -91,7 +91,7 @@ class AccessGoogle(object):
         elif (domain == 'mensgroups.info'):
             clientId = '901181416018-rl909gtvjkerikdpf17m597vqhjm2uqp.apps.googleusercontent.com'
         elif (domain == 'climateactivists.info'):
-            clientId = '901181416018-hm2qk5i7rtqtkj6ga23fmna4rl79iej2.apps.googleusercontent.com'            
+            clientId = '832774817535-0e4d586gd3us7oq6pak88u0djtl8punn.apps.googleusercontent.com'            
         else:
             raise ValueError('Bad Domain')
         return clientId

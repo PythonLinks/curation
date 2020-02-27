@@ -18,9 +18,11 @@ from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.event import Event
+from zopache.business.exists import DuplicateOrganization
 
 class AddBase(AddPageBase):
     count = 0 
+    dataValidators = [DuplicateOrganization]
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
     #def postAddProcess(self):
