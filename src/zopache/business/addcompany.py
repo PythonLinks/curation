@@ -53,7 +53,8 @@ class AddOrganization(AddBase):
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
-    subTitle = "All submissions are reviewed before becoming publicly visible. "    dataValidators = [DuplicateOrganization]
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]
 
 
 #ADD AN EVENT
