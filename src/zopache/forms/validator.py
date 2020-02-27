@@ -87,7 +87,9 @@ class AccessGoogle(object):
         elif (domain == 'golangvideos.com'):
             clientId = '901181416018-f6c7p85thdp79l9c6c3joccj9ffb5jug.apps.googleusercontent.com'
         elif (domain == 'stopsmog.info'):
-            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'
+            clientId = '3722083405-pf3uk2dkkpsoi6873i1etfea7rv55ig1.apps.googleusercontent.com'
+#        elif (domain == 'stopsmog.info'):
+#            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'            
         elif (domain == 'mensgroups.info'):
             clientId = '950419722294-r5peocg874brshvn5kk2bdi71iuhrlc5.apps.googleusercontent.com'
         elif (domain == 'climateactivists.info'):
