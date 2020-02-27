@@ -89,7 +89,7 @@ class AccessGoogle(object):
         elif (domain == 'stopsmog.info'):
             clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'
         elif (domain == 'mensgroups.info'):
-            clientId = '901181416018-rl909gtvjkerikdpf17m597vqhjm2uqp.apps.googleusercontent.com'
+            clientId = '950419722294-r5peocg874brshvn5kk2bdi71iuhrlc5.apps.googleusercontent.com'
         elif (domain == 'climateactivists.info'):
             clientId = '832774817535-0e4d586gd3us7oq6pak88u0djtl8punn.apps.googleusercontent.com'            
         else:
