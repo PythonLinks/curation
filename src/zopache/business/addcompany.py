@@ -22,7 +22,6 @@ from zopache.business.exists import DuplicateOrganization
 
 class AddBase(AddPageBase):
     count = 0 
-    dataValidators = [DuplicateOrganization]
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
     #def postAddProcess(self):
@@ -54,7 +53,8 @@ class AddOrganization(AddBase):
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
-    subTitle = "All submissions are reviewed before becoming publicly visible. "
+    subTitle = "All submissions are reviewed before becoming publicly visible. "    dataValidators = [DuplicateOrganization]
+
 
 #ADD AN EVENT
 @view_component

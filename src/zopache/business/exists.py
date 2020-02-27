@@ -26,8 +26,6 @@ want to submit it, then
 please change the name or spelling, resubmit, and the submission should work.
 You can also add the name of the city to distinguish it from the other 
 organization. """
-
-        breakpoint()
         if slug in siteRoot:
            error = OrganizationExistsError(errorMessage)
            errors.append(error)
