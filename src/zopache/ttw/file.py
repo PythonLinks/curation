@@ -24,6 +24,7 @@ class FileBase(object):
             self.blob = Blob()
         with self.blob.open(mode ="w") as blobFile:
            blobFile.write(bits)
+        self.title = data ["title"]   
         
     def getData(self):
         if not hasattr(self,'blob'):
@@ -43,8 +44,15 @@ class File(FileBase,Leaf):
 @implementer(IImage)
 class Image (File):
     icon="ttwicons/Image.svg"
-
-    
+    def getHTML(self, view=None):
+        url = view.url(self)
+        if hasattr(self,'title'):
+           title = self.title
+        else:
+           title = ""
+        tag = F"""<img src="{url}" width ="{self.width}" height = "{self.height}" alt = "{title}">"""  
+        return tag
+     
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.content_type=view.context.contentType
