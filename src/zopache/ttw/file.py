@@ -23,9 +23,7 @@ class FileBase(object):
         if not hasattr(self,'blob'):
             self.blob = Blob()
         with self.blob.open(mode ="w") as blobFile:
-           blobFile.write(bits)
-        self.title = data ["title"]   
-        
+           blobFile.write(bits)        
     def getData(self):
         if not hasattr(self,'blob'):
             return ""
@@ -44,13 +42,17 @@ class File(FileBase,Leaf):
 @implementer(IImage)
 class Image (File):
     icon="ttwicons/Image.svg"
-    def getHTML(self, view=None):
+    def getHTML(self, view=None, style = ''):
         url = view.url(self)
-        if hasattr(self,'title'):
-           title = self.title
+
+        tag = F"""<img src="{url}" """
+        if hasattr(self,'title') and self.title!= '':
+             tag += F""" alt = "{self.title}" """  
+        if style !='':
+             tag += F""" style = "{style}" """
         else:
-           title = ""
-        tag = F"""<img src="{url}" width ="{self.width}" height = "{self.height}" alt = "{title}">"""  
+             tag += """ width ="{self.width}" height = "{self.height}" """
+        tag += ">"
         return tag
      
 def make_file_response(view, result, *args, **kwargs):
@@ -62,8 +64,6 @@ def make_file_response(view, result, *args, **kwargs):
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
 from zopache.core.viewdecorators import *
-
-
 
 @view_component
 @name('index')

@@ -108,6 +108,7 @@ class AddImageAction(AddFileAction):
          file.contentType = imageData.type
          file.width = image.width
          file.height = image.height
+         file.title = formData ["title"]   
          return file
 
         
