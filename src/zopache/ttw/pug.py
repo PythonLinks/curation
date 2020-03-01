@@ -3,6 +3,7 @@ from . import tal_template
 from html import escape
 from zope import interface
 from zope import schema
+from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import Interface
 from zopache.ttw.interfaces import ITestSource as ISource
@@ -10,7 +11,7 @@ from zopache.ttw.addeditforms import AceAddForm, PugEditForm
 from zopache.crud.forms import EditDemoForm
 from dolmen.container import IBTreeContainer
 
-
+from zopache.core.interfaces import ITreeSecurity
 from zopache.core.getroot import getProducts
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
@@ -36,6 +37,18 @@ html
     title Hello World
   body
     h1 Hello World 
+"""
+
+defaultHTML = """
+<html>
+<head>
+<title>Hello World</title>
+</head>
+<body>
+Hello World 
+</body>
+</html>
+
 """
 
 class IPug(IPugBase,IJavascript):    
@@ -70,7 +83,7 @@ class IPug(IPugBase,IJavascript):
         title = u'Javascript',
         description = u'The generated Javascript:',
         required = False,
-        default = u'',
+        default = defaultHTML,
     )
     
     html= schema.Text(
@@ -121,13 +134,17 @@ from .javascript import JavascriptBase
 @implementer(IPug)      
 class Pug(TrustedHTML,JavascriptBase,Leaf):
     icon="ttwicons/Pug.svg"    
-    source =u''
+    source =defaultPug
+    html = defaultHTML
     title=u''
     className='Pug'
 
     def postProcess(self,view=None):
         TrustedHTML.postProcess(self,view)
         JavascriptBase.postProcess(self,view = view)
+
+    def postAddProcess(self, view = None):
+        self.postProcess(view=view)
         
     def getHTML(self):
         return self.html
@@ -172,34 +189,29 @@ class BasePugForm(AceScripts):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
-    def postProcess(self,view = None):
-        self.context.postProcess(view=view)
 
 @form_component
 @name('addPug')
 @context(IBTreeContainer)
 @target(IView)
 @title("Add Pug")
-@permissions('Manage')
-@implementer(IWeb)
+@implementer(ITreeSecurity)
 class AddPug(AceScripts,AceAddForm):
     subTitle='Add a Pug Object'
-    interface = IPug
+    interface = Interface
     ignoreContent = True
     factory=Pug
-
-    def postProcess(self,view=None):
-        self.new.postProcess(view=view)
-
+    def update(self):
+        products = getProducts(self.context)
+        self.template = products['Templates']['TranspilerTemplate']
 
         
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
 @context(IPug)
 @target(IView)
-@title("AceEdit")
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditPug(BasePugForm,PugEditForm):
     subTitle='Ace Edit this Pug Template.'
     pass

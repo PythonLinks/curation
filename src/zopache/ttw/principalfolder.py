@@ -172,6 +172,11 @@ class InternalPrincipal(FileBase,Page):
     def postAddProcess (self, view =None):
         view.notifyUserNewUser()
         view.notifyAdminsNewUser()
+        self.editors = {self.__name__} 
+        if len(self.__parent__)==1:
+           self.permissions = ['AddContent','EditContent',
+                               'Manage','Vote','Edit','Add','Python']
+
             
     password = property(getPassword, setPassword)
     title = property(getTitle)

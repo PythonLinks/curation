@@ -171,8 +171,7 @@ class AddJavascriptFolder(AceScripts,AceAddForm):
     ignoreContent = True
     factory=JavascriptFolder    
 
-    def postProcess(self):
-        self.new.postProcess()
+
         
 def make_javascript_response(view, result, *args, **kwargs):
         response = view.responseFactory()
@@ -199,8 +198,6 @@ class BaseJavascript(AceScripts):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
-    def postProcess(self):
-        self.context.postProcess()
 
     def footerScripts(self):
         return AceScripts.footerScripts(self)

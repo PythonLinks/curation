@@ -15,6 +15,7 @@ def possibleItems():
                 'Edit',
                 'EditContent',
                 'Manage',
+                'Python',
                 'Vote'
                 ]:
         term = SimpleVocabulary.createTerm(item,item,item)
@@ -47,5 +48,3 @@ class EditPermissions (EditForm):
     def acquireTitle(self):
         return 'Edit Permissions'
 
-    def postProcess(self):
-        pass

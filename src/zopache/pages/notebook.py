@@ -33,8 +33,9 @@ class Notebook (Leaf,ObjectDirectory):
         return "notebook.ipynb"
     
     def exportSource(self):
+
         path = os.path.join(self.path,self.fileName())
-        super(Notebook,self).exportSource(path = path)
+        objectDirectory.exportSource(path = path)
 
     def postAddProcess(self,view):
         fileUpload =  view.request.form['form.field._v_source']

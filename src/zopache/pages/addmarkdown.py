@@ -16,7 +16,8 @@ from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.pages.markdown import Markdown
 from zopache.pages.interfaces import IMarkdown, IPage
 from zopache.core import View
-
+from zopache.ttw.mail import Notify
+from zopache.core.interfaces import ITreeSecurity
 
 class  AceScripts(AceScripts):
     def  footerScripts(self):
@@ -24,6 +25,7 @@ class  AceScripts(AceScripts):
         <script >editor.getSession().setMode("ace/mode/markdown");
         </script>
         """
+
 
 class AddAndEdit(Add):
     parentClass=Add
@@ -33,7 +35,7 @@ class AddAndEdit(Add):
 class AddAndView(Add):
     parentClass=Add
     def newURL(self,baseURL):
-        return baseURL + '/aceedit'
+        return baseURL 
 
 class Edit (Edit):
     parentClass=Edit
@@ -48,8 +50,8 @@ class EditAndView (Edit):
 @form_component
 @name('addMarkdown')
 @context(IPage)
-@permissions('Manage')
-class AddPython(AceScripts,AceAddForm):
+@implementer(ITreeSecurity)
+class AddMarkdown(AceScripts,AceAddForm, Notify):
     subTitle = "Add a Markdown Page"
     interface = IMarkdown
     ignoreContent = True
@@ -90,7 +92,7 @@ class AceDemo(AceScripts,EditDemoForm):
 @form_component
 @context(IMarkdown)
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEdit(AceScripts,AceEditForm):
     subTitle= "Edit a Markdown Page"
 
@@ -101,7 +103,5 @@ class AceEdit(AceScripts,AceEditForm):
         action3=Cancel("Cancel","Cancel")
         return Actions(action1,action2,action3)
 
-    def postProcess(self, view = None):
-        self.context.postEditProcess()
 
 

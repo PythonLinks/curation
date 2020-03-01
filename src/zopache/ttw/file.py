@@ -16,7 +16,8 @@ class FileBase(object):
         return self.blob.getSize()
 
     def setData(self, data):
-        bits = data
+        dataFile = data.file
+        bits =  dataFile.read()
         if len(bits) == 0:
             return
         if not hasattr(self,'blob'):
@@ -37,18 +38,12 @@ class FileBase(object):
     
 @implementer(IFile)
 class File(FileBase,Leaf):    
-    def postProcess(self,view = None):
-        pass
-
-    def postAddProcess(self,view = None):
-        pass
-
+     pass
+ 
 @implementer(IImage)
 class Image (File):
     icon="ttwicons/Image.svg"
 
-    def postAddProcess(self,view = None):
-           self.postProcess(view)
     
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()

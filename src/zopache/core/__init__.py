@@ -21,13 +21,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 
 class AllObjects(object):
     icon=''
-    
-    def postProcess(self, view = None):
-        pass
-
-    def postAddProcess(self, view = None):
-        pass    
-    
+        
     def getParent(self):
         return self.__parent__
     

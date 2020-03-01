@@ -98,9 +98,6 @@ class AddReact(AceScripts,AceAddForm):
     ignoreContent = True
     factory=React
 
-    def postProcess(self):
-        self.new.postProcess()
-
             
 from .javascript import make_javascript_response, JavascriptBase
 
@@ -121,8 +118,6 @@ class BaseReactForm(AceScripts):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
-    def postProcess(self):
-        self.context.postProcess()
 
     #def footerScripts(self):
     #    return AceScriptsBase.footerScripts(self)
