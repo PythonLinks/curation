@@ -33,6 +33,11 @@ class Parents(object):
         parents.reverse()
         return parents
     
+    def parentsUpToZodbRoot(self):
+        parents = self.reversedParentsUpToZodbRoot(self.context)
+        parents.reverse()
+        return parents
+    
     def reversedParentsUpToSiteRoot(self,item):
         return self.reversedParentsUpTo(item,IPublicationRoot)
 

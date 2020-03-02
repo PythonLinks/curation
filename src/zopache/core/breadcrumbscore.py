@@ -11,7 +11,7 @@ class BreadcrumbsCore(object):
                         showTitles=True,
                         ):
 
-        parents = self.parentsUpToSiteRoot()
+        parents = self.parentsUpToZodbRoot()
         result=[]
         if parents:
             for ancestor in parents:
