@@ -21,7 +21,7 @@ class IForm(Interface):
     twitterId= TextLine(
         title = u'Twitter Id',
         description = "Twitter Id.",
-        required = True, 
+        required = False, 
         default = u'',
     )             
     googleClientId= TextLine(
@@ -34,7 +34,7 @@ class IForm(Interface):
     homePage= TextLine(
         title = "Home Page",
         description = "Shows a Logo.",
-        required = True,
+        required = False,
         default = u'',
     )                 
 
