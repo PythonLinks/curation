@@ -5,6 +5,10 @@ from dolmen.container import IBTreeContainer
 from pydoc import locate
 
 class Utilities (object):
+    def isForestWiki(self):
+        root = self.getSiteRoot()
+        return root.__class__.__name__ == 'Page'
+        
     def treeSecurity(self):
         tree = TreeSecurity(self)
         if (self.isAuthenticated() and
@@ -29,6 +33,8 @@ class Utilities (object):
         parameters["webPageTitle"] = title
         parameters ["parents"] =list(map(lambda x: x.__name__,
                                          self.parentsUpToSiteRoot()))
+        parameters ["hasLogo"] = (self.parentalAcquire("Logo-Wide.png") != None)
+        
         if self.isAuthenticated():
             parameters["isAuthenticated"] = True
             principal = self.request.principal

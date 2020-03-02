@@ -10,6 +10,8 @@
 Tree  <span class="caret"></span></a>
 <ul class="dropdown-menu">
 <li><a href="/manage">Root</a></li>
+<li><a href="/configure">Configure</a></li>
+<li tal:condition = "not view.isForestWiki()"><a href="/Root/manage">Root</a></li>
 <li><a href="/Products/manage">Products</a></li>
 <li><a href="/pack">Pack</a></li>
 <li><a href="/undo">Transactions</a></li>
