@@ -121,7 +121,6 @@ class AccessGoogle(object):
 class GoogleValidator (AccessGoogle,Validator):
     
     def getEmail(self):
-
         token = self.form.request.form['form.field.idtoken']        
         self.getTokenData (token)
         email = self.tokenData['email']

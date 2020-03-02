@@ -29,7 +29,6 @@ def getSiteRoot(item):
 def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
 
-
 def getPrincipalFolder(item):
     root = getSiteRoot(item)
     if ((root != None) and
@@ -61,7 +60,7 @@ def getRoot(object):
 class Root(object):
 
     def getSiteRoot(self):
-        return getSiteRoot(self)
+        return getSiteRoot(self.context)
 
     def getZodbRoot(self):
         return getZodbRoot(self)
