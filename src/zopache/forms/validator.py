@@ -73,8 +73,15 @@ class AccessGoogle(object):
         if  not (idinfo['iss'] in legit):
                raise ValueError('Wrong issuer.')
         return idinfo
-        
+
     def getClientId(self,form):
+        
+        root = form.getSiteRoot()
+        if hasattr(root,'googleClientId'):
+            return root.googleClientId
+        return ''
+    
+    """    
         domain = form.getDomain()
         if (domain == 'pythonlinks.info'):
             clientId= '901181416018-8c8n8knds3b6koqkottchj7ivpncf409.apps.googleusercontent.com'
@@ -97,7 +104,7 @@ class AccessGoogle(object):
         else:
             raise ValueError('Bad Domain')
         return clientId
-
+    """
     def getTokenData(self,token):
 
         try : 

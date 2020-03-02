@@ -18,18 +18,20 @@ class IForm(Interface):
         description = "Domain of this server",
         required = True,
     )
-    twitterId= TextLine(
-        title = u'Twitter Id',
-        description = "Twitter Id.",
-        required = False, 
-        default = u'',
-    )             
+
     googleClientId= TextLine(
         title = "Google Key",
         description = "For Logins",
         required = True,
         default = u'',
     )
+    
+    twitterId= TextLine(
+        title = u'Twitter Id',
+        description = "Twitter Id.",
+        required = False, 
+        default = u'',
+    )             
 
     homePage= TextLine(
         title = "Home Page",
