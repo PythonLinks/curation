@@ -15,26 +15,24 @@ from zopache.application.interfaces import IVirtualHost
 #THE IDEA HERE IS THAT THE END USER
 #CAN SPECIFY THE ROOT
 #NO NEED TO DO IN NGINX
-virtualHosts = {'dev.pythonlinks.info':'python',
-                'mqttchat.info':'mqtt',
+virtualHosts = {
+                'berniesupporters.org': 'bernie-sanders',
                 'climateactivists.info': 'climate-change',
-                'bernie-supporters.org': 'bernie-sanders',
-                'mensgroups.info': 'mens-rights',                
+                'dev.pythonlinks.info':'python',
+                'desktop.rights.men':'mens-rights',
+                'desktop.climatevideos.info':'climate-change',
+                'desktop.forestwiki.com':'forestwiki',
+                'ents.climateactivists.info': 'ents',
+                'golangvideos.com':'golang',                
+                'forestwiki.com':'forestwiki',
+                'js.pythonlinks.info':'python',
+                'mensgroups.info': 'mens-rights',
+                'mqttchat.info':'mqtt',
+                'rights.men':'mens-rights',
                 'stopsmog.info': 'smog',                                
-                'golangchat.info':'golang',                
                 'superwifi.pl':'superwifi',
                 'pythonlinks.info':'python',
-                'desktop.pythonlinks.info':'python',
-                'js.pythonlinks.info':'python',                
-                'rights.men':'mens-rights',
-                'desktop.rights.men':'mens-rights',
-                'climatevideos.info':'climate-change', 
-                'desktop.climatevideos.info':'climate-change',               
-                'cloud-native.pl':'golang',
-                'golangvideos.com':'golang',                
-                'desktop.cloud-native.pl':'golang',                
-                'forestwiki.com':'forestwiki',
-                'desktop.forestwiki.com':'forestwiki'                
+                'desktop.pythonlinks.info':'python'
 }
 
 
