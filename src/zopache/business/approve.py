@@ -31,7 +31,7 @@ class EditAddress (CkEditForm,GeoCode):
 @form_component
 @name ('approve')
 @context(ICompanyOrOrganization)
-class Approve (CkEditForm,GeoCode):
+class Approve (CkEditForm):
     title = 'Edit the company address.'
     subTitle = """This is used to geocode lattitude and longitude.
 """

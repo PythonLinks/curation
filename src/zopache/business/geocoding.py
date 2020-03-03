@@ -18,12 +18,14 @@ class GeoCode(object):
         return lat, lng
 
     def postAddProcess(self,view=None):
-        GeoCode.postProcess(self,view=view)
-        
+         lat, lng = self.getLatLong(self.address)
+         self.new.lattitude=lat 
+         self.new.longitude=lng
+         
     def postProcess (self,view=None):
          lat, lng = self.getLatLong(self.address)
-         self.lattitude=lat 
-         self.longitude=lng     
+         self.context.lattitude=lat 
+         self.context.longitude=lng     
 
 class GeoCodingError(ValidationError):
         __doc__ ="""That address is invalid."""
