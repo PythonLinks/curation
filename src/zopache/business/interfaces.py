@@ -8,7 +8,6 @@ from cromlech.container.interfaces import IOrdered
 from zopache.pages.interfaces import ILocationBase
 from zopache.pages.interfaces import IMap as IMapBase
 from zopache.crud.interfaces import IContainer
-from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.pages.interfaces  import ICountable
 from z3c.schema.email import RFC822MailAddress as EmailBase
@@ -81,41 +80,6 @@ class IEvent(IAddress, IPage,ILocationBase, IJoin):
 
 
 from zopache.pages.interfaces import ILatLng
-
-class IPoliticianBase (ILocationBase,IPage, IJoin):
-
-    title = schema.TextLine(
-        title = "Politician's Name",
-        description = u'Who is this politician?',
-        required = True,
-    )
-     
-    description= schema.Text(
-        title = u'Description (200 Characters)',
-        description = "A short description of the politician. ",
-        required = False,
-        max_length = 200,
-        default = '',
-    )
-    url = schema.URI(
-        title = "The Politician's URL",
-        description = """Please link to the Politician. Include  'https://'""",
-        required = False,
-    )
-    source= schema.Text(
-        title = 'Content',
-        description = 'Please describe this politician further.',
-        required = False,
-        default = '',
-    )
-
-
-class IPolitician(IPoliticianBase,IAddress):
-    pass
-
-
-class IAddPoliticians(IPoliticianBase, IAddress):    
-    pass
 
 
 class ITreeBase (ILocationBase,IPage, IJoin):

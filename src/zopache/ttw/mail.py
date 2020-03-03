@@ -71,7 +71,7 @@ class Notify (object):
         if mailer == None:
            return ''                
         
-        subject = "Welcome" + self.new.title
+        subject = "Welcome " + self.new.title
         url = self.url (self.new)
         content = F"""Thank you for signing up. 
                       Here is your user url: {url}"""

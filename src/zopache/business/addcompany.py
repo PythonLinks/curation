@@ -20,6 +20,8 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.business.event import Event
 from zopache.business.exists import DuplicateOrganization
 from zopache.business.geocoding import GeoCodeForm
+from zopache.business.politician import IAddPolitician, Politician
+from zopache.business.tree import IAddTree, Tree
 
 class AddBase(GeoCodeForm,AddPageBase):
     count = 0 
@@ -56,6 +58,19 @@ class AddOrganization(AddBase):
     title = "Add an Organization"
     subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]
+
+
+@view_component
+@name('addTree')
+@target(IView)
+@context(IPage)    
+class AddTree(AddBase):
+    interface = IAddTree
+    factory = Tree
+    title = "Add a Tree"
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]
+
 
 
 #ADD AN EVENT

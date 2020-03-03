@@ -43,7 +43,10 @@ class AddForm(Form):
         return Actions(
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
-
+    
+    def acquireTitle(self):
+         return self.title
+     
 class AddNamedForm(AddForm):
     @property
     def fields(self):
