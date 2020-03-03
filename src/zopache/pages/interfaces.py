@@ -112,9 +112,7 @@ class INotPage (Interface):
 class ILocationBase(Interface):    
     pass
 
-
-
-class ILocationBase2(ILocationBase,IPage):    
+class ILatLng(Interface):
     lattitude = schema.Float(
         title = u'Lattitude',
         description = u'Lattitude',
@@ -122,7 +120,7 @@ class ILocationBase2(ILocationBase,IPage):
         max=90.,
         default = 51.509865,
         required = True,
-    )
+        )
 
     longitude = schema.Float(
         title = u'Longitude',
@@ -132,8 +130,11 @@ class ILocationBase2(ILocationBase,IPage):
         default = 0.,
         required = True,
     )
+
+class ILocationBase2(ILocationBase,IPage, ILatLng):    
+      pass
     
-class ILocation(ILocationBase2, IRecent):
+class ILocation(ILocationBase2, IRecent, ILatLng):
     pass
 
 class IMap(ILocationBase2):

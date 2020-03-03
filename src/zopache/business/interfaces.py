@@ -78,6 +78,83 @@ class IEvent(IAddress, IPage,ILocationBase, IJoin):
            required = True,
     )
 
+
+
+from zopache.pages.interfaces import ILatLng
+
+class IPoliticianBase (ILocationBase,IPage, IJoin):
+
+    title = schema.TextLine(
+        title = "Politician's Name",
+        description = u'Who is this politician?',
+        required = True,
+    )
+     
+    description= schema.Text(
+        title = u'Description (200 Characters)',
+        description = "A short description of the politician. ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+    url = schema.URI(
+        title = "The Politician's URL",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+    )
+    source= schema.Text(
+        title = 'Content',
+        description = 'Please describe this politician further.',
+        required = False,
+        default = '',
+    )
+
+
+class IPolitician(IPoliticianBase,IAddress):
+    pass
+
+
+class IAddPoliticians(IPoliticianBase, IAddress):    
+    pass
+
+
+class ITreeBase (ILocationBase,IPage, IJoin):
+
+    title = schema.TextLine(
+        title = "Tree's Name",
+        description = u'What will you call this tree?',
+        required = True,
+    )
+
+    species= schema.Text(
+        title = u'Species',
+        description = " What type of tree is this?",
+        required = True,
+        max_length = 20,
+     )
+    
+     
+    description= schema.Text(
+        title = u'Description (200 Characters)',
+        description = "A short description of the tree. ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+
+    source= schema.Text(
+        title = 'Content',
+        description = 'Help people to love this tree.',
+        required = False,
+        default = '',
+    )
+
+class ITree(ITreeBase):
+    pass
+
+class IAddTree(ITreeBase, ILatLng):    
+    pass
+    
 class ICompanyOrOrganization (IAddress, ILocationBase,
                               IPage, IJoin):
     pass

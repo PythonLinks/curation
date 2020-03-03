@@ -63,7 +63,7 @@ class Root(object):
         return getSiteRoot(self.context)
 
     def getZodbRoot(self):
-        return getZodbRoot(self)
+        return getZodbRoot(self.context)
 
     def getPrincipalFolder(self):
-        return getPrincipalFolder(self)               
+        return getPrincipalFolder(self.context)               

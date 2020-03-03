@@ -95,6 +95,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         cache.resetCache(self)
         
     def postAddProcess(self,view=None):
+
         Page.postProcess(self,view=view)
         view.notifyAdminsNewPage()
         

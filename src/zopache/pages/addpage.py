@@ -33,7 +33,7 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
               formactions.Cancel("Cancel","Cancel"))
     
     def postAddProcess(self,view = None):
-        Page.postAddProcess (self.context,view = self)
+        Page.postAddProcess (self.new,view = self)
         self.notifyAdminsNewPage()
         
 @view_component
