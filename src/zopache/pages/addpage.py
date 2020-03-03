@@ -17,6 +17,7 @@ from zopache.core.interfaces import ITreeSecurity
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
     def getSubTitle(self):
+        
         return (
                 "To a " +  
                 self.context.webClass +
@@ -33,7 +34,7 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
               formactions.Cancel("Cancel","Cancel"))
     
     def postAddProcess(self,view = None):
-        Page.postAddProcess (self.new,view = self)
+        self.new.postAddProcess (view = self)
         self.notifyAdminsNewPage()
         
 @view_component

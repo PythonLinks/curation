@@ -19,8 +19,9 @@ from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.event import Event
 from zopache.business.exists import DuplicateOrganization
+from zopache.business.geocoding import GeoCodeForm
 
-class AddBase(AddPageBase):
+class AddBase(GeoCodeForm,AddPageBase):
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."

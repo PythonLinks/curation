@@ -5,19 +5,18 @@ from cromlech.security import Unauthorized
 from zopache.pages.location import LocationBase
 from zopache.business.interfaces import (ICompany, IMap,
                                IOrganization, ICompanyBase)
-from zopache.business.geocoding import GeoCode
 from zopache.pages.page import Page
-from zopache.business.geocoding import GeoCode
+from zopache.business.geocoding import GeoCodeObject
 from zopache.business.subscribe import Member
 
-class Base (GeoCode,LocationBase,Member):
+class Base (GeoCodeObject,LocationBase,Member):
     hidden = False
     longitude = 0.
     lattitude = 0.
     def __init__(self):
         LocationBase.__init__(self)
         Member.__init__(self)
-        GeoCode.__init__(self)
+        GeoCodeObject.__init__(self)
 
     def getTitle(self):
          if self.hidden:
@@ -51,11 +50,12 @@ class Base (GeoCode,LocationBase,Member):
     
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
+        GeoCodeObject.postProcess(self,view = view)
         
     def postAddProcess(self,view=None):
         self.webApproved = False
         self.hidden = False
-        GeoCode.postAddProcess(self,view=view)
+        GeoCodeObject.postAddProcess(self,view=view)
         Page.postAddProcess(self, view = view)
         
         #self.editors=[view.request.principal.__name__]

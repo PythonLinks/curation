@@ -2,12 +2,13 @@ import googlemaps
 from zope.schema import Text
 from zope.schema import ValidationError
 
-class GeoCode(object):
+class GeoCodeForm(object):
     postAmble = """ When you submit the form, please be patient, 
             the server has to contact Google GeoCoding to 
             convert the address into a lattitude and longitude.  That   
             takes a few seconds. """
-    
+
+class GeoCodeObject(object):
     def getLatLong(self,data):   
         gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
         # Geocoding an address
@@ -18,19 +19,17 @@ class GeoCode(object):
         return lat, lng
 
     def postAddProcess(self,view=None):
-         lat, lng = self.getLatLong(self.address)
-         self.new.lattitude=lat 
-         self.new.longitude=lng
+         self.postProcess(view = view)
          
     def postProcess (self,view=None):
          lat, lng = self.getLatLong(self.address)
-         self.context.lattitude=lat 
-         self.context.longitude=lng     
+         self.lattitude=lat 
+         self.longitude=lng     
 
 class GeoCodingError(ValidationError):
         __doc__ ="""That address is invalid."""
         
-class Address (Text,GeoCode):
+class Address (Text,GeoCodeObject):
      def _validate (self,data):
          Text._validate(self,data)
          try:
