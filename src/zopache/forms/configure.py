@@ -40,18 +40,6 @@ class IForm(Interface):
         default = u'',
     )
 
-    bannerLogo = Bool(
-          title = "Horizontal Banner?",
-          description = "Display a Horizontal Banner on the home page?",
-          required = False,
-          default = False,
-     )
-    leftLogo = Bool(
-          title = "Float Left Logo?",
-          description = "Display a Float Left on the home page?",
-          required = False,
-          default = False,
-     )    
 
 @form_component
 @name ('configure')

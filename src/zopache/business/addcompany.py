@@ -71,6 +71,17 @@ class AddTree(AddBase):
     subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]
 
+from zopache.business.driver import IAddDriver, Driver    
+@view_component
+@name('addDriver')
+@target(IView)
+@context(IPage)    
+class AddTree(AddBase):
+    interface = IAddDriver
+    factory = Driver
+    title = "Offer to be a driver."
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]    
 
 
 #ADD AN EVENT
@@ -90,8 +101,7 @@ class AddEvemt(AddBase):
         return Actions(
               AddAndView("Add and View", self.factory),
               formactions.Cancel("Cancel","Cancel"))
-    
-        
+            
 @view_component
 @name('addCompanyMap')
 @target(IView)

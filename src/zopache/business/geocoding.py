@@ -9,6 +9,17 @@ class GeoCodeForm(object):
             takes a few seconds. """
 
 class GeoCodeObject(object):
+    def postProcess(self,view=None):
+        Page.postProcess(self, view = view)
+        GeoCodeObject.postProcess(self,view = view)
+        
+    def postAddProcess(self,view=None):
+        self.webApproved = False
+        self.hidden = False
+        GeoCodeObject.postAddProcess(self,view=view)
+        Page.postAddProcess(self, view = view)
+        
+        #self.editors=[view.request.principal.__name__]    
     def getLatLong(self,data):   
         gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
         # Geocoding an address

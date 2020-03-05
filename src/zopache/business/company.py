@@ -48,17 +48,7 @@ class Base (GeoCodeObject,LocationBase,Member):
         return result
     """
     
-    def postProcess(self,view=None):
-        Page.postProcess(self, view = view)
-        GeoCodeObject.postProcess(self,view = view)
-        
-    def postAddProcess(self,view=None):
-        self.webApproved = False
-        self.hidden = False
-        GeoCodeObject.postAddProcess(self,view=view)
-        Page.postAddProcess(self, view = view)
-        
-        #self.editors=[view.request.principal.__name__]
+
         
 @implementer (ICompany)
 class Company  (Base):
