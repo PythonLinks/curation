@@ -3,6 +3,7 @@ from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
 from pydoc import locate
+from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
     def isForestWiki(self):
@@ -33,7 +34,10 @@ class Utilities (object):
         parameters["webPageTitle"] = title
         parameters ["parents"] =list(map(lambda x: x.__name__,
                                          self.parentsUpToSiteRoot()))
-        parameters ["hasLogo"] = (self.parentalAcquire("Logo-Wide.png") != None)
+        parameters ["banner"] = (self.parentalAcquire("Banner.png")
+                                     != None)
+        parameters ["logo"] = (self.parentalAcquire("Logo.png") != None)
+        parameters ["homePage"]= getSiteRoot(self.context).homePage
         
         if self.isAuthenticated():
             parameters["isAuthenticated"] = True

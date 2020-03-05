@@ -2,7 +2,7 @@ import googlemaps
 
 from zope.interface import Interface
 from zope.schema._field import Choice
-from zope.schema import TextLine, DottedName
+from zope.schema import TextLine, DottedName, Bool
 
 from cromlech.browser.exceptions import HTTPFound
 from cromlech.browser.interfaces import IPublicationRoot
@@ -38,7 +38,20 @@ class IForm(Interface):
         description = "Shows a Logo.",
         required = False,
         default = u'',
-    )                 
+    )
+
+    bannerLogo = Bool(
+          title = "Horizontal Banner?",
+          description = "Display a Horizontal Banner on the home page?",
+          required = False,
+          default = False,
+     )
+    leftLogo = Bool(
+          title = "Float Left Logo?",
+          description = "Display a Float Left on the home page?",
+          required = False,
+          default = False,
+     )    
 
 @form_component
 @name ('configure')
