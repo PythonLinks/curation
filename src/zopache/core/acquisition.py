@@ -3,6 +3,12 @@ from zopache.ttw.acquisition import ParentalAcquire,webClassAcquire
 
 class Acquisition(object):
 
+    def acquireBoth(self, name, context = None):
+        result = self.parentalAcquire(name, context = context)
+        if result != None:
+           return result
+        return self.webClassAcquire(name, context = context)
+    
     #WITH ZOPACHE TEMPLATES THE CONTEXT
     #CAN BE DIFFERENT THAN THE PARENT
     #VIEW -> PARENT
