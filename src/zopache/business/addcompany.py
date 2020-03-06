@@ -58,7 +58,18 @@ class AddOrganization(AddBase):
     title = "Add an Organization"
     subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]
+    
 
+@view_component
+@name('addPolitician')
+@target(IView)
+@context(IPage)    
+class AddPolitician(AddBase):
+    interface = IAddPolitician
+    factory = Politician
+    title = "Add a Politician"
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]    
 
 @view_component
 @name('addTree')
@@ -76,7 +87,7 @@ from zopache.business.driver import IAddDriver, Driver
 @name('addDriver')
 @target(IView)
 @context(IPage)    
-class AddTree(AddBase):
+class AddDriver(AddBase):
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
