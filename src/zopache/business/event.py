@@ -21,7 +21,7 @@ class Event (GeoCodeObject,Page,Member):
 
 
     def postAddProcess(self,view):
-        GeoCode.postAddProcess(self, view = view)
+        GeoCodeObject.postAddProcess(self, view = view)
         Page.postAddProcess(self, view = view)
         
     def canView(self,view):
