@@ -97,7 +97,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.description=self.description.replace ('\n' , " ")        
         
     def postAddProcess(self,view=None):
-        self.postProcess(self,view=view)
+        self.postProcess(view=view)
         view.notifyAdminsNewPage()
         
     # NOT YET SERVING JSON
