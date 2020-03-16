@@ -16,7 +16,7 @@ class Event (GeoCodeObject,Page,Member):
 
     def __init__(self):
         Page.__init__(self)
-        GeoCode.__init__(self)
+        GeoCodeObject.__init__(self)
         Member.__init__(self)
 
 

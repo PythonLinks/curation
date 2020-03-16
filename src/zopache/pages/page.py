@@ -93,10 +93,11 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def postProcess(self,view=None):
         self.recalculateRootJSON()
         cache.resetCache(self)
+        self.description=self.description.replace ('"' , "'")
+        self.description=self.description.replace ('\n' , " ")        
         
     def postAddProcess(self,view=None):
-
-        Page.postProcess(self,view=view)
+        sels.postProcess(self,view=view)
         view.notifyAdminsNewPage()
         
     # NOT YET SERVING JSON
@@ -118,7 +119,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def blogParents(self):
          return parentsUpTo(self,IRootPage)
 
-         
     def isCategory (self):
         return False
     

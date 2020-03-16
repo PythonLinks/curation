@@ -128,8 +128,10 @@ class Copier(BaseClass):
         self.describeTransaction(" Copy ", obj)
          
     def allowed(self,item):
+        if hasattr(item,'canCopy'):
+           return item.canCopy()        
         if  ICopyable.providedBy(item):
-                return True 
+                return True
         return False
 
 
@@ -161,7 +163,9 @@ class Paster(BaseClass):
            self.describeTransaction(" Paste ", toContainer[new_name])
            
     def allowed(self,obj):
-        if  ICopyable.providedBy(obj):
+        if hasattr(item,'canCopy'):
+           return item.canCopy()                
+        if ICopyable.providedBy(obj):
                 return True
         return False
 
@@ -191,6 +195,8 @@ class Deleter(BaseClass):
 
         
     def allowed(self,item):
-        if  IDeletable.providedBy(item):
+        if hasattr(item,'canDelete'):
+           return item.canDelete()
+        if IDeletable.providedBy(item):
                 return True
         return False
