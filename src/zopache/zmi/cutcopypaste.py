@@ -163,8 +163,8 @@ class Paster(BaseClass):
            self.describeTransaction(" Paste ", toContainer[new_name])
            
     def allowed(self,obj):
-        if hasattr(item,'canCopy'):
-           return item.canCopy()                
+        if hasattr(obj,'canCopy'):
+           return obj.canCopy()                
         if ICopyable.providedBy(obj):
                 return True
         return False
