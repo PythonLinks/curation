@@ -9,7 +9,7 @@ from zopache.business.addcompany import AddBase
 @name('addMeetup')
 @target(IView)
 @context(IPage)
-class AddPage(AddBase):
+class AddMeetup(AddBase):
     interface = IMeetup
     title="Add a Meetup"
     factory = Meetup
@@ -18,7 +18,7 @@ class AddPage(AddBase):
 @name('addOnlineEvent')
 @target(IView)
 @context(IMeetup)
-class AddPage(AddBase):
+class AddOnlineEvent(AddBase):
     interface = IOnlineEvent
     title="Add an Online Event"
     factory = OnlineEvent
