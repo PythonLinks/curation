@@ -6,8 +6,9 @@ from zopache.business.interfaces import IMeetup
 from zopache.pages.page import Page
 from zopache.business.subscribe import Member
 
+
 @implementer (IMeetup)
-class Meetup (Page):
+class Meetup (Page,Member):
     webClass = "Meetup"
     clientClass = "category"
     hidden = False
