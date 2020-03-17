@@ -55,13 +55,6 @@ class IOnlineEvent(IPage):
         required = False,
     )    
 
-    source= schema.Text(
-        title = u'More Informatton',
-        description = u'Please more information about the event.',
-        required = False,
-        default = '',
-    )
-
     time = schema.Datetime(title='Date and Time',
                            description = """ Use the format Day/Month/Year 
                    as in "12/30/19, 6:00 PM",
@@ -69,6 +62,14 @@ class IOnlineEvent(IPage):
                            we will have a date time picker.""", 
 
                            required = True)
+    
+    source= schema.Text(
+        title = u'More Informatton',
+        description = u'Please more information about the event.',
+        required = False,
+        default = '',
+    )
+
 
 class IEvent(IOnlineEvent, IAddress, ILocationBase):  
     address= Address(
