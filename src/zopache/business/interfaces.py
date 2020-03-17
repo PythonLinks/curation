@@ -27,7 +27,7 @@ class IAddress(Interface):
 class IJoin(Interface):
     pass
 
-class IEvent(IAddress, IPage,ILocationBase, IJoin):  
+class IOnlineEvent(IPage):
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
@@ -69,11 +69,12 @@ class IEvent(IAddress, IPage,ILocationBase, IJoin):
                            we will have a date time picker.""", 
 
                            required = True)
-    
+
+class IEvent(IOnlineEvent, IAddress, ILocationBase):  
     address= Address(
         title = u'Event Address',
         description = """This is used to 
-                 locate the event on the map. """,
+                 position the event on the map. """,
            required = True,
     )
 
@@ -183,6 +184,7 @@ class IAddCompany(ICompany):
         required = True
 
     )    
+
     
 class IOrganizationBase (ICompanyOrOrganization):
     title = schema.TextLine(
@@ -259,3 +261,49 @@ class IMap (IMapBase):
 	    required = False,
 	    default = False)   
 
+
+class IMeetup (IPage):
+    title = schema.TextLine(
+        title = 'Meetup Name',
+        description = u'What is this meetup called?',
+        required = True,
+    )
+
+
+    specialization= schema.Text(
+        title = u'Specialization (200 characters)',
+        description = " What is this group's focus?",
+        required = True,
+        max_length = 20,
+        default = '',
+    )
+     
+    description= schema.Text(
+        title = u'Description (200 Characters)',
+        description = "A short description of this meetup. ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+
+    source= schema.Text(
+        title = u'Longer Description',
+        description = u'Please describe this meetup further.',
+        required = False,
+        default = '',
+    )    
+
+    phone= schema.TextLine(
+        title = u'Phone Number (Optional)',
+        description = u'Can they call you?',
+        required = False,
+        default = '',
+    )
+
+    email= Email(
+        title = u'Email Address (Optional)',
+        description = u'Can they email you? Make sure there are no spaces. ',
+        required = False,
+    )    
+
+    

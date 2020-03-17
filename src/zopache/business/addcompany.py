@@ -23,12 +23,10 @@ from zopache.business.geocoding import GeoCodeForm
 from zopache.business.politician import IAddPolitician, Politician
 from zopache.business.tree import IAddTree, Tree
 
-class AddBase(GeoCodeForm,AddPageBase):
+class AddBase(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
-    #def postAddProcess(self):
-    #    self.new.postAddProcess(self)
     
     @property
     def actions(self):
@@ -40,7 +38,7 @@ class AddBase(GeoCodeForm,AddPageBase):
 @name('addCompany')
 @target(IView)
 @context(IPage)    
-class AddCompany(AddBase):
+class AddCompany(GeoCodeForm,AddBase):
     interface = IAddCompany
     label="Add a Company"
     factory = Company
@@ -52,7 +50,7 @@ class AddCompany(AddBase):
 @title("Add Organization")
 @target(IView)
 @context(IPage)    
-class AddOrganization(AddBase):
+class AddOrganization(GeoCodeForm,AddBase):
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
