@@ -204,6 +204,13 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
     icon="ttwicons/WikiPage.png"
+
+from zopache.pages.interfaces import ILink    
+@implementer (ILink)     
+class Link(PageBase, PageMixIn):
+    webClass='Link'
+    icon="ttwicons/WikiPage.png"
+
     
 @implementer (INews)     
 class News (Page,RecentMixIn):

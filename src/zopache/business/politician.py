@@ -13,6 +13,25 @@ from zopache.business.interfaces import IJoin, ILatLng, IAddress
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
+
+#key value
+items = { "sunshineMovement":( "SunshineMovement",
+                       "https://couragetochangepac.org"),
+          "courageToChange": ("Courage To Change",
+                       "https://couragetochangepac.org"),
+          "justiceDemocrats":
+                  ("Justice Democrats",
+                  "https://www.justicedemocrats.com/candidates")
+          }
+          #"":("",""). 
+
+terms = [ SimpleTerm(value=key,
+                     token=key,
+                     title=items[key][0]) for key in items.keys() ]
+
+myVocabulary = SimpleVocabulary(terms)
+
 class IPoliticianBase (ILocationBase,IPage, IJoin):
 
     title = schema.TextLine(

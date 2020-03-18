@@ -24,8 +24,7 @@ class IContent(ICanonical):
 class IJSONInclude(Interface):
     pass
 
-class IPage(IContent, IContainer, IOrdered, IJSONInclude, IBTreeContainer,
-            IUntrustedHTML):
+class IPageTop(Interface):
     
     title = schema.TextLine(
         title = u'Page Name',
@@ -33,12 +32,19 @@ class IPage(IContent, IContainer, IOrdered, IJSONInclude, IBTreeContainer,
         required = True,
     )
 
-#    url = schema.URI(
-#        title = u'URL (Optional)',
-#        description = u'A URL That this page refers to.',
-#        required = False,
-#    )    
-
+class ILinkTop(Interface):
+    title = schema.TextLine(
+        title = 'Remote Page Name',
+        description = 'What is the title of this link?',
+        required = True,
+    )
+    remoteUrl = schema.URI(
+        title = 'URL',
+        description = 'A URL That this page refers to. Please include https://',
+        required = True,
+    )
+    
+class IPageBottom(Interface):
     description= schema.Text(
         title = u'Description',
         description = """A brief introduction of this page.  
@@ -46,17 +52,27 @@ class IPage(IContent, IContainer, IOrdered, IJSONInclude, IBTreeContainer,
         required = False,
         default = u'',
     )
-     
+
+    
     source= schema.Text(
         title = u'Content',
         description = u'This is the main content for this page',
         required = False,
         default = u'',
     )
-
-class IMarkdown (ISourceLeaf):
+    
+class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
+            IJSONInclude, IBTreeContainer,IUntrustedHTML):
     pass
 
+
+        
+class ILink(ILinkTop,IPageBottom,IContent, IContainer, IOrdered,
+            IJSONInclude,IBTreeContainer,IUntrustedHTML):
+    pass
+    
+class IMarkdown (ISourceLeaf):
+    pass
 
 from zopache.ttw.interfaces import IJSON
 class INotebookBase(Interface):
