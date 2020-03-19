@@ -67,8 +67,7 @@ class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
 
 
         
-class ILink(ILinkTop,IPageBottom,IContent, IContainer, IOrdered,
-            IJSONInclude,IBTreeContainer,IUntrustedHTML):
+class ILink(ILinkTop,IPage):
     pass
     
 class IMarkdown (ISourceLeaf):

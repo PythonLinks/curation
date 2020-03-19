@@ -15,23 +15,26 @@ from zopache.pages.interfaces import IPage
 
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
-#key value
-items = { "sunshineMovement":( "SunshineMovement",
-                       "https://couragetochangepac.org"),
-          "courageToChange": ("Courage To Change",
-                       "https://couragetochangepac.org"),
-          "justiceDemocrats":
-                  ("Justice Democrats",
-                  "https://www.justicedemocrats.com/candidates")
-          }
-          #"":("",""). 
 
-terms = [ SimpleTerm(value=key,
-                     token=key,
-                     title=items[key][0]) for key in items.keys() ]
+
+items = [ ("sunshineMovement", "Sunshine Movemement"),
+          ("courageToChange","Courage To Change"),
+          ("justiceDemocrats","Justice Democrats")
+          ]
+
+terms = []
+for item in items:
+    new = SimpleTerm(value=item[0],
+                     token=item [0],
+                     title=item[1] )
+    terms.append(new)
 
 myVocabulary = SimpleVocabulary(terms)
 
+def getVocabulary(context):
+    return myVocabulary
+
+from zopache.ttw.editprincipal import possibleItems
 class IPoliticianBase (ILocationBase,IPage, IJoin):
 
     title = schema.TextLine(
@@ -47,11 +50,20 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
         max_length = 200,
         default = '',
     )
+
     url = schema.URI(
         title = "The Politician's URL",
         description = """Please link to the Politician. Include  'https://'""",
         required = False,
     )
+    
+    endorsedBy = schema.Collection(
+          value_type = schema.Choice( vocabulary = myVocabulary),        
+          title=u"Endorsed By",
+          description = "Which organizations endorsed this politician?",       
+          )
+    endorsedBy.mode = 'multiselect'
+    
     source= schema.Text(
         title = 'Content',
         description = """Please describe this politician further. Add relevant links, and links to images.""",
@@ -59,7 +71,7 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
         default = '',
     )
     address= Address(
-        title = "Politician's Home Office Address",
+        title = "Politician's District Office Address",
         description = """This is used to 
                  locate the politician on the map. """,
            required = True,

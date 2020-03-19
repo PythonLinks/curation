@@ -57,7 +57,7 @@ class AddOrganization(GeoCodeForm,AddBase):
     subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]
     
-
+from dolmen.forms.base import interfaces
 @view_component
 @name('addPolitician')
 @target(IView)
@@ -68,7 +68,12 @@ class AddPolitician(AddBase):
     title = "Add a Politician"
     subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]    
-
+    def updateWidgets(self):
+        breakpoint()
+        item =self.fields['endorsedBy']
+        it =object.__setattr__(item,'mode','multiselect')
+        super().updateWidgets()
+    
 @view_component
 @name('addTree')
 @target(IView)
@@ -121,6 +126,16 @@ class AddMap(AddPageBase):
     interface = IMap
     label="Add a Map"
     factory = Map
-
-
     
+import crom
+from dolmen.forms.base.interfaces import IWidget
+from dolmen.forms.ztk.widgets.collection import (
+                      MultiSelectFieldWidget,CollectionSchemaField)
+from dolmen.forms.ztk.widgets.choice import (
+                               ChoiceSchemaField, ChoiceFieldWidget)
+@crom.adapter
+@crom.name('input')
+@crom.target(IWidget)
+@crom.sources(CollectionSchemaField, ChoiceSchemaField, Interface, Interface)
+class DisplayWidget(MultiSelectFieldWidget):
+      pass
