@@ -69,7 +69,6 @@ class AddPolitician(AddBase):
     subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]    
     def updateWidgets(self):
-        breakpoint()
         item =self.fields['endorsedBy']
         it =object.__setattr__(item,'mode','multiselect')
         super().updateWidgets()

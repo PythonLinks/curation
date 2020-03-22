@@ -186,7 +186,7 @@ class Deleter(BaseClass):
             return
         
         # HAVE TO DESCRIE BEFORE DELETING OTHERWISE NO NAME AVAILABLE
-        self.describeTransaction(" Deleted ", obj)
+        self.describeWithActionAndView(obj,self,view)
         if hasattr(obj,'preDeleteProcess'):
             obj.preDeleteProcess(view)                
         del container[name]

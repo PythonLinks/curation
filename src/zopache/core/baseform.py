@@ -37,8 +37,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
         result = ""
         if hasattr(field,"text"):
             result = field.text
-        return result       
-
+        return result
     
     @property
     def action_url(self):

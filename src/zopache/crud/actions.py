@@ -15,7 +15,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.core.getroot import getSiteRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
-
+from zopache.core.transactionnote import TransactionNote
 def message(message):
     send(message)
 
@@ -39,7 +39,7 @@ class View(Action):
         return SuccessMarker('Aborted', True, url=url)    
 
 
-class Add(Action, UniqueName):
+class Add(Action, UniqueName, TransactionNote):
     """Add action for an IAdding context.
     """
 
@@ -63,6 +63,7 @@ class Add(Action, UniqueName):
         message(_(u"Content created"))
         baseURL = self.form.url (obj)
         #baseURL = str(IURL(obj, form.request))
+        self.describeWithView(obj,form)                
         if hasattr(form, 'newURL'):
            url=self.form.newURL(baseURL)
         else:
@@ -118,11 +119,12 @@ class AddAndView(Add):
     def newURL(self,baseURL):
         return baseURL + '/index'        
     
-class Update(Action):
+class Update(Action,TransactionNote):
     """Update action for any locatable object.
     """
 
     def __call__(self, form):
+
         self.form=form
 
         data, errors = form.extractData()
@@ -137,9 +139,10 @@ class Update(Action):
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):
                form.context.postProcess(view=form)
-               
+
         baseURL = str(IURL(form.context, form.request))
         url=self.newURL(baseURL)
+        self.describeWithView(form.context,form)
         if url == form.request.url:
            return SuccessMarker('Updated', True)
         else:

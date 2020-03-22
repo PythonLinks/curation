@@ -98,7 +98,8 @@ class BaseEditForm(Form):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
 
-
+    def update(self):
+        pass
     
 class EditDemoForm(BaseEditForm):
     pass

@@ -6,12 +6,14 @@ td,th {padding-left: 20px; padding-right:20 px;}
 <tr>
   <th></th>
   <th>Restore</th>
-  <th>Titile</th>
+  <th></th>
+  <th>Title</th>
   <th>Age</th>
 </tr>
 <tr  tal:repeat="result view.results()" >
     <td tal:content=" repeat.result.index">0, 1, 2 </td>
     <td> ${structure: view.reverseURL(result['id'])}</td>
+    <td>${result['user_name']} </td>
     <td> ${structure: result['description']}</td>    
     <td>${structure: view.humanizeTime(result['time'])}</td>
      </tr>

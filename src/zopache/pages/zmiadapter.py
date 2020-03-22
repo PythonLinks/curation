@@ -150,7 +150,7 @@ class CategoryDeleter(Deleter,LocalBase):
             self.view.error +=   name + " was not deleted. <br>"   
             self.view.error += " Maybe it still contains something"
             return
-
+        self.describeWithActionAndView(contained,self,view)
         #OKAY NOW DO THE WORK
         # DELETE THE CANNONICAL NAME
         # HAVE TO DO THIS FIRST

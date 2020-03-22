@@ -91,6 +91,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
            return self.webClass
        
     def postProcess(self,view=None):
+
         self.recalculateRootJSON()
         cache.resetCache(self)
         self.description=self.description.replace ('"' , "'")
