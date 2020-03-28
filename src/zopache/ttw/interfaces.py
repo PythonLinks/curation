@@ -241,6 +241,8 @@ class ICkHTML (ISource):
 class IAceHTML(ISource,IAceEdit): 
     pass
 
+
+
 class ISecureHTML(IAceHTML):
     pass
 
@@ -297,6 +299,9 @@ class ISourceContainer(ISource,
                ): 
      pass
 
+class IAceContainer(IAceHTML,IIndexHTML,ISourceContainer):
+    pass
+ 
 class IHTMLContainer(ISourceContainer,IHTML):
    pass
 
