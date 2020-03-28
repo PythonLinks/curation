@@ -178,7 +178,7 @@ class ICompany(ICompanyBase):
     )    
 
 class IAddCompany(ICompany):    
-    address= schema.Text(
+    address= Address(
         title = u'Company Address',
         description = """This is used to 
                  locate the company on the map. List more than just the town, or else all the companies will just have one shared map pin. """,
@@ -256,8 +256,8 @@ class IOrganization(IOrganizationBase):
     )
 
 class IAddOrganization(IOrganizationBase):    
-    address= schema.Text(
-        title = u'Organization Address',
+    address= Address(
+        title = 'Organization Address',
         description = """This is used to 
                  locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,
         required = False

@@ -8,7 +8,18 @@ class GeoCodeForm(object):
             convert the address into a lattitude and longitude.  That   
             takes a few seconds. """
 
-class GeoCodeObject(object):
+class Base(object):
+
+    def getLatLong(self,data):   
+        gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
+        # Geocoding an address
+        geocode_result = gmaps.geocode(data)
+        result=geocode_result[0][u'geometry'] [u'location']
+        lat = float(result [u'lat'])
+        lng = float(result [u'lng'])
+        return lat, lng
+
+class GeoCodeObject(Base):
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
         GeoCodeObject.postProcess(self,view = view)
@@ -20,14 +31,6 @@ class GeoCodeObject(object):
         Page.postAddProcess(self, view = view)
         
         #self.editors=[view.request.principal.__name__]    
-    def getLatLong(self,data):   
-        gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
-        # Geocoding an address
-        geocode_result = gmaps.geocode(data)
-        result=geocode_result[0][u'geometry'] [u'location']
-        lat = float(result [u'lat'])
-        lng = float(result [u'lng'])
-        return lat, lng
 
     def postAddProcess(self,view=None):
          self.postProcess(view = view)
