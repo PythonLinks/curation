@@ -307,4 +307,11 @@ class IMeetup (IPage):
         required = False,
     )    
 
+    isGlobal = schema.Bool(
+	    title = "Is this a global organization?",
+	    description = """"Global Organizations are 
+                              listed in the table below the map. """,
+	    required = False,
+	    default = False)   
+    
     
