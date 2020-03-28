@@ -235,7 +235,17 @@ class IOrganizationBase (ICompanyOrOrganization):
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
         required = False,
-    )    
+    )
+    
+    isGlobal = schema.Bool(
+	    title = "Is this a global organization?",
+	    description = """Global Organizations are 
+                              listed in the table below the map. """,
+	    required = False,
+	    default = False)   
+    
+    
+    
 
 class IOrganization(IOrganizationBase):    
     address= Address(
@@ -307,11 +317,3 @@ class IMeetup (IPage):
         required = False,
     )    
 
-    isGlobal = schema.Bool(
-	    title = "Is this a global organization?",
-	    description = """"Global Organizations are 
-                              listed in the table below the map. """,
-	    required = False,
-	    default = False)   
-    
-    
