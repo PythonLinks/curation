@@ -55,6 +55,7 @@ class Add(Action, UniqueName, TransactionNote):
             return FAILURE
         obj= form.factory()
         self.new=form.new=obj
+
         context=form.context
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
@@ -110,7 +111,8 @@ class AddByTitle (Add):
     
     def actuallyAdd(self,item,data):
         newName = self.newName(data)
-        self.form.context[newName]=item        
+        self.form.context[newName]=item
+        item.__name__ = newName
         root = getSiteRoot(self.form.context)
         if hasattr(root,'addItem'):
             root.addItem(self.new)
