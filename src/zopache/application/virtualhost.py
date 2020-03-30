@@ -26,7 +26,7 @@ virtualHosts = {
                 'golangvideos.com':'golang',                
                 'forestwiki.com':'forestwiki',
                 'js.pythonlinks.info':'python',
-                'mensgroups.info': 'mens-rights',
+                'mensgroups.info': 'mens-groups',
                 'mqttchat.info':'mqtt',
                 'rights.men':'mens-rights',
                 'stopsmog.info': 'smog',                                
