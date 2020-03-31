@@ -38,7 +38,7 @@ class ILinkTop(Interface):
         description = 'What is the title of this link?',
         required = True,
     )
-    remoteUrl = schema.URI(
+    remoteURL= schema.URI(
         title = 'URL',
         description = 'A URL That this page refers to. Please include https://',
         required = True,

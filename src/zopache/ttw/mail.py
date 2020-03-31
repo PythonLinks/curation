@@ -131,7 +131,7 @@ class AddMailHost(AddNamedForm):
         return "MailHost"
     def newURL (self,baseURL):
         return "./manage"
-    
+
 #HERE IS THE  EDIT FORM
 @form_component
 @context(IMailHost)

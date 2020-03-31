@@ -92,11 +92,10 @@ class Add(Action, UniqueName, TransactionNote):
 
 class AddNamed(Add):
     def actuallyAdd(self,item,data):
-        newName = self.newName(data)
+        newName = self.form.newName(data)
         self.form.context[newName]=item
         
-    def newName(self,data):
-        return 'MailHost'
+
 
 class AddByTitle (Add):
     def newName(self,data):    

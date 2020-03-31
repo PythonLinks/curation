@@ -38,7 +38,7 @@
       }
     </style>
   </head>
-  <body class="bg-secondary">
+  <body class="bg-light">
     ${structure: view.webClassAcquire('navbar.py')(view)}
      
     <div class="container" style= "margin-top: 46px;">

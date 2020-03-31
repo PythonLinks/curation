@@ -28,13 +28,17 @@ class Parents(object):
         return parents
 
 
-    def parentsUpToSiteRoot(self):
-        parents = self.reversedParentsUpToSiteRoot(self.context)
+    def parentsUpToSiteRoot(self,item=None):
+        if item ==None:
+           item = self.context 
+        parents = self.reversedParentsUpToSiteRoot(item)
         parents.reverse()
         return parents
     
-    def parentsUpToZodbRoot(self):
-        parents = self.reversedParentsUpToZodbRoot(self.context)
+    def parentsUpToZodbRoot(self, item = None):
+        if item ==None:
+           item = self.context         
+        parents = self.reversedParentsUpToZodbRoot(item)
         parents.reverse()
         return parents
     

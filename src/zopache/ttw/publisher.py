@@ -60,7 +60,8 @@ class Publisher (DawnlightPublisher):
            context, view=traverser(context,request,name)
 
 
-        #IF A VIEW WAS FOUND, RETURN IT 
+        #IF A VIEW WAS FOUND, RETURN IT
+
         if (view is  not None):
                     factory = IResponseFactory(view)
                     response = factory()

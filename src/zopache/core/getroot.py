@@ -67,3 +67,6 @@ class Root(object):
 
     def getPrincipalFolder(self):
         return getPrincipalFolder(self.context)               
+
+    def getProducts(self):
+        return getProducts(self.context)       
