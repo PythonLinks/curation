@@ -79,6 +79,7 @@ class EvaluateFeed(Page, Breadcrumbs):
            slug = slugify(category)
            if slug in siteRoot:
               result = category
+              self.node = siteRoot[slug]
            else:   
               categories.append(category)
        return (result, categories)
