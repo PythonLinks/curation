@@ -31,7 +31,14 @@ class IForm(Interface):
         description = "Twitter Id.",
         required = False, 
         default = u'',
-    )             
+    )
+
+    rssRoot = TextLine(
+        title = u'RSS Root',
+        description = "What is the root of the RSS Tree.",
+        required = False, 
+        default = u'',
+    )                 
 
     homePage= TextLine(
         title = "Home Page",

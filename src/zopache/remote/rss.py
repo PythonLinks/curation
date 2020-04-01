@@ -8,6 +8,7 @@ from zopache.pages.interfaces import ILink
 from zopache.pages.page import Link
 from BTrees.OOBTree import OOBTree
 from zopache.core import Leaf,Container
+from zopache.ttw.treewidget import TreeField
 
 class IRSS(Interface):
     rssURL = schema.URI(
@@ -16,6 +17,13 @@ class IRSS(Interface):
         required = True,
     )      
 
+    category=TreeField(
+           title="Category Search",
+           description= """You can use this widget to explore the category 
+                          tree. It has no impact on the RSS feed. """,
+           required = False,
+            )    
+    
 import feedparser    
         
 @implementer (IRSS)     

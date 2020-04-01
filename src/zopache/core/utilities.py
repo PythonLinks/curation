@@ -6,6 +6,13 @@ from pydoc import locate
 from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
+    
+    def widgetJsonURL(self):
+        root = self.getSiteRoot()
+        categoryRoot = root.rssRoot
+        uri ="https://" + self.getDomain() + "/" + categoryRoot + "/json"
+        return uri
+
     def isForestWiki(self):
         root = self.getSiteRoot()
         return root.__class__.__name__ == 'Page'
