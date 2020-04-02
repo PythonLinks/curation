@@ -73,5 +73,5 @@ class Root(object):
 
     def getTemplates(self):
         products = self.getProducts()
-        templates = products['Tempalates']
+        templates = products['Templates']
         return templates
