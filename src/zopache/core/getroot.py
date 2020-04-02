@@ -70,3 +70,8 @@ class Root(object):
 
     def getProducts(self):
         return getProducts(self.context)       
+
+    def getTemplates(self):
+        products = self.getProducts()
+        templates = products['Tempalates']
+        return templates
