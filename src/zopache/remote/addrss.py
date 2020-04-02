@@ -13,8 +13,11 @@ from zopache.core.page import Page
 
 preamble ="""     
 <p>This is an RSS <bold>dis</bold>agregator. It takes your flat list 
-of articles, 
-sorts them into categories, and publishes them next to other articles in the same cagegory.</p>
+of articles and
+sorts them into categories.  Each category brimgs together 
+articles from multiple blogs.  This way the user can easily find articles
+on the same or related topics.
+</p> 
 <p> 
 To make this work, you mark
 your articles with the correct label or category, and the software then imports
