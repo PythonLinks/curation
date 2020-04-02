@@ -21,7 +21,7 @@ from zopache.crud.forms import AddForm
 class AddRSS(AddNamedForm):
      interface = IRSS
      title = "Add an RSS Feed"
-     subTitle ="More instructions after you submit."
+     subTitle ="Organized By Category"
      count = 0
      factory = RSS
      def getPreamble(self):
