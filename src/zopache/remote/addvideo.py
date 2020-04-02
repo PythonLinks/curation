@@ -59,7 +59,7 @@ class AddPrincipalVideo(Base):
          
 #ADD VIDEO ELSEWHERE
 @view_component
-@name('addVideo')
+@name('addBasicVideo')
 @target(IView)
 @context(IPage)
 @implementer(ITreeSecurity)
