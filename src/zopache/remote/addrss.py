@@ -12,15 +12,16 @@ from zopache.core import View
 from zopache.core.page import Page
 
 from zopache.crud.forms import AddForm
+from zopache.ttw.mail import Notify
 
 @view_component
 @name('addRSS')
 @target(IView)
 @context(IContainer)
 @implementer(IUserSecurity)
-class AddRSS(AddNamedForm):
+class AddRSS(AddNamedForm,Notify):
      interface = IRSS
-     title = "Add an RSS Feed"
+     title = "Add your RSS Feed"
      subTitle ="Organized By Category"
      count = 0
      factory = RSS
@@ -32,14 +33,20 @@ class AddRSS(AddNamedForm):
      layoutName = "UserMenu"     
      
      def newName(self,data):
-        return 'MyRSSFeed'
+        name = 'MyRSSFeed'
+        context = self.context
+        newName=self.uniqueContainerName(context,name,ofType="#")
+        return newName
    
+     def postAddProcess(self,view = None):
+        self.notifyAdminsNewPage()
+        
 @view_component
 @name('index')
 @context(IRSS)
 class EvaluateFeed(Page, Breadcrumbs):
-   title = "Review Your Feed"
-   subTitle='Please categorize your content correctly.'   
+   title = "Please Review Your Feed"
+   subTitle= 'Are the categories correct?'
    feed = None
    def update(self):
         self.template = self.getProducts()['Templates']['RSSTemplate']

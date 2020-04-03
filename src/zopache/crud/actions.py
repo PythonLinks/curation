@@ -48,6 +48,7 @@ class Add(Action, UniqueName, TransactionNote):
         self.factory = factory
 
     def __call__(self, form):
+
         self.form=form
         data, errors = form.extractData()
         if errors:
@@ -84,8 +85,11 @@ class Add(Action, UniqueName, TransactionNote):
         return newName
     
     def actuallyAdd(self,item,data):
-        newName = self.newName(data)
-        self.form.context[newName]=item            
+        if hasattr(self.form, 'newName'):
+           newName = self.form.newName(data)
+        else:   
+           newName = self.newName(data)
+        self.form.context[newName]=item                       
     
     def newURL(self,baseURL):
         return baseURL

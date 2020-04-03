@@ -9,8 +9,9 @@ from zopache.pages.page import Link
 from BTrees.OOBTree import OOBTree
 from zopache.core import Leaf,Container
 from zopache.ttw.treewidget import TreeField
+from zopache.crud.interfaces import ILeaf
 
-class IRSS(Interface):
+class IRSS(ILeaf):
     rssURL = schema.URI(
         title = 'RSS or ATOM URL',
         description = 'Wheree is this feed? Please include https://',
