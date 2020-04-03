@@ -15,7 +15,7 @@ class Page(View,Scripts,Breadcrumbs):
     count=0
     error=''
     title=""
-    subTitle="ZODB Management View"
+    subTitle=""
     responseFactory = Response
     make_response = make_layout_response
 

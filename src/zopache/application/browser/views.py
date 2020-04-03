@@ -27,20 +27,20 @@ from cromlech.security import unauthenticated_principal as anonymous
 @title("Logout")
 @context(Interface)
 class Logout(Page):
+    title="You are logged out"
+    subTitle="Please come back soon!"    
     layoutName = "UserMenu"
     def update(self):
          principal = self.request.principal
          if principal != anonymous:
             principal.logout()
-
+            self.request.principal = anonymous
     
     def render(self):
          return    """ 
+
 <p>
-You are now correclty logged out of this server.  Reload the page to confirm. 
-</p>
-<p>To also logout from both  google sign-in, please restart 
-your browser.  Soon that will not be needed. 
+We hope that you enjoyed your visit. 
 </p>
 
 <h3>         Click <a href =".."> here </a> to go back.
