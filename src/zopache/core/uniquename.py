@@ -16,3 +16,9 @@ class UniqueName(object):
         siteRoot = getSiteRoot(container)
         return self.uniqueContainerName ( siteRoot, new_name,ofType)
 
+    def uniqueBothName(self,name,context):    
+        name = slugify(name,lower=True)
+        newName=self.uniqueContainerName(context,name,ofType="_")        
+        newName=self.uniqueSiteName(context,name,ofType="-")
+        return newName       
+

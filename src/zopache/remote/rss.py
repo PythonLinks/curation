@@ -10,8 +10,16 @@ from BTrees.OOBTree import OOBTree
 from zopache.core import Leaf,Container
 from zopache.ttw.treewidget import TreeField
 from zopache.crud.interfaces import ILeaf
+from zopache.core.uniquename import UniqueName
+from zopache.remote.rsslink import IRSSLink
 
 class IRSS(ILeaf):
+    title=schema.TextLine(
+        title = "RSS Feed Name",
+        description ="Please give it a name",
+        required = True,
+        )
+        
     rssURL = schema.URI(
         title = 'RSS or ATOM URL',
         description = 'Wheree is this feed? Please include https://',
@@ -36,13 +44,37 @@ class RSS(Leaf):
 
    def getFeed(self):
        feed = feedparser.parse(self.rssURL)
+       for article in self.entries():
+           id = article['id']
+           if not id in articles:
+              self.createRSSLink(article) 
        return feed
-   
-   def entries (self,feed):
-       entries = feed['entries']
-       return entries
-       
 
+   def createRSSLink(self,article):
+       new = RSSLink()
+       new.title = article.title
+       new.source = article.description
+       new.link = article.link
+       new.updated = article.updated_parsed
+       self.articles [id] = new
+       newName = self.uniqueBothName (new.title,self)
+       self [newName] = new
+       new.__parent__ = self
+       new.rss = self       
+   
+   def getFirstGoodCategory(self,entry):
+       siteRoot = self.getSiteRoot()
+       categories = []
+       result = None
+       for item in entry["tags"]:
+           category = item ['term']
+           slug = slugify(category)
+           if slug in siteRoot:
+              result = category
+              self.node = siteRoot[slug]
+           else:   
+              categories.append(category)
+       return (result, categories)   
        
 
 import crom

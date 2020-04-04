@@ -48,24 +48,21 @@ class EvaluateFeed(Page, Breadcrumbs):
    title = "Please Review Your Feed"
    subTitle= 'Are the categories correct?'
    feed = None
+   
    def update(self):
         self.template = self.getProducts()['Templates']['RSSTemplate']
         self.feed = self.context.getFeed()
-        self.entries = self.feed ['entries']
+
+   def getEntries (self,feed):
+       entries = feed['entries']
+       return entries
+
+  get RSSLink(self,entry):
+       id = entry['id']
+       rssLink = self.context.articles [id]
+       return rssLink
                      
-   def getFirstGoodCategory(self,entry):
-       siteRoot = self.getSiteRoot()
-       categories = []
-       result = None
-       for item in entry["tags"]:
-           category = item ['term']
-           slug = slugify(category)
-           if slug in siteRoot:
-              result = category
-              self.node = siteRoot[slug]
-           else:   
-              categories.append(category)
-       return (result, categories)
+
 
    def articleCrumbs(self, article):
        category = self.getFirstGoodCategory(article)[0]
