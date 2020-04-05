@@ -63,7 +63,7 @@ class EvaluateFeed(Page, Breadcrumbs):
        siteRoot = self.getSiteRoot()
        category = self.getRSSLink(article).category
        category = siteRoot[category]
-       return category.title
+       return category
        
    def update(self):
         self.template = self.getProducts()['Templates']['RSSTemplate']
@@ -114,7 +114,7 @@ class EvaluateFeed(Page, Breadcrumbs):
           return "Multiple Categories, None Good"
        return "Something went wrong" 
 
-   def getCategories(self,entry):
+   def getTags(self,entry):
        siteRoot = self.getSiteRoot()
        categories = []
        result = None
