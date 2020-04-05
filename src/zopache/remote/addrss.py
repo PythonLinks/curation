@@ -141,12 +141,14 @@ class EvaluateFeed(Page, Breadcrumbs):
 @form_component
 @name ('edit')
 @context(IRSS)
-class EditRSSForm(BaseEditForm):
+@implementer(IUserSecurity)
+class EditRSS(BaseEditForm):
     pass
 
 from zopache.ttw.html import CkEdit
 @form_component
 @name ('edit')
 @context(IRSSLink)
-class EditRSSLinkForm(CkEdit):
+@implementer(IUserSecurity)
+class EditRSSLink(CkEdit):
     pass
