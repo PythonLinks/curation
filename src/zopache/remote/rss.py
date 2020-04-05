@@ -1,5 +1,6 @@
 from zope import schema
 from zope.interface import Interface
+from slugify import slugify
 
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
@@ -7,13 +8,13 @@ from zopache.remote.ivideo import IBasicVideo, IPrincipalVideo
 from zopache.pages.interfaces import ILink
 from zopache.pages.page import Link
 from BTrees.OOBTree import OOBTree
-from zopache.core import Leaf,Container
+from zopache.core import Container
 from zopache.ttw.treewidget import TreeField
-from zopache.crud.interfaces import ILeaf
+from zopache.crud.interfaces import IContainer
 from zopache.core.uniquename import UniqueName
-from zopache.remote.rsslink import IRSSLink
+from zopache.remote.rsslink import IRSSLink, RSSLink
 
-class IRSS(ILeaf):
+class IRSS(IContainer):
     title=schema.TextLine(
         title = "RSS Feed Name",
         description ="Please give it a name",
@@ -33,48 +34,30 @@ class IRSS(ILeaf):
            required = False,
             )    
     
-import feedparser    
-        
+
+
+from zopache.core.getroot import getSiteRoot    
 @implementer (IRSS)     
-class RSS(Leaf):
+class RSS(Container,UniqueName):
    
    def __init__(self):
-       Leaf.__init__
-       articles = OOBTree()
+       Container.__init__(self)
+       self.articles = OOBTree()
 
-   def getFeed(self):
-       feed = feedparser.parse(self.rssURL)
-       for article in self.entries():
-           id = article['id']
-           if not id in articles:
-              self.createRSSLink(article) 
-       return feed
 
    def createRSSLink(self,article):
        new = RSSLink()
        new.title = article.title
        new.source = article.description
-       new.link = article.link
+       new.rssURL = article.link
        new.updated = article.updated_parsed
-       self.articles [id] = new
+       theId = article['id']
+       self.articles [theId] = new
+       newName = slugify (new.title)
        newName = self.uniqueBothName (new.title,self)
        self [newName] = new
        new.__parent__ = self
-       new.rss = self       
-   
-   def getFirstGoodCategory(self,entry):
-       siteRoot = self.getSiteRoot()
-       categories = []
-       result = None
-       for item in entry["tags"]:
-           category = item ['term']
-           slug = slugify(category)
-           if slug in siteRoot:
-              result = category
-              self.node = siteRoot[slug]
-           else:   
-              categories.append(category)
-       return (result, categories)   
+       new.rss = self
        
 
 import crom
