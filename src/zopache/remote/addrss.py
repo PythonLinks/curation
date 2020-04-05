@@ -103,16 +103,24 @@ class EvaluateFeed(Page, Breadcrumbs):
               rssLink.category = slug
               return "One Good Category"               
           return "Invalid Category"  
-          
+       best =(None,1000)          
        if len (entry['tags']) > 1:
           for tag in entry['tags']:
               category = tag['term']  
               slug = slugify (category)
               if slug in siteRoot:
-                  rssLink.category = slug                   
-                  return "Multiple Categories, One Good"
-          return "Multiple Categories, None Good"
-       return "Something went wrong" 
+                 category = siteRoot[slug]
+                 kids = category.childCategories()
+                 length = len (kids)
+                 if length < best [1]:
+                    best =(slug,length)
+
+          if best [0]==None: 
+             return "Multiple Categories, None Good"
+          else:          
+            rssLink.category = best [0]
+            return "Multiple Categories, One Good"
+
 
    def getTags(self,entry):
        siteRoot = self.getSiteRoot()
