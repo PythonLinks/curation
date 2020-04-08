@@ -2,7 +2,7 @@ from slugify import slugify
 import feedparser
 
 from cromlech.security import Unauthorized
-from zopache.crud.forms import AddNamedForm
+from zopache.crud.forms import AddForm
 from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
@@ -12,20 +12,20 @@ from zopache.remote.rsslink import IRSSLink, RSSLink
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core import View
 from zopache.core.page import Page
-
+   
 from zopache.crud.forms import AddForm
 from zopache.ttw.mail import Notify
 from zopache.crud.forms import BaseEditForm
-
-
-     
+import zopache
+from zopache.crud.forms import BaseEditForm
+from BTrees.OOBTree import OOBTree
 
 @view_component
 @name('addRSS')
 @target(IView)
 @context(IContainer)
 @implementer(IUserSecurity)
-class AddRSS(AddNamedForm,Notify):
+class AddRSS(AddForm,Notify):
      interface = IRSS
      title = "Add your RSS Feed"
      subTitle ="Organized By Category"
@@ -38,15 +38,9 @@ class AddRSS(AddNamedForm,Notify):
      
      layoutName = "UserMenu"     
      
-     def newName(self,data):
-        name = 'MyRSSFeed'
-        context = self.context
-        newName=self.uniqueContainerName(context,name,ofType="#")
-        return newName
-   
      def postAddProcess(self,view = None):
         self.notifyAdminsNewPage()
-
+        self.new.principal = self.request.principal 
         
 @view_component
 @name('index')
@@ -57,7 +51,7 @@ class EvaluateFeed(Page, Breadcrumbs):
    feed = None
 
    def getRSSLink(self,article):
-       return self.context.articles [article['id']]
+       return self.getArticles()[article['id']]
 
    def getCategory(self,article):
        siteRoot = self.getSiteRoot()
@@ -71,9 +65,20 @@ class EvaluateFeed(Page, Breadcrumbs):
         
    def getRSSLink(self,entry):
        id = entry['id']
-       rssLink = self.context.articles [id]
+       rssLink = self.getArticles() [id]
        return rssLink
-                     
+
+   def getPrincipal(self):
+       principal = self.parentWhichImplements(
+               zopache.ttw.interfaces.IInternalPrincipal)
+       return principal
+  
+   def getArticles (self):
+       siteRoot = self.getSiteRoot()
+       if not hasattr(siteRoot,'articles'):
+          siteRoot.articles = OOBTree()
+       return siteRoot.articles   
+                   
    def articleCrumbs(self, article):
        rssLink = self.getRSSLink(article)        
        category = rssLink.category
@@ -110,6 +115,8 @@ class EvaluateFeed(Page, Breadcrumbs):
               slug = slugify (category)
               if slug in siteRoot:
                  category = siteRoot[slug]
+                 if category.__class__ == RSS:
+                      breakpoint()
                  kids = category.childCategories()
                  length = len (kids)
                  if length < best [1]:
@@ -137,15 +144,53 @@ class EvaluateFeed(Page, Breadcrumbs):
        return categories
   
    def getFeed(self,rss):
-       self.feed = feedparser.parse(rss.rssURL)
-       self.entries = self.feed['entries']
+       allFeeds = self.allFeeds = [] 
+       allEntries = self.allEntries = {} 
+       urls = rss.rssURLs
+       urls = urls.split ("\n")
+       for url  in urls:
+          print (url)  
+          feed = feedparser.parse(url)
+          allFeeds.append(feed)
+          entries = feed['entries']
+          for article in entries:
+               permalink = article['id']
+              allEntries [permalink]=article
+       self.entries = allEntries       
        for article in self.entries:
            theId = article['id']
            if not theId in rss.articles:
               rss.createRSSLink(article)
        return self.feed
- 
+  
+   #No longer used
+   def getOneFeed(self,rss):
+       articles = self.getArticles()
+       self.feed = feedparser.parse(rss.rssURL)
+       self.entries = self.feed['entries']
+       for article in self.entries:
+           theId = article['id']
+           if not theId in articles:
+              self.createRSSLink(article)
+       return self.feed
 
+   def createRSSLink(self,article):
+       articles = self.getArticles()
+       rss = self.context
+       new = RSSLink()
+       new.title = article.title
+       new.source = article.description
+       new.rssURL = article.link
+       new.updated = article.updated_parsed
+       #new.image = article.image
+       theId = article['id']
+       articles [theId] = new
+       newName = slugify (new.title)
+       newName = self.uniqueBothName (newName,rss)
+       rss[newName] = new
+       new.__parent__ = rss
+       new.rss = rss
+  
 @form_component
 @name ('edit')
 @context(IRSS)

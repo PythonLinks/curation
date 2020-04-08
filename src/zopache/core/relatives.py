@@ -55,7 +55,15 @@ class Parents(object):
              if interface.providedBy(item):
                        result.append(item)
              item=item.__parent__
-           return result    
+           return result
+
+    def parentWhichImplements(self,interface):
+           item=self.context
+           while (item!=None):
+             if interface.providedBy(item):
+                   return item
+             item=item.__parent__
+           return None     
 
     def parents(self, item=None):
         if item == None:

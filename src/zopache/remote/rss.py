@@ -21,9 +21,11 @@ class IRSS(IContainer):
         required = True,
         )
         
-    rssURL = schema.URI(
-        title = 'RSS or ATOM URL',
-        description = 'Wheree is this feed? Please include https://',
+    rssURL = schema.Text(
+        title = 'RSS or ATOM URLs',
+        description = """List of cateogry feeds.   Many RSS servers 
+only list 10 items.  By listing one feed for each category, you can import 
+all of your content. Just one URL per line, and pleae include https://""",
         required = True,
     )      
 
@@ -35,29 +37,11 @@ class IRSS(IContainer):
             )    
     
 
-
 from zopache.core.getroot import getSiteRoot    
 @implementer (IRSS)     
 class RSS(Container,UniqueName):
-   
-   def __init__(self):
-       Container.__init__(self)
-       self.articles = OOBTree()
+     title = ""  
 
-
-   def createRSSLink(self,article):
-       new = RSSLink()
-       new.title = article.title
-       new.source = article.description
-       new.rssURL = article.link
-       new.updated = article.updated_parsed
-       theId = article['id']
-       self.articles [theId] = new
-       newName = slugify (new.title)
-       newName = self.uniqueBothName (new.title,self)
-       self [newName] = new
-       new.__parent__ = self
-       new.rss = self
        
 
 import crom
