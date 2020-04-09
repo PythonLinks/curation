@@ -77,6 +77,18 @@ class Add(Action, UniqueName, TransactionNote):
 
         return SuccessMarker('Added', True, url=url,code=307)
 
+    def actuallyAdd(self,item,data):
+        if hasattr(self.form, 'newName'):
+           newName = self.form.newName(data)
+        else:   
+           newName = self.newName(data)
+        self.form.context[newName]=item
+        
+    
+    def newURL(self,baseURL):
+        return baseURL
+
+class AddNamed(Add):
     def newName(self,data):    
         name =  data['__name__']
         name = slugify(name, ok=SLUG_OK+'.', lower = False)
@@ -84,24 +96,16 @@ class Add(Action, UniqueName, TransactionNote):
         newName=self.uniqueContainerName(context,name,ofType="#")
         return newName
     
-    def actuallyAdd(self,item,data):
-        if hasattr(self.form, 'newName'):
-           newName = self.form.newName(data)
-        else:   
-           newName = self.newName(data)
-        self.form.context[newName]=item                       
-    
-    def newURL(self,baseURL):
-        return baseURL
-
-class AddNamed(Add):
-    def actuallyAdd(self,item,data):
-        newName = self.form.newName(data)
-        self.form.context[newName]=item
-        
-
 
 class AddByTitle (Add):
+    def actuallyAdd(self,item,data):
+        newName = self.newName(data)
+        self.form.context[newName]=item
+        item.__name__ = newName
+        root = getSiteRoot(self.form.context)
+        if hasattr(root,'addItem'):
+            root.addItem(self.new)
+    
     def newName(self,data):    
         name =  data['title']
         name = slugify(name,lower=True)
@@ -112,13 +116,6 @@ class AddByTitle (Add):
         newName=self.uniqueSiteName(context,name,ofType="-")
         return newName
     
-    def actuallyAdd(self,item,data):
-        newName = self.newName(data)
-        self.form.context[newName]=item
-        item.__name__ = newName
-        root = getSiteRoot(self.form.context)
-        if hasattr(root,'addItem'):
-            root.addItem(self.new)
     
 class AddAndView(Add):
     def newURL(self,baseURL):
@@ -217,7 +214,6 @@ class Delete(Action):
                     products = form.getProducts()
                     del container[name]
                     root.indexTree()
-                    breakpoint()
                     products.indexTree()
                     form.status = self.successMessage
                     message(form.status)

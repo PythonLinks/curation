@@ -200,7 +200,10 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def getName(self):
          return self.__name__
-
+     
+    def preDeleteProcess(self,view):
+        pass
+    
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'

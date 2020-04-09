@@ -161,6 +161,8 @@ class CategoryDeleter(Deleter,LocalBase):
         #Have to do this before deleting the __parent__ Pointer. 
         if IPage.providedBy (container):
             root = getSiteRoot(contained)
+        if hasattr(contained,'preDeleteProcess'):
+             contained.preDeleteProcess(view)
         del container[name]
         
         # IF IT IS A VIDEO DELETE IT FROM THE CONFERENCE

@@ -43,7 +43,8 @@ class IRSSLink(ILink):
                           tree. It has no impact on the RSS feed. """,
            required = False,
             )    
-      
+
+from zopache.pages.page import Page    
 @implementer (IRSSLink)
 class RSSLink(Link):
    _category = "" 
@@ -53,3 +54,7 @@ class RSSLink(Link):
    def setCategory(self,value):       
       self._category = value
        
+   def preDeleteProcess(self,view):
+        Page.preDeleteProcess(self,view)
+        articles = view.getArticles()
+        del articles [self.permaLink]

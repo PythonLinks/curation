@@ -2,31 +2,32 @@ from slugify import slugify
 import feedparser
 
 from cromlech.security import Unauthorized
-from zopache.crud.forms import AddForm
+from zopache.crud.forms import AddByTitleForm
 from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
 from zopache.ttw.interfaces import IContainer
-from zopache.remote.rss import IRSS, RSS
+from zopache.remote.rss import IRSS, IAddRSS, RSS
 from zopache.remote.rsslink import IRSSLink, RSSLink
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core import View
 from zopache.core.page import Page
    
-from zopache.crud.forms import AddForm
+from zopache.crud.forms import AddNamedForm
 from zopache.ttw.mail import Notify
 from zopache.crud.forms import BaseEditForm
 import zopache
 from zopache.crud.forms import BaseEditForm
 from BTrees.OOBTree import OOBTree
+from zopache.remote.download import doit
 
 @view_component
 @name('addRSS')
 @target(IView)
 @context(IContainer)
 @implementer(IUserSecurity)
-class AddRSS(AddForm,Notify):
-     interface = IRSS
+class AddRSS(AddByTitleForm,Notify):
+     interface = IAddRSS
      title = "Add your RSS Feed"
      subTitle ="Organized By Category"
      count = 0
@@ -36,14 +37,17 @@ class AddRSS(AddForm,Notify):
 
      preamble = property (getPreamble)
      
-     layoutName = "UserMenu"     
+     layoutName = "UserMenu"
      
+     def newURL(self,baseURL):
+        return baseURL + '/evaluate'
+   
      def postAddProcess(self,view = None):
         self.notifyAdminsNewPage()
         self.new.principal = self.request.principal 
         
 @view_component
-@name('index')
+@name('evaluate')
 @context(IRSS)
 class EvaluateFeed(Page, Breadcrumbs):
    title = "Please Review Your Feed"
@@ -51,13 +55,20 @@ class EvaluateFeed(Page, Breadcrumbs):
    feed = None
 
    def getRSSLink(self,article):
-       return self.getArticles()[article['id']]
+            self.getArticles()[article['id']]
 
+       
    def getCategory(self,article):
        siteRoot = self.getSiteRoot()
        category = self.getRSSLink(article).category
        category = siteRoot[category]
        return category
+
+   def getPossibleCategory(self,article):
+       siteRoot = self.getSiteRoot()
+       category = self.getRSSLink(article).possibleCategory
+       category = siteRoot[category]
+       return category  
        
    def update(self):
         self.template = self.getProducts()['Templates']['RSSTemplate']
@@ -73,19 +84,19 @@ class EvaluateFeed(Page, Breadcrumbs):
                zopache.ttw.interfaces.IInternalPrincipal)
        return principal
   
-   def getArticles (self):
-       siteRoot = self.getSiteRoot()
-       if not hasattr(siteRoot,'articles'):
-          siteRoot.articles = OOBTree()
-       return siteRoot.articles   
+
                    
    def articleCrumbs(self, article):
-       rssLink = self.getRSSLink(article)        
-       category = rssLink.category
+       rssLink = self.getRSSLink(article)
+       if hasattr(rssLink,'category'):
+          category = rssLink.category
+       else:
+           category = rssLink.possiblecategory 
        root = self.getSiteRoot()
        if category in root:
             item = root [category]
             crumbs = self.breadcrumbsCore(item,showRoot=False)
+
        else:
             crumbs = "No legal category found."
        return crumbs
@@ -102,32 +113,40 @@ class EvaluateFeed(Page, Breadcrumbs):
        siteRoot = self.getSiteRoot()
        if len (entry['tags']) == 1:
           category = entry['tags'][0]['term']  
-          category = slugify (category)
           slug = slugify(category)
+          print (slug)
           if slug in siteRoot:
+              category = siteRoot [slug]
+              parent = category.__parent__
+              siblings = parent.childCategories()
+              if len (siblings) > 0:
+                  rssLink.possibleCategory = slug
+                  return "Could Be Better"   
               rssLink.category = slug
               return "One Good Category"               
-          return "Invalid Category"  
-       best =(None,1000)          
+          return "Invalid Category"
+
+       best =(None, #Category Name
+              1000  #Number of Children
+               )          
        if len (entry['tags']) > 1:
           for tag in entry['tags']:
               category = tag['term']  
               slug = slugify (category)
               if slug in siteRoot:
                  category = siteRoot[slug]
-                 if category.__class__ == RSS:
-                      breakpoint()
                  kids = category.childCategories()
                  length = len (kids)
                  if length < best [1]:
-                    best =(slug,length)
-
+                    best =(slug,length)                    
           if best [0]==None: 
              return "Multiple Categories, None Good"
-          else:          
+          elif best[1] > 0:      
+            rssLink.possibleCategory = best[1]
+            return "Multiple Categories, None Good"
+          elif best[1] == 0:      
             rssLink.category = best [0]
             return "Multiple Categories, One Good"
-
 
    def getTags(self,entry):
        siteRoot = self.getSiteRoot()
@@ -144,26 +163,26 @@ class EvaluateFeed(Page, Breadcrumbs):
        return categories
   
    def getFeed(self,rss):
-       allFeeds = self.allFeeds = [] 
-       allEntries = self.allEntries = {} 
-       urls = rss.rssURLs
-       urls = urls.split ("\n")
+       allURLS = []
+       allURLS.append (rss.rssFeed)
+       urls = rss.otherFeeds
+       urls = urls.splitlines ()
        for url  in urls:
-          print (url)  
-          feed = feedparser.parse(url)
-          allFeeds.append(feed)
-          entries = feed['entries']
-          for article in entries:
-               permalink = article['id']
-              allEntries [permalink]=article
-       self.entries = allEntries       
+          url.strip()  
+          print ("FEED =",url)
+          allURLS.append (url)
+       self.entries = doit(allURLS)
+
+       self.entries =  [ v for v in self.entries. values() ]
+
        for article in self.entries:
            theId = article['id']
-           if not theId in rss.articles:
-              rss.createRSSLink(article)
+           if not theId in self.getArticles():
+              self.createRSSLink(article)
        return self.feed
   
    #No longer used
+   """
    def getOneFeed(self,rss):
        articles = self.getArticles()
        self.feed = feedparser.parse(rss.rssURL)
@@ -173,7 +192,7 @@ class EvaluateFeed(Page, Breadcrumbs):
            if not theId in articles:
               self.createRSSLink(article)
        return self.feed
-
+   """
    def createRSSLink(self,article):
        articles = self.getArticles()
        rss = self.context
@@ -184,6 +203,7 @@ class EvaluateFeed(Page, Breadcrumbs):
        new.updated = article.updated_parsed
        #new.image = article.image
        theId = article['id']
+       new.permaLink = theId
        articles [theId] = new
        newName = slugify (new.title)
        newName = self.uniqueBothName (newName,rss)
