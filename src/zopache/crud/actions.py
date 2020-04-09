@@ -214,10 +214,11 @@ class Delete(Action):
                 try:
                     item = container[name]
                     root = getSiteRoot(item)
+                    products = form.getProducts()
                     del container[name]
                     root.indexTree()
-                    root.indexTree()
-                    root['Products'].indexTree()                    
+                    breakpoint()
+                    products.indexTree()
                     form.status = self.successMessage
                     message(form.status)
                     url = str(IURL(container, form.request))
