@@ -44,7 +44,7 @@ class AddRSS(AddByTitleForm,Notify):
    
      def postAddProcess(self,view = None):
         self.notifyAdminsNewPage()
-        self.new.principal = self.request.principal 
+        self.new.principal = self.__parent__ 
         
 @view_component
 @name('evaluate')
@@ -84,19 +84,50 @@ class EvaluateFeed(Page, Breadcrumbs):
                zopache.ttw.interfaces.IInternalPrincipal)
        return principal
   
+   def isGoodRSSLink(self,rssLink):
+       cat = self.getCategoryObject(rssLink)
+       if cat == None:
+           return False  
+       if len(cat.childCategories())  ==0:
+           return True
+       return False
+  
+   def getCategoryObject(self,rssLink):
+        if hasattr(rssLink,'category'):
+            category = rssLink.category
+        elif hasattr(rssLink,'possibleCategory'):
+            category = rssLink.possiblecategory
+        else:
+             return None
+        if category != '':
+             siteRoot = self.getSiteRoot()
+             if category in siteRoot:
+                 categoryObject = siteRoot[category]
+                 return categoryObject
+        return None     
+           
+   def getGoodAndBadArticles(self):
+       bad  = []
+       good = []
+       for item in self.entries:
+          rssLink = self.getRSSLink(item)
+          if self.isGoodRSSLink(rssLink):
+              print (item.title)  
+              print ("good", item.category)
+              print ("")
+              good.append(item)        
+          else:
+              print ("bad",item.title)  
+              bad.append(item)
+       return [bad,good]
 
-                   
+
+        
    def articleCrumbs(self, article):
        rssLink = self.getRSSLink(article)
-       if hasattr(rssLink,'category'):
-          category = rssLink.category
-       else:
-           category = rssLink.possiblecategory 
-       root = self.getSiteRoot()
-       if category in root:
-            item = root [category]
-            crumbs = self.breadcrumbsCore(item,showRoot=False)
-
+       item = self.getCategoryObject(article)
+       if item != None:
+          crumbs = self.breadcrumbsCore(item,showRoot=False)
        else:
             crumbs = "No legal category found."
        return crumbs

@@ -83,4 +83,9 @@ class Root(object):
        siteRoot = self.getSiteRoot()
        if not hasattr(siteRoot,'articles'):
           siteRoot.articles = OOBTree()
+       return siteRoot.articles
+
+    def resetArticles (self):
+       siteRoot = self.getSiteRoot()
+       siteRoot.articles = OOBTree()
        return siteRoot.articles   

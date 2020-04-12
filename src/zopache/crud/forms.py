@@ -62,8 +62,7 @@ class AddByTitleForm(AddForm):
     @property
     def fields(self):
         return  Fields(self.interface)
-
-
+    
     @property
     def actions(self):
         return Actions(

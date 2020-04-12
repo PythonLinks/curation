@@ -88,14 +88,15 @@ class Add(Action, UniqueName, TransactionNote):
     def newURL(self,baseURL):
         return baseURL
 
-class AddNamed(Add):
     def newName(self,data):    
         name =  data['__name__']
         name = slugify(name, ok=SLUG_OK+'.', lower = False)
         context = self.form.context
         newName=self.uniqueContainerName(context,name,ofType="#")
         return newName
-    
+
+class AddNamed(Add):
+    pass
 
 class AddByTitle (Add):
     def actuallyAdd(self,item,data):
@@ -117,7 +118,7 @@ class AddByTitle (Add):
         return newName
     
     
-class AddAndView(Add):
+class AddAndView(AddNamed):
     def newURL(self,baseURL):
         return baseURL + '/index'        
     
@@ -150,6 +151,9 @@ class Update(Action,TransactionNote):
            return SuccessMarker('Updated', True, url=url)
 
     def newURL(self,baseURL):
+        if hasattr(self.form, 'newURL'):
+            return self.form.newURL(baseURL)
+        else:
             return self.form.request.url
 
     def postProcess(self):
