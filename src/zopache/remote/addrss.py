@@ -1,5 +1,6 @@
 from slugify import slugify
 import feedparser
+import time
 
 from cromlech.security import Unauthorized
 from zopache.crud.forms import AddByTitleForm
@@ -248,6 +249,10 @@ class EvaluateFeed(View, Breadcrumbs):
        #new.image = article.image
        theId = article['id']
        new.permaLink = theId
+       if hasattr(article,"published_parsed"):
+          new.publishedAt = time.mktime( article["published_parsed"])
+       else:
+          new.publishedAt = time.time()
        articles [theId] = new
        newName = slugify (new.title)
        newName = self.uniqueBothName (newName,rss)

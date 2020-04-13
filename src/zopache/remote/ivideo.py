@@ -21,7 +21,9 @@ def recordingTypes():
         terms.append(term)
     return SimpleVocabulary(terms)
 
-class IVideo (Interface):
+from zopache.remote.interfaces import IVoteable
+
+class IVideo (IVoteable):
      pass 
  
 

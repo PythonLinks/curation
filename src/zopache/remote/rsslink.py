@@ -4,8 +4,9 @@ from zopache.pages.interfaces import ILink
 from zopache.pages.page import Link
 from zopache.ttw.treewidget import TreeField
 from zopache.core.viewdecorators import *
+from zopache.remote.interfaces import IVoteable
 
-class IRSSLink(ILink):
+class IRSSLink(ILink,IVoteable):
 
     title = schema.TextLine(
         title = 'Remote Article Name',
@@ -42,19 +43,30 @@ class IRSSLink(ILink):
            description= """You can use this widget to explore the category 
                           tree. It has no impact on the RSS feed. """,
            required = False,
-            )    
-
+            )
+    
+from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
 @implementer (IRSSLink)
-class RSSLink(Link):
-   _category = "" 
-   def getCategory(self):
+class RSSLink(Link,Voteable):
+    _category = ""
+    webClass = "RSSLink"
+    def getCategory(self):
       return self._category
   
-   def setCategory(self,value):       
+    def setCategory(self,value):       
       self._category = value
        
-   def preDeleteProcess(self,view):
+    def preDeleteProcess(self,view):
         Page.preDeleteProcess(self,view)
         articles = view.getArticles()
         del articles [self.permaLink]
+        
+    def getSrcSet(self):
+        pass
+    
+    def getDefaultThumbNailURL(self):
+        pass
+   
+
+ 

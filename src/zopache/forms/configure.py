@@ -32,6 +32,18 @@ class IForm(Interface):
         required = False, 
         default = u'',
     )
+    instagramId= TextLine(
+        title = u'Instagram Id',
+        description = "How to reach you on Instagram.",
+        required = False, 
+        default = u'',
+    )
+    facebookId= TextLine(
+        title = u'Facebook Id',
+        description = "How to reach you on Facebook. .",
+        required = False, 
+        default = u'',
+    )    
 
     rssRoot = TextLine(
         title = u'RSS Root',
