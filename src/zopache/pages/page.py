@@ -66,7 +66,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
                result.append (item)
         return result
     
-    def canView(self):
+    def canView(self,view):
         return True
     
     def allValuesAsList(self):

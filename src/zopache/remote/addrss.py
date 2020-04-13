@@ -45,15 +45,24 @@ class AddRSS(AddByTitleForm,Notify):
      def postAddProcess(self,view = None):
         self.notifyAdminsNewPage()
         self.new.principal = self.__parent__ 
-        
+
+from dolmen.view import View
+from cromlech.webob.response import Response
+from dolmen.view import  make_view_response
+
 @view_component
 @name('evaluate')
 @context(IRSS)
-class EvaluateFeed(Page, Breadcrumbs):
+class EvaluateFeed(View, Breadcrumbs):
    title = "Please Review Your Feed"
    subTitle= 'Are the categories correct?'
    feed = None
-
+   responseFactory = Response
+   make_response = make_view_response
+    
+   def render(self):
+       return self.template.render(self,context=context,view = self)
+       
    def getRSSLink(self,article):
             self.getArticles()[article['id']]
 
@@ -73,7 +82,9 @@ class EvaluateFeed(Page, Breadcrumbs):
    def update(self):
         self.template = self.getProducts()['Templates']['RSSTemplate']
         self.feed = self.getFeed(self.context)
-        
+        self.getGoodAndBadArticles()
+        return self
+   
    def getRSSLink(self,entry):
        id = entry['id']
        rssLink = self.getArticles() [id]
@@ -119,7 +130,9 @@ class EvaluateFeed(Page, Breadcrumbs):
           else:
               print ("bad",item.title)  
               bad.append(item)
-       return [bad,good]
+       self.good = good
+       self.bad = bad
+
 
 
         

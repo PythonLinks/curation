@@ -57,6 +57,7 @@ class IRSS (IBase,IPage):
 from zopache.core.getroot import getSiteRoot    
 @implementer (IRSS)     
 class RSS(Link):
+     webClass = "RSS"
      title = ""
      
        
