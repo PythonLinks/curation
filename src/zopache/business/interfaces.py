@@ -104,7 +104,7 @@ class ICompanyBase(ICompanyOrOrganization):
 
     specialization= schema.Text(
         title = u'Specialization (20 characters)',
-        description = " Why is this Company special?",
+        description = " What is this Companies specialization?",
         required = True,
         max_length = 20,
         default = '',

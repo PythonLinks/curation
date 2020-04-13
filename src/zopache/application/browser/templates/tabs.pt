@@ -19,7 +19,7 @@ Tree  <span class="caret"></span></a>
 </li>
 
 
-<li class="dropdown">
+<li tal:condition = "view.treeSecurity()" class="dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
 Node  <span class="caret"></span></a>
 
@@ -48,42 +48,40 @@ Node  <span class="caret"></span></a>
 </ul>
 </li>
 
-
-<li class="dropdown" tal:condition="view.safeMethod('isBTreeContainer')">
+<li class="dropdown" tal:condition="view.treeSecurity() and view.safeMethod('isBTreeContainer')">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
 + HTML  <span class="caret"></span></a>
 
 <ul class="dropdown-menu">
-
-<li tal:condition="view.safeMethod('isPage')"><a href="./addPage">Page</a></li>
-<li><a href="./addContainer">Container</a></li>
-<li tal:condition = "view.treeSecurity()"><a href="./addHTML">HTML</a></li>
-<li tal:condition = "view.treeSecurity()" ><a href="./addAce">Ace HTML</a></li>
-<li tal:condition = "view.treeSecurity()" ><a href="./addPug">Pug</a></li>
-<li tal:condition = "view.isManager()"><a href="./addSecureHTML">Secure HTML</a></li>
+<li><a href="./addHTML">WYSIWYG</a></li>
+<li><a href="./addAce">HTML</a></li>
+<li><a href="./addMarkdown">Markdown</a></li>
 <li><a href="./addCSS">CSS</a></li>
-<li><a href="./addCSSFolder">CSS Folder</a></li>
+<li><a href="./addJavascript">JavaScript</a></li>
 <li><a href="./addImage">Image</a></li>
 <li><a href="./addFile">File</a></li>
+<li><a href="./addContainer">Folder</a></li>
 </ul>
 </li>
 
-
-<li class="dropdown" tal:condition="view.safeMethod('isBTreeContainer')">
-<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-+ JavaScript <span class="caret"></span></a>
+<li class="dropdown" tal:condition="view.treeSecurity() and view.safeMethod('isBTreeContainer')"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">
++ Advanced <span class="caret"></span></a>
 <ul class="dropdown-menu">
-<li><a href="./addJavascript">JavaScript</a></li>
-<li><a href="./addJavascriptFolder">Javascript Folder</a></li>
+
+
+<li tal:condition = "view.treeSecurity()" ><a href="./addPug">Pug</a></li>
+<li tal:condition = "view.isManager()"><a href="./addSecureHTML">Secure HTML</a></li>
 <li><a href="./addCoffeeScript">CoffeeScript</a></li>
+<li>   <a href="./addPython">Python</a></li>
+<li><a href="./addJSON">JSON</a></li>
+<li tal:condition="view.safeMethod('isBTreeContainer') or view.safeMethod('isPythonFolder')"> </li>
+<li><a href="./addCSSFolder">CSS Folder</a></li>
+<li><a href="./addJavascriptFolder">Javascript Folder</a></li>
 <li tal:condition="view.safeMethod('isBTreeContainer') or  view.safeMethod('isPythonFolder')">
-   <a href="./addPython">Python</a></li>
-<li tal:condition="view.safeMethod('isBTreeContainer') or view.safeMethod('isPythonFolder')">
    <a href="./addPythonFolder">Transcyprt Folder</a></li>
 <li tal:condition = "view.isManager()"><a href="./addPug">Pug</a></li>
-<li><a href="./addJSON">JSON</a></li>
 </ul>
-</li>
+
 
 <li class="dropdown" tal:condition="view.safeMethod('isCategory') ">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -94,7 +92,7 @@ Node  <span class="caret"></span></a>
 <li><a href="./addCategory">Add Category</a></li>
 
 <li tal:condition="view.safeMethod('isConference')">
-   <a href="./addVideo">Add Video</a>
+<a href="./addVideo">Add Video</a>
  </li>
 <li><a href="./addConference">Add Conference</a></li>
 <li><a href="./addPlayList">Add PlayList</a></li>
@@ -117,8 +115,8 @@ PyLinks  <span class="caret"></span></a>
 <li><a href="/Products/Root/AllJavascript/search">&nbsp;&nbsp;Scripts</a></li>
 <li><a href="/getvotes">Get Votes</a></li>
 <li><a href="/count">Count</a></li>
-
 </ul>
+
 </li>
 </ul>
 </div>

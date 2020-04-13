@@ -58,7 +58,7 @@ class FileBase(FileAndDirectoryBase):
 
     def exportSource(self, path = None):
 
-        if not path:
+        if path == None:
            path = self.path
         if not os.path.exists(os.path.dirname(path)):
             try:
