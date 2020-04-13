@@ -36,11 +36,30 @@ class LocationBase (PageBase):
                   result +=  str(self.lattitude)  
                   result += ','    
                   result += str(self.longitude)
-                  color = "red"
-                  if self.hasFutureEvent():
-                      color = "blue"
+                  color = self.getColor()
                   result += ",'" + color + "']"
                   return result, firstItem
+    def getColor(self):
+        #COLOR BASED ON CLASS
+        choose = {'Driver':'black',
+                  'Politician':'green',
+                  'Business': 'yellow',
+                  'Map': 'gold2x' 
+                  }
+        aClass = self.__class__.__name__
+        if aClass in choose:
+            return choose[aClass]
+
+        #SELECT BASED On (CHILDREN, FUTURE EVENTS)
+        hasChildren = len (self) >0
+        hasFutureEvent = self.hasFutureEvent()
+        choose = {(True,False):"blue2x",
+                  (True,True):"red2x",
+                  (False,False):"blue",
+                  (False,True):"red"
+                  }
+        return choose[(hasChildren,hasFutureEvent)]
+              
               
     def getCompanies(self):
         result=[]

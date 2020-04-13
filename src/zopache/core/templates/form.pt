@@ -30,7 +30,7 @@
   </div>
 
   <span style= "max-width:40em" tal:condition="hasattr(view,'preamble')">
-  <p>${view.preamble}</p><br></span>
+  <p>${structure: view.preamble}</p><br></span>  
 
   <tal:fields condition="view.fieldWidgets">
     <div tal:attributes="class widget.required and 'form-group required' or 'form-group'"

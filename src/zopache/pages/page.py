@@ -66,7 +66,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
                result.append (item)
         return result
     
-    def canView(self):
+    def canView(self,view):
         return True
     
     def allValuesAsList(self):
@@ -91,11 +91,14 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
            return self.webClass
        
     def postProcess(self,view=None):
+
         self.recalculateRootJSON()
         cache.resetCache(self)
+        self.description=self.description.replace ('"' , "'")
+        self.description=self.description.replace ('\n' , " ")        
         
     def postAddProcess(self,view=None):
-        Page.postProcess(self,view=view)
+        self.postProcess(view=view)
         view.notifyAdminsNewPage()
         
     # NOT YET SERVING JSON
@@ -117,7 +120,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def blogParents(self):
          return parentsUpTo(self,IRootPage)
 
-         
     def isCategory (self):
         return False
     
@@ -198,11 +200,21 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def getName(self):
          return self.__name__
-
+     
+    def preDeleteProcess(self,view):
+        pass
+    
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
     icon="ttwicons/WikiPage.png"
+
+from zopache.pages.interfaces import ILink    
+@implementer (ILink)     
+class Link(PageBase, PageMixIn):
+    webClass='Link'
+    icon="ttwicons/WikiPage.png"
+
     
 @implementer (INews)     
 class News (Page,RecentMixIn):

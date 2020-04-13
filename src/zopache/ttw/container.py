@@ -14,11 +14,12 @@ from zopache.crud import actions as formactions, i18n as _
 from zopache.ttw import actions as ttwactions
 
 from zopache.ttw.html import HTML
-from .interfaces import IHTMLContainer
+from .interfaces import IHTMLContainer, IAceContainer
 from zopache.ttw.html import TrustedHTML
 from zopache.crud.forms import AddForm
 from zopache.ttw.interfaces import IWeb    
 from zopache.core.interfaces import ITreeSecurity
+from zopache.ttw.addeditforms import AceAddForm
 
 @implementer(IHTMLContainer)
 class HTMLContainer(TrustedHTML,Container):
@@ -27,6 +28,11 @@ class HTMLContainer(TrustedHTML,Container):
     def __init__(self):
         Container.__init__(self)
 
+@implementer(IAceContainer)
+class AceContainer(TrustedHTML,Container):
+    icon="ttwicons/Container.svg"
+    def __init__(self):
+        Container.__init__(self)        
 
 
 @form_component
@@ -46,3 +52,22 @@ class ContainerAddForm(AddForm):
               ttwactions.AddAndCkEdit(_("Add and ckEdit","Add and CkEdit"), self.factory),
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
               formactions.Cancel(_("Cancel","Cancel")))        
+
+from zopache.ttw.html import AddAceHTML
+@form_component
+@name (u'addAceContainer')
+@context(IBTreeContainer)
+@implementer(ITreeSecurity)
+class AceContainerAddForm(AddAceHTML):
+    subTitle = 'Add an Ace Container'
+    interface = IAceContainer
+    ignoreContent = True
+    factory=AceContainer
+
+    @property
+    def actions(self):
+        return Actions(
+              ttwactions.AddAndManage(_("Add and Manage","Add and Manage"), self.factory),
+              ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
+              formactions.Cancel(_("Cancel","Cancel")))        
+    

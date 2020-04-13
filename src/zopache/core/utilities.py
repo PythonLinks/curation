@@ -3,8 +3,20 @@ from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
 from pydoc import locate
+from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
+    
+    def widgetJsonURL(self):
+        root = self.getSiteRoot()
+        categoryRoot = root.rssRoot
+        uri ="https://" + self.getDomain() + "/" + categoryRoot + "/json"
+        return uri
+
+    def isForestWiki(self):
+        root = self.getSiteRoot()
+        return root.__class__.__name__ == 'Page'
+        
     def treeSecurity(self):
         tree = TreeSecurity(self)
         if (self.isAuthenticated() and
@@ -29,6 +41,11 @@ class Utilities (object):
         parameters["webPageTitle"] = title
         parameters ["parents"] =list(map(lambda x: x.__name__,
                                          self.parentsUpToSiteRoot()))
+        parameters ["banner"] = (self.parentalAcquire("Banner.png")
+                                     != None)
+        parameters ["logo"] = (self.parentalAcquire("Logo.png") != None)
+        parameters ["homePage"]= getSiteRoot(self.context).homePage
+        
         if self.isAuthenticated():
             parameters["isAuthenticated"] = True
             principal = self.request.principal

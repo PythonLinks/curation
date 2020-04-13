@@ -142,11 +142,14 @@ class URLMethods(object):
     
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)
- 
+
+    def canonicalHref(self,obj):
+        return self.href(self.url(obj),obj.title)
+    
     def viewHref(self,obj,view,name):
         return self.href(self.url(obj)+ '/' + view, name)   
 
-    
+
     def href(self,url,name,target=False):  
            result ='<a href=\"'
            result += url

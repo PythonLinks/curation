@@ -50,9 +50,8 @@ class LoginAction(Action):
         return getPrincipalFolder(form.context)
 
 @form_component
-@name (u'login')
+@name (u'login2')
 @context(Interface)
-@title("Login")
 class LoginForm(Form):
     """ Used to login
     """

@@ -22,7 +22,6 @@ from zopache.zmi.actions import (
     ReName,CopyObjects, CutObjects, DeleteObjects,
     ReTitle,ReBoth,PasteObjects)
 from zopache.core.baseform import Form
-from zopache.pages.interfaces import INotPage
 from zopache.python.interfaces import IDirectory
 from zopache.application.root import RootContainer
          
@@ -132,7 +131,7 @@ class Manage (ManageBase):
         act7 = DeleteObjects("Delete", "Delete") 
         actionList = [act1,act2]
 
-        if INotPage.providedBy(self.context):                         
+        if IPage.providedBy(self.context):                         
             actionList.append(act3)                       
         actionList.append(act4) 
         actionList.append(act5)                     

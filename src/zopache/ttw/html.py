@@ -226,7 +226,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 
 
 @form_component
-@name ('addChameleon')
+@name ('addHTML')
 @context(IBTreeContainer)
 @permissions('Manage')
 class AddCkHTML(AddCkHTMLBase,AddForm):
@@ -251,20 +251,12 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 
 
 @form_component
-@name (u'addAceChameleon')
+@name (u'addAceHTML')
 @context(IBTreeContainer)
 @permissions('Manage')
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
-
-@form_component
-@name ('addHTML')
-@context(IBTreeContainer)
-@implementer(ITreeSecurity)
-class AddUntrustedHTML (AddAceHTMLBase,AddForm):
-    factory = UntrustedHTML 
-    subTitle="Add an HTML Object"
 
 @view_component
 @name('index')
@@ -321,7 +313,7 @@ class AceEdit(BaseAceEdit):
 @name("aceedit")
 @implementer (ITreeSecurity)
 class AceEditForm(AceEdit):
-    pass
+          pass
 
 
 #AND HERE IS THE DEMO ACE EDIT FORM
@@ -363,7 +355,7 @@ class CkEdit(BaseCkEdit):
 @name('ckedit')
 @implementer(ITreeSecurity)
 class CkEditForm(CkEdit):
-      pass
+          pass
 
 
 #AND HERE IS THE CkDemo Form

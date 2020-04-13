@@ -63,18 +63,18 @@ class IEmail(Interface):
 class IPermissions(Interface):            
     frequencyPermission = schema.Choice(
         vocabulary=SimpleVocabulary.fromValues(
-                  ['Daily','Weekly','Monthly','Seldom','Never'],
+                  ['Daily','Weekly','Monthly','Seldom','Never',''],
                   ),
         title = "To send me the news:",
         required = False,
-        default = 'Never',
+        default = '',
     )    
     frequencyPermission.text = """ <p> I give permission 
 to process my professional information for the following  
 purposes:</p>"""
 
     chatPermission = schema.Bool(
-        title = "And to run this web server(registration, logins, cookies, and email notifications).",
+        title = """To register me, manage logins using cookies, and to send me email notifications(not news) as required.""",
         required = True,
         default = False)
     chatPermission.text = """ <br>  """        

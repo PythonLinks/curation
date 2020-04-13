@@ -17,6 +17,7 @@ from zopache.core.interfaces import ITreeSecurity
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
     def getSubTitle(self):
+        
         return (
                 "To a " +  
                 self.context.webClass +
@@ -33,12 +34,11 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
               formactions.Cancel("Cancel","Cancel"))
     
     def postAddProcess(self,view = None):
-        Page.postAddProcess (self.context,view = self)
+        self.new.postAddProcess (view = self)
         self.notifyAdminsNewPage()
         
 @view_component
 @name('addPage')
-@title("Add Page")
 @target(IView)
 @context(IPage)
 @implementer(ITreeSecurity)
@@ -46,8 +46,20 @@ class AddPage(AddPageBase):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
-    
 
+#ADD LINK
+from zopache.pages.page import Link
+from zopache.pages.interfaces import ILink
+@view_component
+@name('addLink')
+@target(IView)
+@context(IPage)
+class AddLink(AddPageBase):
+    interface = ILink
+    title = "Add a Link"
+    subtitle = "To a remote web page."
+    factory = Link
+    
 #ADD NEWS
 @view_component
 @name('addNews')

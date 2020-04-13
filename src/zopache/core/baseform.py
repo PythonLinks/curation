@@ -37,8 +37,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
         result = ""
         if hasattr(field,"text"):
             result = field.text
-        return result       
-
+        return result
     
     @property
     def action_url(self):
@@ -79,8 +78,8 @@ class Form(BaseForm,Scripts,Breadcrumbs):
                if "form-control" in widget.defaultHtmlClass:
                    widget.defaultHtmlClass.remove ("form-control")
 
-               if not 'form-check-input' in widget.defaultHtmlClass: 
-                   widget.defaultHtmlClass.append('form-check-input')
+               #if not 'form-check-input' in widget.defaultHtmlClass: 
+               #    widget.defaultHtmlClass.append('form-check-input')
             else:
                 if not ('form-control' in widget.defaultHtmlClass):                 
                    widget.defaultHtmlClass.append('form-control')

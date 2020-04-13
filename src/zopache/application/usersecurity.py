@@ -3,17 +3,22 @@
 
 from cromlech.security import Unauthorized
 from cromlech.security.principal import UnauthenticatedPrincipal 
+from cromlech.security import unauthenticated_principal as anonymous
+
 
 class UserSecurity(object):
     def __init__(self,view):
         self.view = view
             
     def check(self):
-        if 'Manage' in self.view.request.principal.permissions:
+        principal = self.view.request.principal
+        if principal == anonymous:
+           raise Unauthorized()
+        if 'Manage' in principal.permissions:
             return True
-        if self.view.context is self.view.request.principal:
+        if self.view.context is principal:
             return True 
-        if self.view.context.__parent__ is self.view.request.principal:
+        if self.view.context.__parent__ is principal:
             return True       
         raise Unauthorized()        
 

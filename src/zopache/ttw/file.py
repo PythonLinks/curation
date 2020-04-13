@@ -16,15 +16,18 @@ class FileBase(object):
         return self.blob.getSize()
 
     def setData(self, data):
-        dataFile = data.file
-        bits =  dataFile.read()
+        try:
+           dataFile = data.file
+           bits =  dataFile.read()
+        except:
+           bits = data
         if len(bits) == 0:
             return
         if not hasattr(self,'blob'):
             self.blob = Blob()
         with self.blob.open(mode ="w") as blobFile:
            blobFile.write(bits)
-        
+           
     def getData(self):
         if not hasattr(self,'blob'):
             return ""
@@ -43,10 +46,22 @@ class File(FileBase,Leaf):
 @implementer(IImage)
 class Image (File):
     icon="ttwicons/Image.svg"
+    def getHTML(self, view=None, style = ''):
+        url = view.url(self)
 
-    
+        tag = F"""<img src="{url}" """
+        if hasattr(self,'title') and self.title!= '':
+             tag += F""" alt = "{self.title}" """  
+        if style !='':
+             tag += F""" style = "{style}" """
+        else:
+             tag += """ width ="{self.width}" height = "{self.height}" """
+        tag += ">"
+        return tag
+     
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()
+        response.headers['Cache-Control'] = 'public,max-age=3600'  
         response.content_type=view.context.contentType
         response.write(result or u'')
         return response
@@ -54,8 +69,6 @@ def make_file_response(view, result, *args, **kwargs):
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
 from zopache.core.viewdecorators import *
-
-
 
 @view_component
 @name('index')

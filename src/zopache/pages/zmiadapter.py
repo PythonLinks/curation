@@ -150,7 +150,7 @@ class CategoryDeleter(Deleter,LocalBase):
             self.view.error +=   name + " was not deleted. <br>"   
             self.view.error += " Maybe it still contains something"
             return
-
+        self.describeWithActionAndView(contained,self,view)
         #OKAY NOW DO THE WORK
         # DELETE THE CANNONICAL NAME
         # HAVE TO DO THIS FIRST
@@ -161,6 +161,8 @@ class CategoryDeleter(Deleter,LocalBase):
         #Have to do this before deleting the __parent__ Pointer. 
         if IPage.providedBy (container):
             root = getSiteRoot(contained)
+        if hasattr(contained,'preDeleteProcess'):
+             contained.preDeleteProcess(view)
         del container[name]
         
         # IF IT IS A VIDEO DELETE IT FROM THE CONFERENCE

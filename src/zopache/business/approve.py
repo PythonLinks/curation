@@ -4,9 +4,8 @@ from zopache.business.interfaces import ICompanyBase
 from cromlech.browser.exceptions import HTTPFound
 from zopache.forms.interfaces import IApprove
 from zopache.business.interfaces import IAddress
-from zopache.business.geocoding import GeoCode
 from zope.schema import Text
-from zopache.business.geocoding import Address
+from zopache.business.geocoding import Address, GeoCodeForm
 from zopache.business.interfaces import ICompanyOrOrganization
 from zopache.ttw.html import CkEditForm
 
@@ -23,7 +22,7 @@ class IApproveCompany(IApprove):
 @form_component
 @name ('ckEdit')
 @context(IAddress)
-class EditAddress (CkEditForm,GeoCode):
+class EditAddress (CkEditForm,GeoCodeForm):
     title = 'CkEdit this object.'
     subTitle = """This form is used to geocode lattitude and longitude.
 """
@@ -31,7 +30,7 @@ class EditAddress (CkEditForm,GeoCode):
 @form_component
 @name ('approve')
 @context(ICompanyOrOrganization)
-class Approve (CkEditForm,GeoCode):
+class Approve (CkEditForm):
     title = 'Edit the company address.'
     subTitle = """This is used to geocode lattitude and longitude.
 """

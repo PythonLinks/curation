@@ -18,13 +18,15 @@ from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.event import Event
+from zopache.business.exists import DuplicateOrganization
+from zopache.business.geocoding import GeoCodeForm
+from zopache.business.politician import IAddPolitician, Politician
+from zopache.business.tree import IAddTree, Tree
 
 class AddBase(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
-    #def postAddProcess(self):
-    #    self.new.postAddProcess(self)
     
     @property
     def actions(self):
@@ -36,7 +38,7 @@ class AddBase(AddPageBase):
 @name('addCompany')
 @target(IView)
 @context(IPage)    
-class AddCompany(AddBase):
+class AddCompany(GeoCodeForm,AddBase):
     interface = IAddCompany
     label="Add a Company"
     factory = Company
@@ -48,11 +50,52 @@ class AddCompany(AddBase):
 @title("Add Organization")
 @target(IView)
 @context(IPage)    
-class AddOrganization(AddBase):
+class AddOrganization(GeoCodeForm,AddBase):
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
-    subTitle = "All submissions are reviewed before becoming publicly visible. "
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]
+    
+from dolmen.forms.base import interfaces
+@view_component
+@name('addPolitician')
+@target(IView)
+@context(IPage)    
+class AddPolitician(AddBase):
+    interface = IAddPolitician
+    factory = Politician
+    title = "Add a Politician"
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]    
+    def updateWidgets(self):
+        item =self.fields['endorsedBy']
+        it =object.__setattr__(item,'mode','multiselect')
+        super().updateWidgets()
+    
+@view_component
+@name('addTree')
+@target(IView)
+@context(IPage)    
+class AddTree(AddBase):
+    interface = IAddTree
+    factory = Tree
+    title = "Add a Tree"
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]
+
+from zopache.business.driver import IAddDriver, Driver    
+@view_component
+@name('addDriver')
+@target(IView)
+@context(IPage)    
+class AddDriver(AddBase):
+    interface = IAddDriver
+    factory = Driver
+    title = "Offer to be a driver."
+    subTitle = "All submissions are reviewed before becoming publicly visible."
+    dataValidators = [DuplicateOrganization]    
+
 
 #ADD AN EVENT
 @view_component
@@ -71,8 +114,7 @@ class AddEvemt(AddBase):
         return Actions(
               AddAndView("Add and View", self.factory),
               formactions.Cancel("Cancel","Cancel"))
-    
-        
+            
 @view_component
 @name('addCompanyMap')
 @target(IView)
@@ -83,6 +125,16 @@ class AddMap(AddPageBase):
     interface = IMap
     label="Add a Map"
     factory = Map
-
-
     
+import crom
+from dolmen.forms.base.interfaces import IWidget
+from dolmen.forms.ztk.widgets.collection import (
+                      MultiSelectFieldWidget,CollectionSchemaField)
+from dolmen.forms.ztk.widgets.choice import (
+                               ChoiceSchemaField, ChoiceFieldWidget)
+@crom.adapter
+@crom.name('input')
+@crom.target(IWidget)
+@crom.sources(CollectionSchemaField, ChoiceSchemaField, Interface, Interface)
+class DisplayWidget(MultiSelectFieldWidget):
+      pass

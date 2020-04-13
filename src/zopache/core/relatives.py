@@ -28,8 +28,17 @@ class Parents(object):
         return parents
 
 
-    def parentsUpToSiteRoot(self):
-        parents = self.reversedParentsUpToSiteRoot(self.context)
+    def parentsUpToSiteRoot(self,item=None):
+        if item ==None:
+           item = self.context 
+        parents = self.reversedParentsUpToSiteRoot(item)
+        parents.reverse()
+        return parents
+    
+    def parentsUpToZodbRoot(self, item = None):
+        if item ==None:
+           item = self.context         
+        parents = self.reversedParentsUpToZodbRoot(item)
         parents.reverse()
         return parents
     
@@ -46,7 +55,15 @@ class Parents(object):
              if interface.providedBy(item):
                        result.append(item)
              item=item.__parent__
-           return result    
+           return result
+
+    def parentWhichImplements(self,interface):
+           item=self.context
+           while (item!=None):
+             if interface.providedBy(item):
+                   return item
+             item=item.__parent__
+           return None     
 
     def parents(self, item=None):
         if item == None:

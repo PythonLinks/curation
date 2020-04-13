@@ -1,6 +1,9 @@
 #THERE IS A COPY OF THIS IN zopache.core  as well       
 from cromlech.browser.interfaces import IPublicationRoot
+from BTrees.OOBTree import OOBTree
 from zopache.crud.interfaces import IZodbRoot
+
+
 def getDBRoot(self):
            return (self.request.environ['zodb.connection'].root()
                    ['applicationRoot'])
@@ -28,7 +31,6 @@ def getSiteRoot(item):
 
 def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
-
 
 def getPrincipalFolder(item):
     root = getSiteRoot(item)
@@ -61,10 +63,29 @@ def getRoot(object):
 class Root(object):
 
     def getSiteRoot(self):
-        return getSiteRoot(self)
+        return getSiteRoot(self.context)
 
     def getZodbRoot(self):
-        return getZodbRoot(self)
+        return getZodbRoot(self.context)
 
     def getPrincipalFolder(self):
-        return getPrincipalFolder(self)               
+        return getPrincipalFolder(self.context)               
+
+    def getProducts(self):
+        return getProducts(self.context)       
+
+    def getTemplates(self):
+        products = self.getProducts()
+        templates = products['Templates']
+        return templates
+
+    def getArticles (self):
+       siteRoot = self.getSiteRoot()
+       if not hasattr(siteRoot,'articles'):
+          siteRoot.articles = OOBTree()
+       return siteRoot.articles
+
+    def resetArticles (self):
+       siteRoot = self.getSiteRoot()
+       siteRoot.articles = OOBTree()
+       return siteRoot.articles   

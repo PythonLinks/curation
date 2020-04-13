@@ -43,7 +43,10 @@ class AddForm(Form):
         return Actions(
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
-
+    
+    def acquireTitle(self):
+         return self.title
+     
 class AddNamedForm(AddForm):
     @property
     def fields(self):
@@ -59,8 +62,7 @@ class AddByTitleForm(AddForm):
     @property
     def fields(self):
         return  Fields(self.interface)
-
-
+    
     @property
     def actions(self):
         return Actions(
@@ -95,7 +97,8 @@ class BaseEditForm(Form):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
 
-
+    def update(self):
+        pass
     
 class EditDemoForm(BaseEditForm):
     pass

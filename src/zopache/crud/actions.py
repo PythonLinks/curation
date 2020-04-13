@@ -15,7 +15,7 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.core.getroot import getSiteRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
-
+from zopache.core.transactionnote import TransactionNote
 def message(message):
     send(message)
 
@@ -39,7 +39,7 @@ class View(Action):
         return SuccessMarker('Aborted', True, url=url)    
 
 
-class Add(Action, UniqueName):
+class Add(Action, UniqueName, TransactionNote):
     """Add action for an IAdding context.
     """
 
@@ -48,6 +48,7 @@ class Add(Action, UniqueName):
         self.factory = factory
 
     def __call__(self, form):
+
         self.form=form
         data, errors = form.extractData()
         if errors:
@@ -55,6 +56,7 @@ class Add(Action, UniqueName):
             return FAILURE
         obj= form.factory()
         self.new=form.new=obj
+
         context=form.context
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
@@ -63,6 +65,7 @@ class Add(Action, UniqueName):
         message(_(u"Content created"))
         baseURL = self.form.url (obj)
         #baseURL = str(IURL(obj, form.request))
+        self.describeWithView(obj,form)                
         if hasattr(form, 'newURL'):
            url=self.form.newURL(baseURL)
         else:
@@ -74,29 +77,36 @@ class Add(Action, UniqueName):
 
         return SuccessMarker('Added', True, url=url,code=307)
 
+    def actuallyAdd(self,item,data):
+        if hasattr(self.form, 'newName'):
+           newName = self.form.newName(data)
+        else:   
+           newName = self.newName(data)
+        self.form.context[newName]=item
+        
+    
+    def newURL(self,baseURL):
+        return baseURL
+
     def newName(self,data):    
         name =  data['__name__']
         name = slugify(name, ok=SLUG_OK+'.', lower = False)
         context = self.form.context
         newName=self.uniqueContainerName(context,name,ofType="#")
         return newName
-    
-    def actuallyAdd(self,item,data):
-        newName = self.newName(data)
-        self.form.context[newName]=item            
-    
-    def newURL(self,baseURL):
-        return baseURL
 
 class AddNamed(Add):
+    pass
+
+class AddByTitle (Add):
     def actuallyAdd(self,item,data):
         newName = self.newName(data)
         self.form.context[newName]=item
-        
-    def newName(self,data):
-        return 'MailHost'
-
-class AddByTitle (Add):
+        item.__name__ = newName
+        root = getSiteRoot(self.form.context)
+        if hasattr(root,'addItem'):
+            root.addItem(self.new)
+    
     def newName(self,data):    
         name =  data['title']
         name = slugify(name,lower=True)
@@ -107,25 +117,21 @@ class AddByTitle (Add):
         newName=self.uniqueSiteName(context,name,ofType="-")
         return newName
     
-    def actuallyAdd(self,item,data):
-        newName = self.newName(data)
-        self.form.context[newName]=item        
-        root = getSiteRoot(self.form.context)
-        if hasattr(root,'addItem'):
-            root.addItem(self.new)
     
-class AddAndView(Add):
+class AddAndView(AddNamed):
     def newURL(self,baseURL):
         return baseURL + '/index'        
     
-class Update(Action):
+class Update(Action,TransactionNote):
     """Update action for any locatable object.
     """
 
     def __call__(self, form):
         self.form=form
+
         data, errors = form.extractData()
         if errors:
+
             form.submissionError = errors
             return FAILURE
 
@@ -135,15 +141,19 @@ class Update(Action):
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):
                form.context.postProcess(view=form)
-               
+
         baseURL = str(IURL(form.context, form.request))
         url=self.newURL(baseURL)
+        self.describeWithView(form.context,form)
         if url == form.request.url:
            return SuccessMarker('Updated', True)
         else:
            return SuccessMarker('Updated', True, url=url)
 
     def newURL(self,baseURL):
+        if hasattr(self.form, 'newURL'):
+            return self.form.newURL(baseURL)
+        else:
             return self.form.request.url
 
     def postProcess(self):
@@ -205,10 +215,10 @@ class Delete(Action):
                 try:
                     item = container[name]
                     root = getSiteRoot(item)
+                    products = form.getProducts()
                     del container[name]
                     root.indexTree()
-                    root.indexTree()
-                    root['Products'].indexTree()                    
+                    products.indexTree()
                     form.status = self.successMessage
                     message(form.status)
                     url = str(IURL(container, form.request))

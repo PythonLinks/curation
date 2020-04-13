@@ -73,8 +73,15 @@ class AccessGoogle(object):
         if  not (idinfo['iss'] in legit):
                raise ValueError('Wrong issuer.')
         return idinfo
-        
+
     def getClientId(self,form):
+        
+        root = form.getSiteRoot()
+        if hasattr(root,'googleClientId'):
+            return root.googleClientId
+        return ''
+    
+    """    
         domain = form.getDomain()
         if (domain == 'pythonlinks.info'):
             clientId= '901181416018-8c8n8knds3b6koqkottchj7ivpncf409.apps.googleusercontent.com'
@@ -87,13 +94,17 @@ class AccessGoogle(object):
         elif (domain == 'golangvideos.com'):
             clientId = '901181416018-f6c7p85thdp79l9c6c3joccj9ffb5jug.apps.googleusercontent.com'
         elif (domain == 'stopsmog.info'):
-            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'
-        elif (domain == 'mqttchat.info'):
-            clientId = '901181416018-scjhce6o4m1ldhkqk1d1iv913qvtt3js.apps.googleusercontent.com'
+            clientId = '3722083405-pf3uk2dkkpsoi6873i1etfea7rv55ig1.apps.googleusercontent.com'
+#        elif (domain == 'stopsmog.info'):
+#            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'            
+        elif (domain == 'mensgroups.info'):
+            clientId = '950419722294-r5peocg874brshvn5kk2bdi71iuhrlc5.apps.googleusercontent.com'
+        elif (domain == 'climateactivists.info'):
+            clientId = '832774817535-0e4d586gd3us7oq6pak88u0djtl8punn.apps.googleusercontent.com'            
         else:
             raise ValueError('Bad Domain')
         return clientId
-
+    """
     def getTokenData(self,token):
 
         try : 
@@ -110,7 +121,6 @@ class AccessGoogle(object):
 class GoogleValidator (AccessGoogle,Validator):
     
     def getEmail(self):
-
         token = self.form.request.form['form.field.idtoken']        
         self.getTokenData (token)
         email = self.tokenData['email']
