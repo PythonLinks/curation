@@ -3,8 +3,7 @@ from zopache.pages.addpage import AddPageBase
 from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IInternalPrincipal
-from zopache.categories.data.youtube.getvotes import getVideoDetails
-from zopache.categories.data.youtube.getvotes import getVideoDetails
+from zopache.remote.youtube.getvotes import getVideoDetails
 from zopache.remote.ivideo import IBasicVideo , IPrincipalVideo
 from zopache.remote.video import BasicVideo, PrincipalVideo
 from zopache.pages.interfaces import IPage
@@ -53,9 +52,9 @@ class AddPrincipalVideo(Base):
          if not hasattr(parent, 'videos'):
              parent.videos = PersistentList()
          parent.videos.append(self.new.name)
-         getVideoDetails(self.new)
+         getVideoDetails(self.new,self.factory)
          self.new.processStartTime()       
-         getVideoDetails(self.new)
+
          
 #ADD VIDEO ELSEWHERE
 @view_component
@@ -69,6 +68,6 @@ class AddBasicVideo(Base):
      interface = IBasicVideo
      def postAddProcess(self,view = None):
          Page.postAddProcess(self.new,view = self)
-         getVideoDetails(self.new)     
+         getVideoDetails(self.new,self.factory)     
          self.context.webApproved = True
          self.new.processStartTime()         

@@ -2,6 +2,12 @@ from zope import schema
 
 from zope.interface import Interface
 
+class IAddress(Interface):
+       pass
+
+class I1 (IAddress):
+    pass
+
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
@@ -21,9 +27,9 @@ class Email(EmailBase):
        EmailBase._validate(self,data)
 
 
-class IAddress(Interface):
-       pass
 
+
+   
 class IJoin(Interface):
     pass
 
@@ -70,8 +76,9 @@ class IOnlineEvent(IPage):
         default = '',
     )
 
+from zopache.pages.interfaces import ITime
 
-class IEvent(IOnlineEvent, IAddress, ILocationBase):  
+class IEvent(ITime,IOnlineEvent, IAddress, ILocationBase):  
     address= Address(
         title = u'Event Address',
         description = """This is used to 
@@ -118,11 +125,20 @@ class ITreeBase (ILocationBase,IPage, IJoin):
 class ITree(ITreeBase):
     pass
 
+
 class IAddTree(ITreeBase, ILatLng):    
     pass
     
-class ICompanyOrOrganization (IAddress, ILocationBase,
-                              IPage, IJoin):
+
+class I2(ILocationBase):
+    pass
+class I3 (IPage):
+    pass
+class I4(IJoin):
+    pass
+class IJunk (I1,I2,I3,I4):
+   pass
+class ICompanyOrOrganization (I1, I2, I3, I4):
     pass
 
 class ICompanyBase(ICompanyOrOrganization):

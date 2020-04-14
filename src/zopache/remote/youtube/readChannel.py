@@ -2,9 +2,9 @@ import json
 from slugify import slugify
 from dolmen.container import OrderedBTreeContainer
 from zopache.core import Container, Leaf
-from zopache.categories.category import ConferenceVideo
 
-def readdata(context):
+"""
+def readdata(context,videoClass):
 #def readdata():
     path ='/home/lozinski/code/cromlech/ZopacheDemo/src/zopache.categories/src/zopache/categories/youtube/'
     for name in ('file1','file2','file3'):
@@ -39,7 +39,7 @@ def readdata(context):
               title = title.strip()
               author = segments [0]
               print (videoId, author, title)
-              chat = ConferenceVideo()
+              chat = videoClass()
               chat.title=title
               chat.videoId = videoId
               chat.youTubeDescription = youTubeDescription
@@ -50,3 +50,4 @@ def readdata(context):
                   context [name] = chat
 
 #readdata()
+"""

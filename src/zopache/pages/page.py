@@ -5,7 +5,7 @@ import datetime
 from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from zopache.pages.interfaces import IContent,IPage , IRootPage, INews
+from zopache.pages.interfaces import ITime,IContent,IPage , IRootPage, INews
 from zopache.core.getroot import getSiteRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
@@ -20,7 +20,6 @@ from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
 from zopache.pages.allblogobjects import AllBlogObjects
-from zopache.business.interfaces import IEvent
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
     title = ''
@@ -38,7 +37,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def listFutureEvents(self):
         result = []
         for item in self.allBlogObjects():
-            if (IEvent.providedBy (item)):
+            if (ITime.providedBy (item)):
                 now = datetime.datetime.now()
                 if now < item.time: 
                    result.append(item)
@@ -46,7 +45,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def hasFutureEvent(self):
         for item in self.allBlogObjects():
-            if (IEvent.providedBy (item)):
+            if (ITime.providedBy (item)):
                 now = datetime.datetime.now()
                 if now < item.time: 
                    return True

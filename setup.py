@@ -18,6 +18,8 @@ extensions =[
     Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
     Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
     Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
+    Extension("zopache.remote/*", ["src/zopache/remote/*.py"]),
+    Extension("zopache.remote/youtube/*", ["src/zopache/remote/youtube/*.py"]),        
     Extension("zopache.forms/*",
                  ["src/zopache/forms/*.py"]),
     Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
@@ -28,7 +30,7 @@ extensions =[
     Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
-extensions =[]
+#extensions =[]
 
 
 name = 'zopache'

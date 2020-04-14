@@ -18,6 +18,9 @@ class IRecent(Interface):
 class ICountable(Interface):
       pass
 
+#THINGS THAT HAPPEN AT  A POINT IN TIME  
+class ITime(Interface):
+    pass
 class IContent(ICanonical):
     pass
 

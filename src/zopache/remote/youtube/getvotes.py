@@ -3,7 +3,7 @@ import datetime
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
-from zopache.categories.interfaces import ILightningTalk, IConferenceVideo
+from zopache.remote.ivideo import IVideo
 
 #There are two copies of this key
 DEVELOPER_KEY = "AIzaSyAOHmZ91f6qIt6FTi5BdopElujsENSKeN0"
@@ -69,8 +69,8 @@ from zopache.core.getroot import getSiteRoot
 def recordLocalVotes(context):
       videos =[]
       for item in context.allBlogObjects():
-          if (IConferenceVideo.providedBy(item) and not
-             ILightningTalk.providedBy(item)):
+          if (IVideo.providedBy(item) and not
+          item.__class__.__name__ == 'LightningTalk'):
               videos.append(item)
       recordVotes(videos) 
 

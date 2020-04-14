@@ -69,7 +69,7 @@ class Notify (object):
     def notifyUserNewUser(self):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
         if mailer == None:
-           return ''                
+           return None                
         
         subject = "Welcome " + self.new.title
         url = self.url (self.new)
