@@ -224,6 +224,8 @@ from zopache.pages.cache import Cache
 @implementer(IRootPage)
 class RootPage(Branch,PageBase,PageMixIn):
     webClass='HomePage'
+    homePage = ''
+    
     def __init__(self):
        Branch.__init__(self)
        PageBase.__init__(self)

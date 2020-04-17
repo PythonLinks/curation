@@ -71,3 +71,14 @@ class AceContainerAddForm(AddAceHTML):
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
               formactions.Cancel(_("Cancel","Cancel")))        
     
+import crom
+from zopache.zmi.interfaces import IURLSegment
+@crom.adapter
+@crom.sources(IAceContainer)
+@crom.target(IURLSegment)
+class IAceContainerAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+
+    def getSegment(self):
+        return 'manage'

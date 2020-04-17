@@ -8,6 +8,7 @@ from dolmen.view import View, make_view_response
 
 from dolmen.container import IBTreeContainer
 
+from zopache.ttw.interfaces import IGrapeBase
 from zopache.core import Leaf
 from zopache.ttw.interfaces import ISourceLeaf, ISearchable
 from zopache.ttw.interfaces import ITestSource as ISource
@@ -74,15 +75,16 @@ def make_css_response(view, result, *args, **kwargs):
         response.content_type=u'text/css'
         return response    
 
+
 @view_component
-@name('index')
-@context(ICSSBase)
-class Index(View):
+@name('css')
+@context(IGrapeBase)
+class ShowGrapeCSS(View):
     responseFactory = Response
     make_response = make_css_response
         
     def render(self):
-               return self.context.getJavascript()
+               return self.context.css    
 
 
 

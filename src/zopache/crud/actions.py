@@ -84,10 +84,13 @@ class Add(Action, UniqueName, TransactionNote):
            newName = self.newName(data)
         self.form.context[newName]=item
         
-    
     def newURL(self,baseURL):
-        return baseURL
+        if hasattr(self.form, 'newURL'):
+            return self.form.newURL(baseURL)
+        else:
+            return baseURL
 
+    
     def newName(self,data):    
         name =  data['__name__']
         name = slugify(name, ok=SLUG_OK+'.', lower = False)

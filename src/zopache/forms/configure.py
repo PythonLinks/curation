@@ -16,13 +16,13 @@ class IForm(Interface):
     domain= DottedName(
         title = u'Domain.',
         description = "Domain of this server",
-        required = True,
+        required = False,
     )
 
     googleClientId= TextLine(
         title = "Google Key",
         description = "For Logins",
-        required = True,
+        required = False,
         default = u'',
     )
     

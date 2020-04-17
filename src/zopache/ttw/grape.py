@@ -20,11 +20,8 @@ from zopache.ttw.html import TrustedHTML
 class IGrapePage(IGrapeBase):
       pass
 
-
-
 class IGrapeLayout (IGrapeBase):
     pass
-
 
 class GrapeBase(object):
     icon="ttwicons/HTML.svg"
@@ -108,13 +105,62 @@ from zopache.ttw.html import Index
 @view_component
 @name('index')
 @context(IGrapeLayout)
-class IndexGrapeLayout(Index):
-   pass
-    
+class IndexGrapeLayout(Index,Breadcrumbs):
+    def render(self):   
+       result = "<html>"
+
+       result += F"""
+   <link href="{self.getLongURL(self.context)}/css"
+rel="stylesheet" 
+/>
+   <script
+        src= "{self.getLongURL(self.context)}/js">
+   </script>
+    """
+   
+       result += "<Head>"
+       result += "</Head>"
+       result += Index.render(self)
+       result += "</html>"   
+       return result
+
+from zopache.application.browser.viewlets import Tabs
+class EditBase(EditForm,Breadcrumbs):
+    def breadcrumbs(self):
+        if self.treeSecurity():
+           return self.breadcrumbsCore(
+                        self.context,
+                        viewName='manage',
+                        showTitles=False,
+                        showRoot=True
+                        )
+        else:
+           return self.breadcrumbsCore(
+                        self.context,
+                        viewName='',
+                        showTitles=True,
+                        showRoot=False
+                        )
+     
+    def renderMenuBar(self,layout):
+        if self.treeSecurity():
+           bootstrap = layout.bootstrap3()
+           menuBar = Tabs.template.render(None,
+                     request = self.request,
+                      context=self.context,
+                      view = self)
+           return bootstrap + menuBar
+     
+        else:
+           bootstrap = layout.bootstrap4()
+           #menuBar = self.webClassAcquire('navbar.py', context = self.context.__parent__)(self)
+           return bootstrap #+ menuBar
+     
+     
 @form_component
 @context(IGrapePage)
 @name('edit')
-class EditGrapePage(EditForm,Breadcrumbs):
+class EditGrapePage(EditBase):
     layoutName = "ThinTop"
     title='Edit a Wiki Page' 
      #<a target="_blank"  href ="https://GrapesJS.com">GrapeJS</a> 
@@ -123,9 +169,9 @@ class EditGrapePage(EditForm,Breadcrumbs):
        self.template = templates["Grape-html"]
 
 @form_component
-@context(IGrapeLayout)
+@context(IGrapeBase)
 @name('edit')
-class EditGrapeLayout(EditForm,Breadcrumbs):
+class EditGrapeLayout(EditBase):
     layoutName = "ThinTop"
     title='Edit a Layout Page'
     def update(self):

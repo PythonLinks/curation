@@ -192,6 +192,19 @@ class JavascriptIndex(Page):
             else: 
                    return self.context.getJavascript()
 
+
+
+from zopache.ttw.interfaces import IGrapeBase
+@view_component
+@name('index')
+@context(IGrapeBase)
+class GrapeIndex(Page):
+    responseFactory = Response
+    make_response = make_javascript_response
+        
+    def render(self ):
+        return self.context.javascript
+
 class BaseJavascript(AceScripts):
     subTitle='Ace Edit this  Javascript'
     label=''
