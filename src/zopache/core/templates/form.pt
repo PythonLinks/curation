@@ -59,6 +59,20 @@
   </tal:actions>
   </div>
 </form>
+
+ <div tal:condition="not view.treeSecurity()">
+  <p> Since you do not have permission to edit this page, the buttons
+  below will not do anything.  
+  </p>
+    <input type="submit" id="form-action-save--and-view" name="form.action.save--and-view" value="Save -&gt; View" class="action btn" accesskey="#" />
+<input type="submit" id="form-action-save" name="form.action.save" value="Save" class="action btn" accesskey="#" />
+<input type="submit" id="form-action-save--and-aceedit" name="form.action.save--and-aceedit" value="Save -&gt; AceEdit" class="action btn" accesskey="#" />
+<input type="submit" id="form-action-save--and-test" name="form.action.save--and-test" value="Save -&gt; Test" class="action btn" accesskey="#" />
+<input type="submit" id="form-action-cancel" name="form.action.cancel" value="Cancel" class="action btn" accesskey="#" />
+
+  
+  </div>
+
 <br>
   <p style= "max-width:40em" tal:condition="hasattr(view,'postamble')">
   ${view.postamble}</p>

@@ -75,7 +75,17 @@ def make_css_response(view, result, *args, **kwargs):
         response.content_type=u'text/css'
         return response    
 
+@view_component
+@name('index')
+@context(ICSSBase)
+class Index(View):
+    responseFactory = Response
+    make_response = make_css_response
+        
+    def render(self):
+               return self.context.getJavascript()
 
+    
 @view_component
 @name('css')
 @context(IGrapeBase)
@@ -103,7 +113,6 @@ class AceDemoCSS(AceScripts,EditDemoForm):
 @form_component
 @context(ICSS)
 @name('aceedit')
-@implementer(ITreeSecurity)
 class AceEditCSS(AceScripts,AceEditForm):
     subTitle='Edit a CSS Object'
 
