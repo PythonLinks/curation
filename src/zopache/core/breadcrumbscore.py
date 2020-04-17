@@ -25,6 +25,8 @@ class BreadcrumbsCore(object):
                 slashViewName = self.slashViewName(ancestor,viewName)
                 base_url = self.getLongURL(ancestor)
                 newURL= base_url + slashViewName
+                if newURL == '':
+                    newURL = '/'
                 result.append( self.href(newURL,title))
         return ' / '+' / '.join(result)
              

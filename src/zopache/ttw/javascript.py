@@ -224,8 +224,6 @@ class BaseJavascript(AceScripts):
 @target(IView)
 @title("AceEdit")
 @name("aceedit")
-#@permissions('Manage')Q
-@implementer(ITreeSecurity)
 class AceEditJavascript(BaseJavascript,AceEditForm):
     pass
 

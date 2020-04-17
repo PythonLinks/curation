@@ -25,7 +25,7 @@ from zopache.core.baseform import Form
 from cromlech.browser.directives import title
 
 
-class AddForm(Form):
+class AddFormBase(Form):    
     """The add form itself is not protected. The security is checked on
     'update'. It checks if the 'require' directive of the factored item
     is respected on the context.
@@ -33,57 +33,57 @@ class AddForm(Form):
     error = ''
     label= ''
     subTitle='Add an Object'
-
+    actions = Actions()
+    
     @property
     def fields(self):
-        return  Fields(IName,self.interface)
+        return  Fields(self.interface)
 
-    @property
-    def actions(self):
-        return Actions(
+    def update(self):
+        if self.treeSecurity():
+            self.actions = Actions(
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
     
     def acquireTitle(self):
          return self.title
-     
-class AddNamedForm(AddForm):
+
+class AddForm(AddFormBase):
     @property
     def fields(self):
-        return  Fields(self.interface)
+        return  Fields(IName,self.interface)
     
-    @property
-    def actions(self):
-        return Actions(
+class AddNamedForm(AddForm):
+
+    def update(self):
+        if self.treeSecurity():
+            actions = Actions(
             formactions.AddNamed(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
     
 class AddByTitleForm(AddForm):
-    @property
-    def fields(self):
-        return  Fields(self.interface)
     
-    @property
-    def actions(self):
-        return Actions(
+    def update(self):
+        if self.treeSecurity():
+              self.actions = Actions(
               formactions.AddByTitle("Add", self.factory),
-              formactions.Cancel("Cancel"))    
-
-class BaseEditForm(Form):    
+              formactions.Cancel("Cancel"))
+              
+from zopache.core.breadcrumbs import Breadcrumbs
+class BaseEditForm(Form,Breadcrumbs):    
     """
     """
+    actions = Actions()
     subTitle='Edit This Object'
     ignoreContent = False
     ignoreRequest = False
     count = 0
-    actions = Actions(formactions.Edit(_("Save","Save")),
+
+    def update(self):
+        if self.treeSecurity():
+             actions = Actions(formactions.Edit(_("Save","Save")),
                     formactions.SaveAndView(_("SaveAndView","Save And View")),
                     formactions.Cancel(_("Cancel","Cancel")))
-    @property
-    def fields(self):
-        if hasattr(self,'interface'):
-            return  Fields(IName,self.interface).omit("__parent__")
-        return Fields()
 
     @property
     def label(self):
@@ -97,27 +97,9 @@ class BaseEditForm(Form):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
 
-    def update(self):
-        pass
     
 class EditDemoForm(BaseEditForm):
     pass
-    #FOLLOWING LINES WOULD BE NICE BUT GENERATE ERRORS
-    #layoutName = "UserMenu"    
-    #@property
-    #def actions(self):
-    #    return Actions(
-    #        formactions.View(("View","View")),
-    #        formactions.Cancel(("Cancel","Cancel")))
-
-
-    
-#@form_component
-#@name (u'edit')
-#@context(IEditable)
-#@permissions('Manage')    
-#@title("Edit")
-#@permissions('Manage')
 
 class EditForm(BaseEditForm):
     pass

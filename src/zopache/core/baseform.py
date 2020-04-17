@@ -54,8 +54,10 @@ class Form(BaseForm,Scripts,Breadcrumbs):
 
     def isCheckBoxList (self,widget):
         return  widget.__class__.__name__=='MultiChoiceFieldWidget'
+    
     def isMultiChoiceFieldWidget (self,widget):
         return  widget.__class__.__name__=='MultiChoiceFieldWidget'
+    
     def useFormControl(self,widget):
         if self.isCheckBoxList(widget):
             return False
@@ -64,6 +66,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
         if self.isBool(widget):
             return False
         return True
+    
     def bootstrap_widgets(self):
         return self.bootstrapWidgets()
     
@@ -95,5 +98,3 @@ class Form(BaseForm,Scripts,Breadcrumbs):
 
     def breadcrumbs(self):
         return self.breadcrumbsManage()
-
-

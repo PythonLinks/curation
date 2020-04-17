@@ -135,13 +135,14 @@ class EditBase(EditForm,Breadcrumbs):
                         showRoot=True
                         )
         else:
-           return self.breadcrumbsCore(
+           result =  self.breadcrumbsCore(
                         self.context,
                         viewName='',
                         showTitles=True,
                         showRoot=False
-                        )
-     
+                       ) 
+           return result
+
     def renderMenuBar(self,layout):
         if self.treeSecurity():
            bootstrap = layout.bootstrap3()

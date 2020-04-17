@@ -17,7 +17,6 @@ from zopache.pages.interfaces import IPage
 
 from zopache.core.viewdecorators import *
 from zopache.zmi.interfaces import IURLSegment
-from zopache.core.interfaces import ITreeSecurity
 from zopache.zmi.actions import (
     ReName,CopyObjects, CutObjects, DeleteObjects,
     ReTitle,ReBoth,PasteObjects)
@@ -33,17 +32,35 @@ class ManageBase(Form,Contents):
 
     template = tal_template('manage.pt')
 
+    actions = Actions()
+
+    def update(self):
+        if not self.treeSecurity():
+            return
+        act1 = ReName("ReName","ReName")
+        act2 = ReTitle("ReTitle","ReTitle")
+        act3 = ReBoth("ReBoth","ReBoth")        
+        act4 = CutObjects  ("Cut", "Cut")
+        act5 = CopyObjects ("Copy", "Copy")
+        act6 = PasteObjects("Paste","Paste")
+        act7 = DeleteObjects("Delete", "Delete") 
+        actionList = [act1,act2]
+
+        if IPage.providedBy(self.context):                         
+            actionList.append(act3)                       
+        actionList.append(act4) 
+        actionList.append(act5)                     
+
+        if self.hasClipboardContents():
+           actionList.append (act6)
+        actionList.append (act7)
+        self.actions =  Actions(*actionList)            
+
     """
     #USE THIS TO DEFINE MANAGFE TEMPLATES IN THE ZODB
     def update(self):
           products = self.getProducts()
-          #self.template = products['Templates']['Manage.pt']
-          self.template = root['Products']['Templates']
-          try:
-            self.template = self.template['EditTitles']
-          except:
-            self.template = self.template['Manage.pt']              
-          return 
+          self.template = self.getTemplates()['Manage.pt']
      """    
  
     def getManageURL(self,item):
@@ -96,18 +113,28 @@ from zopache.ttw.interfaces import IPrincipalFolder
 @form_component
 @name('managedemo')
 @context(IPrincipalFolder)
+@permissions ("Manage")
 class ManageDemoPrincipalFolder(ManageBase):
     def update (self):
         if not self.isManager():
             raise Unauthorized()    
+        ManageBase.update()
 
+
+@form_component
+@name('manage')
+@context(IPrincipalFolder)
+@permissions ("Manage")
+class ManageDemoPrincipalFolder2(ManageBase):
+    def update (self):
+        if not self.isManager():
+            raise Unauthorized()    
+        ManageBase.update(self)        
 
 #MANAGE FILE SYSTEM DIRECTORY
 @form_component
 @name('manage')
 @context(IDirectory)
-@implementer(ITreeSecurity)
-#@permissions('Manage')
 class ManageDirectory (ManageDemo): 
     def breadcrumbs(self):
         return self.breadcrumbsManage()       
@@ -116,30 +143,9 @@ class ManageDirectory (ManageDemo):
 @form_component
 @name('manage')
 @context(Interface)
-@implementer(ITreeSecurity)
-#@permissions('Manage')
 class Manage (ManageBase):
-    
-    @property
-    def actions(self):
-        act1 = ReName("ReName","ReName")
-        act2 = ReTitle("ReTitle","ReTitle")
-        act3 = ReBoth("ReBoth","ReBoth")        
-        act4 = CutObjects  ("Cut", "Cut")
-        act5 = CopyObjects ("Copy", "Copy")
-        act6 = PasteObjects("Paste","Paste")
-        act7 = DeleteObjects("Delete", "Delete") 
-        actionList = [act1,act2]
+    pass    
 
-        if IPage.providedBy(self.context):                         
-            actionList.append(act3)                       
-        actionList.append(act4) 
-        actionList.append(act5)                     
-
-        if self.hasClipboardContents():
-           actionList.append (act6)
-        actionList.append (act7)
-        return Actions(*actionList)        
 
         
      
@@ -206,8 +212,7 @@ from zopache.ttw.interfaces import IInternalPrincipal
 @form_component
 @name('manage')
 @context(IInternalPrincipal)
-#@permissions('Manage')
-@implementer(ITreeSecurity)
+@permissions('Manage')
 class FixUsers(Manage):
 
     def update(self):
