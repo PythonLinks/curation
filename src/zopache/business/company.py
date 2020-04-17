@@ -13,6 +13,7 @@ class Base (GeoCodeObject,LocationBase,Member):
     hidden = False
     longitude = 0.
     lattitude = 0.
+
     def __init__(self):
         LocationBase.__init__(self)
         Member.__init__(self)
@@ -32,23 +33,6 @@ class Base (GeoCodeObject,LocationBase,Member):
          if (self.hidden and
              (not view.isAuthenticated())):
              raise Unauthorized 
-    """                        
-    def getCompanies(self):
-        result=[]
-        return self.getCompaniesRecursively(result)
-
-    def getCompaniesRecursively(self,result):
-        values = self.values()
-        for item in values:
-            if (ICompanyBase.providedBy(item) and
-                item.webApproved):
-                result.append(item)
-            elif (IMap.providedBy(item)):
-                item.getCompaniesRecursively(result)
-        return result
-    """
-    
-
         
 @implementer (ICompany)
 class Company  (Base):
@@ -59,4 +43,4 @@ class Company  (Base):
 class Organization  (Base):        
     webClass = "Organization"
     clientClass = "Category"
-
+    webApproved = False

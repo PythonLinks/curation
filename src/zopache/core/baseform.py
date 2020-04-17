@@ -70,19 +70,13 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def bootstrapWidgets(self):
         """Adds the needed css classes for bootstrap styles.
         """
-        for widget in self.fieldWidgets:
-            pass
         result = []
         for widget in self.fieldWidgets:
             if not self.useFormControl(widget):
                if "form-control" in widget.defaultHtmlClass:
                    widget.defaultHtmlClass.remove ("form-control")
-
-               #if not 'form-check-input' in widget.defaultHtmlClass: 
-               #    widget.defaultHtmlClass.append('form-check-input')
             else:
-                if not ('form-control' in widget.defaultHtmlClass):                 
-                   widget.defaultHtmlClass.append('form-control')
+                if not ('form-control' in widget.defaultHtmlClass):                               widget.defaultHtmlClass.append('form-control')
             widget.defaultHtmlClass = widget.defaultHtmlClass.copy()
             result.append (widget)
         return result
