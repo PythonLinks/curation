@@ -216,9 +216,14 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
     def headerScripts(self):
           return CkScripts.headerScripts(self)
 
-    @property
-    def actions(self):
-        return Actions(
+    actions= Actions()
+    
+    def update(self):
+        if self.treeSecurity():
+           self.setActions()
+           
+    def setActions(self):           
+         self.actions = Actions(
               formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
               ttwactions.AddAndCkEdit(_("Add and ckEdit","Add -> ckEdit"), self.factory),
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),

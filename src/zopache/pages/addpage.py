@@ -27,7 +27,10 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
     actions = Actions()
     def update(self):
         if self.treeSecurity():
-              self.actions = Actions(
+            self.setActions()
+            
+    def setActions(self):       
+        self.actions = Actions(
               AddAndView("Add and View", self.factory),
               AddAndCkEdit("Add and ckEdit", self.factory),
               AddAndAceEdit("Add and AceEdit", self.factory),

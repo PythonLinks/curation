@@ -28,9 +28,9 @@ class AddBase(AddPageBase):
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
     
-    @property
-    def actions(self):
-        return Actions(
+    def update(self):
+        AddPageBase.update(self)
+        self.actions = Actions(
               AddAndView("Add and View", self.factory),
               formactions.Cancel("Cancel","Cancel"))
     
@@ -54,25 +54,29 @@ class AddOrganization(GeoCodeForm,AddBase):
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
-    subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]
-    
+    def update(self):
+        AddBase.update()
+        GeocodeForm.update() 
+        self.setActions()
+        
 from dolmen.forms.base import interfaces
 @view_component
 @name('addPolitician')
 @target(IView)
 @context(IPage)    
-class AddPolitician(AddBase):
+class AddPolitician(GeoCodeForm,AddBase):
     interface = IAddPolitician
     factory = Politician
     title = "Add a Politician"
-    subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]    
     def updateWidgets(self):
+        AddBase.update(self)
         item =self.fields['endorsedBy']
         it =object.__setattr__(item,'mode','multiselect')
         super().updateWidgets()
-    
+
+        
 @view_component
 @name('addTree')
 @target(IView)
@@ -81,7 +85,6 @@ class AddTree(AddBase):
     interface = IAddTree
     factory = Tree
     title = "Add a Tree"
-    subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]
 
 from zopache.business.driver import IAddDriver, Driver    
@@ -93,9 +96,8 @@ class AddDriver(AddBase):
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
-    subTitle = "All submissions are reviewed before becoming publicly visible."
     dataValidators = [DuplicateOrganization]    
-
+  
 
 #ADD AN EVENT
 @view_component
@@ -107,13 +109,8 @@ class AddEvemt(AddBase):
     interface = IEvent
     factory = Event
     title = "Add an Event"
-    subTitle = ""
 
-    @property
-    def actions(self):
-        return Actions(
-              AddAndView("Add and View", self.factory),
-              formactions.Cancel("Cancel","Cancel"))
+
             
 @view_component
 @name('addCompanyMap')

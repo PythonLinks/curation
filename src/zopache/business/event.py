@@ -9,7 +9,7 @@ from zopache.business.subscribe import Member
 from zopache.business.subscribe import Member
 
 @implementer (IEvent)
-class Event (GeoCodeObject,Page,Member):
+class Event (Page,Member):
     count = 0
     webClass = "Event"
     clientClass = "Category"
@@ -21,7 +21,6 @@ class Event (GeoCodeObject,Page,Member):
         Member.__init__(self)
 
     def postAddProcess(self,view):
-        GeoCodeObject.postAddProcess(self, view = view)
         Page.postAddProcess(self, view = view)
         
     def canView(self,view):
