@@ -79,12 +79,7 @@ class IOnlineEvent(IPage):
 from zopache.pages.interfaces import ITime
 
 class IEvent(ITime,IOnlineEvent, IAddress, ILocationBase):  
-    address= Address(
-        title = u'Event Address',
-        description = """This is used to 
-                 position the event on the map. """,
-           required = True,
-    )
+    pass
 
 
 

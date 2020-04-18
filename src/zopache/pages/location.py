@@ -110,6 +110,9 @@ class MapBase(LocationBase):
              if not ILocationBase.providedBy(item):
                    continue
                
+             if not item.webApproved:
+                    continue
+               
              elif ((item.lattitude == 0) and
                  item.longitude == 0):
                  continue

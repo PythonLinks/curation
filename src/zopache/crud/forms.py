@@ -65,9 +65,11 @@ class AddByTitleForm(AddForm):
     
     def update(self):
         if self.treeSecurity():
-              self.actions = Actions(
+              breakpoint()
+              actions = Actions(
               formactions.AddByTitle("Add", self.factory),
               formactions.Cancel("Cancel"))
+              self.actions= actions
               
 from zopache.core.breadcrumbs import Breadcrumbs
 class BaseEditForm(Form,Breadcrumbs):    

@@ -30,6 +30,7 @@ def processVotes(response,byId):
     thumbnails = snippet ['thumbnails']
     #pprint (thumbnails)
     #print (snippet ['title'])
+    breakpoint()
     publishedAt = snippet ['publishedAt']
     dt= datetime.datetime.strptime(publishedAt, '%Y-%m-%dT%H:%M:%S.%fZ')
     publishedAt = time.mktime(dt.timetuple())

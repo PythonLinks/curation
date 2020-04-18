@@ -101,7 +101,7 @@ class AddDriver(AddBase):
 @view_component
 @name('addEvent')
 @target(IView)
-@context(ICompanyOrOrganization)
+@context(IPage)
 @implementer (ITreeSecurity)
 class AddEvemt(AddBase):
     interface = IEvent

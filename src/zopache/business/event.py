@@ -13,12 +13,12 @@ class Event (GeoCodeObject,Page,Member):
     count = 0
     webClass = "Event"
     clientClass = "Category"
-
+    webApproved = True
+    
     def __init__(self):
         Page.__init__(self)
         GeoCodeObject.__init__(self)
         Member.__init__(self)
-
 
     def postAddProcess(self,view):
         GeoCodeObject.postAddProcess(self, view = view)

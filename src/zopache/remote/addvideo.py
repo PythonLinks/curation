@@ -52,7 +52,7 @@ class AddPrincipalVideo(Base):
          if not hasattr(parent, 'videos'):
              parent.videos = PersistentList()
          parent.videos.append(self.new.name)
-         getVideoDetails(self.new,self.factory)
+         getVideoDetails(self.new)
          self.new.processStartTime()       
 
          
@@ -68,6 +68,6 @@ class AddBasicVideo(Base):
      interface = IBasicVideo
      def postAddProcess(self,view = None):
          Page.postAddProcess(self.new,view = self)
-         getVideoDetails(self.new,self.factory)     
+         getVideoDetails(self.new)     
          self.context.webApproved = True
          self.new.processStartTime()         
