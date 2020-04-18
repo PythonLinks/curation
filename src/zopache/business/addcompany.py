@@ -27,6 +27,7 @@ class AddBase(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
+    allowAnonymous = True    
     
     def update(self):
         AddPageBase.update(self)

@@ -38,7 +38,7 @@ class GoogleRegister(AddForm, Notify):
     igrnoreRequest = False
     successfulRegistration = False
     submissionError = ""
-    
+    allowAnonymous = True
     
     def updateWidgets(self):
         self.fields["idtoken"].mode = HIDDEN        

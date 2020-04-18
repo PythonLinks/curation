@@ -25,7 +25,8 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')
-
+    allowAnonymous = False
+    
     #Just copied from dolmen.forms.base.BaseForm
     #Setting the parent makes life easier. 
     def __init__(self, context, request, **kwargs):
@@ -93,8 +94,6 @@ class Form(BaseForm,Scripts,Breadcrumbs):
                result.append (widget)
            return result
 
-    def isBTreeContainer(self):
-         return  IBTreeContainer.providedBy(self.context)
 
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
+
+

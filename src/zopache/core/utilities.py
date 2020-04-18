@@ -6,7 +6,9 @@ from pydoc import locate
 from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
-    
+    def isBTreeContainer(self):
+         return  IBTreeContainer.providedBy(self.context)
+
     def widgetJsonURL(self):
         root = self.getSiteRoot()
         categoryRoot = root.rssRoot

@@ -38,8 +38,8 @@ class GoogleLogin(Form):
     ignoreContent = True
     igrnoreRequest = False
     loggedIn = False
+    allowAnonymous = True    
     
-
     @property
     def actions(self):
         return Actions(GoogleLoginAction("Add", self))
