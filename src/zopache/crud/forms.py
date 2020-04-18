@@ -65,7 +65,6 @@ class AddByTitleForm(AddForm):
     
     def update(self):
         if self.treeSecurity():
-              breakpoint()
               actions = Actions(
               formactions.AddByTitle("Add", self.factory),
               formactions.Cancel("Cancel"))
