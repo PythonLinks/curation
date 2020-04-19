@@ -7,9 +7,10 @@ from zopache.ttw import actions as ttwactions
 
 
 class AceAddForm (AddForm):
-    def update(self):
-       if self.treeSecurity():
-          actions = Actions(
+
+    @property
+    def actions (self):
+        return Actions(
               ttwactions.AddAndAceEdit(_("Add and Ace Edit",
                                           "Add -> Ace Edit"),
                                         self.factory),
@@ -20,9 +21,9 @@ class AceAddForm (AddForm):
 
 
 class AddAndSearchForm (AddForm):
-    def update(self):
-        if self.treeSecurity():
-           actions = Actions(
+    @property
+    def actions (self):
+        return  Actions(
               ttwactions.AddAndSearch(_("Add and Search",
                                           "Add -> Search"),
                                         self.factory),

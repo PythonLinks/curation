@@ -35,6 +35,7 @@ class ManageBase(Form,Contents):
     actions = Actions()
 
     def update(self):
+
         if not self.treeSecurity():
             return
         act1 = ReName("ReName","ReName")

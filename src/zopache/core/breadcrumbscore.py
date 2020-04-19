@@ -4,9 +4,6 @@ from zopache.crud.interfaces import IZodbRoot
 
 class BreadcrumbsCore(object):
 
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
-    
 
     #AND HERE WE HAVE THE WORKHORSE                
     def breadcrumbsCore(self,

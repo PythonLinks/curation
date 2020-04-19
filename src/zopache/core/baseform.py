@@ -32,6 +32,9 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def __init__(self, context, request, **kwargs):
         BaseForm.__init__(self, context, request, **kwargs)
         self.__parent__ = context
+
+    def breadcrumbs(self):
+        return self.breadcrumbsManage()
                       
     def before(self,widget):
         field = widget.component._field

@@ -72,13 +72,26 @@ class Root(object):
         return getPrincipalFolder(self.context)               
 
     def getProducts(self):
-        return getProducts(self.context)       
+        if hasattr(self,'products'):
+           return self.products
+        self.products =  getProducts(self.context)
+        return self.products
 
     def getTemplates(self):
         products = self.getProducts()
-        templates = products['Templates']
-        return templates
+        return products['Templates']
 
+    def getHeaders(self):
+        products = self.getProducts()
+        return products['Headers']
+
+    def getAllHeaders(self):
+        headers = self.getHeaders()
+        result = ""
+        for item in headers.values():
+            result += item.render(self, view = self)
+        return result
+    
     def getArticles (self):
        siteRoot = self.getSiteRoot()
        if not hasattr(siteRoot,'articles'):

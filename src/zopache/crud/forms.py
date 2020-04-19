@@ -33,12 +33,9 @@ class AddFormBase(Form):
     error = ''
     label= ''
     subTitle='Add an Object'
-    actions = Actions()
-    
-
-    def update(self):
-        if self.treeSecurity():
-            self.actions = Actions(
+    @property
+    def actions(self):
+        return  Actions(
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
     

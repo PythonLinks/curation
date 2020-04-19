@@ -6,6 +6,20 @@ from pydoc import locate
 from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
+    def getDefaultImage(self):
+        if 'image' in self.context:
+            return self.context['image']
+        siteRoot = self.getSiteRoot()
+        if 'Logo.png' in siteRoot:
+            return siteRoot['Logo.png']
+        return None
+
+    def getSiteName(self):
+        siteRoot = self.getSiteRoot()
+        if hasattr(siteRoot, 'siteName'):
+            return siteRoot['siteName']
+        return None    
+    
     def isBTreeContainer(self):
          return  IBTreeContainer.providedBy(self.context)
 

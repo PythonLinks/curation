@@ -25,10 +25,6 @@ class Email(EmailBase):
        if data == "":
           return
        EmailBase._validate(self,data)
-
-
-
-
    
 class IJoin(Interface):
     pass
@@ -54,7 +50,12 @@ class IOnlineEvent(IPage):
         required = False,
         default = '',
     )
-
+    
+    discordId= schema.TextLine(
+        title = 'Your Discord Id',
+        description = 'Can they contact you on Discord?',
+        required = False,
+    )    
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
@@ -290,6 +291,13 @@ class IMeetup (IPage):
         description = u'What is this meetup called?',
         required = True,
     )
+
+    joinURL = schema.URI(
+        title = u'The Meetup URL',
+        description = """How to join this meetup.  Maybe include a link to the 
+discord server invite.   Include  'https://'""",
+        required = False,
+    )    
 
 
     specialization= schema.Text(
