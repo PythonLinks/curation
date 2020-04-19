@@ -34,8 +34,9 @@ class AddAndSearchForm (AddForm):
 class AceEditForm(EditForm):
      def update(self):
          if self.treeSecurity():
-             
-              actions =  Actions(
+            self.setActions()
+     def setActions(self):       
+              self.actions =  Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
               formactions.SaveAndView(_("Save  and View","Save -> View")),
               formactions.SaveAndTest(_("Save  and Test","Save -> Test")),     

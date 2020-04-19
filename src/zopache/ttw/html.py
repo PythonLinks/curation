@@ -285,8 +285,32 @@ class Index(View,Breadcrumbs):
                return ('Your templates recursion exceeded 50 calls'+
                       self.zopacheTemplate.source)               
 
-class BaseAceEdit(AceScripts,BaseEditForm):
+class BaseHTMLEditForm(BaseEditForm):
+
+    def update(self):
+        if self.treeSecurity():
+            self.setActions()
+
+    def setActions(self):        
+        action1=ttwactions.SaveAndAceEdit("Save","Save")
+        action2=formactions.SaveAndView("Save  and View","Save -> View")
+
+        action3=ttwactions.SaveAndCkEdit(
+                "Save and CkEdit","Save -> ckEdit")
+        
+        #action4=formactions.SaveAndTest(
+        #        "Save and Test","Save -> Test")        
+
+        action5=formactions.Cancel("Cancel","Cancel")
+        if ICkHTML.providedBy(self.context):
+                self.actions = Actions(action1,action2,action3,action5)
+        else:
+                self.actions = Actions(action1,action2,action5)                
+        
+class BaseAceEdit(AceScripts,BaseHTMLEditForm):
     subTitle="Ace Edit this object"
+            
+
     def footerScripts(self):
         return AceScripts.footerScripts(self)
 
@@ -295,22 +319,7 @@ class BaseAceEdit(AceScripts,BaseEditForm):
 
 
 class AceEdit(BaseAceEdit):
-    @property
-    def actions(self):
-
-        action1=ttwactions.SaveAndAceEdit("Save","Save")
-        action2=formactions.SaveAndView("Save  and View","Save -> View")
-
-        action3=ttwactions.SaveAndCkEdit(
-                "Save and CkEdit","Save -> ckEdit")
-        
-        action4=formactions.SaveAndTest(
-                "Save and Test","Save -> Test")        
-
-        action5=formactions.Cancel("Cancel","Cancel")
-        if ICkHTML.providedBy(self.context):
-                return Actions(action1,action2,action3,action4,action5)
-        return Actions(action1,action2,action4,action5)                
+    pass            
         
 #HERE IS THE DEVELOPER ACE EDIT FORM
 @form_component
@@ -332,7 +341,7 @@ class AceDemoHTML(BaseAceEdit):
         return Actions()
 
 
-class BaseCkEdit(CkScripts,BaseEditForm):
+class BaseCkEdit(CkScripts,BaseHTMLEditForm):
     subTitle="CkEdit this object"        
     
     def footerScripts(self):
@@ -343,9 +352,8 @@ class BaseCkEdit(CkScripts,BaseEditForm):
 
 
 class CkEdit(BaseCkEdit):
-    @property
-    def actions(self):
-        return Actions(
+    def setActions():
+        self.actions = Actions(
               formactions.SaveAndView(_("Save  and View","Save -> View")),
               ttwactions.SaveAndCkEdit(_("Save","Save")),
               ttwactions.SaveAndAceEdit(_("Save  and AceEdit","Save -> AceEdit")),

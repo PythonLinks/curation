@@ -84,7 +84,7 @@ class BaseEditForm(Form,Breadcrumbs):
     
     def update(self):
         if self.treeSecurity():
-             actions = Actions(formactions.Edit(_("Save","Save")),
+             self.actions = Actions(formactions.Edit(_("Save","Save")),
                     formactions.SaveAndView(_("SaveAndView","Save And View")),
                     formactions.Cancel(_("Cancel","Cancel")))
 
