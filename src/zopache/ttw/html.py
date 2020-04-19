@@ -352,7 +352,7 @@ class BaseCkEdit(CkScripts,BaseHTMLEditForm):
 
 
 class CkEdit(BaseCkEdit):
-    def setActions():
+    def setActions(self):
         self.actions = Actions(
               formactions.SaveAndView(_("Save  and View","Save -> View")),
               ttwactions.SaveAndCkEdit(_("Save","Save")),
