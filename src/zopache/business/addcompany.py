@@ -9,42 +9,47 @@ from zopache.ttw.html import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.business.interfaces import IMap, IAddCompany, IAddOrganization
-from zopache.business.interfaces import ICompanyOrOrganization, IEvent
+from zopache.business.interfaces import IMap, ICompany, ITree
+from zopache.business.interfaces import ICompanyOrOrganization
+from zopache.business.interfaces import IOrganization, IOnlineOrganization
 
-from zopache.business.company import Company, Organization
+from zopache.business.interfaces import  IOnlineEvent, IEvent
+from zopache.business.company import Company, Organization, OnlineOrganization
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
-from zopache.business.event import Event
-from zopache.business.exists import DuplicateOrganization
+from zopache.business.event import Event,OnlineEvent
+from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
 from zopache.business.politician import IAddPolitician, Politician
-from zopache.business.tree import IAddTree, Tree
+from zopache.business.tree import Tree
 
 class AddBase(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
     allowAnonymous = True    
+    dataValidators = [Duplicate]
     
     def update(self):
         AddPageBase.update(self)
         self.actions = Actions(
               AddAndView("Add and View", self.factory),
               formactions.Cancel("Cancel","Cancel"))
-    
+        
 @view_component
 @name('addCompany')
 @target(IView)
 @context(IPage)    
 class AddCompany(GeoCodeForm,AddBase):
-    interface = IAddCompany
+    interface = ICompany
     label="Add a Company"
     factory = Company
     title = "Add a Company"
-
+    def update(self):
+        AddBase.update(self)
+        GeocodeForm.update(self) 
     
 @view_component
 @name('addOrganization')
@@ -52,14 +57,22 @@ class AddCompany(GeoCodeForm,AddBase):
 @target(IView)
 @context(IPage)    
 class AddOrganization(GeoCodeForm,AddBase):
-    interface = IAddOrganization
+    interface = IOrganization
     factory = Organization
     title = "Add an Organization"
-    dataValidators = [DuplicateOrganization]
-    def update(self):
-        AddBase.update()
-        GeocodeForm.update() 
-        self.setActions()
+
+@view_component
+@name('addOnlineOrganization')
+@title("Add Online Organization")
+@target(IView)
+@context(IPage)    
+class AddOnlineOrganization(GeoCodeForm,AddBase):
+    interface = IOnlineOrganization
+    factory = OnlineOrganization
+    title = "Add an Online Organization"
+
+
+
         
 from dolmen.forms.base import interfaces
 @view_component
@@ -70,7 +83,10 @@ class AddPolitician(GeoCodeForm,AddBase):
     interface = IAddPolitician
     factory = Politician
     title = "Add a Politician"
-    dataValidators = [DuplicateOrganization]    
+    def update(self):
+        AddBase.update(self)
+        GeocodeForm.update(self) 
+    
     def updateWidgets(self):
         AddBase.update(self)
         item =self.fields['endorsedBy']
@@ -83,10 +99,12 @@ class AddPolitician(GeoCodeForm,AddBase):
 @target(IView)
 @context(IPage)    
 class AddTree(AddBase):
-    interface = IAddTree
+    interface = ITree
     factory = Tree
     title = "Add a Tree"
-    dataValidators = [DuplicateOrganization]
+    def update(self):
+        AddBase.update(self)
+        GeocodeForm.update(self) 
 
 from zopache.business.driver import IAddDriver, Driver    
 @view_component
@@ -97,7 +115,9 @@ class AddDriver(AddBase):
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
-    dataValidators = [DuplicateOrganization]    
+    def update(self):
+        AddBase.update(self)
+        GeocodeForm.update(self) 
   
 
 #ADD AN EVENT
@@ -107,11 +127,9 @@ class AddDriver(AddBase):
 @context(IPage)
 @implementer (ITreeSecurity)
 class AddEvemt(AddBase):
-    interface = IEvent
-    factory = Event
+    interface = IOnlineEvent
+    factory = OnlineEvent
     title = "Add an Event"
-
-
             
 @view_component
 @name('addCompanyMap')

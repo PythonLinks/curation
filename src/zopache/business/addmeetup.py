@@ -11,7 +11,7 @@ from zopache.business.addcompany import AddBase
 @context(IPage)
 class AddMeetup(AddBase):
     interface = IMeetup
-    title="Add a Meetup"
+    title="Add a Meetup Group"
     factory = Meetup
 
 @view_component

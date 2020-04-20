@@ -29,12 +29,18 @@ class Email(EmailBase):
 class IJoin(Interface):
     pass
 
-class IOnlineEvent(IPage):
+class IOnlineEvent(IPage,IJoin):
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
         required = True,
     )
+    joinURL = schema.URI(
+        title = u'The Meetup URL',
+        description = """How to join this meetup.  Maybe include a link to the 
+discord server invite.   Include  'https://'""",
+        required = False,
+    )    
 
     description= schema.Text(
         title = u'Description (200 Characters)',
@@ -65,14 +71,15 @@ class IOnlineEvent(IPage):
     time = schema.Datetime(title='Date and Time',
                            description = """ Use the format Day/Month/Year 
                    as in "12/30/19, 6:00 PM",
-                whithout the quotation marks. In due course 
-                           we will have a date time picker.""", 
-
-                           required = True)
+                whithout the quotation marks. 
+     If you have diviculty with this widget, you can leave it blank, 
+put the date and time in the "More Information" section and I will configure it later.
+ In due course we will have a date time picker.""", 
+                           required = False)
     
     source= schema.Text(
-        title = u'More Informatton',
-        description = u'Please more information about the event.',
+        title = 'More Informatton',
+        description = 'Please provide more information about the event.',
         required = False,
         default = '',
     )
@@ -118,23 +125,10 @@ class ITreeBase (ILocationBase,IPage, IJoin):
         default = '',
     )
 
-class ITree(ITreeBase):
-    pass
-
-
-class IAddTree(ITreeBase, ILatLng):    
+class ITree(ITreeBase,ILatLng):
     pass
     
-
-class I2(ILocationBase):
-    pass
-class I3 (IPage):
-    pass
-class I4(IJoin):
-    pass
-class IJunk (I1,I2,I3,I4):
-   pass
-class ICompanyOrOrganization (I1, I2, I3, I4):
+class ICompanyOrOrganization (ILocationBase,IPage,IJoin):
     pass
 
 class ICompanyBase(ICompanyOrOrganization):
@@ -158,10 +152,10 @@ class ICompanyBase(ICompanyOrOrganization):
     )
 
     specialization= schema.Text(
-        title = u'Specialization (20 characters)',
-        description = " What is this Companies specialization?",
+        title = u'Specialization ',
+        description = " What is this Companies specialization? Make it really short",
         required = True,
-        max_length = 20,
+        max_length = 200,
         default = '',
     )
      
@@ -214,10 +208,10 @@ class IOrganizationBase (ICompanyOrOrganization):
     )
 
     specialization= schema.Text(
-        title = u'Specialization (200 characters)',
-        description = " What is this group's focus?",
+        title = u'Specialization',
+        description = """ What is this group's focus? Try to keep it really short""",
         required = True,
-        max_length = 20,
+        max_length = 200,
         default = '',
     )
      
@@ -248,33 +242,24 @@ class IOrganizationBase (ICompanyOrOrganization):
         description = u'Can they email you? Make sure there are no spaces. ',
         required = False,
     )
-    
+
+class IOnlineOrganization(IOrganizationBase):
+          pass
+
+class IOrganization(IOrganizationBase):
     isGlobal = schema.Bool(
 	    title = "Is this a global organization?",
 	    description = """Global Organizations are 
                               listed in the table below the map. """,
 	    required = False,
-	    default = False)   
+	    default = False)
     
-    
-    
-
-class IOrganization(IOrganizationBase):    
     address= Address(
         title = u'Organization Address',
         description = """This is used to 
                  locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,
         required = False
     )
-
-class IAddOrganization(IOrganizationBase):    
-    address= Address(
-        title = 'Organization Address',
-        description = """This is used to 
-                 locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,
-        required = False
-    )        
-    
 
 
 class IMap (IMapBase):
@@ -285,26 +270,18 @@ class IMap (IMapBase):
 	    default = False)   
 
 
-class IMeetup (IPage):
+class IMeetup (IPage,IJoin):
     title = schema.TextLine(
         title = 'Meetup Name',
         description = u'What is this meetup called?',
         required = True,
     )
 
-    joinURL = schema.URI(
-        title = u'The Meetup URL',
-        description = """How to join this meetup.  Maybe include a link to the 
-discord server invite.   Include  'https://'""",
-        required = False,
-    )    
-
-
     specialization= schema.Text(
-        title = u'Specialization (200 characters)',
-        description = " What is this group's focus?",
+        title = u'Specialization ',
+        description = " What is this group's focus? Keep it really short.",
         required = True,
-        max_length = 20,
+        max_length = 200,
         default = '',
     )
      
@@ -321,6 +298,12 @@ discord server invite.   Include  'https://'""",
         description = u'Please describe this meetup further.',
         required = False,
         default = '',
+    )    
+
+    discordId= schema.TextLine(
+        title = "Organizer's Discord Id",
+        description = 'Can they contact you on Discord?',
+        required = False,
     )    
 
     phone= schema.TextLine(
