@@ -129,7 +129,7 @@ class AddDriver(AddBase):
 class AddEvemt(AddBase):
     interface = IOnlineEvent
     factory = OnlineEvent
-    title = "Add an Event"
+    title = "Add an Online Event"
             
 @view_component
 @name('addCompanyMap')

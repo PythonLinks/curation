@@ -12,7 +12,7 @@ class OnlineEvent (Page,Member):
     count = 0
     webClass = "Event"
     clientClass = "Category"
-    webApproved = True
+    webApproved = False
     
     def __init__(self):
         Page.__init__(self)
