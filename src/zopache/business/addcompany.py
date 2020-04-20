@@ -18,7 +18,6 @@ from zopache.business.company import Company, Organization, OnlineOrganization
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
-from zopache.core.interfaces import ITreeSecurity
 from zopache.business.event import Event,OnlineEvent
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
@@ -125,8 +124,7 @@ class AddDriver(AddBase):
 @name('addEvent')
 @target(IView)
 @context(IPage)
-@implementer (ITreeSecurity)
-class AddEvemt(AddBase):
+class AddEvent(AddBase):
     interface = IOnlineEvent
     factory = OnlineEvent
     title = "Add an Online Event"
