@@ -31,7 +31,7 @@ class Base(VeryBase,Page):
         Page.__init__(self)    
 
 #GeoBase inherits  Page from Location
-class GeoBase(GeoCodeObject,Base):
+class GeoBase(GeoCodeObject,Base,LocationBase):
     longitude = 0.
     lattitude = 0.
     #LocationBase inherits from Page
