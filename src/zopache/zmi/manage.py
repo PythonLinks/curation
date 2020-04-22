@@ -23,7 +23,8 @@ from zopache.zmi.actions import (
 from zopache.core.baseform import Form
 from zopache.python.interfaces import IDirectory
 from zopache.application.root import RootContainer
-         
+
+#Breadcrumbs is included in Form
 class ManageBase(Form,Contents):
     supportsPaste = True
     label='managelabel'

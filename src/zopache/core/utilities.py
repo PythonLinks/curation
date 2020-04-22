@@ -28,7 +28,13 @@ class Utilities (object):
         categoryRoot = root.rssRoot
         uri ="https://" + self.getDomain() + "/" + categoryRoot + "/json"
         return uri
+    
+    def isVideo(self):
+        return False
 
+    def isConference(self):
+        return False
+    
     def isForestWiki(self):
         root = self.getSiteRoot()
         return root.__class__.__name__ == 'Page'
