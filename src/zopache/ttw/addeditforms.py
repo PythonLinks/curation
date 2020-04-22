@@ -14,8 +14,8 @@ class AceAddForm (AddForm):
               ttwactions.AddAndAceEdit(_("Add and Ace Edit",
                                           "Add -> Ace Edit"),
                                         self.factory),
-              formactions.AddAndView(_("Add  and View",
-                                       "Add  -> View"),
+              formactions.AddAndView(_("Add and View",
+                                       "Add -> View"),
                                         self.factory),
               formactions.Cancel(_("Cancel","Cancel")))
 
@@ -38,8 +38,8 @@ class AceEditForm(EditForm):
      def setActions(self):       
               self.actions =  Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
-              formactions.SaveAndView(_("Save  and View","Save -> View")),
-              formactions.SaveAndTest(_("Save  and Test","Save -> Test")),     
+              formactions.SaveAndView(_("Save and View","Save -> View")),
+              formactions.SaveAndTest(_("Save and Test","Save -> Test")),     
               formactions.Cancel(_("Cancel","Cancel")))
 
 
@@ -48,7 +48,7 @@ class PugEditForm(EditForm):
          if self.treeSecurity():
               actions = Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
-              formactions.SaveAndView(_("Save  and View","Save -> View")),
+              formactions.SaveAndView(_("Save and View","Save -> View")),
               formactions.SaveAndViewJS(_("Save -> JS","Save -> JS")),
               #formactions.SaveAndViewHTML(_("Save -> HTML","Save -> HTML")),
               #formactions.SaveAndTest(_("Save  and Test","Save -> Test")), 

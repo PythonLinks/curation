@@ -184,6 +184,9 @@ class ISource(ILeaf):
 
 class IAceEdit(Interface):
           pass
+      
+class IAceDiff(Interface):
+          pass      
 
 #NO DISPLAYALE, IT RETURNS SOME VERSION OF SOURCE
 class ISourceLeaf(ISource,ILeaf,IAceEdit):

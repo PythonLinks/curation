@@ -19,8 +19,9 @@ from zope.interface import Interface
 from zopache.ttw.javascript import JavascriptBase, JavascriptFolderBase
 from zopache.core.interfaces import ITreeSecurity
 from dolmen.container import IBTreeContainer
+from zopache.ttw.interfaces import IAceDiff
 
-class ICSSBase(Interface):
+class ICSSBase(IAceDiff):
     """ For CSS Leaves and Folders."""
     pass
 
@@ -48,7 +49,9 @@ class ICSS(ICSSBase, ISourceLeaf):
 @implementer(ICSS)
 class CSS(JavascriptBase,Leaf):
     icon="ttwicons/CSS.svg"
-
+    aceMode = 'css'
+    englishType = 'CSS'
+    
 class  AceScripts(AceScripts):
     def  footerScripts(self):
         return self.aceEditorFooter + """ 
@@ -116,6 +119,18 @@ class AceDemoCSS(AceScripts,EditDemoForm):
 class AceEditCSS(AceScripts,AceEditForm):
     subTitle='Edit a CSS Object'
 
+from zopache.core.breadcrumbs import Breadcrumbs
+from zopache.crud.forms import EditForm
+@form_component
+@context(IAceDiff)
+@name('acediff')
+class AceDiff(EditForm,Breadcrumbs):
+    layoutName = "NoMenu"
+    subTitle = '<center>If you have permission, you can save them.</center>'
+    def update(self):
+        self.title=F'<center>Diff two {self.context.englishType} Objects</center>'    
+        templates = self.getTemplates()
+        self.template = templates['AceDiff']
 
 
 
