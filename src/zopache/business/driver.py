@@ -7,7 +7,7 @@ from cromlech.security import Unauthorized
 
 from zopache.pages.interfaces import ILocationBase
 from zopache.pages.page import Page
-from zopache.business.company import Base
+from zopache.business.company import GeoBase
 from zopache.pages.interfaces import IPage, ILocationBase
 from zopache.business.interfaces import IJoin, ILatLng, IAddress
 from zopache.business.geocoding import Address
@@ -97,7 +97,7 @@ class IAddDriver(IDriverBase):
     pass
 
 @implementer (IDriver)
-class Driver (Base):
+class Driver (GeoBase):
     webClass = "Driver"
     clientClass = "category"
 
