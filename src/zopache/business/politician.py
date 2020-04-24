@@ -7,7 +7,7 @@ from cromlech.security import Unauthorized
 
 from zopache.pages.interfaces import ILocationBase
 from zopache.pages.page import Page
-from zopache.business.company import Base
+from zopache.business.company import GeoBase
 from zopache.pages.interfaces import IPage, ILocationBase
 from zopache.business.interfaces import IJoin, ILatLng, IAddress
 from zopache.business.geocoding import Address
@@ -57,12 +57,12 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
         required = False,
     )
     
-    endorsedBy = schema.Collection(
-          value_type = schema.Choice( vocabulary = myVocabulary),        
-          title=u"Endorsed By",
-          description = "Which organizations endorsed this politician?",       
-          )
-    endorsedBy.mode = 'multiselect'
+#    endorsedBy = schema.Collection(
+#          value_type = schema.Choice( vocabulary = myVocabulary),        
+#          title=u"Endorsed By",
+#          description = "Which organizations endorsed this politician?",       
+#          )
+#    endorsedBy.mode = 'multiselect'
     
     source= schema.Text(
         title = 'Content',
@@ -86,7 +86,7 @@ class IAddPolitician(IPoliticianBase, IAddress):
 
 
 @implementer (IPolitician)
-class Politician (Base):
+class Politician (GeoBase):
     webClass = "Politician"
     clientClass = "category"
 

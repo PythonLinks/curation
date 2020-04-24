@@ -35,12 +35,6 @@ class IOnlineEvent(IPage,IJoin):
         description = u'What is this event called?',
         required = True,
     )
-    joinURL = schema.URI(
-        title = u'The Meetup URL',
-        description = """How to join this meetup.  Maybe include a link to the 
-discord server invite.   Include  'https://'""",
-        required = False,
-    )    
 
     description= schema.Text(
         title = u'Description (200 Characters)',
@@ -49,6 +43,20 @@ discord server invite.   Include  'https://'""",
         max_length = 200,
         default = '',
     )
+    
+    source= schema.Text(
+        title = 'More Informatton',
+        description = 'Please provide more information about the event.',
+        required = False,
+        default = '',
+    )
+
+    joinURL = schema.URI(
+        title = u'The Meetup URL',
+        description = """How to join this meetup.  Maybe include a link to the 
+discord server invite.   Include  'https://'""",
+        required = False,
+    )    
 
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
@@ -77,13 +85,6 @@ put the date and time in the "More Information" section and I will configure it 
  In due course we will have a date time picker.""", 
                            required = False)
     
-    source= schema.Text(
-        title = 'More Informatton',
-        description = 'Please provide more information about the event.',
-        required = False,
-        default = '',
-    )
-
 from zopache.pages.interfaces import ITime
 
 class IEvent(ITime,IOnlineEvent, IAddress, ILocationBase):  

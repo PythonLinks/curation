@@ -18,7 +18,6 @@ from zopache.business.company import Company, Organization, OnlineOrganization
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
-from zopache.business.event import Event,OnlineEvent
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
 from zopache.business.politician import IAddPolitician, Politician
@@ -69,9 +68,6 @@ class AddOnlineOrganization(GeoCodeForm,AddBase):
     interface = IOnlineOrganization
     factory = OnlineOrganization
     title = "Add an Online Organization"
-
-
-
         
 from dolmen.forms.base import interfaces
 @view_component
@@ -84,14 +80,13 @@ class AddPolitician(GeoCodeForm,AddBase):
     title = "Add a Politician"
     def update(self):
         AddBase.update(self)
-        GeocodeForm.update(self) 
+        GeoCodeForm.update(self) 
     
     def updateWidgets(self):
         AddBase.update(self)
         item =self.fields['endorsedBy']
         it =object.__setattr__(item,'mode','multiselect')
         super().updateWidgets()
-
         
 @view_component
 @name('addTree')
@@ -117,18 +112,7 @@ class AddDriver(AddBase):
     def update(self):
         AddBase.update(self)
         GeocodeForm.update(self) 
-  
-
-#ADD AN EVENT
-@view_component
-@name('addEvent')
-@target(IView)
-@context(IPage)
-class AddEvent(AddBase):
-    interface = IOnlineEvent
-    factory = OnlineEvent
-    title = "Add an Online Event"
-            
+              
 @view_component
 @name('addCompanyMap')
 @target(IView)
