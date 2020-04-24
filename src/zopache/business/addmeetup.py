@@ -33,10 +33,10 @@ class AddOnlineEvent(AddBase):
 class AddEvent(AddBase):
     interface = IEvent
     factory = Event
-    title = "Add an Online Event"
+    title = "Add a Real World Event"
     def update(self):
         AddBase.update(self)
-        GeocodeForm.update(self)     
+        GeoCodeForm.update(self)     
     
 
 

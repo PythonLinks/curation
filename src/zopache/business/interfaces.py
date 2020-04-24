@@ -5,9 +5,6 @@ from zope.interface import Interface
 class IAddress(Interface):
        pass
 
-class I1 (IAddress):
-    pass
-
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
@@ -29,7 +26,7 @@ class Email(EmailBase):
 class IJoin(Interface):
     pass
 
-class IOnlineEvent(IPage,IJoin):
+class IEventBase(IPage,IJoin):
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
@@ -51,13 +48,6 @@ class IOnlineEvent(IPage,IJoin):
         default = '',
     )
 
-    joinURL = schema.URI(
-        title = u'The Meetup URL',
-        description = """How to join this meetup.  Maybe include a link to the 
-discord server invite.   Include  'https://'""",
-        required = False,
-    )    
-
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
         description = u'Can they call you?',
@@ -65,11 +55,6 @@ discord server invite.   Include  'https://'""",
         default = '',
     )
     
-    discordId= schema.TextLine(
-        title = 'Your Discord Id',
-        description = 'Can they contact you on Discord?',
-        required = False,
-    )    
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
@@ -84,11 +69,32 @@ discord server invite.   Include  'https://'""",
 put the date and time in the "More Information" section and I will configure it later.
  In due course we will have a date time picker.""", 
                            required = False)
+
+class IOnlineEvent(IEventBase):
+    discordId= schema.TextLine(
+        title = 'Your Discord Id',
+        description = 'Can they contact you on Discord?',
+        required = False,
+    )
     
+    joinURL = schema.URI(
+        title = u'The Meetup URL',
+        description = """How to join this meetup.  Maybe include a link to the 
+discord server invite.   Include  'https://'""",
+        required = False,
+    )    
+
+       
 from zopache.pages.interfaces import ITime
 
-class IEvent(ITime,IOnlineEvent, IAddress, ILocationBase):  
-    pass
+class IEvent(IEventBase, IAddress, ILocationBase):  
+    address= Address(
+        title = u'Organization Address',
+        description = """This is used to 
+                 locate the organization on the map. List more than just the town, or else all the organizations in that town will just have one shared map pin. """,
+        required = True
+
+    )        
 
 
 

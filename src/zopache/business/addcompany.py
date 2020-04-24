@@ -47,7 +47,7 @@ class AddCompany(GeoCodeForm,AddBase):
     title = "Add a Company"
     def update(self):
         AddBase.update(self)
-        GeocodeForm.update(self) 
+        GeoCodeForm.update(self) 
     
 @view_component
 @name('addOrganization')
@@ -81,13 +81,13 @@ class AddPolitician(GeoCodeForm,AddBase):
     def update(self):
         AddBase.update(self)
         GeoCodeForm.update(self) 
-    
+    """
     def updateWidgets(self):
-        AddBase.update(self)
-        item =self.fields['endorsedBy']
+        ddBase.update(self)
+        #item =self.fields['endorsedBy']
         it =object.__setattr__(item,'mode','multiselect')
         super().updateWidgets()
-        
+     """   
 @view_component
 @name('addTree')
 @target(IView)
