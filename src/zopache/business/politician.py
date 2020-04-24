@@ -57,12 +57,12 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
         required = False,
     )
     
-    endorsedBy = schema.Collection(
-          value_type = schema.Choice( vocabulary = myVocabulary),        
-          title=u"Endorsed By",
-          description = "Which organizations endorsed this politician?",       
-          )
-    endorsedBy.mode = 'multiselect'
+#    endorsedBy = schema.Collection(
+#          value_type = schema.Choice( vocabulary = myVocabulary),        
+#          title=u"Endorsed By",
+#          description = "Which organizations endorsed this politician?",       
+#          )
+#    endorsedBy.mode = 'multiselect'
     
     source= schema.Text(
         title = 'Content',

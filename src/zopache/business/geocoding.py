@@ -4,6 +4,9 @@ from zope.schema import ValidationError
 from zopache.pages.page import Page
 
 class GeoCodeForm(object):
+    def update(self):
+        pass
+    
     postAmble = """ When you submit the form, please be patient, 
             the server has to contact Google GeoCoding to 
             convert the address into a lattitude and longitude.  That   
