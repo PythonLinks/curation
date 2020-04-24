@@ -7,8 +7,7 @@ from zopache.business.geocoding import GeoCodeObject
 from zopache.pages.page import Page
 from zopache.business.subscribe import Member
 
-@implementer (IOnlineEvent)
-class OnlineEvent (Page,Member):
+class EventBase(Page,Member):
     count = 0
     webClass = "Event"
     clientClass = "Category"
@@ -24,8 +23,12 @@ class OnlineEvent (Page,Member):
     def canView(self,view):
         return True
 
+@implementer (IOnlineEvent)
+class OnlineEvent (EventBase):
+    pass
+     
 @implementer(IEvent)
-class Event(OnlineEvent,GeoCodeObject):
+class Event(EventBase,GeoCodeObject):
     def __init__(self):
         Page.__init__(self)
         GeoCodeObject.__init__(self)

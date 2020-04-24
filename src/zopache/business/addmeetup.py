@@ -1,8 +1,7 @@
 from zopache.core.viewdecorators import *
 from zopache.business.interfaces import IMeetup, IOnlineEvent, IEvent
 from zopache.business.meetup import Meetup
-from zopache.business.onlineevent import OnlineEvent
-from zopache.business.event import Event
+from zopache.business.event import Event, OnlineEvent
 from zopache.pages.interfaces import IPage
 from zopache.business.addcompany import AddBase
 from zopache.business.geocoding import GeoCodeForm
