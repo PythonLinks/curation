@@ -241,6 +241,13 @@ class IOrganizationBase (ICompanyOrOrganization):
         default = '',
     )
 
+    twitterId= schema.TextLine(
+        title = u'TwitterId (Optional)',
+        description = u'Do not include the @ symbol.',
+        required = False,
+        default = '',
+    )    
+
     facebookId= schema.TextLine(
         title = u'FaceBook Id (Optional)',
         description = u'Not the domain name, just the part after "https/facebook.com/". ',

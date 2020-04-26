@@ -29,12 +29,13 @@ class AddBase(AddPageBase):
     subTitle = "All submissions are reviewed before becoming being publicly visible."
     allowAnonymous = True    
     dataValidators = [Duplicate]
-    
+    actions = Actions()    
     def update(self):
-        AddPageBase.update(self)
-        self.actions = Actions(
-              AddAndView("Add and View", self.factory),
-              formactions.Cancel("Cancel","Cancel"))
+        if self.treeSecurity():
+            AddPageBase.update(self)
+            self.actions = Actions(
+                  AddAndView("Add and View", self.factory),
+                  formactions.Cancel("Cancel","Cancel"))
         
 @view_component
 @name('addCompany')
