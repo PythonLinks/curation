@@ -89,14 +89,11 @@ from zopache.pages.interfaces import ITime
 
 class IEvent(IEventBase, IAddress, ILocationBase):  
     address= Address(
-        title = u'Organization Address',
-        description = """This is used to 
-                 locate the organization on the map. List more than just the town, or else all the organizations in that town will just have one shared map pin. """,
+        title = u'Event Address',
+           description = """Where is this event being held?""",
         required = True
 
     )        
-
-
 
 from zopache.pages.interfaces import ILatLng
 

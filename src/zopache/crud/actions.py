@@ -131,7 +131,6 @@ class Update(Action,TransactionNote):
 
     def __call__(self, form):
         self.form=form
-
         data, errors = form.extractData()
         if errors:
 

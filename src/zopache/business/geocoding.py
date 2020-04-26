@@ -14,6 +14,9 @@ class GeoCodeForm(object):
 
 class Base(object):
 
+    def setLatLong(self):
+        self.lattitude, self.longitude = self.getLatLong (self.address)
+        
     def getLatLong(self,data):   
         gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
         # Geocoding an address
@@ -26,23 +29,14 @@ class Base(object):
 class GeoCodeObject(Base):
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
-        GeoCodeObject.postProcess(self,view = view)
+        self.setLatLong()
         
     def postAddProcess(self,view=None):
         self.webApproved = False
         self.hidden = False
-        GeoCodeObject.postAddProcess(self,view=view)
         Page.postAddProcess(self, view = view)
-        
+        self.postProcess(view = view)        
         #self.editors=[view.request.principal.__name__]    
-
-    def postAddProcess(self,view=None):
-         self.postProcess(view = view)
-         
-    def postProcess (self,view=None):
-         lat, lng = self.getLatLong(self.address)
-         self.lattitude=lat 
-         self.longitude=lng     
 
 class GeoCodingError(ValidationError):
         __doc__ ="""That address is invalid."""

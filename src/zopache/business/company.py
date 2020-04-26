@@ -26,6 +26,7 @@ class VeryBase (Member):
         return self.description [0:20]
 
 class Base(VeryBase,Page):
+    email = ''    
     def __init__(self):
         Member.__init__(self)
         Page.__init__(self)    
@@ -57,7 +58,8 @@ class OnlineOrganization  (Base):
     webApproved = False
 
 @implementer (IOrganization)
-class Organization  (GeoBase):        
+class Organization  (GeoBase):
+    interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
     webApproved = False    
