@@ -241,6 +241,20 @@ class IOrganizationBase (ICompanyOrOrganization):
         default = '',
     )
 
+    facebookId= schema.TextLine(
+        title = u'FaceBook Id (Optional)',
+        description = u'Not the domain name, just the part after "https/facebook.com/". ',
+        required = False,
+        default = '',
+    )
+
+    facebookGroup= schema.TextLine(
+        title = u'Facebook Group (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )    
+
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',

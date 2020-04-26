@@ -40,7 +40,7 @@ class AddBase(AddPageBase):
 @name('addCompany')
 @target(IView)
 @context(IPage)    
-class AddCompany(GeoCodeForm,AddBase):
+class AddCompany(AddBase,GeoCodeForm):
     interface = ICompany
     label="Add a Company"
     factory = Company
@@ -54,7 +54,7 @@ class AddCompany(GeoCodeForm,AddBase):
 @title("Add Organization")
 @target(IView)
 @context(IPage)    
-class AddOrganization(GeoCodeForm,AddBase):
+class AddOrganization(AddBase,GeoCodeForm):
     interface = IOrganization
     factory = Organization
     title = "Add an Organization"
@@ -64,7 +64,7 @@ class AddOrganization(GeoCodeForm,AddBase):
 @title("Add Online Organization")
 @target(IView)
 @context(IPage)    
-class AddOnlineOrganization(GeoCodeForm,AddBase):
+class AddOnlineOrganization(AddBase,GeoCodeForm):
     interface = IOnlineOrganization
     factory = OnlineOrganization
     title = "Add an Online Organization"
@@ -74,7 +74,7 @@ from dolmen.forms.base import interfaces
 @name('addPolitician')
 @target(IView)
 @context(IPage)    
-class AddPolitician(GeoCodeForm,AddBase):
+class AddPolitician(AddBase,GeoCodeForm):
     interface = IAddPolitician
     factory = Politician
     title = "Add a Politician"
@@ -92,7 +92,7 @@ class AddPolitician(GeoCodeForm,AddBase):
 @name('addTree')
 @target(IView)
 @context(IPage)    
-class AddTree(AddBase):
+class AddTree(AddBase,GeoCodeForm):
     interface = ITree
     factory = Tree
     title = "Add a Tree"
@@ -105,7 +105,7 @@ from zopache.business.driver import IAddDriver, Driver
 @name('addDriver')
 @target(IView)
 @context(IPage)    
-class AddDriver(AddBase):
+class AddDriver(AddBase,GeoCodeForm):
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
