@@ -4,6 +4,7 @@ from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
 from pydoc import locate
 from zopache.core.getroot import getSiteRoot
+import hashlib
 
 class Utilities (object):
     def getDefaultImage(self):
@@ -127,4 +128,11 @@ class Utilities (object):
            return  IBTreeContainer.providedBy(self.context)    
         return  IBTreeContainer.providedBy(args[0])    
 
+    def hash(self,value):
+         h = hashlib.sha256() 
+         h.update(value.encode('utf-8')) # Update the hash using a bytes object
+         return h.hexdigest()
 
+    def longestName(self,context,*args):
+        if (len (args)==0):
+           pass 

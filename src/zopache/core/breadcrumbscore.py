@@ -73,8 +73,10 @@ class BreadcrumbsCore(object):
         return self.breadcrumbsIndex(self.context)
           
     #FOR MANAGEMENT VIEWS  
-    def breadcrumbsManage(self):
-        return self.breadcrumbsView(self.context,viewName='manage',showTitles=False)
+    def breadcrumbsManage(self,item = None):
+        if item == None:
+            item = self.context
+        return self.breadcrumbsView(item,viewName='manage',showTitles=False)
 
     #SKIP THE CURRENT OBJECT, IF POSSIBLE
     def breadcrumbsParent(self):
@@ -146,9 +148,6 @@ class BreadcrumbsCore(object):
     def breadcrumbs(self):
         return self.breadcrumbsIndex(self.context)
           
-    #FOR MANAGEMENT VIEWS  
-    def breadcrumbsManage(self):
-        return self.breadcrumbsView(self.context,viewName='manage',showTitles=False)
 
     #SKIP THE CURRENT OBJECT, IF POSSIBLE
     def breadcrumbsParent(self):
