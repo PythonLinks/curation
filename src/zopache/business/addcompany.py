@@ -20,7 +20,7 @@ from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
-from zopache.business.politician import IAddPolitician, Politician
+from zopache.business.politician import IPolitician, Politician
 from zopache.business.tree import Tree
 
 class AddBase(AddPageBase):
@@ -76,7 +76,7 @@ from dolmen.forms.base import interfaces
 @target(IView)
 @context(IPage)    
 class AddPolitician(AddBase,GeoCodeForm):
-    interface = IAddPolitician
+    interface = IPolitician
     factory = Politician
     title = "Add a Politician"
     def update(self):

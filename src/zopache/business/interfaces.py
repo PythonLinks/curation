@@ -13,15 +13,10 @@ from zopache.pages.interfaces import IMap as IMapBase
 from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.pages.interfaces  import ICountable
-from z3c.schema.email import RFC822MailAddress as EmailBase
+from z3c.schema.email import RFC822MailAddress as Email
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
-class Email(EmailBase):
-    def _validate (self,data):
-       if data == "":
-          return
-       EmailBase._validate(self,data)
    
 class IJoin(Interface):
     pass
@@ -59,6 +54,8 @@ class IEventBase(IPage,IJoin):
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
         required = False,
+        missing_value = "",
+           
     )    
 
     time = schema.Datetime(title='Date and Time',
@@ -196,6 +193,50 @@ class IAddCompany(ICompany):
 
     )    
 
+
+class ISocialMedia(Interface):
+
+    phone= schema.TextLine(
+        title = u'Phone Number (Optional)',
+        description = u'Can they call you?',
+        required = False,
+        default = '',
+    )
+
+    twitterId= schema.TextLine(
+        title = u'TwitterId (Optional)',
+        description = u'Do not include the @ symbol.',
+        required = False,
+        default = '',
+    )    
+
+    facebookId= schema.TextLine(
+        title = u'FaceBook Id (Optional)',
+        description = u'Not the domain name, just the part after "https/facebook.com/". ',
+        required = False,
+        default = '',
+    )
+
+    facebookGroup= schema.TextLine(
+        title = u'Facebook Group (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )
+
+    instagramId= schema.TextLine(
+        title = u'Instagram Id (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )        
+
+    email= Email(
+        title = u'Email Address (Optional)',
+        description = u'Can they email you? Make sure there are no spaces. ',
+        required = False,
+    )
+       
     
 class IOrganizationBase (ICompanyOrOrganization):
     title = schema.TextLine(
@@ -234,44 +275,10 @@ class IOrganizationBase (ICompanyOrOrganization):
         default = '',
     )    
 
-    phone= schema.TextLine(
-        title = u'Phone Number (Optional)',
-        description = u'Can they call you?',
-        required = False,
-        default = '',
-    )
-
-    twitterId= schema.TextLine(
-        title = u'TwitterId (Optional)',
-        description = u'Do not include the @ symbol.',
-        required = False,
-        default = '',
-    )    
-
-    facebookId= schema.TextLine(
-        title = u'FaceBook Id (Optional)',
-        description = u'Not the domain name, just the part after "https/facebook.com/". ',
-        required = False,
-        default = '',
-    )
-
-    facebookGroup= schema.TextLine(
-        title = u'Facebook Group (Optional)',
-        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
-        required = False,
-        default = '',
-    )    
-
-    email= Email(
-        title = u'Email Address (Optional)',
-        description = u'Can they email you? Make sure there are no spaces. ',
-        required = False,
-    )
-
-class IOnlineOrganization(IOrganizationBase):
+class IOnlineOrganization(IOrganizationBase,ISocialMedia):
           pass
 
-class IOrganization(IOrganizationBase):
+class IOrganization(IOrganizationBase,ISocialMedia):
     isGlobal = schema.Bool(
 	    title = "Is this a global organization?",
 	    description = """Global Organizations are 

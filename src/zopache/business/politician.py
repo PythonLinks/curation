@@ -1,7 +1,7 @@
 from zope import schema
 from zope.interface import Interface
 from zope.interface import implementer
-from z3c.schema.email import RFC822MailAddress as EmailBase
+from z3c.schema.email import RFC822MailAddress as Email
 
 from cromlech.security import Unauthorized
 
@@ -9,7 +9,7 @@ from zopache.pages.interfaces import ILocationBase
 from zopache.pages.page import Page
 from zopache.business.company import GeoBase
 from zopache.pages.interfaces import IPage, ILocationBase
-from zopache.business.interfaces import IJoin, ILatLng, IAddress
+from zopache.business.interfaces import IJoin, ILatLng, IAddress, ISocialMedia
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
@@ -35,7 +35,7 @@ def getVocabulary(context):
     return myVocabulary
 
 from zopache.ttw.editprincipal import possibleItems
-class IPoliticianBase (ILocationBase,IPage, IJoin):
+class IPoliticianBase (ILocationBase):
 
     title = schema.TextLine(
         title = "Politician's Name",
@@ -70,6 +70,50 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
         required = False,
         default = '',
     )
+
+
+    phone= schema.TextLine(
+        title = u'Phone Number (Optional)',
+        description = u'Can they call you?',
+        required = False,
+        default = '',
+    )
+
+    twitterId= schema.TextLine(
+        title = u'TwitterId (Optional)',
+        description = u'Do not include the @ symbol.',
+        required = False,
+        default = '',
+    )    
+
+    facebookId= schema.TextLine(
+        title = u'FaceBook Id (Optional)',
+        description = u'Not the domain name, just the part after "https/facebook.com/". ',
+        required = False,
+        default = '',
+    )
+
+    facebookGroup= schema.TextLine(
+        title = u'Facebook Group (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )
+
+    instagramId= schema.TextLine(
+        title = u'Instagram Id (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )        
+
+    email= Email(
+        title = u'Email Address (Optional)',
+        description = u'Can they email you? Make sure there are no spaces. ',
+        missing_value = "",
+        required = False,
+    )
+    
     address= Address(
         title = "Politician's District Office Address",
         description = """This is used to 
@@ -77,13 +121,8 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
            required = True,
     )
 
-class IPolitician(IPoliticianBase,IAddress):
+class IPolitician(IPoliticianBase,ISocialMedia):
     pass
-
-
-class IAddPolitician(IPoliticianBase, IAddress):    
-    pass
-
 
 @implementer (IPolitician)
 class Politician (GeoBase):
