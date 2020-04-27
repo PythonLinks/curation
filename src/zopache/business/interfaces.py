@@ -15,13 +15,13 @@ from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.pages.interfaces  import ICountable
 from z3c.schema.email import RFC822MailAddress as Email
 from zopache.business.geocoding import Address
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage, ITime
 
    
 class IJoin(Interface):
     pass
 
-class IEventBase(IPage,IJoin):
+class IEventBase(IPage,IJoin,ITime):
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
@@ -83,7 +83,7 @@ discord server invite.   Include  'https://'""",
 
        
 from zopache.pages.interfaces import ITime
-
+#ITime is on future events.
 class IEvent(IEventBase, IAddress, ILocationBase):  
     address= Address(
         title = u'Event Address',

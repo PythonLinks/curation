@@ -42,7 +42,6 @@ class LocationBase (PageBase):
     def getColor(self):
         #COLOR BASED ON CLASS
         choose = {'Driver':'black',
-                  'Politician':'green',
                   'Business': 'yellow',
                   'Map': 'gold2x' 
                   }
@@ -50,15 +49,16 @@ class LocationBase (PageBase):
         if aClass in choose:
             return choose[aClass]
 
-        #SELECT BASED On (CHILDREN, FUTURE EVENTS)
-        hasChildren = len (self) >0
+        #SELECT BASED On (CLASS, FUTURE EVENTS)
         hasFutureEvent = self.hasFutureEvent()
-        choose = {(True,False):"blue2x",
-                  (True,True):"red2x",
-                  (False,False):"blue",
-                  (False,True):"red"
+        choose = {('Politician',True):"blue2x",
+                  ('Organization',True):"red2x",
+                  ('Politician',False):"blue",
+                  ('Organization',False):"red"
                   }
-        return choose[(hasChildren,hasFutureEvent)]
+        icon = choose[(aClass,hasFutureEvent)]
+        print (icon,self.title, hasFutureEvent, '<-')
+        return icon
               
               
     def getCompanies(self):
