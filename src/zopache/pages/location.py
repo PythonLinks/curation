@@ -56,7 +56,9 @@ class LocationBase (PageBase):
                   ('Politician',False):"blue",
                   ('Organization',False):"red",
                   ('Location',True):"blue2x",
-                  ('Location',False):"blue"                  
+                  ('Location',False):"blue",
+                  ('Company',True):"yellow2x",
+                  ('Company',False):"yellow"                                    
                   }
         icon = choose[(aClass,hasFutureEvent)]
         print (icon,self.title, hasFutureEvent, '<-')
