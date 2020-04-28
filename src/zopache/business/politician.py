@@ -51,10 +51,20 @@ class IPoliticianBase (ILocationLeaf):
     )
 
     url = schema.URI(
-        title = "The Politician's URL",
+        title = "The Politician's Website",
         description = """Please link to the Politician. Include  'https://'""",
         required = False,
     )
+    imageURL = schema.URI(
+        title = "The Politician's Image",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+    )
+    districtURL = schema.URI(
+        title = "The Politician's District Map",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+    )    
     
 #    endorsedBy = schema.Collection(
 #          value_type = schema.Choice( vocabulary = myVocabulary),        

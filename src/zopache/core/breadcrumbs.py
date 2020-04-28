@@ -8,7 +8,7 @@ from cromlech.location import get_absolute_url
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.core.uniquename import UniqueName
-
+from zopache.core.tests import Tests
 
 from zopache.core.relatives import Parents
 from zopache.core.urlmethods import URLMethods
@@ -81,6 +81,7 @@ class Breadcrumbs(UniqueName,
                   Acquisition,
                   URLMethods,
                   Root,
+                  Tests,
                   Parents):
     try:   
       def isCompiledByCython(self):
