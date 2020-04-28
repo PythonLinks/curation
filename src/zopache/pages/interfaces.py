@@ -130,6 +130,12 @@ class INotPage (Interface):
 class ILocationBase(Interface):    
     pass
 
+class ILocationLeaf(ILocationBase):
+    pass
+
+class ILocationContainer(ILocationBase):
+    pass
+
 class ILatLng(Interface):
     lattitude = schema.Float(
         title = u'Lattitude',

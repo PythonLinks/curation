@@ -6,6 +6,8 @@ from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.business.interfaces import IMap, ICompanyOrOrganization
 from zopache.pages.page import PageBase
 from zopache.pages.interfaces import IPage , IRootPage
+from zopache.pages.interfaces  import (ILocationContainer,
+                                       ILocationLeaf)
 
 class LocationBase (PageBase):
     lattitude = 45.
@@ -72,14 +74,21 @@ class LocationBase (PageBase):
     def getCompaniesRecursively(self,result):
         values = self.values()
         for item in values:
-            if (ICompanyOrOrganization.providedBy(item) and
+
+            
+            if (ILocationContainer.providedBy(item) and
                 item.webApproved):
                 result.append(item)
-                
-            if (IMap.providedBy(item)):
                 item.getCompaniesRecursively(result)
+                
+            elif (ILocationLeaf.providedBy(item) and
+                   item.webApproved):
+                result.append(item)
+                
+            elif (IMap.providedBy(item)):
+                result.append(item)
 
-            if (ILocation.providedBy(item)):
+            elif (ILocation.providedBy(item)):
                 item.getCompaniesRecursively(result)                
 
         return result
@@ -110,30 +119,33 @@ class MapBase(LocationBase):
 
 
     def getLocationsJSONCore(self,firstItem,result):
-        for item in self.values():
+
+        if self.showChildren == True:
+              mapPoints = self.getCompanies()
+        else:
+             mapPoints = self.values()
+             
+        for item in mapPoints:
+            
              if not ILocationBase.providedBy(item):
                    continue
                
              if not item.webApproved:
                     continue
                
-             elif ((item.lattitude == 0) and
+             if ((item.lattitude == 0) and
                  item.longitude == 0):
                  continue
              
              # IF LOCATION GET THE JSON
-             elif ( ILocationBase.providedBy(item)):
+             if ( ILocationBase.providedBy(item)):
                 result, firstItem= item.getOneMarker(firstItem,result)
 
             #IF IF IS A MAP SHOW IT
             #OR SHOW A SINGLETON CHILD
-             elif ( IMap.providedBy (item)): 
-                  #location=item.onlyOneLocationIn()
-                  #if (location!=None):
-                  #   item = location
+             if ( IMap.providedBy (item)): 
                   result, firstItem= item.getOneMarker(  
                             firstItem,result)
-
         return result , firstItem
 
 

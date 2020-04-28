@@ -25,7 +25,6 @@ class Acquisition(object):
 
     def possibleWebClassAcquire(self,name):
         context = self.context
-        breakpoint()
         if not hasattr(context,'webClass'):
            return webClassAcquire(self.context.__parent__,name)
         return webClassAcquire(context,name)

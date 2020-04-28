@@ -5,10 +5,9 @@ from z3c.schema.email import RFC822MailAddress as Email
 
 from cromlech.security import Unauthorized
 
-from zopache.pages.interfaces import ILocationBase
+from zopache.pages.interfaces import ILocationLeaf, IPage
 from zopache.pages.page import Page
 from zopache.business.company import GeoBase
-from zopache.pages.interfaces import IPage, ILocationBase
 from zopache.business.interfaces import IJoin, ILatLng, IAddress, ISocialMedia
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
@@ -35,7 +34,7 @@ def getVocabulary(context):
     return myVocabulary
 
 from zopache.ttw.editprincipal import possibleItems
-class IPoliticianBase (ILocationBase):
+class IPoliticianBase (ILocationLeaf):
 
     title = schema.TextLine(
         title = "Politician's Name",

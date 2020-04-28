@@ -12,7 +12,9 @@ from zopache.pages.interfaces import ILocationBase
 from zopache.pages.interfaces import IMap as IMapBase
 from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
-from zopache.pages.interfaces  import ICountable
+from zopache.pages.interfaces  import (ICountable,
+                                       ILocationContainer,
+                                       ILocationLeaf)
 from z3c.schema.email import RFC822MailAddress as Email
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage, ITime
@@ -129,7 +131,7 @@ class ITreeBase (ILocationBase,IPage, IJoin):
 class ITree(ITreeBase,ILatLng):
     pass
     
-class ICompanyOrOrganization (ILocationBase,IPage,IJoin):
+class ICompanyOrOrganization (ILocationContainer,IPage,IJoin):
     pass
 
 class ICompanyBase(ICompanyOrOrganization):
@@ -301,6 +303,12 @@ class IMap (IMapBase):
 	    required = False,
 	    default = False)   
 
+    showChildren = schema.Bool(
+	    title = "Show Children?",
+	    description = "Should it show the objects in the children?",           
+	    required = False,
+	    default = False)   
+    
 
 class IMeetup (IPage,IJoin):
     title = schema.TextLine(

@@ -8,6 +8,6 @@ class Map  (Page,MapBase):
     webClass = "OpenStreetMap"
     hidden = False
     interface = IMap
-    
+    showChildren = False    
 
         
