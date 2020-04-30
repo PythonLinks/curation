@@ -39,8 +39,11 @@ class LocationBase (PageBase):
                   result += ','    
                   result += str(self.longitude)
                   color = self.getColor()
-                  result += ",'" + color + "']"
+                  result += ",'" + color +"'"
+                  result += "," + str(self.hasFutureEvent())
+                  result += "]"
                   return result, firstItem
+              
     def getColor(self):
         #COLOR BASED ON CLASS
         choose = {'Driver':'black',
@@ -53,43 +56,43 @@ class LocationBase (PageBase):
 
         #SELECT BASED On (CLASS, FUTURE EVENTS)
         hasFutureEvent = self.hasFutureEvent()
-        choose = {('Politician',True):"blue2x",
-                  ('Organization',True):"red2x",
+        choose = {('Politician',True):"orange",
+                  ('Organization',True):"red",
                   ('Politician',False):"blue",
                   ('Organization',False):"red",
-                  ('Location',True):"blue2x",
+                  ('Location',True):"bluered",
                   ('Location',False):"blue",
                   ('Company',True):"yellow2x",
                   ('Company',False):"yellow"                                    
                   }
-        icon = choose[(aClass,hasFutureEvent)]
+        icon = choose[(aClass,bool(hasFutureEvent))]
         print (icon,self.title, hasFutureEvent, '<-')
         return icon
               
               
     def getCompanies(self):
         result=[]
-        return self.getCompaniesRecursively(result)
+        return self.getCompaniesRecursively(self,result)
 
-    def getCompaniesRecursively(self,result):
+    def getCompaniesRecursively(self,context,result):
         values = self.values()
         for item in values:
-
             
             if (ILocationContainer.providedBy(item) and
                 item.webApproved):
-                result.append(item)
-                item.getCompaniesRecursively(result)
+                item.getCompaniesRecursively(context,result)
+                if item.hasFutureEvent() or not context.showChildren :
+                    result.append(item)
                 
             elif (ILocationLeaf.providedBy(item) and
                    item.webApproved):
                 result.append(item)
-                
+
             elif (IMap.providedBy(item)):
                 result.append(item)
-
+                
             elif (ILocation.providedBy(item)):
-                item.getCompaniesRecursively(result)                
+                item.getCompaniesRecursively(context,result)                
 
         return result
     
