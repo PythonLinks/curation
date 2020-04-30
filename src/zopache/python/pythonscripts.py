@@ -26,12 +26,12 @@ from dolmen.view import View, make_view_response
 from zope.cachedescriptors.property import CachedProperty
 from RestrictedPython import compile_restricted_function
 from RestrictedPython import compile_restricted
-from zopache.ttw.acescripts import AceScripts
+from zopache.python.acescripts import AceScripts
 from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 from RestrictedPython import RestrictingNodeTransformer
-from .interfaces import ITestURL
-from zopache.ttw.interfaces import IPython
-from zopache.core import getRoot
+from zopache.ttw.interfaces import ITestURL
+from zopache.python.interfaces import IPython
+from zopache.core.getroot import getRoot
 from zopache.core.breadcrumbs import parents
 
 import RestrictedPython

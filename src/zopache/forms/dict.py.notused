@@ -1,0 +1,87 @@
+# -*- coding: utf-8 -*-
+
+
+import hashlib
+md5hash = lambda s: hashlib.md5(s.encode('utf-8')).hexdigest()
+
+import crom
+
+from dolmen.forms.base.interfaces import IWidget, IWidgetExtractor
+from dolmen.forms.base import _, Fields, Widgets, cloneFormData
+from dolmen.forms.base.interfaces import IField, IWidget, IWidgetExtractor
+from dolmen.forms.base.markers import NO_VALUE
+from dolmen.forms.base.widgets import WidgetExtractor, createWidget
+
+from dolmen.forms.ztk.widgets import getTemplate
+from dolmen.forms.ztk.interfaces import ICollectionSchemaField
+from dolmen.forms.ztk.widgets.choice import ChoiceSchemaField, ChoiceFieldWidget
+from dolmen.forms.ztk.widgets.object import ObjectSchemaField
+from dolmen.forms.ztk.fields import (
+    SchemaField, registerSchemaField, SchemaFieldWidget)
+
+from zope.interface import Interface, implementer
+from zope.schema import interfaces as schema_interfaces
+
+
+def register():
+    registerSchemaField(DictSchemaField, schema_interfaces.Dict)
+
+
+from dolmen.forms.ztk.widgets.collection import CollectionSchemaField 
+class DictSchemaField(CollectionSchemaField):
+    """A Dict field
+    """
+    collectionType = Dict
+    def __init__(self, field):
+        super(CollectionSchemaField, self).__init__(field)
+        self.__value_field = IField(self._field.value_type)
+        self.__key_field = IField(self._field.key_type)
+
+    def isEmpty(self, value):
+        return len(value)  == 0
+    
+    @property
+    def keyField(self):
+        return self.__key_field
+
+#NOT SURE I AGREE WITH THIS APPROACH    
+def newCollectionWidgetFactory(mode=u"", interface=IWidget):
+    def collectionWidgetFactory(field, form, request):
+        """A widget of a collection is a bit advanced. We have to adapt
+        the sub-type of the field as well.
+        """
+        return interface(field, field.valueField, form, request, name=mode)
+    return collectionWidgetFactory
+
+
+@crom.adapter
+@crom.name('input')
+@crom.target(IWidget)
+@crom.sources(IDictSchemaField, Interface, Interface)
+def input_collection(field, form, request):
+    return newCollectionWidgetFactory(mode='input')(field, form, request)
+
+
+@crom.adapter
+@crom.target(IWidgetExtractor)
+@crom.sources(DictSchemaField, Interface, Interface)
+def extractor_collection(field, form, request):
+    return newCollectionWidgetFactory(
+        interface=IWidgetExtractor)(field, form, request)
+
+
+
+
+
+@crom.adapter
+@crom.target(IWidget)
+@crom.sources(ListSchemaField, Interface, Interface, Interface)
+class DictGenericFieldWidget(MultiGenericFieldWidget):
+
+    def __init__(self, field, value_field, form, request):
+        super(ListGenericFieldWidget, self).__init__(
+            field, value_field, form, request)
+	#self.keyField = key_field
+
+    template = getTemplate('Dict.pt')
+

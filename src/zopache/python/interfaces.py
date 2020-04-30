@@ -32,12 +32,12 @@ class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
         default = u'',
     )
     
-    sideBySide = schema.Bool(
-        title = 'Side By Side',
-        description = 'Show Text Areas Side By Side?',
-        required = False,
-        default = True,
-    )        
+#    sideBySide = schema.Bool(
+#        title = 'Side By Side',
+#        description = 'Show Text Areas Side By Side?',
+#        required = False,
+#        default = True,
+#    )        
 
 class IDirectory(IZMI):
      pass
