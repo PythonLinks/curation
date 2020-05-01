@@ -20,10 +20,10 @@ from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage, ITime
 
    
-class IJoin(Interface):
+class IFollow(Interface):
     pass
 
-class IEventBase(IPage,IJoin,ITime):
+class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
@@ -97,7 +97,7 @@ class IEvent(IEventBase, IAddress, ILocationBase):
 from zopache.pages.interfaces import ILatLng
 
 
-class ITreeBase (ILocationBase,IPage, IJoin):
+class ITreeBase (ILocationBase,IPage, IFollow):
 
     title = schema.TextLine(
         title = "Tree's Name",
@@ -131,7 +131,7 @@ class ITreeBase (ILocationBase,IPage, IJoin):
 class ITree(ITreeBase,ILatLng):
     pass
     
-class ICompanyOrOrganization (ILocationContainer,IPage,IJoin):
+class ICompanyOrOrganization (ILocationContainer,IPage,IFollow):
     pass
 
 class ICompanyBase(ICompanyOrOrganization):
@@ -195,7 +195,37 @@ class IAddCompany(ICompany):
 
     )    
 
+class IOrganizationBase (ICompanyOrOrganization):
+    title = schema.TextLine(
+        title = 'Organization Name',
+        description = u'What is this organization called?',
+        required = True,
+    )
 
+    description= schema.Text(
+        title = u'Description (200 Characters)',
+        description = "A short description of this organization. ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+
+    source= schema.Text(
+        title = u'Longer Description',
+        description = u'Please describe this organization further.',
+        required = False,
+        default = '',
+    )    
+
+    url = schema.URI(
+        title = u'The Organization URL',
+        description = """Please link to a web page, maybe twitter or gab.com 
+. Include  'https://'""",
+        required = False,
+    )
+
+
+    
 class ISocialMedia(Interface):
 
     phone= schema.TextLine(
@@ -240,42 +270,6 @@ class ISocialMedia(Interface):
     )
        
     
-class IOrganizationBase (ICompanyOrOrganization):
-    title = schema.TextLine(
-        title = 'Organization Name',
-        description = u'What is this organization called?',
-        required = True,
-    )
-
-    url = schema.URI(
-        title = u'The Organization URL',
-        description = """Please link to a web page, maybe twitter or gab.com 
-. Include  'https://'""",
-        required = False,
-    )
-
-    specialization= schema.Text(
-        title = u'Specialization',
-        description = """ What is this group's focus? Try to keep it really short""",
-        required = True,
-        max_length = 200,
-        default = '',
-    )
-     
-    description= schema.Text(
-        title = u'Description (200 Characters)',
-        description = "A short description of this organization. ",
-        required = False,
-        max_length = 200,
-        default = '',
-    )
-
-    source= schema.Text(
-        title = u'Longer Description',
-        description = u'Please describe this organization further.',
-        required = False,
-        default = '',
-    )    
 
 class IOnlineOrganization(IOrganizationBase,ISocialMedia):
           pass
@@ -296,7 +290,7 @@ class IOrganization(IOrganizationBase,ISocialMedia):
     )
 
 
-class IMap (IMapBase):
+class IMap (IMapBase,IFollow):
     showCities = schema.Bool(
 	    title = "Show Cities?",
 	    description = "Should the table of companies show the city name?",           
@@ -310,7 +304,7 @@ class IMap (IMapBase):
 	    default = False)   
     
 
-class IMeetup (IPage,IJoin):
+class IMeetup (IPage,IFollow):
     title = schema.TextLine(
         title = 'Meetup Name',
         description = u'What is this meetup called?',

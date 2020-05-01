@@ -8,7 +8,7 @@ from cromlech.security import Unauthorized
 from zopache.pages.interfaces import ILocationLeaf, IPage
 from zopache.pages.page import Page
 from zopache.business.company import GeoBase
-from zopache.business.interfaces import IJoin, ILatLng, IAddress, ISocialMedia
+from zopache.business.interfaces import IFollow, ILatLng, IAddress, ISocialMedia
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
@@ -34,7 +34,7 @@ def getVocabulary(context):
     return myVocabulary
 
 from zopache.ttw.editprincipal import possibleItems
-class IPoliticianBase (ILocationLeaf):
+class IPoliticianBase (ILocationLeaf,IFollow):
 
     title = schema.TextLine(
         title = "Politician's Name",
@@ -50,21 +50,6 @@ class IPoliticianBase (ILocationLeaf):
         default = '',
     )
 
-    url = schema.URI(
-        title = "The Politician's Website",
-        description = """Please link to the Politician. Include  'https://'""",
-        required = False,
-    )
-    imageURL = schema.URI(
-        title = "The Politician's Image",
-        description = """Please link to the Politician. Include  'https://'""",
-        required = False,
-    )
-    districtURL = schema.URI(
-        title = "The Politician's District Map",
-        description = """Please link to the Politician. Include  'https://'""",
-        required = False,
-    )    
     
 #    endorsedBy = schema.Collection(
 #          value_type = schema.Choice( vocabulary = myVocabulary),        
@@ -80,6 +65,22 @@ class IPoliticianBase (ILocationLeaf):
         default = '',
     )
 
+    url = schema.URI(
+        title = "The Politician's Website",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+    )
+    
+    imageURL = schema.URI(
+        title = "The Politician's Image",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+    )
+    districtURL = schema.URI(
+        title = "The Politician's District Map",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+    )    
 
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',

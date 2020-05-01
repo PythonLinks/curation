@@ -37,7 +37,15 @@ class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
 #        description = 'Show Text Areas Side By Side?',
 #        required = False,
 #        default = True,
-#    )        
+#    )       
+
+class IPythonScript(IPython):
+    arguments = schema.TextLine(
+        title = u'Arguments',
+         description = 'Does this function take arguments?', 
+        default='',            
+        required = False,
+    )     
 
 class IDirectory(IZMI):
      pass
@@ -50,7 +58,6 @@ class IPythonFile(IFile,IPythonIndex):
 
 class IJavascriptFile(IFile,IJavascriptIndex):
     pass
-
 
 class IPythonFolder(IContainer,IMixed,IZMI): 
     pass

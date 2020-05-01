@@ -5,7 +5,9 @@ from pydoc import locate
 
 class Tests(object):
     
-     
+    def hasMembers(self):
+        return hasattr(self.context,'isMember')
+    
     def isVideo(self):
         return False
 

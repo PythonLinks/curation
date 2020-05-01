@@ -9,7 +9,7 @@ from zopache.pages.interfaces import ILocationBase
 from zopache.pages.page import Page
 from zopache.business.company import Base
 from zopache.pages.interfaces import IPage, ILocationBase
-from zopache.business.interfaces import IJoin, ILatLng, IAddress
+from zopache.business.interfaces import IFollow, ILatLng, IAddress
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
@@ -32,7 +32,7 @@ class ITitle(Interface):
         required = True,
     )
 
-class ITreeBase (ILocationBase,IPage, IJoin):
+class ITreeBase (ILocationBase,IPage, IFollow):
 
     
     species = schema.Choice(

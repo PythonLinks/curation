@@ -27,6 +27,10 @@ Tree  <span class="caret"></span></a>
                 </li>
             </ul>
         </li>
+
+
+<!--  NODE MENU  -->
+
         <li class="dropdown nav-item">
 <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
 
@@ -66,7 +70,10 @@ Node  <span class="caret"></span></a>
                 </li>
             </ul>
         </li>
-	
+
+
+<!--  HTML MENU  -->
+
         <li class="dropdown nav-item" tal:condition="view.safeMethod('isBTreeContainer')">
         <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
 

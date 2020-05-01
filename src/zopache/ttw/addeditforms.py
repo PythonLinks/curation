@@ -7,10 +7,12 @@ from zopache.ttw import actions as ttwactions
 
 
 class AceAddForm (AddForm):
-
     @property
-    def actions (self):
-        return Actions(
+    def actions(self):
+         if not self.treeSecurity():
+              return Actions()
+         
+         return Actions(
               ttwactions.AddAndAceEdit(_("Add and Ace Edit",
                                           "Add -> Ace Edit"),
                                         self.factory),
@@ -46,7 +48,10 @@ class AceEditForm(EditForm):
 class PugEditForm(EditForm):
     def update(self):
          if self.treeSecurity():
-              actions = Actions(
+              self.setActions()
+              
+    def setActions(self):          
+         self.actions = Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
               formactions.SaveAndView(_("Save and View","Save -> View")),
               formactions.SaveAndViewJS(_("Save -> JS","Save -> JS")),

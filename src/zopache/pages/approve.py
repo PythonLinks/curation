@@ -8,10 +8,12 @@ from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
 from zopache.pages.interfaces import IPage
 from zopache.forms.interfaces import IApprove
+from zopache.core.interfaces import ITreeSecurity
 
 @form_component
 @name ('approve')
 @context(IPage)
+@implementer(ITreeSecurity)
 class Approve (EditForm):
     title = 'Aprove this posting'
     subTitle = ''

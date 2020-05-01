@@ -1,6 +1,6 @@
 import crom
 from dolmen.container import IBTreeContainer
-from zopache.python.interfaces import IFile, IDirectory
+from zopache.python.interfaces import IFile, IDirectory,IPythonScript
 from zopache.zmi.interfaces import IURLSegment
 from zopache.pages.interfaces import INotebook
 
@@ -22,5 +22,14 @@ class IFileAdaptor(object):
         self.context=context
     def getSegment(self):
         return 'index'
+
+@crom.adapter
+@crom.sources(IPythonScript)
+@crom.target(IURLSegment)
+class IPythonScriptAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'aceedit'    
 
 

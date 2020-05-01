@@ -7,8 +7,7 @@ from cromlech.security import Unauthorized
 from dolmen.view import name, context, view_component
 from cromlech.security import unauthenticated_principal as anonymous
 from zopache.core.page  import  Page
-from zopache.business.interfaces import IJoin
-
+from zopache.business.interfaces import IFollow
 class Member(object):
     def __init__ (self):
         self.members = OOBTree()
@@ -35,8 +34,8 @@ class BaseMembers(Page):
               
     
 @view_component
-@name('join')
-@context(IJoin)
+@name('follow')
+@context(IFollow)
 class Join(BaseMembers):
     def update(self):
          principal = self.request.principal
@@ -53,8 +52,8 @@ class Join(BaseMembers):
          raise HTTPFound(location=".")    
 
 @view_component
-@name('leave')
-@context(IJoin)
+@name('unfollow')
+@context(IFollow)
 class Leave(BaseMembers):
     def update(self):
          principal = self.request.principal
