@@ -26,7 +26,7 @@ from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import IWeb
 from dolmen.view import name, context, view_component
-from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML
+from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML, IAceCMSClass
 from zopache.ttw.interfaces import IAceHTMLPage
 from zopache.core.interfaces import ITreeSecurity
 
@@ -170,6 +170,13 @@ class HTML(TrustedHTML,Leaf):
 @implementer(IAceHTMLClass)
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
+    
+
+@implementer(IAceCMSClass)
+class AceCMSHTML(TrustedHTML,Leaf):
+    icon="ttwicons/HTML.svg"
+    
+
 
 @implementer(IAceHTMLPage)
 class HTMLPage(TrustedHTML,Leaf):
@@ -262,6 +269,13 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
+@form_component
+@name (u'addAceCMS')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddAceHTML (AddAceHTMLBase,AddForm):
+    factory = AceCMSHTML
+
 
 @view_component
 @name('index')
@@ -273,6 +287,13 @@ class Index(View,Breadcrumbs):
     def setDisplayObject(self,item):
         self.zopacheTemplate=item
 
+    def isCMS(self):
+        return False
+
+    def command(self,name):
+        url = '/' + self.context.__name__ + '/' + name
+        return url
+        
         
     def render(self):
         #In the case of /index/index
@@ -284,6 +305,18 @@ class Index(View,Breadcrumbs):
         except HTMLRecursionError:
                return ('Your templates recursion exceeded 50 calls'+
                       self.zopacheTemplate.source)               
+
+
+@view_component
+@name('index')
+@context(IAceCMSClass)
+class CMSIndex(Index):
+    def isCMS(self):
+        return True
+
+    def command(self,name):
+        url = '/' + self.context.__name__ + '/cms-' + name
+        return url
 
 class BaseHTMLEditForm(BaseEditForm):
 

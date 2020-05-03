@@ -106,16 +106,16 @@ crossorigin="anonymous" />
 class UserMenuLayout(LiteLayout):
     template = tal_template('UserMenuLayout.pt')
 
-@crom.component
-@name("NoMenu")
-@crom.sources(IRequest, Interface)
-@crom.target(ILayout)
-class NoMenuLayout(LiteLayout):
-    template = tal_template('NoMenuLayout2.pt')    
+#@crom.component
+#@name("NoMenu")
+#@crom.sources(IRequest, Interface)
+#@crom.target(ILayout)
+#class NoMenuLayout(LiteLayout):
+#    template = tal_template('NoMenuLayout2.pt')    
 
-@crom.component
-@name("ThinTop")
-@crom.sources(IRequest, Interface)
-@crom.target(ILayout)
-class ThinTopLayout(LiteLayout):
-    template = tal_template('thintop.pt')    
+#@crom.component
+#@name("ThinTop")
+#@crom.sources(IRequest, Interface)
+#@crom.target(ILayout)
+#class ThinTopLayout(LiteLayout):
+#    template = tal_template('thintop.pt')    
