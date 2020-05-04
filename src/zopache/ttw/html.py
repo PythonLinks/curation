@@ -273,7 +273,7 @@ class AddAceHTML (AddAceHTMLBase,AddForm):
 @name (u'addAceCMS')
 @context(IBTreeContainer)
 @permissions('Manage')
-class AddAceHTML (AddAceHTMLBase,AddForm):
+class AddAceCMS (AddAceHTMLBase,AddForm):
     factory = AceCMSHTML
 
 

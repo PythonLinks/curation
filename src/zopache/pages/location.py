@@ -78,21 +78,26 @@ class LocationBase (PageBase):
         values = self.values()
         for item in values:
             
+            #FOR APPROVED ORGANIZATIONS
             if (ILocationContainer.providedBy(item) and
                 item.webApproved):
                 item.getCompaniesRecursively(context,result)
+                
+                #IF ONLY SHOWING CHILDREN
                 if item.hasFutureEvent() or not context.showChildren :
                     result.append(item)
-                
+                    
+            #FOR POLITICIANS    
             elif (ILocationLeaf.providedBy(item) and
                    item.webApproved):
                 result.append(item)
-
+            
             elif (IMap.providedBy(item)):
-                result.append(item)
-                
+                item.getCompaniesRecursively(context,result)
+
+            #FOR A CITY, JUST SHOW ONE ICON    
             elif (ILocation.providedBy(item)):
-                item.getCompaniesRecursively(context,result)                
+                result.append(item)
 
         return result
     

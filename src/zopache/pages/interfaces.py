@@ -130,9 +130,11 @@ class INotPage (Interface):
 class ILocationBase(Interface):    
     pass
 
+#For Politicians
 class ILocationLeaf(ILocationBase):
     pass
 
+#For State Party Organizations
 class ILocationContainer(ILocationBase):
     pass
 
