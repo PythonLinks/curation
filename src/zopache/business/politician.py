@@ -62,31 +62,32 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         title = 'Content',
         description = """Please describe this politician further. Add relevant links, and links to images.""",
         required = False,
-        default = '',
     )
 
     url = schema.URI(
         title = "The Politician's Website",
         description = """Please link to the Politician. Include  'https://'""",
+        missing_value="",
         required = False,
     )
     
     imageURL = schema.URI(
         title = "The Politician's Image",
         description = """Please link to the Politician. Include  'https://'""",
+        missing_value="",        
         required = False,
     )
     districtURL = schema.URI(
         title = "The Politician's District Map",
         description = """Please link to the Politician. Include  'https://'""",
         required = False,
+        missing_value="",                
     )    
 
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
         description = u'Can they call you?',
         required = False,
-        default = '',
     )
 
     twitterId= schema.TextLine(
@@ -131,7 +132,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
            required = True,
     )
 
-class IPolitician(IPoliticianBase,ISocialMedia):
+class IPolitician(IPoliticianBase):
     pass
 
 @implementer (IPolitician)

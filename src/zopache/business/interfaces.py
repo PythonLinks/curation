@@ -81,6 +81,7 @@ class IOnlineEvent(IEventBase):
         description = """How to join this meetup.  Maybe include a link to the 
 discord server invite.   Include  'https://'""",
         required = False,
+        missing_value ='',
     )    
 
        
@@ -145,6 +146,7 @@ class ICompanyBase(ICompanyOrOrganization):
         title = u'The Company URL',
         description = """Please link to the Company. Include  'https://'""",
         required = False,
+        missing_value ='',           
     )
 
     jobURL = schema.URI(
@@ -152,6 +154,7 @@ class ICompanyBase(ICompanyOrOrganization):
         description = """Where are the jobs listed? 
                    Include  'https://' """,
         required = False,
+        missing_value ='',           
     )
 
     specialization= schema.Text(
@@ -222,6 +225,7 @@ class IOrganizationBase (ICompanyOrOrganization):
         description = """Please link to a web page, maybe twitter or gab.com 
 . Include  'https://'""",
         required = False,
+        missing_value ='',           
     )
 
 
