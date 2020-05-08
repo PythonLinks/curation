@@ -169,17 +169,7 @@ class Fix(Manage):
         Manage.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        from zopache.remote.greens.parse import createOrganizations
-        #createOrganizations(item)
-        for party in item.values():
-            try:
-               #party.phone = party.phone.national_number
-               pass 
-               #party.setLatLong()
-            except:
-               party.phone = ''
-               
-               print (party.title) 
+
         pass
 
 

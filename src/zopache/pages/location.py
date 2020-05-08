@@ -1,24 +1,22 @@
 
-from .interfaces import ILocation, ILocationBase,IMap
+from .interfaces import ILocation,IMap
 from zope.interface import implementer
 from .geo import geoCache
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
-from zopache.business.interfaces import IMap, ICompanyOrOrganization
+#from zopache.business.interfaces import IMap, ICompanyOrOrganization
 from zopache.pages.page import PageBase
 from zopache.pages.interfaces import IPage , IRootPage
 from zopache.pages.interfaces  import (ILocationContainer,
+                                       ILocationOrMap,
                                        ILocationLeaf)
 
-class LocationBase (PageBase):
+class MapOrLocation (PageBase):
     lattitude = 45.
     longintude = 0.
     webClass = 'Location'
     specialization = ''
+    showChildren = True
     
-    def postProcess(self, view = None):
-          #geoCache.geoCode(self.context.address)
-          pass
-
     def getTitle(self):
         return self.title
     
@@ -34,10 +32,11 @@ class LocationBase (PageBase):
                   result +='"' +  self.__name__ + '"'
                   result += ','
                   result +='"' +  self.getTitle() + '"'
-                  result += ','                      
-                  result +=  str(self.lattitude)  
+                  result += ','
+                  lat,lng = self.getMarkerLatLng()
+                  result +=  str(lat)  
                   result += ','    
-                  result += str(self.longitude)
+                  result += str(lng)
                   color = self.getColor()
                   result += ",'" + color +"'"
                   result += "," + str(self.hasFutureEvent())
@@ -68,23 +67,45 @@ class LocationBase (PageBase):
         icon = choose[(aClass,bool(hasFutureEvent))]
         print (icon,self.title, hasFutureEvent, '<-')
         return icon
-              
-              
+                        
+class MarkerLocation(MapOrLocation, PageMixIn):
+    def getMarkerLatLng (self):
+           #OOPS AN ANCIENT TYPO
+           if hasattr(self,'longitude'):
+               return self.lattitude, self.longitude
+           else:
+               return self.lattitude, self.longintude
+    
+    def setMarkerLatLng(self, lat,lng):
+        self.latitude = lat
+        self.longitude = lng
+
+#At least used by events. 
+@implementer (ILocationLeaf)
+class LocationLeaf (MarkerLocation):
+    icon="ttwicons/Location.svg"
+    def getCompanies(self):
+        return self
+    def getCompaniesRecursively(self,context,result):
+        return self
+        
+@implementer (ILocationContainer)
+class LocationContainer (MarkerLocation):
+    icon="ttwicons/Location.svg"    
     def getCompanies(self):
         result=[]
-        return self.getCompaniesRecursively(self,result)
+        return self.getCompaniesRecursively(result,showChildren=False)
 
-    def getCompaniesRecursively(self,context,result):
+    def getCompaniesRecursively(self,result, showChildren = None):
         values = self.values()
         for item in values:
-            
             #FOR APPROVED ORGANIZATIONS
             if (ILocationContainer.providedBy(item) and
                 item.webApproved):
-                item.getCompaniesRecursively(context,result)
+                item.getCompaniesRecursively(result,showChildren = True)
                 
                 #IF ONLY SHOWING CHILDREN
-                if item.hasFutureEvent() or not context.showChildren :
+                if item.hasFutureEvent() or showChildren :
                     result.append(item)
                     
             #FOR POLITICIANS    
@@ -93,24 +114,23 @@ class LocationBase (PageBase):
                 result.append(item)
             
             elif (IMap.providedBy(item)):
-                item.getCompaniesRecursively(context,result)
+                item.getCompaniesRecursively(result,showChildren = showChildren)
 
             #FOR A CITY, JUST SHOW ONE ICON    
             elif (ILocation.providedBy(item)):
                 result.append(item)
 
         return result
-    
-@implementer (ILocation)
-class Location (LocationBase, PageMixIn):
-    icon="ttwicons/Location.svg"
 
+@implementer(ILocation)
+class Location(LocationContainer):
+    pass
 import googlemaps
-class MapBase(LocationBase):
+class MapBase(LocationContainer):
     zoomLevel=5.
     mapHeight=0.
     mapWidth=0.
-    webClass = 'GoogleMap'
+    webClass = 'OpenStreetMap'
     clientClass = 'Category'
     icon="ttwicons/Map.svg"
     
@@ -127,35 +147,28 @@ class MapBase(LocationBase):
 
 
     def getLocationsJSONCore(self,firstItem,result):
-
         if self.showChildren == True:
-              mapPoints = self.getCompanies()
-        else:
              mapPoints = self.values()
+        else:
+             mapPoints = self.getCompanies()
              
         for item in mapPoints:
-            
-             if not ILocationBase.providedBy(item):
+             if not ILocationOrMap.providedBy(item):
                    continue
                
              if not item.webApproved:
                     continue
-               
-             if ((item.lattitude == 0) and
-                 item.longitude == 0):
+                
+             lat, lng = item.getMarkerLatLng()  
+             if ((lat == 0) or
+                 lng == 0):
                  continue
              
              # IF LOCATION GET THE JSON
-             if ( ILocationBase.providedBy(item)):
+             if ( ILocationOrMap.providedBy(item)):
                 result, firstItem= item.getOneMarker(firstItem,result)
 
-            #IF IF IS A MAP SHOW IT
-            #OR SHOW A SINGLETON CHILD
-             if ( IMap.providedBy (item)): 
-                  result, firstItem= item.getOneMarker(  
-                            firstItem,result)
         return result , firstItem
-
 
     #ITERATE THROUGH THE CHILDREN
     # IF ONLY ONE COMPANY RETURN IT, ELSE RETURN NONE
@@ -173,12 +186,13 @@ class MapBase(LocationBase):
         values=self.values()
         result=[]
         for item in values:
-            if (ILocation.providedBy(item) and 
+            if (ILocationOrMap.providedBy(item) and 
                 item.webApproved):
                 result.append(item)
         return result
 
-    
+#So the old maps had a center
+#Which was also their Marker
 @implementer (IMap)
-class Map(MapBase,PageMixIn):        
+class Map(MapBase,LocationContainer,PageMixIn):        
     pass

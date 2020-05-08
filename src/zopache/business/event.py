@@ -17,8 +17,10 @@ class EventBase(Page,Member):
         Page.__init__(self)
         Member.__init__(self)
 
-    def postAddProcess(self,view):
-        Page.postAddProcess(self, view = view)
+    def postAddProcess(self,view=None):
+        if view.treeSecurity():
+           self.webApproved = True
+        Page.postAddProcess(self,view)
         
     def canView(self,view):
         return True
@@ -26,9 +28,10 @@ class EventBase(Page,Member):
 @implementer (IOnlineEvent)
 class OnlineEvent (EventBase):
     pass
-     
+
+from zopache.pages.location import LocationLeaf
 @implementer(IEvent)
-class Event(EventBase,GeoCodeObject):
+class Event(EventBase,GeoCodeObject,LocationLeaf):
     def __init__(self):
         Page.__init__(self)
         GeoCodeObject.__init__(self)

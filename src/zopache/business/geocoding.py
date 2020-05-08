@@ -15,8 +15,9 @@ class GeoCodeForm(object):
 class Base(object):
 
     def setLatLong(self):
-        self.lattitude, self.longitude = self.getLatLong (self.address)
-        
+        lat,lng = self.getLatLong (self.address)        
+        self.setMarkerLatLng(lat,lng)
+
     def getLatLong(self,data):   
         gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
         # Geocoding an address

@@ -9,7 +9,6 @@ class Map  (Page,MapBase,Member):
     webClass = "OpenStreetMap"
     hidden = False
     interface = IMap
-    showChildren = False    
     def __init__(self):
         Member.__init__(self)
         Page.__init__(self)    

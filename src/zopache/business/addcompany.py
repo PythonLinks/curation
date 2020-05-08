@@ -9,9 +9,10 @@ from zopache.ttw.html import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.business.interfaces import IMap, ICompany, ITree
+from zopache.business.interfaces import IMap, ICompany,IMapOrganization
 from zopache.business.interfaces import ICompanyOrOrganization
 from zopache.business.interfaces import IOrganization, IOnlineOrganization
+from zopache.business.company import MapOrganization
 
 from zopache.business.interfaces import  IOnlineEvent, IEvent
 from zopache.business.company import Company, Organization, OnlineOrganization
@@ -21,7 +22,6 @@ from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
 from zopache.business.politician import IPolitician, Politician
-from zopache.business.tree import Tree
 
 class AddBase(AddPageBase):
     count = 0 
@@ -89,17 +89,6 @@ class AddPolitician(AddBase,GeoCodeForm):
         it =object.__setattr__(item,'mode','multiselect')
         super().updateWidgets()
      """   
-@view_component
-@name('addTree')
-@target(IView)
-@context(IPage)    
-class AddTree(AddBase,GeoCodeForm):
-    interface = ITree
-    factory = Tree
-    title = "Add a Tree"
-    def update(self):
-        AddBase.update(self)
-        GeocodeForm.update(self) 
 
 from zopache.business.driver import IAddDriver, Driver    
 @view_component
@@ -124,6 +113,18 @@ class AddMap(AddPageBase):
     interface = IMap
     label="Add a Map"
     factory = Map
+
+
+@view_component
+@name('addMapOrganization')
+@target(IView)
+@permissions('AddContent')
+@context(IPage)    
+class AddMapOrganization(AddPageBase):
+    subTitle = ''
+    interface = IMapOrganization
+    label="Add a Map Organizatin"
+    factory = MapOrganization    
     
 import crom
 from dolmen.forms.base.interfaces import IWidget

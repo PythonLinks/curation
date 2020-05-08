@@ -5,16 +5,15 @@ from z3c.schema.email import RFC822MailAddress as Email
 
 from cromlech.security import Unauthorized
 
-from zopache.pages.interfaces import ILocationBase
 from zopache.pages.page import Page
 from zopache.business.company import GeoBase
-from zopache.pages.interfaces import IPage, ILocationBase
+from zopache.pages.interfaces import IPage, ILocationLeaf
 from zopache.business.interfaces import IFollow, ILatLng, IAddress
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
 
-class IDriverBase (ILocationBase,IPage):
+class IDriverBase (ILocationLeaf,IPage):
 
     title = schema.TextLine(
         title = "Drivers's Legal Name",

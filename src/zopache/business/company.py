@@ -1,8 +1,8 @@
 from zope.interface import implementer
 
 from cromlech.security import Unauthorized
+from zopache.pages.location import LocationContainer
 
-from zopache.pages.location import LocationBase
 from zopache.business.interfaces import (ICompany, IMap,
                                          IOrganization,
                                          IOnlineOrganization,
@@ -32,12 +32,13 @@ class Base(VeryBase,Page):
         Page.__init__(self)    
 
 #GeoBase inherits  Page from Location
-class GeoBase(GeoCodeObject,Base,LocationBase):
+class GeoBase(GeoCodeObject,Base,LocationContainer):
     longitude = 0.
     lattitude = 0.
+        
     #LocationBase inherits from Page
     def __init__(self):
-        LocationBase.__init__(self)
+        LocationContainer.__init__(self)
         Member.__init__(self)
         GeoCodeObject.__init__(self)
         
@@ -63,3 +64,37 @@ class Organization  (GeoBase):
     webClass = "Organization"
     clientClass = "Category"
     webApproved = False    
+
+#SO maps have Lattitude and Longitude.
+#Companies now use getMarketLngLtd
+from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
+from zopache.pages.location import MapBase
+@implementer (IMapOrganization)
+class MapOrganization(MapBase,Organization):
+    interface = IMapOrganization
+    webClass = 'MapOrganization'
+    #LocationBase inherits from Page
+    def __init__(self):
+        MapBase.__init__(self)
+        Organization.__init__(self)
+
+from zopache.core.getroot import getSiteRoot
+from zopache.business.interfaces import IEndorsingOrganization
+@implementer(IEndorsingOrganization)    
+class EndorsingOrganization(MapBase,Organization):
+    interface = IEndorsingOrganization
+    webClass = "EndorsingOrganization"
+    _endorsedPoliticians = []
+
+    @property
+    def endorsedPoliticians(self):
+        siteRoot = getSiteRoot(self)
+        for item in self._endorsedPoliticians:
+            if not item in siteRoot:
+                continue
+            yield siteRoot[item]
+    
+    def getCompanies(self):
+        return self.endorsedPoliticians
+    
+

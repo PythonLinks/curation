@@ -286,6 +286,9 @@ class IAceHTMLClass(IAceHTML, IIndexHTML,ILeaf):
 
 class IAceCMSClass(IAceHTMLClass):
     pass
+
+class IAceIFrameClass(IAceHTMLClass):
+    pass
     
 class IAceHTMLPage(IAceHTML, IIndexHTML,ILeaf):
     pass

@@ -26,7 +26,11 @@ from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import IWeb
 from dolmen.view import name, context, view_component
-from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML, IAceCMSClass
+from zopache.ttw.interfaces import (IHTMLClass,
+                                    IAceHTMLClass,
+                                    IIndexHTML,
+                                    IAceCMSClass,
+                                    IAceIFrameClass)
 from zopache.ttw.interfaces import IAceHTMLPage
 from zopache.core.interfaces import ITreeSecurity
 
@@ -171,11 +175,13 @@ class HTML(TrustedHTML,Leaf):
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
     
-
 @implementer(IAceCMSClass)
 class AceCMSHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
-    
+
+@implementer(IAceIFrameClass)
+class AceIFrameHTML(TrustedHTML,Leaf):
+    icon="ttwicons/HTML.svg"        
 
 
 @implementer(IAceHTMLPage)
@@ -269,6 +275,14 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
+
+@form_component
+@name (u'addAceIFrame')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddAceIFrame (AddAceHTMLBase,AddForm):
+    factory = AceIFrameHTML
+
 @form_component
 @name (u'addAceCMS')
 @context(IBTreeContainer)
@@ -289,6 +303,9 @@ class Index(View,Breadcrumbs):
 
     def isCMS(self):
         return False
+
+    def remoteHref(self,url,title):
+            return F'<a href="{url}" > {title}</a>'
 
     def command(self,name):
         url = '/' + self.context.__name__ + '/' + name
@@ -314,9 +331,30 @@ class CMSIndex(Index):
     def isCMS(self):
         return True
 
+    def breadcrumbs(self):
+        return self.divBreadcrumbs(self.context,viewName = 'wp-content')
+
     def command(self,name):
         url = '/' + self.context.__name__ + '/cms-' + name
         return url
+
+#INDEX IFRAME CLASS
+@view_component
+@name('index')
+@context(IAceIFrameClass)
+class CMSIndex(Index):
+    def isCMS(self):
+        return True
+
+    def breadcrumbs(self):
+        return self.divBreadcrumbs(self.context,viewName = 'html-content')
+        
+    def command(self,name):
+        url = '/' + self.context.__name__ + '/iframe-' + name
+        return url
+
+    def remoteHref(self,url,title):
+            return F'<a href="{url}" target ="_parent"> {title}</a>'
 
 class BaseHTMLEditForm(BaseEditForm):
 
