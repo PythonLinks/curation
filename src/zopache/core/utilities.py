@@ -4,6 +4,9 @@ from zopache.core.getroot import getSiteRoot
 import hashlib
 
 class Utilities (object):
+    def getNavBar(self):
+         return self.webClassAcquire('navbar.py')(view)
+     
     def getDefaultImage(self):
         if 'image' in self.context:
             return self.context['image']
