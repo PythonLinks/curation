@@ -5,8 +5,8 @@ import hashlib
 
 class Utilities (object):
     def getNavBar(self):
-         return self.webClassAcquire('navbar.py')(view)
-     
+         return self.webClassAcquire('navbar.py')(self)
+  
     def getDefaultImage(self):
         if 'image' in self.context:
             return self.context['image']
