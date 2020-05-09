@@ -1,15 +1,14 @@
 from zope import schema
 from zope.interface import Interface
 from zope.interface import implementer
-from z3c.schema.email import RFC822MailAddress as EmailBase
+from z3c.schema.email import RFC822MailAddress as Email
 
 from cromlech.security import Unauthorized
 
-from zopache.pages.interfaces import ILocationBase
+from zopache.pages.interfaces import ILocationLeaf, IPage
 from zopache.pages.page import Page
-from zopache.business.company import Base
-from zopache.pages.interfaces import IPage, ILocationBase
-from zopache.business.interfaces import IJoin, ILatLng, IAddress
+from zopache.business.company import GeoBase
+from zopache.business.interfaces import IFollow, ILatLng, IAddress, ISocialMedia
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
@@ -35,7 +34,7 @@ def getVocabulary(context):
     return myVocabulary
 
 from zopache.ttw.editprincipal import possibleItems
-class IPoliticianBase (ILocationBase,IPage, IJoin):
+class IPoliticianBase (ILocationLeaf,IFollow):
 
     title = schema.TextLine(
         title = "Politician's Name",
@@ -51,25 +50,81 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
         default = '',
     )
 
-    url = schema.URI(
-        title = "The Politician's URL",
-        description = """Please link to the Politician. Include  'https://'""",
-        required = False,
-    )
     
-    endorsedBy = schema.Collection(
-          value_type = schema.Choice( vocabulary = myVocabulary),        
-          title=u"Endorsed By",
-          description = "Which organizations endorsed this politician?",       
-          )
-    endorsedBy.mode = 'multiselect'
+#    endorsedBy = schema.Collection(
+#          value_type = schema.Choice( vocabulary = myVocabulary),        
+#          title=u"Endorsed By",
+#          description = "Which organizations endorsed this politician?",       
+#          )
+#    endorsedBy.mode = 'multiselect'
     
     source= schema.Text(
         title = 'Content',
         description = """Please describe this politician further. Add relevant links, and links to images.""",
         required = False,
+    )
+
+    url = schema.URI(
+        title = "The Politician's Website",
+        description = """Please link to the Politician. Include  'https://'""",
+        missing_value="",
+        required = False,
+    )
+    
+    imageURL = schema.URI(
+        title = "The Politician's Image",
+        description = """Please link to the Politician. Include  'https://'""",
+        missing_value="",        
+        required = False,
+    )
+    districtURL = schema.URI(
+        title = "The Politician's District Map",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+        missing_value="",                
+    )    
+
+    phone= schema.TextLine(
+        title = u'Phone Number (Optional)',
+        description = u'Can they call you?',
+        required = False,
+    )
+
+    twitterId= schema.TextLine(
+        title = u'TwitterId (Optional)',
+        description = u'Do not include the @ symbol.',
+        required = False,
+        default = '',
+    )    
+
+    facebookId= schema.TextLine(
+        title = u'FaceBook Id (Optional)',
+        description = u'Not the domain name, just the part after "https/facebook.com/". ',
+        required = False,
         default = '',
     )
+
+    facebookGroup= schema.TextLine(
+        title = u'Facebook Group (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )
+
+    instagramId= schema.TextLine(
+        title = u'Instagram Id (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )        
+
+    email= Email(
+        title = u'Email Address (Optional)',
+        description = u'Can they email you? Make sure there are no spaces. ',
+        missing_value = "",
+        required = False,
+    )
+    
     address= Address(
         title = "Politician's District Office Address",
         description = """This is used to 
@@ -77,16 +132,11 @@ class IPoliticianBase (ILocationBase,IPage, IJoin):
            required = True,
     )
 
-class IPolitician(IPoliticianBase,IAddress):
+class IPolitician(IPoliticianBase):
     pass
-
-
-class IAddPolitician(IPoliticianBase, IAddress):    
-    pass
-
 
 @implementer (IPolitician)
-class Politician (Base):
+class Politician (GeoBase):
     webClass = "Politician"
     clientClass = "category"
 

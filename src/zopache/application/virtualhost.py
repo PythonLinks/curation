@@ -32,6 +32,7 @@ virtualHosts = {
                 'stopsmog.info': 'smog',                                
                 'superwifi.pl':'superwifi',
                 'pythonlinks.info':'python',
+                'usgreens.info':'us-greens',            
                 'desktop.pythonlinks.info':'python'
 }
 

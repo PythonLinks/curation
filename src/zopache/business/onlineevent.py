@@ -6,6 +6,8 @@ from zope.interface import implementer
 from zopache.pages.page import Page
 from zopache.business.subscribe import Member
 
+
+#MAYBE JUST USED IN TEXAS GREENS
 @implementer (IOnlineEvent)
 class OnlineEvent (Page,Member):
     count = 0

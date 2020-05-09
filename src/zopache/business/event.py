@@ -1,15 +1,13 @@
 
 from BTrees.OOBTree import OOBTree
 from zopache.pages.page import Page
-from zopache.business.interfaces import IEvent
+from zopache.business.interfaces import IEvent,IOnlineEvent
 from zope.interface import implementer
 from zopache.business.geocoding import GeoCodeObject
 from zopache.pages.page import Page
 from zopache.business.subscribe import Member
-from zopache.business.subscribe import Member
 
-@implementer (IEvent)
-class Event (GeoCodeObject,Page,Member):
+class EventBase(Page,Member):
     count = 0
     webClass = "Event"
     clientClass = "Category"
@@ -17,13 +15,24 @@ class Event (GeoCodeObject,Page,Member):
     
     def __init__(self):
         Page.__init__(self)
-        GeoCodeObject.__init__(self)
         Member.__init__(self)
 
-
-    def postAddProcess(self,view):
-        GeoCodeObject.postAddProcess(self, view = view)
-        Page.postAddProcess(self, view = view)
+    def postAddProcess(self,view=None):
+        if view.treeSecurity():
+           self.webApproved = True
+        Page.postAddProcess(self,view)
         
     def canView(self,view):
-        pass
+        return True
+
+@implementer (IOnlineEvent)
+class OnlineEvent (EventBase):
+    pass
+
+from zopache.pages.location import LocationLeaf
+@implementer(IEvent)
+class Event(EventBase,GeoCodeObject,LocationLeaf):
+    def __init__(self):
+        Page.__init__(self)
+        GeoCodeObject.__init__(self)
+        Member.__init__(self)

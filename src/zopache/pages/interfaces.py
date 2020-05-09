@@ -11,6 +11,7 @@ from zopache.python.interfaces import IDirectory
 from zopache.ttw.interfaces import ISourceLeaf
 from cromlech.file import FileField
 
+
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
     pass
@@ -21,6 +22,7 @@ class ICountable(Interface):
 #THINGS THAT HAPPEN AT  A POINT IN TIME  
 class ITime(Interface):
     pass
+
 class IContent(ICanonical):
     pass
 
@@ -126,8 +128,21 @@ class IRootPage(IBranch,IPublicationRoot,IZodbRoot,IPage):
 class INotPage (Interface):
      pass
 
-    
-class ILocationBase(Interface):    
+class ILocationOrMap(Interface):    
+    pass
+
+#This is the legacy Location,
+#Used in pages.location.Location
+#So it has to stay
+class ILocation(ILocationOrMap,IRecent):
+    pass
+
+#For Politicians
+class ILocationLeaf(ILocation):
+    pass
+
+#For State Party Organizations
+class ILocationContainer(ILocation):
     pass
 
 class ILatLng(Interface):
@@ -149,13 +164,7 @@ class ILatLng(Interface):
         required = True,
     )
 
-class ILocationBase2(ILocationBase,IPage, ILatLng):    
-      pass
-    
-class ILocation(ILocationBase2, IRecent, ILatLng):
-    pass
-
-class IMap(ILocationBase2):
+class IMap(ILocationOrMap,ILatLng):
     zoomLevel = schema.Float(
         title = u'Google Maps Zoom Level',
         description = u'Google Maps Zoom Level',
@@ -164,25 +173,11 @@ class IMap(ILocationBase2):
         default = 5., 
         required = True,
     )
-    """
-from .geo import Address
 
-    mapWidth = schema.Float(
-        title = u'Map Width',
-        description = u'Map Width ',
-        min=-0.,
-        max=20000.,
-        required = True,
-    )
-    
-    mapHeight = schema.Float(
-        title = u'mapHeight',
-        description = u'mapHeight ',
-        min=0.,
-        max=20000.,
-        required = True,
-    )    
 
+class IAddress(Interface):
+    pass
+    """"
     address= Address(
         title = u'Address (For the map)',
         description = u'Where is the main office for this company?',
@@ -190,4 +185,8 @@ from .geo import Address
         default = u'',
     )
     """
- 
+
+    
+class IAddressMap(IMap,IAddress):
+    pass
+

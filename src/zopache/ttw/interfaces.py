@@ -184,6 +184,9 @@ class ISource(ILeaf):
 
 class IAceEdit(Interface):
           pass
+      
+class IAceDiff(Interface):
+          pass      
 
 #NO DISPLAYALE, IT RETURNS SOME VERSION OF SOURCE
 class ISourceLeaf(ISource,ILeaf,IAceEdit):
@@ -279,6 +282,12 @@ class IHTMLClass(ICkHTML, IAceHTML, IIndexHTML,ILeaf):
     pass
 
 class IAceHTMLClass(IAceHTML, IIndexHTML,ILeaf):
+    pass
+
+class IAceCMSClass(IAceHTMLClass):
+    pass
+
+class IAceIFrameClass(IAceHTMLClass):
     pass
     
 class IAceHTMLPage(IAceHTML, IIndexHTML,ILeaf):

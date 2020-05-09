@@ -44,12 +44,15 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         return result
 
     def hasFutureEvent(self):
-        for item in self.allBlogObjects():
+        result = 0
+        for item in self.childCategories():
             if (ITime.providedBy (item)):
                 now = datetime.datetime.now()
+                if item.time == None:
+                   continue
                 if now < item.time: 
-                   return True
-        return False
+                   result +=1
+        return result
                               
     def allPagesAsList(self):
         pages = []

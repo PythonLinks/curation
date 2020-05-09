@@ -27,7 +27,7 @@ class Publisher (DawnlightPublisher):
            aType, name=crumbs.popleft()
            if not name in context:
               if not name in ['manage','fix','editors',
-                              'addRootCategory', 'editVirtualHosts']: 
+                              'addRootCategory', 'editHosts']: 
                  context = getSiteRootFromRequest(request,context)
         else:
                  context = getSiteRootFromRequest(request,context)

@@ -101,7 +101,7 @@ table-hover table-condensed" summary="Content listing"
 	  </span>
 
  <span tal:condition="not view.treeSecurity()">
-    <p>The ReName, ReTitle, and ReBoth Buttons act on the display, but you do not have permission to make changes on the server.</p>
+    <p>The ReName, and ReTitle Buttons act on the display, but you do not have permission to make changes on the server.</p>
      <input type="button" id="form-action-ReName" name="form.action.ReName" value="ReName" class="action btn" accesskey="#">
      <input type="button" id="form-action-ReTitle" name="form.action.ReTitle" value="ReTitle" class="action btn" accesskey="#">
      <input type="button" id="form-action-Cut" name="form.action.Cut" value="Cut" class="action btn" accesskey="#">

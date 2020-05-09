@@ -23,7 +23,8 @@ from zopache.zmi.actions import (
 from zopache.core.baseform import Form
 from zopache.python.interfaces import IDirectory
 from zopache.application.root import RootContainer
-         
+
+#Breadcrumbs is included in Form
 class ManageBase(Form,Contents):
     supportsPaste = True
     label='managelabel'
@@ -35,6 +36,7 @@ class ManageBase(Form,Contents):
     actions = Actions()
 
     def update(self):
+
         if not self.treeSecurity():
             return
         act1 = ReName("ReName","ReName")
@@ -167,6 +169,7 @@ class Fix(Manage):
         Manage.update(self)
         item=self.context
         import pdb; pdb.set_trace()
+
         pass
 
 
@@ -181,7 +184,7 @@ class VisitChildren(Manage):
         Manage.update(self)
         item=self.context
         self.visitChildren(item)
-        
+
     def visitChildren(self,item):
         for child in item.values():
             if child.__parent__ == None:

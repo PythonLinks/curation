@@ -9,112 +9,101 @@ from zopache.ttw.html import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.business.interfaces import IMap, IAddCompany, IAddOrganization
-from zopache.business.interfaces import ICompanyOrOrganization, IEvent
+from zopache.business.interfaces import IMap, ICompany,IMapOrganization
+from zopache.business.interfaces import ICompanyOrOrganization
+from zopache.business.interfaces import IOrganization, IOnlineOrganization
+from zopache.business.company import MapOrganization
 
-from zopache.business.company import Company, Organization
+from zopache.business.interfaces import  IOnlineEvent, IEvent
+from zopache.business.company import Company, Organization, OnlineOrganization
 from zopache.business.map import Map
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.interfaces import IPage
-from zopache.core.interfaces import ITreeSecurity
-from zopache.business.event import Event
-from zopache.business.exists import DuplicateOrganization
+from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
-from zopache.business.politician import IAddPolitician, Politician
-from zopache.business.tree import IAddTree, Tree
+from zopache.business.politician import IPolitician, Politician
 
 class AddBase(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
-    
-    @property
-    def actions(self):
-        return Actions(
-              AddAndView("Add and View", self.factory),
-              formactions.Cancel("Cancel","Cancel"))
-    
+    allowAnonymous = True    
+    dataValidators = [Duplicate]
+    actions = Actions()    
+    def update(self):
+        if self.treeSecurity():
+            AddPageBase.update(self)
+            self.actions = Actions(
+                  AddAndView("Add and View", self.factory),
+                  formactions.Cancel("Cancel","Cancel"))
+        
 @view_component
 @name('addCompany')
 @target(IView)
 @context(IPage)    
-class AddCompany(GeoCodeForm,AddBase):
-    interface = IAddCompany
+class AddCompany(AddBase,GeoCodeForm):
+    interface = ICompany
     label="Add a Company"
     factory = Company
     title = "Add a Company"
-
+    def update(self):
+        AddBase.update(self)
+        GeoCodeForm.update(self) 
     
 @view_component
 @name('addOrganization')
 @title("Add Organization")
 @target(IView)
 @context(IPage)    
-class AddOrganization(GeoCodeForm,AddBase):
-    interface = IAddOrganization
+class AddOrganization(AddBase,GeoCodeForm):
+    interface = IOrganization
     factory = Organization
     title = "Add an Organization"
-    subTitle = "All submissions are reviewed before becoming publicly visible."
-    dataValidators = [DuplicateOrganization]
-    
+
+@view_component
+@name('addOnlineOrganization')
+@title("Add Online Organization")
+@target(IView)
+@context(IPage)    
+class AddOnlineOrganization(AddBase,GeoCodeForm):
+    interface = IOnlineOrganization
+    factory = OnlineOrganization
+    title = "Add an Online Organization"
+        
 from dolmen.forms.base import interfaces
 @view_component
 @name('addPolitician')
 @target(IView)
 @context(IPage)    
-class AddPolitician(AddBase):
-    interface = IAddPolitician
+class AddPolitician(AddBase,GeoCodeForm):
+    interface = IPolitician
     factory = Politician
     title = "Add a Politician"
-    subTitle = "All submissions are reviewed before becoming publicly visible."
-    dataValidators = [DuplicateOrganization]    
+    def update(self):
+        AddBase.update(self)
+        GeoCodeForm.update(self) 
+    """
     def updateWidgets(self):
-        item =self.fields['endorsedBy']
+        ddBase.update(self)
+        #item =self.fields['endorsedBy']
         it =object.__setattr__(item,'mode','multiselect')
         super().updateWidgets()
-    
-@view_component
-@name('addTree')
-@target(IView)
-@context(IPage)    
-class AddTree(AddBase):
-    interface = IAddTree
-    factory = Tree
-    title = "Add a Tree"
-    subTitle = "All submissions are reviewed before becoming publicly visible."
-    dataValidators = [DuplicateOrganization]
+     """   
 
 from zopache.business.driver import IAddDriver, Driver    
 @view_component
 @name('addDriver')
 @target(IView)
 @context(IPage)    
-class AddDriver(AddBase):
+class AddDriver(AddBase,GeoCodeForm):
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
-    subTitle = "All submissions are reviewed before becoming publicly visible."
-    dataValidators = [DuplicateOrganization]    
 
-
-#ADD AN EVENT
-@view_component
-@name('addEvent')
-@target(IView)
-@context(IPage)
-@implementer (ITreeSecurity)
-class AddEvemt(AddBase):
-    interface = IEvent
-    factory = Event
-    title = "Add an Event"
-    subTitle = ""
-
-    @property
-    def actions(self):
-        return Actions(
-              AddAndView("Add and View", self.factory),
-              formactions.Cancel("Cancel","Cancel"))
-            
+    def update(self):
+        AddBase.update(self)
+        GeocodeForm.update(self) 
+              
 @view_component
 @name('addCompanyMap')
 @target(IView)
@@ -125,6 +114,18 @@ class AddMap(AddPageBase):
     interface = IMap
     label="Add a Map"
     factory = Map
+
+
+@view_component
+@name('addMapOrganization')
+@target(IView)
+@permissions('AddContent')
+@context(IPage)    
+class AddMapOrganization(AddPageBase):
+    subTitle = ''
+    interface = IMapOrganization
+    label="Add a Map Organizatin"
+    factory = MapOrganization    
     
 import crom
 from dolmen.forms.base.interfaces import IWidget

@@ -33,27 +33,25 @@ class AddFormBase(Form):
     error = ''
     label= ''
     subTitle='Add an Object'
-    actions = Actions()
-    
     @property
-    def fields(self):
-        return  Fields(self.interface)
-
-    def update(self):
-        if self.treeSecurity():
-            self.actions = Actions(
+    def actions(self):
+        return  Actions(
             formactions.Add(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
     
     def acquireTitle(self):
          return self.title
+     
+    @property
+    def fields(self):
+        return  Fields(self.interface)
 
 class AddForm(AddFormBase):
     @property
     def fields(self):
         return  Fields(IName,self.interface)
     
-class AddNamedForm(AddForm):
+class AddNamedForm(AddFormBase):
 
     def update(self):
         if self.treeSecurity():
@@ -61,13 +59,14 @@ class AddNamedForm(AddForm):
             formactions.AddNamed(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
     
-class AddByTitleForm(AddForm):
+class AddByTitleForm(AddFormBase):
     
     def update(self):
         if self.treeSecurity():
-              self.actions = Actions(
+              actions = Actions(
               formactions.AddByTitle("Add", self.factory),
               formactions.Cancel("Cancel"))
+              self.actions= actions
               
 from zopache.core.breadcrumbs import Breadcrumbs
 class BaseEditForm(Form,Breadcrumbs):    
@@ -78,10 +77,14 @@ class BaseEditForm(Form,Breadcrumbs):
     ignoreContent = False
     ignoreRequest = False
     count = 0
+    @property
 
+    def fields(self):
+        return  Fields(self.interface)
+    
     def update(self):
         if self.treeSecurity():
-             actions = Actions(formactions.Edit(_("Save","Save")),
+             self.actions = Actions(formactions.Edit(_("Save","Save")),
                     formactions.SaveAndView(_("SaveAndView","Save And View")),
                     formactions.Cancel(_("Cancel","Cancel")))
 

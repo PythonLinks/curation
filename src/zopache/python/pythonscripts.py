@@ -26,17 +26,20 @@ from dolmen.view import View, make_view_response
 from zope.cachedescriptors.property import CachedProperty
 from RestrictedPython import compile_restricted_function
 from RestrictedPython import compile_restricted
-from zopache.ttw.acescripts import AceScripts
+from zopache.python.acescripts import AceScripts
 from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 from RestrictedPython import RestrictingNodeTransformer
-from .interfaces import ITestURL
-from zopache.ttw.interfaces import IPython
-from zopache.core import getRoot
-from zopache.core.breadcrumbs import parents
+from zopache.ttw.interfaces import ITestURL
+from zopache.python.interfaces import IPythonScript
+from zopache.core.getroot import getRoot
 
 import RestrictedPython
 from RestrictedPython import _compat
 from dolmen.forms.base.interfaces import ActionError
+
+from cromlech.location import lineage_chain
+def parents (item):
+    return lineage_chain (item)
 
 def safer_getattr(object, name, default=None, getattr=getattr):
     """Getattr implementation which prevents using format on string objects.
@@ -86,7 +89,7 @@ class  DotAccess(object):
     def __getattr__(self, name):
         if name in self.context:
             item =  self.context[name]
-            if IPython.providedBy(item):
+            if IPythonScript.providedBy(item):
                return item
             return DotAccess(item)
         item = object.__getattr__(self, name)
@@ -94,7 +97,7 @@ class  DotAccess(object):
 
 
 
-@implementer(IPython)
+@implementer(IPythonScript)
 class PythonScript(Leaf):
     icon="ttwicons/Python.svg"
     
@@ -111,7 +114,7 @@ class PythonScript(Leaf):
           self.compile()
        return self._v_compiledFunction
 
-    def postProcess(self):
+    def postProcess(self, view = None):
             self.compile()
             
     def compile(self):
@@ -196,19 +199,19 @@ class EditPythonAndTest(EditPython):
         return self.form.context.testURL        
     
 @form_component
-@name('addPython')
+@name('addPythonScript')
 @context(IBTreeContainer)
 @title("Add Python")
 @permissions('Manage')
-@implementer(IPython)
+@implementer(IPythonScript)
 class AddPythonFunction(AceScripts,AceAddForm):
     subTitle = "Add  a Python  Script (Beta)"
-    interface = IPython
+    interface = IPythonScript
     ignoreContent = True
     factory=PythonScript
     
-    def postProcess(self):
-        self.new.postProcess()
+    def postProcess(self, view = None):
+        self.new.postProcess(view)
 
     def footerScripts(self):
         return AceScripts.footerScripts(self)
@@ -216,9 +219,9 @@ class AddPythonFunction(AceScripts,AceAddForm):
     def headerScripts(self):
           return AceScripts.headerScripts(self)    
     
-    @property
-    def actions(self):
-        return Actions(
+
+    def setActions(self):
+        self.actions = Actions(
               AddPythonAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
               AddPythonAndTest(_("Add and Test","Add -> Test"), self.factory),
               Cancel(_("Cancel","Cancel")))
@@ -237,7 +240,7 @@ def make_python_response(view, result, *args, **kwargs):
 
 @view_component
 @name('index')
-@context(IPython)
+@context(IPythonScript)
 @title("View")
 class Index(View):
     responseFactory = Response
@@ -248,7 +251,7 @@ class Index(View):
 
 
 @form_component
-@context(IPython)
+@context(IPythonScript)
 @title("AceEit")
 @name("aceedit")
 @permissions('Manage')
@@ -260,8 +263,8 @@ class AceEditPython(AceScripts,AceEditForm):
     def headerScripts(self):
           return AceScripts.headerScripts(self)    
 
-    def postProcess(self):
-        self.context.postProcess()
+    def postProcess(self, view = None):
+        self.context.postProcess(view)
         
     @CachedProperty
     def actions(self):

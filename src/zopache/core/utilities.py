@@ -1,37 +1,33 @@
 import json
-from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
-from zopache.application.treesecurity import TreeSecurity
-from dolmen.container import IBTreeContainer
 from pydoc import locate
 from zopache.core.getroot import getSiteRoot
+import hashlib
 
 class Utilities (object):
+    def getNavBar(self):
+         return self.webClassAcquire('navbar.py')(self)
+  
+    def getDefaultImage(self):
+        if 'image' in self.context:
+            return self.context['image']
+        siteRoot = self.getSiteRoot()
+        if 'Logo.png' in siteRoot:
+            return siteRoot['Logo.png']
+        return None
+
+    def getSiteName(self):
+        siteRoot = self.getSiteRoot()
+        if hasattr(siteRoot, 'siteName'):
+            return siteRoot['siteName']
+        return None    
     
+
     def widgetJsonURL(self):
         root = self.getSiteRoot()
         categoryRoot = root.rssRoot
         uri ="https://" + self.getDomain() + "/" + categoryRoot + "/json"
         return uri
-
-    def isForestWiki(self):
-        root = self.getSiteRoot()
-        return root.__class__.__name__ == 'Page'
-        
-    def treeSecurity(self):
-        tree = TreeSecurity(self)
-        if (self.isAuthenticated() and
-           tree.hasEditorPermission()):
-            return True
-        return False
-
-    def hasPermission(self, aPermission):
-        if (self.isAuthenticated() and
-           aPermission in self.request.principal.permissions):
-           return True
-        return False
-
-    def isManager(self):
-        return self.hasPermission('Manage')
+    
     
     def parameters(self):
         parameters = {}
@@ -73,13 +69,6 @@ class Utilities (object):
        return None 
 
 
-            
-    def hasTrueAttribute(self,attribute):
-        if (hasattr(self.context, attribute) and
-            getattr(self.context,attribute)):
-            return True
-        return False
-      
     def debug(self,*args):
         import pdb;pdb.set_trace()
         fred = 1
@@ -87,22 +76,12 @@ class Utilities (object):
           fred = args
           item = args [0]
           
-    def implements (self,dottedName):
-        return self.itemImplements(self.context,dottedName)
-    
-    def itemImplements(self, item, dottedName):
-        myInterface = locate(dottedName)
-        if myInterface == None:
-            return False
-        result = myInterface.providedBy(item)
-        return result
 
-    def isAuthenticated(self):
-       return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
+    def hash(self,value):
+         h = hashlib.sha256() 
+         h.update(value.encode('utf-8')) # Update the hash using a bytes object
+         return h.hexdigest()
 
-    def isBTreeContainer(self,*args):
+    def longestName(self,context,*args):
         if (len (args)==0):
-           return  IBTreeContainer.providedBy(self.context)    
-        return  IBTreeContainer.providedBy(args[0])    
-
-
+           pass 

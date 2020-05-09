@@ -25,12 +25,16 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')
-
+    allowAnonymous = False
+    
     #Just copied from dolmen.forms.base.BaseForm
     #Setting the parent makes life easier. 
     def __init__(self, context, request, **kwargs):
         BaseForm.__init__(self, context, request, **kwargs)
         self.__parent__ = context
+
+    def breadcrumbs(self):
+        return self.breadcrumbsManage()
                       
     def before(self,widget):
         field = widget.component._field
@@ -73,19 +77,13 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     def bootstrapWidgets(self):
         """Adds the needed css classes for bootstrap styles.
         """
-        for widget in self.fieldWidgets:
-            pass
         result = []
         for widget in self.fieldWidgets:
             if not self.useFormControl(widget):
                if "form-control" in widget.defaultHtmlClass:
                    widget.defaultHtmlClass.remove ("form-control")
-
-               #if not 'form-check-input' in widget.defaultHtmlClass: 
-               #    widget.defaultHtmlClass.append('form-check-input')
             else:
-                if not ('form-control' in widget.defaultHtmlClass):                 
-                   widget.defaultHtmlClass.append('form-control')
+                if not ('form-control' in widget.defaultHtmlClass):                               widget.defaultHtmlClass.append('form-control')
             widget.defaultHtmlClass = widget.defaultHtmlClass.copy()
             result.append (widget)
         return result
@@ -99,8 +97,6 @@ class Form(BaseForm,Scripts,Breadcrumbs):
                result.append (widget)
            return result
 
-    def isBTreeContainer(self):
-         return  IBTreeContainer.providedBy(self.context)
 
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
+
+

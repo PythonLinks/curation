@@ -2,38 +2,25 @@ from zope import schema
 
 from zope.interface import Interface
 
-class IAddress(Interface):
-       pass
-
-class I1 (IAddress):
-    pass
-
+from zopache.pages.interfaces import IAddress
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
-from zopache.pages.interfaces import ILocationBase
-from zopache.pages.interfaces import IMap as IMapBase
+from zopache.pages.interfaces import ILocationOrMap
 from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
-from zopache.pages.interfaces  import ICountable
-from z3c.schema.email import RFC822MailAddress as EmailBase
+from zopache.pages.interfaces  import (ICountable,
+                                       ILocationContainer,
+                                       ILocationLeaf)
+from z3c.schema.email import RFC822MailAddress as Email
 from zopache.business.geocoding import Address
-from zopache.pages.interfaces import IPage
-
-class Email(EmailBase):
-    def _validate (self,data):
-       if data == "":
-          return
-       EmailBase._validate(self,data)
-
-
-
+from zopache.pages.interfaces import IPage, ITime
 
    
-class IJoin(Interface):
+class IFollow(Interface):
     pass
 
-class IOnlineEvent(IPage):
+class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
         title = 'Event Name',
         description = u'What is this event called?',
@@ -47,6 +34,13 @@ class IOnlineEvent(IPage):
         max_length = 200,
         default = '',
     )
+    
+    source= schema.Text(
+        title = 'More Informatton',
+        description = 'Please provide more information about the event.',
+        required = False,
+        default = '',
+    )
 
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
@@ -54,44 +48,54 @@ class IOnlineEvent(IPage):
         required = False,
         default = '',
     )
-
+    
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
         required = False,
+        missing_value = "",
+           
     )    
 
     time = schema.Datetime(title='Date and Time',
                            description = """ Use the format Day/Month/Year 
                    as in "12/30/19, 6:00 PM",
-                whithout the quotation marks. In due course 
-                           we will have a date time picker.""", 
+                whithout the quotation marks. 
+     If you have diviculty with this widget, you can leave it blank, 
+put the date and time in the "More Information" section and I will configure it later.
+ In due course we will have a date time picker.""", 
+                           required = False)
 
-                           required = True)
-    
-    source= schema.Text(
-        title = u'More Informatton',
-        description = u'Please more information about the event.',
+class IOnlineEvent(IEventBase):
+    discordId= schema.TextLine(
+        title = 'Your Discord Id',
+        description = 'Can they contact you on Discord?',
         required = False,
-        default = '',
     )
+    
+    joinURL = schema.URI(
+        title = u'The Meetup URL',
+        description = """How to join this meetup.  Maybe include a link to the 
+discord server invite.   Include  'https://'""",
+        required = False,
+        missing_value ='',
+    )    
 
+       
 from zopache.pages.interfaces import ITime
-
-class IEvent(ITime,IOnlineEvent, IAddress, ILocationBase):  
+#ITime is on future events.
+class IEvent(IEventBase, IAddress, ILocationLeaf):  
     address= Address(
         title = u'Event Address',
-        description = """This is used to 
-                 position the event on the map. """,
-           required = True,
-    )
+           description = """Where is this event being held?""",
+        required = True
 
-
+    )        
 
 from zopache.pages.interfaces import ILatLng
 
 
-class ITreeBase (ILocationBase,IPage, IJoin):
+class ITreeBase (ILocationLeaf,IPage, IFollow):
 
     title = schema.TextLine(
         title = "Tree's Name",
@@ -122,23 +126,10 @@ class ITreeBase (ILocationBase,IPage, IJoin):
         default = '',
     )
 
-class ITree(ITreeBase):
-    pass
-
-
-class IAddTree(ITreeBase, ILatLng):    
+class ITree(ITreeBase,ILatLng):
     pass
     
-
-class I2(ILocationBase):
-    pass
-class I3 (IPage):
-    pass
-class I4(IJoin):
-    pass
-class IJunk (I1,I2,I3,I4):
-   pass
-class ICompanyOrOrganization (I1, I2, I3, I4):
+class ICompanyOrOrganization (ILocationContainer,IPage,IFollow):
     pass
 
 class ICompanyBase(ICompanyOrOrganization):
@@ -152,6 +143,7 @@ class ICompanyBase(ICompanyOrOrganization):
         title = u'The Company URL',
         description = """Please link to the Company. Include  'https://'""",
         required = False,
+        missing_value ='',           
     )
 
     jobURL = schema.URI(
@@ -159,13 +151,14 @@ class ICompanyBase(ICompanyOrOrganization):
         description = """Where are the jobs listed? 
                    Include  'https://' """,
         required = False,
+        missing_value ='',           
     )
 
     specialization= schema.Text(
-        title = u'Specialization (20 characters)',
-        description = " What is this Companies specialization?",
+        title = u'Specialization ',
+        description = " What is this Companies specialization? Make it really short",
         required = True,
-        max_length = 20,
+        max_length = 200,
         default = '',
     )
      
@@ -202,7 +195,6 @@ class IAddCompany(ICompany):
 
     )    
 
-    
 class IOrganizationBase (ICompanyOrOrganization):
     title = schema.TextLine(
         title = 'Organization Name',
@@ -210,21 +202,6 @@ class IOrganizationBase (ICompanyOrOrganization):
         required = True,
     )
 
-    url = schema.URI(
-        title = u'The Organization URL',
-        description = """Please link to a web page, maybe twitter or gab.com 
-. Include  'https://'""",
-        required = False,
-    )
-
-    specialization= schema.Text(
-        title = u'Specialization (200 characters)',
-        description = " What is this group's focus?",
-        required = True,
-        max_length = 20,
-        default = '',
-    )
-     
     description= schema.Text(
         title = u'Description (200 Characters)',
         description = "A short description of this organization. ",
@@ -240,6 +217,18 @@ class IOrganizationBase (ICompanyOrOrganization):
         default = '',
     )    
 
+    url = schema.URI(
+        title = u'The Organization URL',
+        description = """Please link to a web page, maybe twitter or gab.com 
+. Include  'https://'""",
+        required = False,
+        missing_value ='',           
+    )
+
+
+    
+class ISocialMedia(Interface):
+
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
         description = u'Can they call you?',
@@ -247,23 +236,53 @@ class IOrganizationBase (ICompanyOrOrganization):
         default = '',
     )
 
+    twitterId= schema.TextLine(
+        title = u'TwitterId (Optional)',
+        description = u'Do not include the @ symbol.',
+        required = False,
+        default = '',
+    )    
+
+    facebookId= schema.TextLine(
+        title = u'FaceBook Id (Optional)',
+        description = u'Not the domain name, just the part after "https/facebook.com/". ',
+        required = False,
+        default = '',
+    )
+
+    facebookGroup= schema.TextLine(
+        title = u'Facebook Group (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )
+
+    instagramId= schema.TextLine(
+        title = u'Instagram Id (Optional)',
+        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        required = False,
+        default = '',
+    )        
+
     email= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
         required = False,
     )
+       
     
+
+class IOnlineOrganization(IOrganizationBase,ISocialMedia):
+          pass
+
+class IOrganization(IOrganizationBase,ISocialMedia):
     isGlobal = schema.Bool(
 	    title = "Is this a global organization?",
 	    description = """Global Organizations are 
                               listed in the table below the map. """,
 	    required = False,
-	    default = False)   
+	    default = False)
     
-    
-    
-
-class IOrganization(IOrganizationBase):    
     address= Address(
         title = u'Organization Address',
         description = """This is used to 
@@ -271,37 +290,38 @@ class IOrganization(IOrganizationBase):
         required = False
     )
 
-class IAddOrganization(IOrganizationBase):    
-    address= Address(
-        title = 'Organization Address',
-        description = """This is used to 
-                 locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,
-        required = False
-    )        
-    
+from zopache.pages.interfaces import IMap as IMapBase
 
-
-class IMap (IMapBase):
+class IMap (IMapBase,IFollow):
     showCities = schema.Bool(
 	    title = "Show Cities?",
 	    description = "Should the table of companies show the city name?",           
 	    required = False,
 	    default = False)   
 
+    showChildren = schema.Bool(
+	    title = "Show Children?",
+	    description = "Should it show the objects in the children?",           
+	    required = False,
+	    default = False)   
+    
+class IMapOrganization(IOrganization, IMap):
+       pass
 
-class IMeetup (IPage):
+class IEndorsingOrganization(IMapOrganization):
+       pass
+class IMeetup (IPage,IFollow):
     title = schema.TextLine(
         title = 'Meetup Name',
         description = u'What is this meetup called?',
         required = True,
     )
 
-
     specialization= schema.Text(
-        title = u'Specialization (200 characters)',
-        description = " What is this group's focus?",
+        title = u'Specialization ',
+        description = " What is this group's focus? Keep it really short.",
         required = True,
-        max_length = 20,
+        max_length = 200,
         default = '',
     )
      
@@ -320,6 +340,12 @@ class IMeetup (IPage):
         default = '',
     )    
 
+    discordId= schema.TextLine(
+        title = "Organizer's Discord Id",
+        description = 'Can they contact you on Discord?',
+        required = False,
+    )    
+
     phone= schema.TextLine(
         title = u'Phone Number (Optional)',
         description = u'Can they call you?',
@@ -331,5 +357,6 @@ class IMeetup (IPage):
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
         required = False,
+        missing_value = ''
     )    
 

@@ -4,12 +4,19 @@ from zope.schema import ValidationError
 from zopache.pages.page import Page
 
 class GeoCodeForm(object):
+    def update(self):
+        pass
+    
     postAmble = """ When you submit the form, please be patient, 
             the server has to contact Google GeoCoding to 
             convert the address into a lattitude and longitude.  That   
             takes a few seconds. """
 
 class Base(object):
+
+    def setLatLong(self):
+        lat,lng = self.getLatLong (self.address)        
+        self.setMarkerLatLng(lat,lng)
 
     def getLatLong(self,data):   
         gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
@@ -23,23 +30,14 @@ class Base(object):
 class GeoCodeObject(Base):
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
-        GeoCodeObject.postProcess(self,view = view)
+        self.setLatLong()
         
     def postAddProcess(self,view=None):
         self.webApproved = False
         self.hidden = False
-        GeoCodeObject.postAddProcess(self,view=view)
         Page.postAddProcess(self, view = view)
-        
+        self.postProcess(view = view)        
         #self.editors=[view.request.principal.__name__]    
-
-    def postAddProcess(self,view=None):
-         self.postProcess(view = view)
-         
-    def postProcess (self,view=None):
-         lat, lng = self.getLatLong(self.address)
-         self.lattitude=lat 
-         self.longitude=lng     
 
 class GeoCodingError(ValidationError):
         __doc__ ="""That address is invalid."""

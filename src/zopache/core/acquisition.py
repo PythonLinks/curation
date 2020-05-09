@@ -22,7 +22,13 @@ class Acquisition(object):
         if (context == None):
             context = self.context
         return ParentalAcquire(context)[name]
-          
+
+    def possibleWebClassAcquire(self,name):
+        context = self.context
+        if not hasattr(context,'webClass'):
+           return webClassAcquire(self.context.__parent__,name)
+        return webClassAcquire(context,name)
+    
     def webClassAcquire(self,name,context=None):
         if context == None:
            context = self.context

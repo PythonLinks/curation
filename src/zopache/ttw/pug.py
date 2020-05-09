@@ -156,9 +156,6 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
         return self.source
 
 class  AceScripts(AceScriptsBase):
-    def update(self):
-        products = getProducts(self.context)
-        self.template = products['Templates']['TranspilerTemplate']
         
     def  headerScripts(self):
         result = AceScriptsBase.headerScripts(self)
@@ -202,9 +199,8 @@ class AddPug(AceScripts,AceAddForm):
     ignoreContent = True
     factory=Pug
     def update(self):
-        products = getProducts(self.context)
-        self.template = products['Templates']['TranspilerTemplate']
-
+        self.template = self.getTemplates()['TranspilerTemplate']
+        AceAddForm.update(self)
         
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
@@ -214,7 +210,9 @@ class AddPug(AceScripts,AceAddForm):
 @implementer(ITreeSecurity)
 class AceEditPug(BasePugForm,PugEditForm):
     subTitle='Ace Edit this Pug Template.'
-    pass
+    def update(self):
+        self.template = self.getTemplates()['TranspilerTemplate']        
+        PugEditForm.update(self)
 
 #AND HERE WE HAVE THE ACE DEMO FORM               
 @form_component
@@ -223,6 +221,9 @@ class AceEditPug(BasePugForm,PugEditForm):
 @title("Ace Demo")
 @name("acedemo")
 class AceDemoPug(BasePugForm,EditDemoForm):
+    def update(self):
+        self.template = self.getTemplates()['TranspilerTemplate']    
+
     def breadcrumbs(self):
         return self.breadcrumbsIndex(self.context)
     

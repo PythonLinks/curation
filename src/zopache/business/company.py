@@ -1,22 +1,19 @@
 from zope.interface import implementer
 
 from cromlech.security import Unauthorized
+from zopache.pages.location import LocationContainer
 
-from zopache.pages.location import LocationBase
 from zopache.business.interfaces import (ICompany, IMap,
-                               IOrganization, ICompanyBase)
+                                         IOrganization,
+                                         IOnlineOrganization,
+                                         ICompanyBase)
 from zopache.pages.page import Page
 from zopache.business.geocoding import GeoCodeObject
 from zopache.business.subscribe import Member
+from zopache.business.geocoding import GeoCodeObject
 
-class Base (GeoCodeObject,LocationBase,Member):
+class VeryBase (Member):
     hidden = False
-    longitude = 0.
-    lattitude = 0.
-    def __init__(self):
-        LocationBase.__init__(self)
-        Member.__init__(self)
-        GeoCodeObject.__init__(self)
 
     def getTitle(self):
          if self.hidden:
@@ -27,36 +24,77 @@ class Base (GeoCodeObject,LocationBase,Member):
         if hasattr(self,'specialization') and self.specialization != '':
            return self.specialization
         return self.description [0:20]
-    
+
+class Base(VeryBase,Page):
+    email = ''    
+    def __init__(self):
+        Member.__init__(self)
+        Page.__init__(self)    
+
+#GeoBase inherits  Page from Location
+class GeoBase(GeoCodeObject,Base,LocationContainer):
+    longitude = 0.
+    lattitude = 0.
+        
+    #LocationBase inherits from Page
+    def __init__(self):
+        LocationContainer.__init__(self)
+        Member.__init__(self)
+        GeoCodeObject.__init__(self)
+        
     def canView(self,view):
          if (self.hidden and
              (not view.isAuthenticated())):
              raise Unauthorized 
-    """                        
-    def getCompanies(self):
-        result=[]
-        return self.getCompaniesRecursively(result)
-
-    def getCompaniesRecursively(self,result):
-        values = self.values()
-        for item in values:
-            if (ICompanyBase.providedBy(item) and
-                item.webApproved):
-                result.append(item)
-            elif (IMap.providedBy(item)):
-                item.getCompaniesRecursively(result)
-        return result
-    """
     
-
-        
 @implementer (ICompany)
-class Company  (Base):
+class Company  (GeoBase):
     webClass = "Company"
     clientClass = "category"
 
-@implementer (IOrganization)
-class Organization  (Base):        
+@implementer (IOnlineOrganization)
+class OnlineOrganization  (Base):        
     webClass = "Organization"
     clientClass = "Category"
+    webApproved = False
+
+@implementer (IOrganization)
+class Organization  (GeoBase):
+    interface = IOrganization
+    webClass = "Organization"
+    clientClass = "Category"
+    webApproved = False    
+
+#SO maps have Lattitude and Longitude.
+#Companies now use getMarketLngLtd
+from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
+from zopache.pages.location import MapBase
+@implementer (IMapOrganization)
+class MapOrganization(MapBase,Organization):
+    interface = IMapOrganization
+    webClass = 'MapOrganization'
+    #LocationBase inherits from Page
+    def __init__(self):
+        MapBase.__init__(self)
+        Organization.__init__(self)
+
+from zopache.core.getroot import getSiteRoot
+from zopache.business.interfaces import IEndorsingOrganization
+@implementer(IEndorsingOrganization)    
+class EndorsingOrganization(MapBase,Organization):
+    interface = IEndorsingOrganization
+    webClass = "EndorsingOrganization"
+    _endorsedPoliticians = []
+
+    @property
+    def endorsedPoliticians(self):
+        siteRoot = getSiteRoot(self)
+        for item in self._endorsedPoliticians:
+            if not item in siteRoot:
+                continue
+            yield siteRoot[item]
+    
+    def getCompanies(self):
+        return self.endorsedPoliticians
+    
 

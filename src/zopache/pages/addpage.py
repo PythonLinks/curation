@@ -24,10 +24,13 @@ class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
                 u' called: ' +
                 self.context.getTitle()
                )
-
-    @property
-    def actions(self):
-        return Actions(
+    actions = Actions()
+    def update(self):
+        if self.treeSecurity():
+            self.setActions()
+            
+    def setActions(self):       
+        self.actions = Actions(
               AddAndView("Add and View", self.factory),
               AddAndCkEdit("Add and ckEdit", self.factory),
               AddAndAceEdit("Add and AceEdit", self.factory),

@@ -7,9 +7,9 @@ from slugify import slugify, SLUG_OK
 
 class OrganizationExistsError (ValidationError):
     """ Organization Exists. """
-    title = "Organization Exists"
+    title = "That Object Exists"
     
-class DuplicateOrganization(object):
+class Duplicate(object):
 
     def __init__(self, fields, form):
         self.form = form
@@ -20,11 +20,11 @@ class DuplicateOrganization(object):
         title = data ['title']
         slug = slugify(title,lower=True)
         errorMessage =    F""" Thank you for your suggesting "{title}", 
-but that organization 
+but that object 
 is already in the database at /{slug}. If it is not a duplicate, and you still 
 want to submit it, then 
 please change the name or spelling, resubmit, and the submission should work.
-You can also add the name of the city to distinguish it from the other 
+If the object has a location, you can also add the name of the city to distinguish it from the other 
 organization. """
         if slug in siteRoot:
            error = OrganizationExistsError(errorMessage)

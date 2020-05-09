@@ -18,7 +18,7 @@ from zopache.crud.interfaces import  IZodbRoot
 from zopache.crud.forms import EditForm
 
 @form_component
-@name ('editVirtualHosts')
+@name ('editHosts')
 @context(IZodbRoot)
 @permissions('Manage')
 class EditPermissions (EditForm):
@@ -29,7 +29,7 @@ class EditPermissions (EditForm):
         
     def acquireTitle(self):
         return 'Edit Permissions'
-    
+
     def updateWidgets(self):
         breakpoint()        
         super().updateWidgets()

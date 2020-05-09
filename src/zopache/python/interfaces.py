@@ -32,12 +32,20 @@ class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
         default = u'',
     )
     
-    sideBySide = schema.Bool(
-        title = 'Side By Side',
-        description = 'Show Text Areas Side By Side?',
+#    sideBySide = schema.Bool(
+#        title = 'Side By Side',
+#        description = 'Show Text Areas Side By Side?',
+#        required = False,
+#        default = True,
+#    )       
+
+class IPythonScript(IPython):
+    arguments = schema.TextLine(
+        title = u'Arguments',
+         description = 'Does this function take arguments?', 
+        default='',            
         required = False,
-        default = True,
-    )        
+    )     
 
 class IDirectory(IZMI):
      pass
@@ -50,7 +58,6 @@ class IPythonFile(IFile,IPythonIndex):
 
 class IJavascriptFile(IFile,IJavascriptIndex):
     pass
-
 
 class IPythonFolder(IContainer,IMixed,IZMI): 
     pass

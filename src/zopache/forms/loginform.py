@@ -62,7 +62,9 @@ class LoginForm(Form):
     fields = Fields(ILogin)
     ignoreContent = True
     submissionError = []
-    count = 0 
+    count = 0
+    allowAnonymous = True
+    
     @property
     def actions(self):
         return Actions(
