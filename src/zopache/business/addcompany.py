@@ -60,6 +60,9 @@ class AddOrganization(AddBase,GeoCodeForm):
     factory = Organization
     title = "Add an Organization"
 
+
+
+    
 @view_component
 @name('addOnlineOrganization')
 @title("Add Online Organization")

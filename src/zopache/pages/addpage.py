@@ -66,14 +66,11 @@ class AddLink(AddPageBase):
 #ADD NEWS
 @view_component
 @name('addNews')
-@title("Add News")
 @target(IView)
 @context(IPage)
-@implementer(ITreeSecurity)
 class AddNews(AddPageBase):
     interface = INews
-    label="Add a News Item"
-    factory = News    
+
 
 #LOCAION
 @view_component
