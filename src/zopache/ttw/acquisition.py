@@ -14,6 +14,8 @@ def webClassAcquire(context,name, marker = object):
             webClass = context 
         elif isinstance(webClass, str):
             products = getProducts(context)
+            if not webClass in products:
+                return marker
             webClass = products[webClass]
         else:
             raise Exception("Something is Wrong")

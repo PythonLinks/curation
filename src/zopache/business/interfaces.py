@@ -268,6 +268,7 @@ class ISocialMedia(Interface):
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
         required = False,
+        missing_value = '',
     )
        
     
@@ -275,7 +276,7 @@ class ISocialMedia(Interface):
 class IOnlineOrganization(IOrganizationBase,ISocialMedia):
           pass
 
-class IOrganization(IOrganizationBase,ISocialMedia):
+class IOrganization(IOrganizationBase,ISocialMedia,ILocationContainer):
     isGlobal = schema.Bool(
 	    title = "Is this a global organization?",
 	    description = """Global Organizations are 
