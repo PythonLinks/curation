@@ -37,18 +37,24 @@ class Base(object):
      
 @view_component
 @name('iframe-addOrganization')
-@title("Add Organization")
 @target(IView)
 @context(IPage)    
 class AddCMSOrganization(Base,AddOrganization):
     pass
 
 @view_component
-@name('iframe-addOnlineOrganization')
-@title("Add Online Organization")
+@name('iframe-addNews')
 @target(IView)
 @context(IPage)    
-class AddOnlineOrganization2(Base,AddOnlineOrganization):
+class AddCMSOrganization(Base,AddOrganization):
+    pass
+
+from zopache.pages.addpage import AddNews
+@view_component
+@name('iframe-addOnlineOrganization')
+@target(IView)
+@context(IPage)    
+class AddNews(Base,AddNews):
     pass
     
 from dolmen.forms.base import interfaces

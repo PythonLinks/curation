@@ -31,9 +31,7 @@ class AddBase(AddPageBase):
     dataValidators = [Duplicate]
     actions = Actions()    
     def update(self):
-        #AddPageBase.update(self)
-        if self.treeSecurity():
-            self.actions = Actions(
+        self.actions = Actions(
                   AddAndView("Add and View", self.factory),
                   formactions.Cancel("Cancel","Cancel"))
         
