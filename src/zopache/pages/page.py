@@ -93,7 +93,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
            return self.webClass
        
     def postProcess(self,view=None):
-
         self.recalculateRootJSON()
         cache.resetCache(self)
         self.description=self.description.replace ('"' , "'")
@@ -220,7 +219,7 @@ class Link(PageBase, PageMixIn):
     
 @implementer (INews)     
 class News (Page,RecentMixIn):
-    webClass = 'News'
+    webClass = 'NewsItem'
     pass
 
 from zopache.pages.cache import Cache

@@ -38,7 +38,6 @@ class LocalBase(BaseClass):
         root = getSiteRoot(item)
         parent = item.__parent__
         valuesByToken = root.valuesByToken
-
         if not IPage.providedBy(parent):
              return
 

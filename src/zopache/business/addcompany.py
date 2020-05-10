@@ -31,8 +31,8 @@ class AddBase(AddPageBase):
     dataValidators = [Duplicate]
     actions = Actions()    
     def update(self):
+        #AddPageBase.update(self)
         if self.treeSecurity():
-            AddPageBase.update(self)
             self.actions = Actions(
                   AddAndView("Add and View", self.factory),
                   formactions.Cancel("Cancel","Cancel"))
@@ -60,6 +60,9 @@ class AddOrganization(AddBase,GeoCodeForm):
     factory = Organization
     title = "Add an Organization"
 
+
+
+    
 @view_component
 @name('addOnlineOrganization')
 @title("Add Online Organization")

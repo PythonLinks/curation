@@ -27,6 +27,7 @@ class Base(object):
         lng = float(result [u'lng'])
         return lat, lng
 
+    
 class GeoCodeObject(Base):
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
