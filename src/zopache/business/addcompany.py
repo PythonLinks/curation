@@ -22,6 +22,8 @@ from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
 from zopache.business.politician import IPolitician, Politician
+from zopache.pages.interfaces import  INews
+from zopache.pages.page import  News
 
 class AddBase(AddPageBase):
     count = 0 
@@ -34,7 +36,19 @@ class AddBase(AddPageBase):
         self.actions = Actions(
                   AddAndView("Add and View", self.factory),
                   formactions.Cancel("Cancel","Cancel"))
-        
+
+
+#ADD NEWS
+@view_component
+@name('addNews')
+@target(IView)
+@context(IPage)
+class AddNews(AddBase):
+    interface = INews
+    title = "Add a News Item"
+    subtitle = "Because the MSM does not cover it."
+    factory = News
+    
 @view_component
 @name('addCompany')
 @target(IView)

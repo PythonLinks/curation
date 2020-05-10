@@ -9,8 +9,8 @@ from zopache.ttw.html import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.pages.interfaces import IMap, ILocation, INews, IPage
-from zopache.pages.page import Page, News
+from zopache.pages.interfaces import IMap, ILocation, IPage
+from zopache.pages.page import Page
 from zopache.pages import Map, Location
 from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
@@ -63,14 +63,7 @@ class AddLink(AddPageBase):
     subtitle = "To a remote web page."
     factory = Link
     
-#ADD NEWS
-@view_component
-@name('addNews')
-@target(IView)
-@context(IPage)
-class AddNews(AddPageBase):
-    interface = INews
-
+  
 
 #LOCAION
 @view_component
