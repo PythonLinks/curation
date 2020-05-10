@@ -11,8 +11,8 @@ from zopache.pages.interfaces  import (ILocationContainer,
                                        ILocationLeaf)
 
 class MapOrLocation (PageBase):
-    lattitude = 45.
-    longintude = 0.
+    latitude = 45.
+    longitude = 0.
     webClass = 'Location'
     specialization = ''
     showChildren = True
@@ -65,17 +65,23 @@ class MapOrLocation (PageBase):
                   ('Company',False):"yellow"                                    
                   }
         icon = choose[(aClass,bool(hasFutureEvent))]
-        print (icon,self.title, hasFutureEvent, '<-')
         return icon
                         
 class MarkerLocation(MapOrLocation, PageMixIn):
     def getMarkerLatLng (self):
            #OOPS AN ANCIENT TYPO
-           if hasattr(self,'longitude'):
-               return self.lattitude, self.longitude
-           else:
-               return self.lattitude, self.longintude
-    
+           if hasattr(self,'lattitude'):
+               if  self.lattitude != 0:
+                   self.latitude = self.lattitude
+               #del self.lattitude
+
+           if hasattr(self,'longintude'):
+               if  self.longintude != 0:
+                   self.longitude = self.longintude
+               #del self.longintude
+           return self.latitude, self.longitude
+
+           
     def setMarkerLatLng(self, lat,lng):
         self.latitude = lat
         self.longitude = lng
@@ -87,7 +93,7 @@ class LocationLeaf (MarkerLocation):
     def getCompanies(self):
         return self
     def getCompaniesRecursively(self,context,result):
-        return self
+        return result.append(self)
         
 @implementer (ILocationContainer)
 class LocationContainer (MarkerLocation):
@@ -100,22 +106,26 @@ class LocationContainer (MarkerLocation):
         values = self.values()
         for item in values:
             #FOR APPROVED ORGANIZATIONS
-            if (ILocationContainer.providedBy(item) and
-                item.webApproved):
+            #FOR POLITICIANS, DO IT FIRST
+            if not ILocationOrMap.providedBy(item):
+                continue
+
+            if not item.webApproved:
+                continue 
+           
+            if ILocationLeaf.providedBy(item):
+                result.append(item)
+
+            elif ILocationContainer.providedBy(item):
                 item.getCompaniesRecursively(result,showChildren = True)
                 
                 #IF ONLY SHOWING CHILDREN
                 if item.hasFutureEvent() or showChildren :
                     result.append(item)
                     
-            #FOR POLITICIANS    
-            elif (ILocationLeaf.providedBy(item) and
-                   item.webApproved):
-                result.append(item)
             
             elif (IMap.providedBy(item)):
                 item.getCompaniesRecursively(result,showChildren = showChildren)
-
             #FOR A CITY, JUST SHOW ONE ICON    
             elif (ILocation.providedBy(item)):
                 result.append(item)
@@ -158,7 +168,7 @@ class MapBase(LocationContainer):
                
              if not item.webApproved:
                     continue
-                
+                               
              lat, lng = item.getMarkerLatLng()  
              if ((lat == 0) or
                  lng == 0):
