@@ -112,7 +112,7 @@ class LocationContainer (MarkerLocation):
 
             if not item.webApproved:
                 continue 
-           
+
             if ILocationLeaf.providedBy(item):
                 result.append(item)
 
@@ -122,7 +122,6 @@ class LocationContainer (MarkerLocation):
                 #IF ONLY SHOWING CHILDREN
                 if item.hasFutureEvent() or showChildren :
                     result.append(item)
-                    
             
             elif (IMap.providedBy(item)):
                 item.getCompaniesRecursively(result,showChildren = showChildren)

@@ -46,7 +46,7 @@ class AddCMSOrganization(Base,AddOrganization):
 @name('iframe-addNews')
 @target(IView)
 @context(IPage)    
-class AddCMSOrganization(Base,AddOrganization):
+class AddCMSNews(Base,AddOrganization):
     pass
 
 from zopache.pages.addpage import AddNews
