@@ -27,7 +27,7 @@ class EventBase(Page,Member):
 
 @implementer (IOnlineEvent)
 class OnlineEvent (EventBase):
-    pass
+    webClass = "OnlineEvent"    
 
 from zopache.pages.location import LocationLeaf
 @implementer(IEvent)
