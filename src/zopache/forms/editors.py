@@ -13,8 +13,8 @@ def possibleEditors(context):
     term = SimpleVocabulary.createTerm('None','None','None')
     terms.append(term)    
     for key, principal  in people.items():
-        email =  principal.email
-        term = SimpleVocabulary.createTerm(key, key, email)
+        title =  principal.title
+        term = SimpleVocabulary.createTerm(key, key, title)
         terms.append(term)
     return SimpleVocabulary(terms)
 
