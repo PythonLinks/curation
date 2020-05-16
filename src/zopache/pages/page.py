@@ -1,7 +1,7 @@
 import time
 import os
 import datetime
-
+from pydoc import locate
 from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
@@ -84,7 +84,23 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
                result.append (item)
         return result
 
-
+    def listOfAClass(self,aClassName):
+        result = []
+        for item in self.values():
+            if (item.__class__.__name__ == aClassName):
+               result.append (item)
+        return result
+    
+    def listOfAnInterface(self,aDottedName):
+        result = []
+        theInterface = locate(aDottedName)        
+        if theInterface == None:
+            return result
+        for item in self.values():
+            if theInterface.providedBy(item): 
+               result.append (item)
+        return result
+    
     def getClientClass(self):
         if (hasattr(self,'clientClass') and
            self.clientClass != ""):

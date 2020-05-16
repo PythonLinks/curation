@@ -20,17 +20,31 @@ class IForm(Interface):
     )
 
     googleClientId= TextLine(
-        title = "Google Key",
+        title = "Google Oauth Client Id",
         description = "For Logins",
         required = False,
         default = u'',
     )
+
+    mapBoxKey= TextLine(
+        title = "MapBox Key",
+        description = "Required For Maps",
+        required = False,
+        default = '',
+    )
+
+    youTubeKey= TextLine(
+        title = "You Tube Key",
+        description = "For Accessing Videos",
+        required = False,
+        default = '',
+    )        
     
     twitterId= TextLine(
-        title = u'Twitter Id',
+        title = 'Twitter Id',
         description = "Twitter Id.",
         required = False, 
-        default = u'',
+        default = '',
     )
     instagramId= TextLine(
         title = u'Instagram Id',
