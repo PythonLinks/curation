@@ -167,7 +167,7 @@ class ValidatePython(object):
                    raise ActionError(new._v_errors) 
              if len(new._v_warnings) != 0:
                    form.submissionError += new._v_warnings + ("Extra Warning",)
-                   raise ActinError(new._v_warnings)
+                   raise ActionError(new._v_warnings)
              return True
              
 class AddPythonAndEdit(ValidatePython,Add):

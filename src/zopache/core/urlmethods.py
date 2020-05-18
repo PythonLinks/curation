@@ -92,7 +92,10 @@ class URLMethods(object):
     def url(self, *args):
         try:
           if len(args)==0:
-            return self.request.path_url
+            if hasattr(self.request,'path_url'):
+                return self.request.path_url
+            else:
+                return self.simpleUrl(self.context)
           else:
             result =  self.simpleUrl((args)[0])
             return result
