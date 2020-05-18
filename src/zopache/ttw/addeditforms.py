@@ -34,9 +34,11 @@ class AddAndSearchForm (AddForm):
 
 
 class AceEditForm(EditForm):
+     actions = Actions()
      def update(self):
          if self.treeSecurity():
             self.setActions()
+            
      def setActions(self):       
               self.actions =  Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
@@ -50,7 +52,7 @@ class PugEditForm(EditForm):
          if self.treeSecurity():
               self.setActions()
               
-    def setActions(self):          
+    def setActions(self):
          self.actions = Actions(
               ttwactions.SaveAndAceEdit(_("Save","Save")),
               formactions.SaveAndView(_("Save and View","Save -> View")),

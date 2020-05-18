@@ -15,7 +15,7 @@ class Markdown (Page):
     def postAddProcess(self, view = None):                
         self.postProcess(view = view)
         
-    def html(self):
+    def getHTML(self):
         return self._html
       
 

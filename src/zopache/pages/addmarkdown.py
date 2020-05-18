@@ -96,12 +96,12 @@ class AceDemo(AceScripts,EditDemoForm):
 class AceEdit(AceScripts,AceEditForm):
     subTitle= "Edit a Markdown Page"
 
-    @property
-    def actions(self):
-        action1=Edit("Save","Save")
-        action2=EditAndView("Save  and View","Save -> View")
-        action3=Cancel("Cancel","Cancel")
-        return Actions(action1,action2,action3)
+    #@property
+    #def actions(self):
+    #    action1=Edit("Save","Save")
+    #    action2=EditAndView("Save  and View","Save -> View")
+    #    action3=Cancel("Cancel","Cancel")
+    #    return Actions(action1,action2,action3)
 
 
 
