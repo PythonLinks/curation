@@ -89,7 +89,35 @@ class IndexImage(View):
     make_response = make_file_response
         
     def render(self):
-               return self.context.data           
+               return self.context.data
+
+
+def make_logo_response(view, result, *args, **kwargs):
+        response = view.responseFactory()
+        response.headers['Cache-Control'] = 'public,max-age=3600'  
+        logo = ParentalAcquire(view.context)['Logo.png']
+        if logo:
+            contentType = logo.contentType
+        else:
+            contentType = ''
+        response.content_type=contentType
+        response.write(result or '')
+        return response
+
+from zopache.ttw.acquisition import ParentalAcquire           
+from dolmen.container import IBTreeContainer
+@view_component
+@name('Logo')
+@context(IBTreeContainer)
+class LogoAcquire(View):
+    responseFactory = Response
+    make_response = make_logo_response
+        
+    def render(self):
+               logo = ParentalAcquire(self.context)['Logo.png']
+               if not logo:
+                   return ''
+               return logo.data                      
 
 
 from zopache.ttw.interfaces import IInternalPrincipal           

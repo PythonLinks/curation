@@ -1,5 +1,4 @@
 from zope.interface import Interface
-from zope.schema._field import Choice
 from zope.schema import Text, TextLine, Bool
 
 from cromlech.browser.exceptions import HTTPFound
