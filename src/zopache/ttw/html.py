@@ -64,6 +64,9 @@ class HTMLBase(object):
     def html(self):
         return self.source    
 
+    def getHTML(self):
+        return self.source
+
     def getTitle(self):
         if hasattr(self,'title') and self.title!= None and len(self.title)>0:
            return self.title
@@ -82,8 +85,6 @@ class TrustedHTML(HTMLBase):
                self.compileTemplate()
             #return self._v_compiledTemplate 
 
-    def getHTML(self):
-        return self.source
 
     def compileTemplate(self):
                  if self.trusted == False:

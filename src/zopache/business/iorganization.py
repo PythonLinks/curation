@@ -7,6 +7,7 @@ from zope.schema.interfaces import IContextSourceBinder
 from zopache.ttw.acquisition import ParentalAcquire
 from zopache.ttw.treewidget import TreeField
 
+"""
 choiceDict = {"All":"all",
             "Divorce": "divorce",
             "Intactivism": "intactivism",
@@ -15,13 +16,13 @@ choiceDict = {"All":"all",
             "News":"news",
             "College":"college"  
             }    
+"""
 
 def possibleFocus (context):
     return fromDict(getDict(context))
 
 def getDict(context):        
     choices = ParentalAcquire(context)['focusChoices']
-    breakpoint()
     if ((choices != None) and
         (choices.__class__.__name__ == 'PythonScript')):
         return choices()

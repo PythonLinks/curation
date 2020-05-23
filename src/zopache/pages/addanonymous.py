@@ -3,12 +3,17 @@ from zopache.crud import actions as formactions
 from zopache.crud import actions as formactions
 from zopache.crud.actions import AddByTitle
 from zopache.pages.pageactions import AddAndView
+from zopache.crud.forms import AddByTitleToTree
+from zopache.pages.addpage import AddPageVeryBase
+from zopache.business.exists import Duplicate
 
 class AddToTreeAndView(AddByTitleToTree):
     def newURL(self,baseURL):
         return baseURL 
 
-class AddAnonymous(AddPageBase):
+class AddAnonymous(AddPageVeryBase):
+
+
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
@@ -26,7 +31,7 @@ class AddAnonymous(AddPageBase):
 
     def widgetJsonURL(self):
         siteRoot = self.getSiteRoot()
-        mapName = root.mapName
+        mapName = siteRoot.mapName
         uri ="https://" + self.getDomain() + "/" + mapName + "/json"
         return uri
         

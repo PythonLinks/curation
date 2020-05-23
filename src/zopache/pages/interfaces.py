@@ -10,7 +10,7 @@ from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.python.interfaces import IDirectory
 from zopache.ttw.interfaces import ISourceLeaf
 from cromlech.file import FileField
-
+from zopache.ttw.interfaces import IAceHTML
 
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
