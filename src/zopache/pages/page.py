@@ -90,7 +90,21 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
             if (item.__class__.__name__ == aClassName):
                result.append (item)
         return result
-    
+
+    def listOfAClassInParents(self,aClassName):
+        result = []
+        node = self
+        while node != None:
+            for item in node.values():
+                if (item.__class__.__name__ == aClassName):
+                   result.append (item)
+            if not hasattr(node,'__parent__'):
+               break
+            node = node.__parent__
+        result.reverse()    
+        return result
+
+        
     def listOfAnInterface(self,aDottedName):
         result = []
         theInterface = locate(aDottedName)        

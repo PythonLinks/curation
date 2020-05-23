@@ -25,17 +25,6 @@ from zopache.business.politician import IPolitician, Politician
 from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
 
-class AddBase(AddPageBase):
-    count = 0 
-    layoutName = "UserMenu"
-    subTitle = "All submissions are reviewed before becoming being publicly visible."
-    allowAnonymous = True    
-    dataValidators = [Duplicate]
-    actions = Actions()    
-    def update(self):
-        self.actions = Actions(
-                  AddAndView("Add and View", self.factory),
-                  formactions.Cancel("Cancel","Cancel"))
 
 
 #ADD NEWS

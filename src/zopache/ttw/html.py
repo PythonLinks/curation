@@ -310,6 +310,10 @@ class Index(View,Breadcrumbs):
     def command(self,name):
         url = '/' + self.context.__name__ + '/' + name
         return url
+
+    def page(self,name):
+        url = '/' + name 
+        return url
         
         
     def render(self):
@@ -338,11 +342,15 @@ class CMSIndex(Index):
         url = '/' + self.context.__name__ + '/cms-' + name
         return url
 
+    def page(self,name):
+        url = '/' + name +"/wp-content"
+        return url
+
 #INDEX IFRAME CLASS
 @view_component
 @name('index')
 @context(IAceIFrameClass)
-class CMSIndex(Index):
+class IFrameIndex(Index):
     def isCMS(self):
         return True
 
@@ -351,6 +359,10 @@ class CMSIndex(Index):
         
     def command(self,name):
         url = '/' + self.context.__name__ + '/iframe-' + name
+        return url
+
+    def page(self,name):
+        url = '/' + name +"/html-content"
         return url
 
     def remoteHref(self,url,title):

@@ -75,7 +75,7 @@ class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
 class ILink(ILinkTop,IPage):
     pass
     
-class IMarkdown (ISourceLeaf):
+class IMarkdown (IAceHTML,ISourceLeaf):
     pass
 
 from zopache.ttw.interfaces import IJSON
