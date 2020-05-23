@@ -1,0 +1,72 @@
+from zope import schema
+from zope.schema.vocabulary import SimpleVocabulary
+from zope.interface import Interface
+from zopache.application.choices import fromDict
+from zope.interface import directlyProvides
+from zope.schema.interfaces import IContextSourceBinder
+from zopache.ttw.acquisition import ParentalAcquire
+from zopache.ttw.treewidget import TreeField
+
+choiceDict = {"All":"all",
+            "Divorce": "divorce",
+            "Intactivism": "intactivism",
+            "Support For the Accused":"support-for-the-accused",
+            "Politics": "politics",
+            "News":"news",
+            "College":"college"  
+            }    
+
+def possibleFocus (context):
+    return fromDict(getDict(context))
+
+def getDict(context):        
+    choices = ParentalAcquire(context)['focusChoices']
+    breakpoint()
+    if ((choices != None) and
+        (choices.__class__.__name__ == 'PythonScript')):
+        return choices()
+    return {}    
+
+directlyProvides(possibleFocus, IContextSourceBinder)
+
+class IOrganizationBase (Interface):
+    title = schema.TextLine(
+        title = 'Organization Name',
+        description = u'What is this organization called?',
+        required = True,
+    )
+
+    description= schema.Text(
+        title = u'Description (200 Characters)',
+        description = "A short description of this organization. ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+
+    focus = schema.Choice(
+        source = possibleFocus,
+        title="Specialization",
+        description= "What is this groups focus?",
+        required = False)                
+
+    addTo=TreeField(
+           title="Where should this organization be?",
+           description= "To be approved, please place it in a leaf of the tree.?",
+           required = True,
+           )    
+    
+    url = schema.URI(
+        title = u'The Organization URL',
+        description = """Please link to a web page, maybe twitter or gab.com 
+. Include  'https://'""",
+        required = False,
+        missing_value ='',           
+    )
+
+    source= schema.Text(
+        title = u'Longer Description',
+        description = u'Please describe this organization further.',
+        required = False,
+        default = '',
+    )    

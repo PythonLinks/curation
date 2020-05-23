@@ -33,30 +33,8 @@ class ManageBase(Form,Contents):
 
     template = tal_template('manage.pt')
 
-    actions = Actions()
 
-    def update(self):
-
-        if not self.treeSecurity():
-            return
-        act1 = ReName("ReName","ReName")
-        act2 = ReTitle("ReTitle","ReTitle")
-        act3 = ReBoth("ReBoth","ReBoth")        
-        act4 = CutObjects  ("Cut", "Cut")
-        act5 = CopyObjects ("Copy", "Copy")
-        act6 = PasteObjects("Paste","Paste")
-        act7 = DeleteObjects("Delete", "Delete") 
-        actionList = [act1,act2]
-
-        if IPage.providedBy(self.context):                         
-            actionList.append(act3)                       
-        actionList.append(act4) 
-        actionList.append(act5)                     
-
-        if self.hasClipboardContents():
-           actionList.append (act6)
-        actionList.append (act7)
-        self.actions =  Actions(*actionList)            
+    actions= Actions()
 
     """
     #USE THIS TO DEFINE MANAGFE TEMPLATES IN THE ZODB
@@ -146,9 +124,27 @@ class ManageDirectory (ManageDemo):
 @name('manage')
 @context(Interface)
 class Manage (ManageBase):
-    pass    
+    @property
+    def actions(self):
+        act1 = ReName("ReName","ReName")
+        act2 = ReTitle("ReTitle","ReTitle")
+        act3 = ReBoth("ReBoth","ReBoth")        
+        act4 = CutObjects  ("Cut", "Cut")
+        act5 = CopyObjects ("Copy", "Copy")
+        act6 = PasteObjects("Paste","Paste")
+        act7 = DeleteObjects("Delete", "Delete") 
+        actionList = [act1,act2]
 
+        if IPage.providedBy(self.context):                         
+            actionList.append(act3)                       
+        actionList.append(act4) 
+        actionList.append(act5)                     
 
+        if self.hasClipboardContents():
+           actionList.append (act6)
+        actionList.append (act7)
+        return  Actions(*actionList)            
+    
         
      
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    

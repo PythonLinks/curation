@@ -59,12 +59,19 @@ class IForm(Interface):
         default = u'',
     )    
 
-    rssRoot = TextLine(
-        title = u'RSS Root',
-        description = "What is the root of the RSS Tree.",
+    categoryName = TextLine(
+        title = u'JSON Category Root',
+        description = "What is the root of the Categories for the tree widget.",
         required = False, 
         default = u'',
-    )                 
+    )
+
+    mapName = TextLine(
+        title = u'Map Name',
+        description = "What is the url segment for the map for the tree widget.",
+        required = False, 
+        default = u'',
+    )                     
 
     homePage= TextLine(
         title = "Home Page",

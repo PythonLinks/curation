@@ -145,22 +145,42 @@ class MapBase(LocationContainer):
     
       
     # GET THE JSON FOR CHILD LOCATIONS
-    def getLocationsJSON(self):
+    def getLocationsJSON(self, view = None):
         firstItem=True
         result=""   
         begin= "var locations =["
         end="\n];"
         result, firstItem= self.getLocationsJSONCore(
-                                firstItem,result)
+                                firstItem,result,view)
         return begin + result + end
 
-
-    def getLocationsJSONCore(self,firstItem,result):
+    def filter(self,mapPoints,view):
+        request = view.request
+        if not hasattr(request,'form'):
+           return mapPoints
+        form = request.form
+        if not 'focus' in form:
+           return mapPoints
+        value = form ['focus']
+        if value in ['', 'None']:
+           return mapPoints
+        result = []
+        for item in mapPoints:
+               if not hasattr(value,'focus'):
+                  result.append(item)
+                  continue
+               if item.value == focus:
+                  result.append(item)
+        return result          
+        
+    def getLocationsJSONCore(self,firstItem,result,view):
         if self.showChildren == True:
              mapPoints = self.values()
         else:
              mapPoints = self.getCompanies()
-             
+        if view != None:
+            mapPoints = self.filter(mapPoints,view)
+
         for item in mapPoints:
              if not ILocationOrMap.providedBy(item):
                    continue

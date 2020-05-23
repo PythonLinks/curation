@@ -56,12 +56,9 @@ class Add(Action, UniqueName, TransactionNote):
             return FAILURE
         obj= form.factory()
         self.new=form.new=obj
-
-        context=form.context
         set_fields_data(form.fields, obj, data)
         notify(ObjectCreatedEvent(obj))
         self.actuallyAdd(obj,data)
-        obj.__parent__ = context
         message(_(u"Content created"))
         baseURL = self.form.url (obj)
         #baseURL = str(IURL(obj, form.request))
@@ -82,7 +79,9 @@ class Add(Action, UniqueName, TransactionNote):
            newName = self.form.newName(data)
         else:   
            newName = self.newName(data)
-        self.form.context[newName]=item
+        context = self.form.context   
+        context[newName]=item
+        item.__parent__ = context
         
     def newURL(self,baseURL):
         if hasattr(self.form, 'newURL'):
@@ -104,23 +103,34 @@ class AddNamed(Add):
 class AddByTitle (Add):
     def actuallyAdd(self,item,data):
         newName = self.newName(data)
-        self.form.context[newName]=item
+        context = self.getContext(data)
+        context[newName]=item
+        item.__parent__ = context
         item.__name__ = newName
         root = getSiteRoot(self.form.context)
         if hasattr(root,'addItem'):
             root.addItem(self.new)
+            
+    def getContext(self,data):
+        return self.form.context
     
     def newName(self,data):    
         name =  data['title']
         name = slugify(name,lower=True)
-        context = self.form.context
+        context = self.getContext()
         
         #THERE COULD BE A LOCAL OBJECT WITH THE SAME NAME
         newName=self.uniqueContainerName(context,name,ofType="#")        
         newName=self.uniqueSiteName(context,name,ofType="-")
         return newName
-    
-    
+
+class AddByTitleToTree(AddByTitle):    
+    def getContext(self,data):
+        siteRoot = self.getSiteRoot()
+        addTo = data ['addTo']
+        addTo = siteRoot ['addTo']
+        return addTo
+        
 class AddAndView(AddNamed):
     def newURL(self,baseURL):
         return baseURL + '/index'        

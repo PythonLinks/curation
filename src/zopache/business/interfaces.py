@@ -15,7 +15,7 @@ from zopache.pages.interfaces  import (ICountable,
 from z3c.schema.email import RFC822MailAddress as Email
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage, ITime
-
+from zopache.business.iorganization import IOrganizationBase
    
 class IFollow(Interface):
     pass
@@ -195,37 +195,8 @@ class IAddCompany(ICompany):
 
     )    
 
-class IOrganizationBase (ICompanyOrOrganization):
-    title = schema.TextLine(
-        title = 'Organization Name',
-        description = u'What is this organization called?',
-        required = True,
-    )
 
-    description= schema.Text(
-        title = u'Description (200 Characters)',
-        description = "A short description of this organization. ",
-        required = False,
-        max_length = 200,
-        default = '',
-    )
-
-    source= schema.Text(
-        title = u'Longer Description',
-        description = u'Please describe this organization further.',
-        required = False,
-        default = '',
-    )    
-
-    url = schema.URI(
-        title = u'The Organization URL',
-        description = """Please link to a web page, maybe twitter or gab.com 
-. Include  'https://'""",
-        required = False,
-        missing_value ='',           
-    )
-
-
+    
     
 class ISocialMedia(Interface):
 
@@ -273,10 +244,10 @@ class ISocialMedia(Interface):
        
     
 
-class IOnlineOrganization(IOrganizationBase,ISocialMedia):
+class IOnlineOrganization(IOrganizationBase,ICompanyOrOrganization,ISocialMedia):
           pass
 
-class IOrganization(IOrganizationBase,ISocialMedia,ILocationContainer):
+class IOrganization(IOrganizationBase,      ICompanyOrOrganization,ISocialMedia,ILocationContainer):
     isGlobal = schema.Bool(
 	    title = "Is this a global organization?",
 	    description = """Global Organizations are 

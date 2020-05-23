@@ -31,8 +31,8 @@ class GoogleRegister(AddForm, Notify):
     count = 0
     layoutName = "UserMenu"    
     factory = InternalPrincipal
-    title='PythonLinks.info'
-    subTitle='Add your user id and GDPR permissions.'
+    title='Site Registration'
+    subTitle='Please enter your user id and GDPR permissions.'
     fields = Fields(IGRegister)
     ignoreContent = True
     igrnoreRequest = False

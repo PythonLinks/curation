@@ -17,6 +17,7 @@ from zopache.crud.forms import AddByTitleForm
 from zopache.iodide.iodide import Iodide
 from zopache.iodide.interfaces import IIodide
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
+from zopache.core.interfaces import ITreeSecurity
 
 class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName):
 
@@ -49,7 +50,7 @@ class  AceScripts(AceScripts):
 @context(IIodide)
 @title("AceEdit")
 @name("aceedit")
-@permissions('EditContent')
+@implementer(ITreeSecurity)
 class AceEditIodide(AceScripts,AceEditForm):
     subTitle='Edit an Iodide Object'
 
@@ -58,9 +59,9 @@ class AceEditIodide(AceScripts,AceEditForm):
 @name('addIodide')
 @title("Add Iodide")
 @target(IView)
-@permissions('AddContent')
 @context(IPage)    
-class AddPage(AceScripts,AddPageBase):
+@implementer(ITreeSecurity)
+class AddIodide(AceScripts,AddPageBase):
     interface = IIodide
     label="Add an Iodide Object"
     subTitle='Add an Iodide Object'    

@@ -13,8 +13,8 @@ from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
 
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
-
-
+from zopache.application.choices import fromList
+from zopache.ttw.treewidget import TreeField
 
 items = [ ("sunshineMovement", "Sunshine Movemement"),
           ("courageToChange","Courage To Change"),
@@ -50,6 +50,17 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         default = '',
     )
 
+    status = schema.Set(
+        value_type = schema.Choice(source = fromList(['Elected','Running'])),
+        title="Already Elected Or Running For Office",
+        description= "It could be both",
+        required = False)
+    
+    addTo=TreeField(
+           title="Where to Add this Politician.",
+           description= "State-wide politicians get added to the state party, Local Politicians get added to the local party if there is one.  ?",
+           required = True,
+            )
     
 #    endorsedBy = schema.Collection(
 #          value_type = schema.Choice( vocabulary = myVocabulary),        

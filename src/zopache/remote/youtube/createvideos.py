@@ -1,23 +1,21 @@
+#FROM HERE WE CAN IMPORT VIDEOS
+# BY CHANNEL, BY SEARCH TERM OR BY CHANNEL
 from slugify import slugify
 import transaction
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
-from .getvideos import core
-from zopache.remote.youtube.parsePlayList import parsePlayList, parseChannel
-
-#There are two copies of this key
-DEVELOPER_KEY = "AIzaSyAOHmZ91f6qIt6FTi5BdopElujsENSKeN0"
-YOUTUBE_API_SERVICE_NAME = "youtube"
-YOUTUBE_API_VERSION = "v3"
-
-youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-    developerKey=DEVELOPER_KEY)
-
+from .downloadvideolist import core
+from zopache.remote.youtube.parsechannel import parseChannel
+from zopache.remote.youtube.parseplaylist import parsePlayList
 from zopache.core.getroot import getSiteRoot
-
-
 from zopache.pages.uniquename import UniqueName
+from .getvotes import getYouTubeObject
+
+baseArgs = {}
+baseArgs [ 'maxResults'] = 50
+baseArgs ['publishedAfter'] = "2017-12-07T00:00:00Z"
+
 class Base(UniqueName):
     def processResults (self,context,results,videoClass):   
         for item in results:
@@ -35,15 +33,6 @@ class Base(UniqueName):
                   if not name2 in context:
                       context [name2] = video
 
-baseArgs = {}
-baseArgs [ 'maxResults'] = 50
-baseArgs ['publishedAfter'] = "2017-12-07T00:00:00Z"
-
-def search(args):
-     search_response = youtube.search().list(**args)
-     search_response = search_response.execute()
-     return search_response
-                      
 class ByChannel(Base):                      
     def __init__(self,view,youTubeId,videoClass):
         context = view.new
@@ -52,13 +41,14 @@ class ByChannel(Base):
         args = baseArgs.copy()
         args ['channelId'] = youTubeId
         args ['part'] = 'snippet'
+        search = self.search(args,context)        
         results =  core (args,search,parseChannel)
         self.processResults (context,results,videoClass)
 
-def playListSearch(args):
-        search_response = youtube.playlistItems().list(**args)
-        search_response = search_response.execute()
-        return search_response
+    def getSearch (self,args,context):            
+         search_response = youtube.search().list(**args)
+         search_response = search_response.execute()
+         return search_response                      
     
 class ByPlayList(Base):                      
     def __init__(self,view,youTubeId,videoClass):
@@ -67,11 +57,17 @@ class ByPlayList(Base):
         transaction.get().note(note)
         args = baseArgs.copy()
         args ['playlistId']=youTubeId       
-        args ['part']= 'snippet,contentDetails'            
-        results = core (args,playListSearch,parsePlayList)
+        args ['part']= 'snippet,contentDetails'
+        search = self.search(args,context)
+        results = core (args,search,parsePlayList)
         self.processResults (context,results)
-        
-    
+
+    def getSearch (self,args,context):
+        youtube = getYouTubeObject(context)
+        search_response = youtube.playlistItems().list(**args)
+        search_response = search_response.execute()
+        return search_response
+
 class BySearchTerm(Base):                      
     def __init__(self,view,query,videoClass):
         context = view.new
@@ -83,7 +79,7 @@ class BySearchTerm(Base):
         args ['type']= 'video'
         #args ['videoDuration']= 'medium'
         args ['relevanceLanguage']= 'pl'                
-        
+        #THIS ONE WILL NOT WORK
         results =  core (args,search,parseChannel)        
         self.processResults (context,results,videoClass)   
 

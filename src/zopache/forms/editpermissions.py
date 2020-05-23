@@ -2,34 +2,14 @@ from zope.interface import Interface
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema._field import Choice
 from zope.schema import Text, Set, List
+from zopache.application.choices import fromList
 
-
-def possibleItems():
-    terms = []
-    #term = SimpleVocabulary.createTerm('None','None','None')
-    #terms.append(term)    
-    for item in [
-                'Add',
-                'AddContent',
-                'Approve',
-                'Edit',
-                'EditContent',
-                'Manage',
-                'Python',
-                'Vote'
-                ]:
-        term = SimpleVocabulary.createTerm(item,item,item)
-        terms.append(term)
-    return SimpleVocabulary(terms)
-
-class IPermissions(Interface):
-         
+class IPermissions(Interface): 
     permissions = Set(
-        value_type =Choice(source=possibleItems()),
+        value_type =Choice(source = fromList(['Manage','Python','Vote'])),
         title="Permissions",
         description= "What is this user allowed to do?",
         required = False)                
-    
 
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IInternalPrincipal

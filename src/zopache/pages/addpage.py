@@ -15,7 +15,9 @@ from zopache.pages import Map, Location
 from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
 
-class AddPageBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
+class AddPageVeryBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
+    pass
+class AddPageBase(AddPageVeryBase):
     def getSubTitle(self):
         
         return (

@@ -67,7 +67,10 @@ class AddByTitleForm(AddFormBase):
               formactions.AddByTitle("Add", self.factory),
               formactions.Cancel("Cancel"))
               self.actions= actions
-              
+
+class AddByTitleToTree(AddByTitleForm):
+     pass
+ 
 from zopache.core.breadcrumbs import Breadcrumbs
 class BaseEditForm(Form,Breadcrumbs):    
     """

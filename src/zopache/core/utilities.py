@@ -21,13 +21,11 @@ class Utilities (object):
             return siteRoot['siteName']
         return None    
     
-
     def widgetJsonURL(self):
-        root = self.getSiteRoot()
-        categoryRoot = root.rssRoot
-        uri ="https://" + self.getDomain() + "/" + categoryRoot + "/json"
+        siteRoot = self.getSiteRoot()
+        categoryName = siteRoot.categoryName
+        uri ="https://" + self.getDomain() + "/" + categoryName + "/json"
         return uri
-    
     
     def parameters(self):
         parameters = {}

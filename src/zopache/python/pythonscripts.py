@@ -219,9 +219,9 @@ class AddPythonFunction(AceScripts,AceAddForm):
     def headerScripts(self):
           return AceScripts.headerScripts(self)    
     
-
-    def setActions(self):
-        self.actions = Actions(
+    @property 
+    def actions(self):
+        return Actions(
               AddPythonAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
               AddPythonAndTest(_("Add and Test","Add -> Test"), self.factory),
               Cancel(_("Cancel","Cancel")))

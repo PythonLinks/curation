@@ -1,10 +1,5 @@
+#THIS DOWNLAODS THE DATA FOR CREATING A LIST OF VIDEOS. 
 from pprint import pprint
-
-
-#id = "PLYx7XA2nY5Gd-tNhm79CNMe_qvi35PgUR" #SCIPY-2018
-#id = "PLX7Eu6MEBYSJeOdWM-_9N8G-8Yp47Ce2E" #Windows Playlist
-#id = "PLGB9meziqbzpoB9i8UcYMipexqdsMYutY" #AnacondaCon 18
-#id = "PLGVZCDnMOq0oQh7daBKy1AW5Q34d0LDsC" #PyData Berlin 2018
 
 def core(args,search,parse):
 

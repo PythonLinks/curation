@@ -1,20 +1,28 @@
+#SO THIS FILE CAN RECORD VOTES OF THE WHOLE TREE, A BRANCH OFTHE TREE OR A SINGLE FILE. recordAllVotes, recordLocalvotes, getVideoDetails. 
+#getVotes gets the data, process votes proceses the data, and recordVotes
+#records the data. 
+
 import time
 import datetime
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from zopache.remote.ivideo import IVideo
+from zopache.core.getroot import getSiteRoot
 
 #There are two copies of this key
-DEVELOPER_KEY = "AIzaSyAOHmZ91f6qIt6FTi5BdopElujsENSKeN0"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
-def getVotes(id):
-
-  youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-    developerKey=DEVELOPER_KEY)
-  search_response = youtube.videos().list(
+def getYouTubeObject(context):
+    siteRoot= getSiteRoot(context)
+    DEVELOPER_KEY = siteRoot.youTubeKey
+    youTubeObject = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+       developerKey=DEVELOPER_KEY)
+    return youTubeObject
+  
+def getVotes(id,youTubeObject):
+  search_response = youTubeObject.videos().list(
     part='snippet,statistics',      
     id=id ,
   ).execute()
@@ -43,23 +51,24 @@ def processVotes(response,byId):
       value = int (value)
       setattr(talk,key,value)
 
-def recordVotes (context):
+def recordVotes (listOfVideos,context):
+    youTubeObject = getYouTubeObject(context)
     byId ={}
     idArray = []
-    for item in context:
+    for item in listOfVideos:
        if hasattr(item, 'videoId'):
           videoId=item.videoId
           byId[videoId]=item
           idArray.append(videoId)
     
     i=0
-    length = len(context)
+    length = len(listOfVideos)
     while (i*50 <= length-1 ):
           first = 50 * i
           last = min (first + 49, length)
           cut = idArray[first:last]
           string = ','.join(map(str,cut))
-          votes=getVotes (string)
+          votes=getVotes (string, youTubeObject)
           i += 1
           print ("GOt BATCH ", i)
           processVotes(votes,byId)
@@ -72,11 +81,11 @@ def recordLocalVotes(context):
           if (IVideo.providedBy(item) and not
           item.__class__.__name__ == 'LightningTalk'):
               videos.append(item)
-      recordVotes(videos) 
+      recordVotes(videos,context) 
 
-
-def getVideoDetails(context):
-    recordVotes ([context])
+def getVideoDetails(aVideo):
+    context = aVideo
+    recordVotes ([aVideo],context)
     
 def recordAllVotes(context):
       root = context.getSiteRoot()
