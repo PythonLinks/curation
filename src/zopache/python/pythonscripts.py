@@ -1,4 +1,4 @@
-#sheThis software is subject to the CV License Agreement
+ #sheThis software is subject to the CV License Agreement
 from zope.schema import ValidationError
 from dolmen.forms.base import Actions
 from zopache.crud   import i18n as _
@@ -201,8 +201,7 @@ class EditPythonAndTest(EditPython):
 @form_component
 @name('addPythonScript')
 @context(IBTreeContainer)
-@title("Add Python")
-@permissions('Manage')
+@permissions('Python')
 @implementer(IPythonScript)
 class AddPythonFunction(AceScripts,AceAddForm):
     subTitle = "Add  a Python  Script (Beta)"
@@ -244,18 +243,18 @@ def make_python_response(view, result, *args, **kwargs):
 @title("View")
 class Index(View):
     responseFactory = Response
-    make_response = make_python_response
+    make_response = make_view_response
         
     def render(self):
-               return self.context.source
-
+               return  str(self.context(aView = self))
 
 @form_component
 @context(IPythonScript)
-@title("AceEit")
 @name("aceedit")
-@permissions('Manage')
+@permissions('Python')
 class AceEditPython(AceScripts,AceEditForm):
+    def update(self):
+        pass
     subTitle= "Edit a Python Object"
     def footerScripts(self):
         return AceScripts.footerScripts(self)
