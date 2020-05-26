@@ -117,7 +117,7 @@ class AddByTitle (Add):
     def newName(self,data):    
         name =  data['title']
         name = slugify(name,lower=True)
-        context = self.getContext()
+        context = self.getContext(data)
         
         #THERE COULD BE A LOCAL OBJECT WITH THE SAME NAME
         newName=self.uniqueContainerName(context,name,ofType="#")        

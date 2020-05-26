@@ -150,6 +150,7 @@ Node  <span class="caret"></span></a>
 <li class="dropdown-item "><a href="./addCoffeeScript ">CoffeeScript</a></li>
 
 <li class="dropdown-item ">   <a href="./addPython ">Python</a></li>
+<li class="dropdown-item ">   <a href="./addPythonScript ">PythonScript</a></li>
 
 <li class="dropdown-item "><a href="./addJSON ">JSON</a></li>
 

@@ -51,11 +51,11 @@ class IOrganizationBase (Interface):
         description= "What is this groups focus?",
         required = False)                
 
-    addTo=TreeField(
-           title="Where should this organization be?",
-           description= "To be approved, please place it in a leaf of the tree.?",
-           required = True,
-           )    
+#    addTo=TreeField(
+#           title="Where should this organization be?",
+#           description= "To be approved, please place it in a leaf of the tree.?",
+#           required = True,
+#           )    
     
     url = schema.URI(
         title = u'The Organization URL',

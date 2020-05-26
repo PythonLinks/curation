@@ -119,7 +119,7 @@ class PythonScript(Leaf):
             
     def compile(self):
         compiled = compile_restricted_function(
-            self.arguments,
+            self.arguments+ "aView = None",
             self.source,
             self.__name__,
             globalize = ['view'])

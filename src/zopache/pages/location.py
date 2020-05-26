@@ -166,10 +166,10 @@ class MapBase(LocationContainer):
            return mapPoints
         result = []
         for item in mapPoints:
-               if not hasattr(value,'focus'):
+               if not hasattr(item,'focus'):
                   result.append(item)
                   continue
-               if item.value == focus:
+               if item.focus == value:
                   result.append(item)
         return result          
         

@@ -9,14 +9,14 @@ class IApprove(Interface):
         title = "Approved for publication on the web.",
         required = False,
         default = False)
-
+    """
     hidden = schema.Bool(
         title = "Hidden from the public.Login Required.",
-        description = """When this is checked, unauthorized viewers get a message "You are not permitted to view that page."  This discourages spammers.  For 
-        publicly visible pages, this should be unchecked. """,
+        description = "" "When this is checked, unauthorized viewers get a message "You are not permitted to view that page."  This discourages spammers.  For 
+        publicly visible pages, this should be unchecked. "" ",
         required = False,
         default = False)
-
+     """
 
 class ILogin(Interface):
 

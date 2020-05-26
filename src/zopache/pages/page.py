@@ -125,7 +125,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def postProcess(self,view=None):
         self.recalculateRootJSON()
         cache.resetCache(self)
-        self.description=self.description.replace ('"' , "'")
+        self.description=self.description.replace ('"' , "&ldquo;", 1)
+        self.description=self.description.replace ('"' , "&rdquo;", 1)
+        self.description=self.description.replace ('"' , "&ldquo;")
         self.description=self.description.replace ('\n' , " ")        
         
     def postAddProcess(self,view=None):

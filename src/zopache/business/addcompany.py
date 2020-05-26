@@ -24,7 +24,8 @@ from zopache.business.geocoding import GeoCodeForm
 from zopache.business.politician import IPolitician, Politician
 from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
-
+from zopache.pages.addpage import AddPageBase
+from zopache.pages.addanonymous import AddAnonymous
 
 
 #ADD NEWS
@@ -32,7 +33,7 @@ from zopache.pages.page import  News
 @name('addNews')
 @target(IView)
 @context(IPage)
-class AddNews(AddBase):
+class AddNews(AddPageBase):
     interface = INews
     title = "Add a News Item"
     subtitle = "Because the MSM does not cover it."
@@ -42,13 +43,13 @@ class AddNews(AddBase):
 @name('addCompany')
 @target(IView)
 @context(IPage)    
-class AddCompany(AddBase,GeoCodeForm):
+class AddCompany(AddPageBase,GeoCodeForm):
     interface = ICompany
     label="Add a Company"
     factory = Company
     title = "Add a Company"
     def update(self):
-        AddBase.update(self)
+        AddPageBase.update(self)
         GeoCodeForm.update(self) 
     
 @view_component
@@ -56,7 +57,7 @@ class AddCompany(AddBase,GeoCodeForm):
 @title("Add Organization")
 @target(IView)
 @context(IPage)    
-class AddOrganization(AddBase,GeoCodeForm):
+class AddOrganization(AddAnonymous,GeoCodeForm):
     interface = IOrganization
     factory = Organization
     title = "Add an Organization"
@@ -69,7 +70,7 @@ class AddOrganization(AddBase,GeoCodeForm):
 @title("Add Online Organization")
 @target(IView)
 @context(IPage)    
-class AddOnlineOrganization(AddBase,GeoCodeForm):
+class AddOnlineOrganization(AddAnonymous,GeoCodeForm):
     interface = IOnlineOrganization
     factory = OnlineOrganization
     title = "Add an Online Organization"
@@ -79,12 +80,12 @@ from dolmen.forms.base import interfaces
 @name('addPolitician')
 @target(IView)
 @context(IPage)    
-class AddPolitician(AddBase,GeoCodeForm):
+class AddPolitician(AddAnonymous,GeoCodeForm):
     interface = IPolitician
     factory = Politician
     title = "Add a Politician"
     def update(self):
-        AddBase.update(self)
+        AddAnonymous.update(self)
         GeoCodeForm.update(self) 
     """
     def updateWidgets(self):
@@ -99,13 +100,13 @@ from zopache.business.driver import IAddDriver, Driver
 @name('addDriver')
 @target(IView)
 @context(IPage)    
-class AddDriver(AddBase,GeoCodeForm):
+class AddDriver(AddAnonymous,GeoCodeForm):
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
 
     def update(self):
-        AddBase.update(self)
+        AddAnonymous.update(self)
         GeocodeForm.update(self) 
               
 @view_component

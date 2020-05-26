@@ -1,6 +1,6 @@
 from zopache.core.viewdecorators import *
 from zopache.business.videolocation import IVideoLocation, VideoLocation
-from zopache.business.addcompany import AddBase
+from zopache.pages.addpage import AddPageBase as AddBase
 from zopache.pages.interfaces import IMap
 
 @view_component

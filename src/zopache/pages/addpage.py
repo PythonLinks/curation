@@ -14,10 +14,14 @@ from zopache.pages.page import Page
 from zopache.pages import Map, Location
 from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
+from zopache.business.exists import Duplicate
 
 class AddPageVeryBase(AddCkHTMLBase,AddByTitleForm,UniqueName,Notify):
-    pass
+    dataValidators = [Duplicate]    
+
 class AddPageBase(AddPageVeryBase):
+
+    
     def getSubTitle(self):
         
         return (

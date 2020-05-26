@@ -45,7 +45,8 @@ class ByChannel(Base):
         results =  core (args,search,parseChannel)
         self.processResults (context,results,videoClass)
 
-    def getSearch (self,args,context):            
+    def getSearch (self,args,context):
+         youtube = getYouTubeObject(context)        
          search_response = youtube.search().list(**args)
          search_response = search_response.execute()
          return search_response                      
@@ -79,7 +80,8 @@ class BySearchTerm(Base):
         args ['type']= 'video'
         #args ['videoDuration']= 'medium'
         args ['relevanceLanguage']= 'pl'                
-        #THIS ONE WILL NOT WORK
+        #THIS ONE WILL NOT WORK, self.search not defined. 
+        search = self.search(args,context)                
         results =  core (args,search,parseChannel)        
         self.processResults (context,results,videoClass)   
 

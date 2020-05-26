@@ -5,20 +5,16 @@ from zopache.crud.actions import AddByTitle
 from zopache.pages.pageactions import AddAndView
 from zopache.crud.forms import AddByTitleToTree
 from zopache.pages.addpage import AddPageVeryBase
-from zopache.business.exists import Duplicate
 
 class AddToTreeAndView(AddByTitleToTree):
     def newURL(self,baseURL):
         return baseURL 
 
 class AddAnonymous(AddPageVeryBase):
-
-
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
     allowAnonymous = True    
-    dataValidators = [Duplicate]
     actions = Actions()    
     def update(self):
         self.actions = Actions(
@@ -26,6 +22,8 @@ class AddAnonymous(AddPageVeryBase):
                   formactions.Cancel("Cancel","Cancel"))
 
     def postAddProcess(self,view = None):
+        if self.treeSecurity():
+            self.new.webApproved == True
         self.new.postAddProcess (view = self)
         self.notifyAdminsNewPage()
 
