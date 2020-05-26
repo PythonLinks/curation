@@ -34,6 +34,13 @@ class AddAndSearchForm (AddForm):
 
 
 class AceEditForm(EditForm):
+     @property
+     def title(self):
+         return	"Ace Edit this " + self.className()
+     
+     @property
+     def title(self):
+         return "Ace Edit this " + self.className()
      actions = Actions()
      def update(self):
          if self.treeSecurity():
