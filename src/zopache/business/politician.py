@@ -56,11 +56,11 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         description= "It could be both",
         required = False)
     
-    addTo=TreeField(
-           title="Where to Add this Politician.",
-           description= "State-wide politicians get added to the state party, Local Politicians get added to the local party if there is one.  ?",
-           required = True,
-            )
+#    addTo=TreeField(
+#           title="Where to Add this Politician.",
+#           description= "State-wide politicians get added to the state party, #Local Politicians get added to the local party if there is one.  ?",
+#           required = True,
+#            )
     
 #    endorsedBy = schema.Collection(
 #          value_type = schema.Choice( vocabulary = myVocabulary),        

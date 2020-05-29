@@ -34,10 +34,9 @@ class GeoCodeObject(Base):
         self.setLatLong()
         
     def postAddProcess(self,view=None):
-        self.webApproved = False
         self.hidden = False
         Page.postAddProcess(self, view = view)
-        self.postProcess(view = view)        
+        self.setLatLong()        
         #self.editors=[view.request.principal.__name__]    
 
 class GeoCodingError(ValidationError):

@@ -132,7 +132,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         
     def postAddProcess(self,view=None):
         self.postProcess(view=view)
-        view.notifyAdminsNewPage()
+        if not view.treeSecurity():
+           view.notifyAdminsNewPage()
         
     # NOT YET SERVING JSON
     def recalculateRootJSON(self):

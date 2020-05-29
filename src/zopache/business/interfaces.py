@@ -228,12 +228,6 @@ class ISocialMedia(Interface):
         default = '',
     )
 
-    instagramId= schema.TextLine(
-        title = u'Instagram Id (Optional)',
-        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
-        required = False,
-        default = '',
-    )        
 
     email= Email(
         title = u'Email Address (Optional)',
