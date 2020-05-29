@@ -26,7 +26,11 @@ from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.interfaces import IWeb
 from dolmen.view import name, context, view_component
-from zopache.ttw.interfaces import IHTMLClass,IAceHTMLClass,IIndexHTML
+from zopache.ttw.interfaces import (IHTMLClass,
+                                    IAceHTMLClass,
+                                    IIndexHTML,
+                                    IAceCMSClass,
+                                    IAceIFrameClass)
 from zopache.ttw.interfaces import IAceHTMLPage
 from zopache.core.interfaces import ITreeSecurity
 
@@ -60,6 +64,9 @@ class HTMLBase(object):
     def html(self):
         return self.source    
 
+    def getHTML(self):
+        return self.source
+
     def getTitle(self):
         if hasattr(self,'title') and self.title!= None and len(self.title)>0:
            return self.title
@@ -78,8 +85,6 @@ class TrustedHTML(HTMLBase):
                self.compileTemplate()
             #return self._v_compiledTemplate 
 
-    def getHTML(self):
-        return self.source
 
     def compileTemplate(self):
                  if self.trusted == False:
@@ -170,6 +175,15 @@ class HTML(TrustedHTML,Leaf):
 @implementer(IAceHTMLClass)
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
+    
+@implementer(IAceCMSClass)
+class AceCMSHTML(TrustedHTML,Leaf):
+    icon="ttwicons/HTML.svg"
+
+@implementer(IAceIFrameClass)
+class AceIFrameHTML(TrustedHTML,Leaf):
+    icon="ttwicons/HTML.svg"        
+
 
 @implementer(IAceHTMLPage)
 class HTMLPage(TrustedHTML,Leaf):
@@ -216,9 +230,14 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
     def headerScripts(self):
           return CkScripts.headerScripts(self)
 
-    @property
-    def actions(self):
-        return Actions(
+    actions= Actions()
+    
+    def update(self):
+        if self.treeSecurity():
+           self.setActions()
+           
+    def setActions(self):           
+         self.actions = Actions(
               formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
               ttwactions.AddAndCkEdit(_("Add and ckEdit","Add -> ckEdit"), self.factory),
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),
@@ -258,6 +277,21 @@ class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
 
+@form_component
+@name (u'addAceIFrame')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddAceIFrame (AddAceHTMLBase,AddForm):
+    factory = AceIFrameHTML
+
+@form_component
+@name (u'addAceCMS')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddAceCMS (AddAceHTMLBase,AddForm):
+    factory = AceCMSHTML
+
+
 @view_component
 @name('index')
 @context(IIndexHTML)
@@ -268,6 +302,20 @@ class Index(View,Breadcrumbs):
     def setDisplayObject(self,item):
         self.zopacheTemplate=item
 
+    def isCMS(self):
+        return False
+
+    def remoteHref(self,url,title):
+            return F'<a href="{url}" > {title}</a>'
+
+    def command(self,name):
+        url = '/' + self.context.__name__ + '/' + name
+        return url
+
+    def page(self,name):
+        url = '/' + name 
+        return url
+        
         
     def render(self):
         #In the case of /index/index
@@ -280,8 +328,73 @@ class Index(View,Breadcrumbs):
                return ('Your templates recursion exceeded 50 calls'+
                       self.zopacheTemplate.source)               
 
-class BaseAceEdit(AceScripts,BaseEditForm):
+
+@view_component
+@name('index')
+@context(IAceCMSClass)
+class CMSIndex(Index):
+    def isCMS(self):
+        return True
+
+    def breadcrumbs(self):
+        return self.divBreadcrumbs(self.context,viewName = 'wp-content')
+
+    def command(self,name):
+        url = '/' + self.context.__name__ + '/cms-' + name
+        return url
+
+    def page(self,name):
+        url = '/' + name +"/wp-content"
+        return url
+
+#INDEX IFRAME CLASS
+@view_component
+@name('index')
+@context(IAceIFrameClass)
+class IFrameIndex(Index):
+    def isCMS(self):
+        return True
+
+    def breadcrumbs(self):
+        return self.divBreadcrumbs(self.context,viewName = 'html-content')
+        
+    def command(self,name):
+        url = '/' + self.context.__name__ + '/iframe-' + name
+        return url
+
+    def page(self,name):
+        url = '/' + name +"/html-content"
+        return url
+
+    def remoteHref(self,url,title):
+            return F'<a href="{url}" target ="_parent"> {title}</a>'
+
+class BaseHTMLEditForm(BaseEditForm):
+
+    def update(self):
+        if self.treeSecurity():
+            self.setActions()
+
+    def setActions(self):        
+        action1=ttwactions.SaveAndAceEdit("Save","Save")
+        action2=formactions.SaveAndView("Save  and View","Save -> View")
+
+        action3=ttwactions.SaveAndCkEdit(
+                "Save and CkEdit","Save -> ckEdit")
+        
+        #action4=formactions.SaveAndTest(
+        #        "Save and Test","Save -> Test")        
+
+        action5=formactions.Cancel("Cancel","Cancel")
+        if ICkHTML.providedBy(self.context):
+                self.actions = Actions(action1,action2,action3,action5)
+        else:
+                self.actions = Actions(action1,action2,action5)                
+        
+class BaseAceEdit(AceScripts,BaseHTMLEditForm):
     subTitle="Ace Edit this object"
+            
+
     def footerScripts(self):
         return AceScripts.footerScripts(self)
 
@@ -290,22 +403,7 @@ class BaseAceEdit(AceScripts,BaseEditForm):
 
 
 class AceEdit(BaseAceEdit):
-    @property
-    def actions(self):
-
-        action1=ttwactions.SaveAndAceEdit("Save","Save")
-        action2=formactions.SaveAndView("Save  and View","Save -> View")
-
-        action3=ttwactions.SaveAndCkEdit(
-                "Save and CkEdit","Save -> ckEdit")
-        
-        action4=formactions.SaveAndTest(
-                "Save and Test","Save -> Test")        
-
-        action5=formactions.Cancel("Cancel","Cancel")
-        if ICkHTML.providedBy(self.context):
-                return Actions(action1,action2,action3,action4,action5)
-        return Actions(action1,action2,action4,action5)                
+    pass            
         
 #HERE IS THE DEVELOPER ACE EDIT FORM
 @form_component
@@ -327,7 +425,7 @@ class AceDemoHTML(BaseAceEdit):
         return Actions()
 
 
-class BaseCkEdit(CkScripts,BaseEditForm):
+class BaseCkEdit(CkScripts,BaseHTMLEditForm):
     subTitle="CkEdit this object"        
     
     def footerScripts(self):
@@ -338,9 +436,8 @@ class BaseCkEdit(CkScripts,BaseEditForm):
 
 
 class CkEdit(BaseCkEdit):
-    @property
-    def actions(self):
-        return Actions(
+    def setActions(self):
+        self.actions = Actions(
               formactions.SaveAndView(_("Save  and View","Save -> View")),
               ttwactions.SaveAndCkEdit(_("Save","Save")),
               ttwactions.SaveAndAceEdit(_("Save  and AceEdit","Save -> AceEdit")),
