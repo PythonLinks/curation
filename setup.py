@@ -30,7 +30,7 @@ extensions =[
     Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
-#extensions =[]
+extensions =[]
 
 
 name = 'zopache'
