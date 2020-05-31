@@ -267,7 +267,7 @@ class EvaluateFeed(View, Breadcrumbs):
 class EditRSS(BaseEditForm):
     pass
 
-from zopache.ttw.html import CkEdit
+from zopache.ttw.htmlviews import CkEdit
 @form_component
 @name ('edit')
 @context(IRSSLink)

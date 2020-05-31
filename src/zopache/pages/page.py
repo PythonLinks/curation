@@ -9,31 +9,25 @@ from zopache.pages.interfaces import ITime,IContent,IPage , IRootPage, INews
 from zopache.core.getroot import getSiteRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
-from zopache.core.breadcrumbs import parentWhichImplements
 from cromlech.container.contained import Contained
 from zope.interface import implementer
 from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
-from zopache.core.breadcrumbs import parentWhichImplements
-from zopache.core.breadcrumbs import parentsUpTo
+from zopache.core.relatives import parentWhichImplements
+from zopache.core.relatives import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
-from zopache.pages.allblogobjects import AllBlogObjects
+from zopache.pages.allblogobjects import ProcessTree
 
-class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject):
+class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
     url = ''
     branchSize=1
     description = ''
     webApproved = True
     
-    def allBlogObjects(self):
-        return AllBlogObjects(self)
-
-    def allTreeObjects(self):
-        return AllBlogObjects(self)        
-
+    
     def listFutureEvents(self):
         result = []
         for item in self.allBlogObjects():

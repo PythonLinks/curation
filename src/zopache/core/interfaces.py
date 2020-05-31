@@ -5,3 +5,6 @@ class ITreeSecurity(Interface):
 
 class IUserSecurity(Interface):
     pass
+
+class IVideo (Interface):
+     pass 

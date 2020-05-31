@@ -1,6 +1,7 @@
 from zopache.core.viewdecorators import *
 from .interfaces import ISecureHTML , IWeb
-from .html import Index, SecureHTML, HTMLPage
+from .html import  SecureHTML, HTMLPage
+from .htmlviews import Index
 
 @view_component
 @name (u'index')
@@ -12,7 +13,7 @@ class SecureIndex(Index):
      pass
 
 from dolmen.container import IBTreeContainer
-from .html import AddAceHTML
+from .htmlviews import AddAceHTML
 
 @form_component
 @name (u'addSecureChameleon')

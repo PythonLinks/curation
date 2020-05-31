@@ -2,14 +2,19 @@ from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
 from pydoc import locate
+from zopache.core.interfaces import IVideo
 
 class Tests(object):
     
     def hasMembers(self):
         return hasattr(self.context,'isMember')
     
-    def isVideo(self):
-        return False
+    def isVideo(self,*item):
+        if item:
+           item = item[0]
+        else:
+           item = self.context 
+        return IVideo.providedBy (item)
 
     def isConference(self):
         return False

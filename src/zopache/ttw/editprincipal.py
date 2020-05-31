@@ -8,7 +8,7 @@ from zope.schema import TextLine,URI
 from dolmen.forms.base import Actions
 from cromlech.file import FileField
 
-from zopache.ttw.html import AceEdit, CkEdit
+from zopache.ttw.htmlviews import AceEdit, CkEdit
 from zopache.core.viewdecorators import *
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zope.schema._field import Choice

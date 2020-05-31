@@ -7,7 +7,7 @@ import datetime
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
-from zopache.remote.ivideo import IVideo
+from zopache.core.interfaces import IVideo
 from zopache.core.getroot import getSiteRoot
 
 #There are two copies of this key
@@ -17,8 +17,7 @@ YOUTUBE_API_VERSION = "v3"
 def getYouTubeObject(context):
     siteRoot= getSiteRoot(context)
     DEVELOPER_KEY = siteRoot.youTubeKey
-    youTubeObject = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-       developerKey=DEVELOPER_KEY)
+    youTubeObject = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
     return youTubeObject
   
 def getVotes(id,youTubeObject):
@@ -28,13 +27,12 @@ def getVotes(id,youTubeObject):
   ).execute()
   return search_response
 
-#youtube_search("T-TwcmT6Rcw,Ks-_Mh1QhMc")
+
 from pprint import pprint
 def processVotes(response,byId):
   items = response['items']
   for item in items:
     snippet = item ['snippet']
-    
     thumbnails = snippet ['thumbnails']
     #pprint (thumbnails)
     #print (snippet ['title'])
@@ -42,27 +40,33 @@ def processVotes(response,byId):
     dt= datetime.datetime.strptime(publishedAt, '%Y-%m-%dT%H:%M:%S.%fZ')
     publishedAt = time.mktime(dt.timetuple())
     id = item ["id"]
-    talk = byId[id]
-    talk.publishedAt = publishedAt
-    print (publishedAt, talk.title)
-    talk.thumbnails = thumbnails
-    talk._p_changed = True
-    for key, value in item["statistics"].items():
-      value = int (value)
-      setattr(talk,key,value)
+    for talk in byId[id]:
+        talk.publishedAt = publishedAt
+        print (publishedAt, talk.title)
+        talk.thumbnails = thumbnails
+        talk._p_changed = True
+        for key, value in item["statistics"].items():
+           value = int (value)
+           setattr(talk,key,value)
 
 def recordVotes (listOfVideos,context):
+    breakpoint()
     youTubeObject = getYouTubeObject(context)
     byId ={}
-    idArray = []
     for item in listOfVideos:
        if hasattr(item, 'videoId'):
           videoId=item.videoId
-          byId[videoId]=item
-          idArray.append(videoId)
-    
+          try:
+              if not videoId in byId:
+                 byId[videoId]= []
+          except:
+              breakpoint()
+          byId[videoId].append (item)
+          continue
+      
+    idArray = byId.keys()
     i=0
-    length = len(listOfVideos)
+    length = len(idArray)
     while (i*50 <= length-1 ):
           first = 50 * i
           last = min (first + 49, length)
@@ -74,12 +78,12 @@ def recordVotes (listOfVideos,context):
           processVotes(votes,byId)
 
 from zopache.core.getroot import getSiteRoot
-    
+from zopache.core.interfaces import IVideo
+
 def recordLocalVotes(context):
       videos =[]
       for item in context.allBlogObjects():
-          if (IVideo.providedBy(item) and not
-          item.__class__.__name__ == 'LightningTalk'):
+          if IVideo.providedBy(item):
               videos.append(item)
       recordVotes(videos,context) 
 

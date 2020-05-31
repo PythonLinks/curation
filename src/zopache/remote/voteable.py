@@ -47,7 +47,18 @@ class Voteable(object):
         if hasattr(self,"dislikeCount"):
            result += self.dislikeCount           
         return result
-
+    
+    def clearVotes(self):
+        print(self.__name__)
+        #if self.__name__ =='zest-releaser':
+        #    breakpoint()
+        if hasattr(self,'likeCount'):
+            self.likeCount = 0
+        if hasattr(self,'dislikeCount'):
+            self.dislikeCount = 0
+        if hasattr(self,'thumbnails'):
+            del self.thumbnails            
+            
     def getWilsonScore2(self):
         return self.getWilsonScore()
 

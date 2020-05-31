@@ -12,7 +12,6 @@ from zopache.ttw.interfaces import ICanonical
 from dolmen.container import BTreeContainer
 
 from .interfaces import IBranch
-from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.pages.interfaces import IRootPage
 from zopache.ttw.interfaces import IWebClass, IProducts
 from zopache.ttw.interfaces import IInternalPrincipal

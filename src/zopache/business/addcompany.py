@@ -4,8 +4,8 @@ from zopache.pages.pageactions import *
 from zopache.crud import actions as formactions
 from zopache.pages.pageactions import *
 from zopache.core.viewdecorators import *
-from zopache.ttw.html import CkScripts
-from zopache.ttw.html import AddCkHTMLBase
+from zopache.ttw.htmlviews import CkScripts
+from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm

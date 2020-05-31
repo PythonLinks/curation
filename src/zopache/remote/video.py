@@ -12,6 +12,13 @@ class VideoBase(Voteable):
     seconds = 0
     minutes = 0
     hours = 0
+    def isLightingTalk(self):  
+        if self.__class__.__name__ == 'LightningTalk':
+           return True
+        if hasattr(self,'recordingType'):
+            if self.recordingType =='lightning-talk':
+               return True
+        return False
     
     def getDefaultThumbNailURL(self):
         try:

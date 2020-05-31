@@ -53,7 +53,7 @@ class ContainerAddForm(AddForm):
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
               formactions.Cancel(_("Cancel","Cancel")))        
 
-from zopache.ttw.html import AddAceHTML
+from zopache.ttw.htmlviews import AddAceHTML
 @form_component
 @name (u'addAceContainer')
 @context(IBTreeContainer)

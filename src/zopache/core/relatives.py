@@ -3,6 +3,33 @@ from cromlech.browser import IPublicationRoot
 from cromlech.location import lineage_chain
 from zopache.crud.interfaces import IZodbRoot
 
+def reversedParentsUpTo(self,anInterface):
+        parents=[]
+        item=self        
+        while (item!=None):
+           parents.append(item)
+           if anInterface.providedBy(item):
+              break
+           item=item.__parent__      
+        return parents
+
+def parentWhichImplements(self,interface):
+        item=self        
+        while (item!=None):
+           if interface.providedBy(item):
+              return item
+           item=item.__parent__      
+        return None
+    
+#THIS IS PLURAL    
+def parentsWhichImplement(self,interface):
+        item=self        
+        result=[]
+        while (item!=None):
+           if interface.providedBy(item):
+              result.append(item)
+           item=item.__parent__      
+        return result
 
 def parentsUpTo(self,anInterface):
     return self.reversedParentsUpTo(self,anInterface).reverse()
