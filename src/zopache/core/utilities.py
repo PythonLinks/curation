@@ -2,8 +2,13 @@ import json
 from pydoc import locate
 from zopache.core.getroot import getSiteRoot
 import hashlib
+from cromlech.security import Unauthorized
 
 class Utilities (object):
+
+    def raiseUnauthorized(self):
+        raise Unauthorized
+    
     def getNavBar(self):
          return self.webClassAcquire('navbar.py')(self)
   

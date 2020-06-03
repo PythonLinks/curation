@@ -37,7 +37,8 @@ def processVotes(response,byId):
     #pprint (thumbnails)
     #print (snippet ['title'])
     publishedAt = snippet ['publishedAt']
-    dt= datetime.datetime.strptime(publishedAt, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+    dt= datetime.datetime.strptime(publishedAt, '%Y-%m-%dT%H:%M:%fZ')
     publishedAt = time.mktime(dt.timetuple())
     id = item ["id"]
     for talk in byId[id]:
@@ -50,7 +51,7 @@ def processVotes(response,byId):
            setattr(talk,key,value)
 
 def recordVotes (listOfVideos,context):
-    breakpoint()
+
     youTubeObject = getYouTubeObject(context)
     byId ={}
     for item in listOfVideos:
@@ -64,7 +65,7 @@ def recordVotes (listOfVideos,context):
           byId[videoId].append (item)
           continue
       
-    idArray = byId.keys()
+    idArray = list(byId.keys())
     i=0
     length = len(idArray)
     while (i*50 <= length-1 ):
