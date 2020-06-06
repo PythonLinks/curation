@@ -56,19 +56,6 @@ class AddPage(AddPageBase):
     label="Add a Wiki Page"
     factory = Page
 
-#ADD LINK
-from zopache.pages.page import Link
-from zopache.pages.interfaces import ILink
-@view_component
-@name('addLink')
-@target(IView)
-@context(IPage)
-class AddLink(AddPageBase):
-    interface = ILink
-    title = "Add a Link"
-    subtitle = "To a remote web page."
-    factory = Link
-    
   
 
 #LOCAION

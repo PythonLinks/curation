@@ -84,7 +84,7 @@ class IFile(ILeaf):
 class IImage(IFile):
     title = TextLine(
         title = u'Image Desciption',
-        description = u'Describe this Image.',
+        description = u'Describe this Image, so that the user has some idea what they are looking at. ',
         required = True,
     )
     data = FileField(title=u'Upload an Image')         

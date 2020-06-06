@@ -18,7 +18,9 @@ class IApp(Interface):
 class IName(Interface):
       __name__ = TextLine(
            title=(u"URL Segment Name (required)"),
-           description = "Will be made web-safe.", 
+           description = """This is the text string that shows up in the url.  
+These characters include digits (0-9), letters(A-Z, a-z), and a few special characters ( "-" , "." , "_" , "~" ).  If you use other characters, they 
+will be made web-safe.""", 
            required=True,
            default=None)
 

@@ -21,6 +21,7 @@ from .utilities import title_or_name
 from cromlech.webob import Response
 from .interfaces import IEditable, IDeletable, IDisplayable
 from zopache.core.baseform import Form
+from zopache.core.viewdecorators import *
 
 from cromlech.browser.directives import title
 
@@ -63,6 +64,9 @@ class AddByTitleForm(AddFormBase):
     
     def update(self):
         if self.treeSecurity():
+            self.addAuthorizedActions(self)
+            
+    def addAuthorizedActions(self):   
               actions = Actions(
               formactions.AddByTitle("Add", self.factory),
               formactions.Cancel("Cancel"))
