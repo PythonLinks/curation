@@ -20,7 +20,23 @@ from zopache.crud.forms import BaseEditForm
 import zopache
 from zopache.crud.forms import BaseEditForm
 from BTrees.OOBTree import OOBTree
-from zopache.remote.download import doit
+from zopache.remote.downloadrss import doit
+
+import feedparser
+def processRssResponse(html):          
+          feed = feedparser.parse(html)
+          entries = feed['entries']
+          print ("LEN",len(entries))
+          print (type(entries))
+          for article in entries:
+               permalink = article['id']
+               print ("Perma",permalink)
+               allEntries [permalink]=article          
+          return  ('Success' ,url)
+
+          
+
+
 
 @view_component
 @name('addRSS')
@@ -216,7 +232,7 @@ class EvaluateFeed(View, Breadcrumbs):
           url.strip()  
           print ("FEED =",url)
           allURLS.append (url)
-       self.entries = doit(allURLS)
+       self.entries = doit(allURLS,processRssResponse)
 
        self.entries =  [ v for v in self.entries. values() ]
 
