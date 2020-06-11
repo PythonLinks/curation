@@ -6,6 +6,13 @@ from cromlech.security import Unauthorized
 from dolmen.message.utils import send
 
 class Utilities (object):
+    def rename(self,item,newName):
+        parent = item.__parent__
+        del parent[item.__name__]
+        parent[newName] = item
+        item.__parent__ = parent
+        item.__name__ = newName
+
     def className(self):
         return self.__class__.__name__
     def contextClassName(self):
@@ -21,7 +28,7 @@ class Utilities (object):
          return self.webClassAcquire('navbar.py')(self)
   
     def getDefaultImage(self):
-        logo = self.parentalAcquire('Logo.png')
+        logo = self.parentalAcquire('Logo')
         return logo
 
     def getSiteName(self):
@@ -46,7 +53,7 @@ class Utilities (object):
                                          self.parentsUpToSiteRoot()))
         parameters ["banner"] = (self.parentalAcquire("Banner.png")
                                      != None)
-        parameters ["logo"] = (self.parentalAcquire("Logo.png") != None)
+        parameters ["logo"] = (self.parentalAcquire("Logo") != None)
         parameters ["homePage"]= getSiteRoot(self.context).homePage
         
         if self.isAuthenticated():
