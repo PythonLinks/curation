@@ -28,7 +28,7 @@ class Utilities (object):
          return self.webClassAcquire('navbar.py')(self)
   
     def getDefaultImage(self):
-        logo = self.parentalAcquire('Logo.png')
+        logo = self.parentalAcquire('Logo')
         return logo
 
     def getSiteName(self):
