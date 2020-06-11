@@ -4,7 +4,7 @@ from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
-from zopache.crud.forms import AddByTitleForm
+from zopache.crud.forms import AddByTitleForm, AddByURLForm
 from zopache.business.interfaces import IMap, ICompany,IMapOrganization
 from zopache.business.interfaces import ICompanyOrOrganization
 from zopache.business.interfaces import IOrganization, IOnlineOrganization
@@ -22,7 +22,7 @@ from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.addanonymous import AddAnonymous
-
+from zopache.core.interfaces import ITreeSecurity
 
 #ADD NEWS
 @view_component
@@ -31,6 +31,7 @@ from zopache.pages.addanonymous import AddAnonymous
 @context(IPage)
 class AddNews(AddPageBase):
     interface = INews
+    emailApparoved = True
     title = "Add a News Item"
     subtitle = "Because the MSM does not cover it."
     factory = News
@@ -60,6 +61,15 @@ class AddOrganization(AddAnonymous,GeoCodeForm):
 
 
 
+@view_component
+@name('addOrgByURL')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddOrganizationByURL(AddByURLForm):
+    factory = Organization
+    title = "Add an Organization by URL"
+    subTitle = "This software will download the title, description and image of the group you linked to, and store that information.  You will also be able to edit it."
     
 @view_component
 @name('addOnlineOrganization')
@@ -82,7 +92,19 @@ class AddPolitician(AddAnonymous,GeoCodeForm):
     title = "Add a Politician"
     def update(self):
         AddAnonymous.update(self)
-        GeoCodeForm.update(self) 
+        GeoCodeForm.update(self)
+
+@view_component
+@name('addPolByURL')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddPolitician(AddByURLForm):
+    factory = Politician
+    title = "Add a Politician"
+    def update(self):
+        AddAnonymous.update(self)
+        GeoCodeForm.update(self)         
     """
     def updateWidgets(self):
         ddBase.update(self)

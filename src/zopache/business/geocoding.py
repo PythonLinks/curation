@@ -36,14 +36,16 @@ class Base(object):
 
     
 class GeoCodeObject(Base):
+    address = ''
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
-        self.setLatLong()
+        if self.address:
+            self.setLatLong()        
         
     def postAddProcess(self,view=None):
         self.hidden = False
         Page.postAddProcess(self, view = view)
-        self.setLatLong()        
+        #Page calls post process, so lat lng  is not needed. 
         #self.editors=[view.request.principal.__name__]    
 
 class GeoCodingError(ValidationError):

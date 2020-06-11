@@ -3,8 +3,16 @@ from pydoc import locate
 from zopache.core.getroot import getSiteRoot
 import hashlib
 from cromlech.security import Unauthorized
+from dolmen.message.utils import send
 
 class Utilities (object):
+    def className(self):
+        return self.__class__.__name__
+    def contextClassName(self):
+        return self.context.__class__.__name__    
+    
+    def message(self,message):
+        send(message)
 
     def raiseUnauthorized(self):
         raise Unauthorized
@@ -13,12 +21,8 @@ class Utilities (object):
          return self.webClassAcquire('navbar.py')(self)
   
     def getDefaultImage(self):
-        if 'image' in self.context:
-            return self.context['image']
-        siteRoot = self.getSiteRoot()
-        if 'Logo.png' in siteRoot:
-            return siteRoot['Logo.png']
-        return None
+        logo = self.parentalAcquire('Logo.png')
+        return logo
 
     def getSiteName(self):
         siteRoot = self.getSiteRoot()

@@ -96,8 +96,14 @@ class Notify (object):
     def notifyAdminsNewPage(self):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
         if mailer == None:
-           return ''                
-        subject = "New " + self.new.__class__.__name__
+           return ''
+       
+        if self.treeSecurity():
+            subject = "Approved: "
+        else:
+            subject = "New "
+            
+        subject += self.new.__class__.__name__
         content = self.secureShortURL (context = self.new)
         self.notify (mailer.noReply,mailer.postMaster, subject, content)
         self.sendTheMail()

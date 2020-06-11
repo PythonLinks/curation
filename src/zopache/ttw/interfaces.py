@@ -89,6 +89,7 @@ class IImage(IFile):
     )
     data = FileField(title=u'Upload an Image')         
 
+#I THINK ALL OD MY ZODB OBJECTS GET THIS ONE    
 class ICanonical (Interface):
       pass   
 

@@ -3,9 +3,11 @@
 
 from cromlech.browser.interfaces import IPublicationRoot
 from zope.interface import Interface, Attribute
+from zope import schema
 from zope.schema import TextLine, Text,  DottedName
 from dolmen.container.interfaces import IBTreeContainer
 from zopache.zmi.interfaces import IZMI
+
 
 class IZodbRoot(Interface):
     pass
@@ -23,6 +25,19 @@ These characters include digits (0-9), letters(A-Z, a-z), and a few special char
 will be made web-safe.""", 
            required=True,
            default=None)
+
+class IURLForm(Interface):
+    title = schema.TextLine(
+        title = u'Page Name',
+        description = u'Describe this page.',
+        required = True,
+    )
+    
+    remoteURL= schema.URI(
+        title = 'URL',
+        description = 'The url of the remote web page',
+        required = True,
+    )      
 
 #Objects which can be deleted.  You cannot delte the root object. 
 class IDeletable(Interface):

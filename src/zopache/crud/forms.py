@@ -2,29 +2,25 @@
 
 #This software is subject to the CV and Zope Public Licenses.
 from zope.interface import Interface
-from dolmen.forms.base import DISPLAY
-from zopache.crud import actions as formactions, i18n as _
-from zopache.crud.utils import getFactoryFields, getAllFields
-from cromlech.i18n import translate
 
-from cromlech.security import getSecurityGuards, permissions
+from zope import schema
+from zopache.core.viewdecorators import *
+
+from dolmen.forms.base import DISPLAY
+
+from dolmen.container import BTreeContainer, IBTreeContainer
+from dolmen.forms.base import Actions
+from .interfaces import IURLForm
 
 from .interfaces import IName, IContainer, ILeaf
-from dolmen.container import BTreeContainer, IBTreeContainer
-from zope.interface import implementer
-
-from dolmen.forms.base import Actions
-from dolmen.forms.base import Fields
-from dolmen.forms.base import action, name, context, form_component
-
 from .utilities import title_or_name    
-from cromlech.webob import Response
 from .interfaces import IEditable, IDeletable, IDisplayable
 from zopache.core.baseform import Form
 from zopache.core.viewdecorators import *
-
-from cromlech.browser.directives import title
-
+from zopache.core.breadcrumbs import Breadcrumbs
+from zopache.crud import actions as formactions, i18n as _
+from zopache.crud.utils import getFactoryFields, getAllFields
+from zopache.pages.page import Page
 
 class AddFormBase(Form):    
     """The add form itself is not protected. The security is checked on
@@ -61,10 +57,10 @@ class AddNamedForm(AddFormBase):
             formactions.Cancel(_("Cancel","Cancel")))
     
 class AddByTitleForm(AddFormBase):
-    
+    actions = Actions()
     def update(self):
         if self.treeSecurity():
-            self.addAuthorizedActions(self)
+            self.addAuthorizedActions()
             
     def addAuthorizedActions(self):   
               actions = Actions(
@@ -72,10 +68,51 @@ class AddByTitleForm(AddFormBase):
               formactions.Cancel("Cancel"))
               self.actions= actions
 
+
+
+
+
+class AddByURLForm(AddFormBase,Breadcrumbs):
+    preamble = """This form may take a few seconds to process. 
+    The software will download that webpage, capture the title, 
+    description and the image url, and then download the image,  
+    and store them to this server.  You will then 
+    be able to edit the page content if you so wish. It all takes a few
+    seconds, so please be patient. It is so much faster than entering the 
+    data by hand """
+    
+    def update(self):
+        if self.isPerson() and not self.treeSecurity():
+            self.raiseUnauthorized()
+            
+    @property 
+    def subTitle(self):
+        return f"""To a {self.contextClassName()} called {self.context.title}"""
+
+    'The short form will grab the details from the remote site.'
+    interface = IURLForm
+    actions = Actions()
+    
+    def update(self):
+        if self.treeSecurity():
+            self.addAuthorizedActions()
+            
+    def addAuthorizedActions(self):   
+              actions = Actions(
+              formactions.AddByURL("Add", self.factory),
+              formactions.Cancel("Cancel"))
+              self.actions= actions
+              
+    def postAddProcess(self,view=None):
+        self.new.webApproved = True
+        self.new.postAddProcess (view = self)
+        remoteLinks = self.getRemoteLinks()
+        remoteLinks[self.new.remoteURL] = self.new
+        
 class AddByTitleToTree(AddByTitleForm):
      pass
  
-from zopache.core.breadcrumbs import Breadcrumbs
+
 class BaseEditForm(Form,Breadcrumbs):    
     """
     """

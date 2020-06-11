@@ -9,6 +9,12 @@ class IApprove(Interface):
         title = "Approved for publication on the web.",
         required = False,
         default = False)
+
+    emailApproved = schema.Bool(
+        title = "Approved for publication in Emails.",
+        required = False,
+        default = False)
+    
     """
     hidden = schema.Bool(
         title = "Hidden from the public.Login Required.",

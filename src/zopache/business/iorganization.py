@@ -56,8 +56,8 @@ class IOrganizationBase (Interface):
 #           description= "To be approved, please place it in a leaf of the tree.?",
 #           required = True,
 #           )    
-    
-    url = schema.URI(
+    #was url
+    remoteURL = schema.URI(
         title = u'The Organization URL',
         description = """Please link to a web page, maybe twitter or gab.com 
 . Include  'https://'""",

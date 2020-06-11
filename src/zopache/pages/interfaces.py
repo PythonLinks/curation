@@ -46,7 +46,7 @@ class ILinkTop(Interface):
     remoteURL= schema.URI(
         title = 'URL',
         description = 'A URL That this page refers to. Please include https://',
-        required = True,
+        required = False,
     )
     
 class IPageBottom(Interface):

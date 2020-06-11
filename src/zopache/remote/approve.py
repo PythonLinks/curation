@@ -32,11 +32,12 @@ class Approve (EditForm,Breadcrumbs):
     def postProcess(self, view = None):
         context = self.context    
         self.root = self.getSiteRoot()
-        items =self.getArticles().values()
+        items =self.getremoteLinks().values()
 
         if context.webApproved == True:
             for item in items:
                 self.publish(item)
+                
         if context.webApproved == False:
             for item in items:
                 self.retract(item)

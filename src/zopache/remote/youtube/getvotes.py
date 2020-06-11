@@ -57,11 +57,8 @@ def recordVotes (listOfVideos,context):
     for item in listOfVideos:
        if hasattr(item, 'videoId'):
           videoId=item.videoId
-          try:
-              if not videoId in byId:
+          if not videoId in byId:
                  byId[videoId]= []
-          except:
-              breakpoint()
           byId[videoId].append (item)
           continue
       

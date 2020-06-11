@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
+import requests
 from slugify import slugify, SLUG_OK
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
+from webpreview import web_preview
+import requests
+from html_to_etree import parse_html_bytes
+#https://github.com/fluquid/extract-social-media
 
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
-from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
-
+from dolmen.forms.base.errors import Error, Errors
 from zopache.core.getroot import getSiteRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
 from zopache.core.transactionnote import TransactionNote
-def message(message):
-    send(message)
-
+from zopache.ttw.file import Image
 
 class Cancel(Action):
     """Cancel the current form and return on the default content view.
@@ -47,19 +49,28 @@ class Add(Action, UniqueName, TransactionNote):
         Action.__init__(self,title)
         self.factory = factory
 
-    def __call__(self, form):
+    def extractData(self):
+        return self.form.extractData()
 
+    def __call__(self, form):
         self.form=form
-        data, errors = form.extractData()
+        obj= form.factory()
+        self.new=form.new=obj
+
+        data, errors = self.extractData()
         if errors:
             form.submissionError = errors
             return FAILURE
-        obj= form.factory()
-        self.new=form.new=obj
-        set_fields_data(form.fields, obj, data)
+        self.data = data
+        
+        errors = self.setFields()
+        if errors:
+            form.submissionError = errors
+            return FAILURE
+        
         notify(ObjectCreatedEvent(obj))
         self.actuallyAdd(obj,data)
-        message(_(u"Content created"))
+        form.message("Content created")
         baseURL = self.form.url (obj)
         #baseURL = str(IURL(obj, form.request))
         self.describeWithView(obj,form)                
@@ -73,12 +84,20 @@ class Add(Action, UniqueName, TransactionNote):
                form.new.postAddProcess(view=form)
 
         return SuccessMarker('Added', True, url=url,code=307)
+    
+    def setFields(self):
+            set_fields_data(self.form.fields, self.new, self.data)
+            return Errors()
 
-    def actuallyAdd(self,item,data):
+    def getName(self,data):
         if hasattr(self.form, 'newName'):
            newName = self.form.newName(data)
         else:   
            newName = self.newName(data)
+        return newName
+    
+    def actuallyAdd(self,item,data):
+        newName = self.getName(data)
         context = self.form.context   
         context[newName]=item
         item.__parent__ = context
@@ -89,14 +108,10 @@ class Add(Action, UniqueName, TransactionNote):
         else:
             return baseURL
 
+    def newName(self,data):
+        name =  data['__name__']        
+        return self.uniqueContainerName(self.form.context,name)
     
-    def newName(self,data):    
-        name =  data['__name__']
-        name = slugify(name, ok=SLUG_OK+'.', lower = False)
-        context = self.form.context
-        newName=self.uniqueContainerName(context,name,ofType="#")
-        return newName
-
 class AddNamed(Add):
     pass
 
@@ -115,15 +130,130 @@ class AddByTitle (Add):
         return self.form.context
     
     def newName(self,data):    
-        name =  data['title']
-        name = slugify(name,lower=True)
-        context = self.getContext(data)
-        
-        #THERE COULD BE A LOCAL OBJECT WITH THE SAME NAME
-        newName=self.uniqueContainerName(context,name,ofType="#")        
-        newName=self.uniqueSiteName(context,name,ofType="-")
-        return newName
+        newName =  data['title']
+        return self.uniqueBothName(self.form.context,neName)
+    
 
+class AddByURL(AddByTitle):
+    def newURL(self,baseURL):
+        return baseURL + '/ckedit'
+    
+    #checks that the url is not already in the database
+    def extractData(self):
+        data, errors = self.form.extractData()
+        if errors:
+            return data, errors
+        remoteURLs = self.form.getRemoteLinks()
+        if data['remoteURL'] in remoteURLs:
+            errors.append(Error("That URL is already in the Database"))
+            self.form.submissionError = errors            
+        return data, errors
+    
+    def newName(self,data):
+        name =  self.new.title
+        return self.uniqueBothName(self.form.context,name)
+    
+    def setFields(self):
+        set_fields_data(self.form.fields, self.new, self.data)        
+        remoteURL = self.new.remoteURL
+        try:
+           source = requests.get(remoteURL).text
+        except:
+            error = Error("Failed to Fetch URL")
+            return Errors().append(error)
+        
+        new = self.new
+        try:
+
+            result = web_preview( remoteURL,content= source,parser="html.parser")
+            #I do not use the title. 
+            title,new.description, image = result
+            
+        except:
+            error = Error("""Failed to Extract title, description 
+                     and image from that URL""")
+            
+            return Errors().append(error)
+        if new.description ==None:
+            new.description = ""
+            
+        if image != None:
+            response = requests.get(image)
+            zodbImage =Image()
+            zodbImage.contentType=response.headers['content-type']            
+            zodbImage.data = response.content
+            new['Logo']= zodbImage
+            zodbImage.__parent__ = new
+
+    def processURL(self,url,attribute, split):
+         if not split in url:
+            return
+         parts = url.split(split)
+         if len (parts) < 2 :
+            return
+         setattr(self.new,attribute,parts[1])
+         print ("SETTNG", attribute, parts[1])
+         
+    def extractSocialMediaLinks(self,response):
+         tree = parse_html_bytes(response.content,
+                    response.headers.get('content-type'))
+         links = set(find_links_tree(tree))
+         remainingLinks = []
+         
+         for url in links:
+             if 'facebook.com/group/' in url:
+                 self.processURL(self,url,'facebookGroup',
+                                 'acebook.com/group/')
+                 continue
+             if 'facebook.com/' in url:
+                  self.processURL(self,url,'facebookId',
+                                 'acebook.com/')
+                  continue
+             if 'twitter.com/' in item:  
+                  self.processURL(self,url,'twitterId',
+                                 'witter.com/')
+                  continue              
+             if 'twitter.com/intent/follow?screen_name=' in item:  
+                  self.processURL(self,url,'twitterId',
+                    'witter.com/intent/follow?screen_name=')
+                  continue
+             if 'twitter.com/' in item:  
+                  self.processURL(self,url,'twitterId',
+                                 'witter.com/')
+                  continue              
+             if 'youtube.com/channel' in item:  
+                  self.processURL(self,url,'youtubeId',
+                                 'youtube.com/channel/')
+                  continue
+             if 'youtube.com/user' in item:  
+                  self.processURL(self,url,'youtubeId',
+                                 'youtube.com/user/')
+                  continue
+             if 'youtube.com/' in item:  
+                  self.processURL(self,url,'youtubeId',
+                                 'youtube.com/')
+                  continue                            
+             if 'instagram.com/' in item:  
+                  self.processURL(self,url,'instagramId',
+                                 'stagram.com/')
+                  continue
+             remainingLinks.append(url)
+                 
+         allLinks = []       
+         for item in remainingLinks:                                
+              oneLink = self.href(item,item)
+              allLinks.append(oneLink)                    
+              self.new.source = '<br>'.join(allLinks)
+
+#So This one can be called multiple times.               
+class AddMultipleByURL(AddByURL):
+    def __call__(self, form,remoteURL):
+        self.remoteURL = remoteURL
+        return AddByURL.__call__(self,form)
+        
+    def extractData(self):
+        return {'remoteURL':self.remoteURL}
+    
 class AddByTitleToTree(AddByTitle):    
     def getContext(self,data):
         siteRoot = self.getSiteRoot()
@@ -143,12 +273,10 @@ class Update(Action,TransactionNote):
         self.form=form
         data, errors = form.extractData()
         if errors:
-
             form.submissionError = errors
             return FAILURE
-
         apply_data_event(form.fields, form.getContentData(), data)
-        message(_(u"Content updated"))
+        form.message(_(u"URL updated"))
         if hasattr(form,'postProcess'):        
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):
@@ -232,7 +360,7 @@ class Delete(Action):
                     root.indexTree()
                     products.indexTree()
                     form.status = self.successMessage
-                    message(form.status)
+                    form.message(form.status)
                     url = str(IURL(container, form.request))
                     url = url + '/manage'
                     return SuccessMarker('Deleted', True, url=url)
@@ -240,5 +368,5 @@ class Delete(Action):
                     pass
 
         form.status = self.failureMessage
-        message(form.status)
+        form.message(form.status)
         return FAILURE

@@ -8,7 +8,7 @@ from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
-from zopache.crud.forms import AddByTitleForm
+from zopache.crud.forms import AddByTitleForm, AddByURLForm
 from zopache.pages.interfaces import IMap, ILocation, IPage
 from zopache.pages.page import Page
 from zopache.pages import Map, Location
@@ -56,7 +56,26 @@ class AddPage(AddPageBase):
     label="Add a Wiki Page"
     factory = Page
 
-  
+#ADD LINK
+from zopache.core.interfaces import ITreeSecurity
+from zopache.pages.page import Link
+from zopache.pages.interfaces import ILink
+from zopache.core.interfaces import ITreeSecurity
+
+@view_component
+@name('addLink')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddLink(AddByURLForm):
+    def update(self):
+        AddByURLForm.update(self)
+        if not self.isAuthenticated():
+           self.raiseUnauthorized
+           
+    title = "Add a Link"
+    factory = Link
+
 
 #LOCAION
 @view_component

@@ -222,7 +222,8 @@ class IFrameIndex(Index):
             return F'<a href="{url}" target ="_parent"> {title}</a>'
 
 class BaseHTMLEditForm(BaseEditForm):
-
+    actions = Actions()
+    
     def update(self):
         if self.treeSecurity():
             self.setActions()
@@ -296,13 +297,11 @@ class CkEdit(BaseCkEdit):
               formactions.SaveAndTest(_("Save  and Test","Save -> Test")),                   formactions.Cancel(_("Cancel","Cancel")))
 
 
-        
-        
+                
 #HERE IS THE CKEDIT FORM
 @form_component
 @context(ICkHTML)
 @name('ckedit')
-@implementer(ITreeSecurity)
 class CkEditForm(CkEdit):
           pass
 

@@ -117,22 +117,31 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
            return self.webClass
        
     def postProcess(self,view=None):
+        self.partialPostProcess(view=view)
         self.recalculateRootJSON()
         cache.resetCache(self)
+        
+    def partialPostProcess(self, view=None):        
         self.description=self.description.replace ('"' , "&ldquo;", 1)
         self.description=self.description.replace ('"' , "&rdquo;", 1)
         self.description=self.description.replace ('"' , "&ldquo;")
         self.description=self.description.replace ('\n' , " ")        
+
+        self.title=self.title.replace ('"' , "&ldquo;", 1)
+        self.title=self.title.replace ('"' , "&rdquo;", 1)
+        self.title=self.title.replace ('"' , "&ldquo;")
+        self.title=self.title.replace ('\n' , " ")        
         
     def postAddProcess(self,view=None):
         self.postProcess(view=view)
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
-        
-    # NOT YET SERVING JSON
-    def recalculateRootJSON(self):
-        pass
 
+    def recalculateRootJSON(self):
+         jsonRoot = self.getSiteRoot()
+         if jsonRoot:
+            jsonRoot.setJson()
+    
     def __init__(self):
          OrderedBTreeContainer.__init__(self)
          self.creationTime=time.time()
@@ -230,7 +239,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
          return self.__name__
      
     def preDeleteProcess(self,view):
-        pass
+        if hasattr(self,'remoteURL'):
+            siteRoot = self.getSiteRoot()
+            del siteRoot.remoteLinks [self.remoteURL]
     
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
@@ -242,7 +253,13 @@ from zopache.pages.interfaces import ILink
 class Link(PageBase, PageMixIn):
     webClass='Link'
     icon="ttwicons/WikiPage.png"
-
+    def postAddProcess(self,view=None):
+        siteRoot = self.getSiteRoot()
+        siteRoot.valuesByToken[self.__name__] = self
+        self.createdBy = view.request.principal.__name__
+        PageBase.postAddProcess(self, view=view)
+        #The Following is not needed.
+        #PageMixIn.postAddProcess(self, view=view)       
     
 @implementer (INews)     
 class News (Page,RecentMixIn):
