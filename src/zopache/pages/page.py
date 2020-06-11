@@ -27,6 +27,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     branchSize=1
     description = ''
     webApproved = True
+    emailApproved = False
     
     def allBlogObjects(self):
         return AllBlogObjects(self)

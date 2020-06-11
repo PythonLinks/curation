@@ -15,7 +15,7 @@ from dolmen.container import IBTreeContainer
 from .html import AddAceHTML
 
 @form_component
-@name (u'addSecureChameleon')
+@name (u'addSecureHTML')
 @context(IBTreeContainer)
 @permissions('Manage')
 class AddSecureHTML(AddAceHTML):

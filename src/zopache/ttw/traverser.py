@@ -13,7 +13,6 @@ from zopache.ttw.interfaces import IWebClass
 from zopache.ttw.acquisition import webClassAcquire
 from zopache.python.interfaces import IDirectory
 
-
 class NotFound(Exception):
     pass
 

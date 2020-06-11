@@ -68,7 +68,10 @@ class AddLink(AddPageBase):
     title = "Add a Link"
     subtitle = "To a remote web page."
     factory = Link
-    
+    def update(self):
+        AddPageBase.update(self)
+        if self.isForestWiki():
+            self.raiseUnauthorized()
   
 
 #LOCAION
