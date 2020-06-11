@@ -95,7 +95,7 @@ class IndexImage(View):
 def make_logo_response(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.headers['Cache-Control'] = 'public,max-age=3600'  
-        logo = ParentalAcquire(view.context)['Logo.png']
+        logo = ParentalAcquire(view.context)['Logo']
         if logo:
             contentType = logo.contentType
         else:
@@ -114,7 +114,7 @@ class LogoAcquire(View):
     make_response = make_logo_response
         
     def render(self):
-               logo = ParentalAcquire(self.context)['Logo.png']
+               logo = ParentalAcquire(self.context)['Logo']
                if not logo:
                    return ''
                return logo.data                      
