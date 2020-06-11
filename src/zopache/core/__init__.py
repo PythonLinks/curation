@@ -59,8 +59,8 @@ class Page(View):
         responseFactory = Response
         make_response = make_layout_response
 
-        def url(self):
-           return get_absolute_url(self.context, self.request)
+        #def url(self):
+        #   return get_absolute_url(self.context, self.request)
                         
 
 

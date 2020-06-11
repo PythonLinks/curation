@@ -27,7 +27,11 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     description = ''
     webApproved = True
     
-    
+    def moveURL(self):
+        if hasattr(self,'url'):
+           self.remoteURL = self.url
+           del self.url
+           
     def listFutureEvents(self):
         result = []
         for item in self.allBlogObjects():
