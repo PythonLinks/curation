@@ -139,7 +139,7 @@ class ICompanyBase(ICompanyOrOrganization):
         required = True,
     )
 
-    url = schema.URI(
+    remoteURL = schema.URI(
         title = u'The Company URL',
         description = """Please link to the Company. Include  'https://'""",
         required = False,

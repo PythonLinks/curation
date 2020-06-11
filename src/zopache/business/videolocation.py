@@ -6,7 +6,7 @@ from zopache.remote.video import BasicVideo
 from zopache.business.subscribe import Member
 from zopache.business.subscribe import Member
 from zopache.pages.interfaces import ILocation
-from zopache.remote.ivideo import IVideo
+from zopache.core.interfaces import IVideo
 from zope import schema
 from zopache.pages.interfaces import IMap
 

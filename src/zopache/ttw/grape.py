@@ -101,7 +101,7 @@ class AddGrape(AddForm,Breadcrumbs):
     def newURL(self,baseURL):
         return baseURL + '/edit'    
     
-from zopache.ttw.html import Index    
+from zopache.ttw.htmlviews import Index    
 @view_component
 @name('index')
 @context(IGrapeLayout)

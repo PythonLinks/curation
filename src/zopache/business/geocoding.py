@@ -11,15 +11,22 @@ class GeoCodeForm(object):
             the server has to contact Google GeoCoding to 
             convert the address into a lattitude and longitude.  That   
             takes a few seconds. """
-
+    
+from zopache.core.getroot import getSiteRoot
 class Base(object):
 
     def setLatLong(self):
         lat,lng = self.getLatLong (self.address)        
         self.setMarkerLatLng(lat,lng)
 
-    def getLatLong(self,data):   
-        gmaps = googlemaps.Client(key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
+    def getLatLong(self,data):
+        #key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
+        key =''
+        siteRoot = getSiteRoot(self)
+        if hasattr(siteRoot,'googleClientId'):
+           if siteRoot.googleClientId:
+              key = siteRoot.googleClientId 
+        gmaps = googlemaps.Client()
         # Geocoding an address
         geocode_result = gmaps.geocode(data)
         result=geocode_result[0][u'geometry'] [u'location']
@@ -29,14 +36,16 @@ class Base(object):
 
     
 class GeoCodeObject(Base):
+    address = ''
     def postProcess(self,view=None):
         Page.postProcess(self, view = view)
-        self.setLatLong()
+        if self.address:
+            self.setLatLong()        
         
     def postAddProcess(self,view=None):
         self.hidden = False
         Page.postAddProcess(self, view = view)
-        self.setLatLong()        
+        #Page calls post process, so lat lng  is not needed. 
         #self.editors=[view.request.principal.__name__]    
 
 class GeoCodingError(ValidationError):

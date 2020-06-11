@@ -12,7 +12,6 @@ from zopache.ttw.interfaces import ICanonical
 from dolmen.container import BTreeContainer
 
 from .interfaces import IBranch
-from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.pages.interfaces import IRootPage
 from zopache.ttw.interfaces import IWebClass, IProducts
 from zopache.ttw.interfaces import IInternalPrincipal
@@ -47,6 +46,7 @@ class Branch(object):
 
     def indexTree(self):
         self.valuesByToken=OOBTree()
+        self.remoteLinks = OOBTree()
         self.indexBranch(self,self)
 
 
@@ -54,6 +54,8 @@ class Branch(object):
         for item in branch.values():
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
+            if hasattr(item,'remoteURL'):
+                self.remoteLinks[item.remoteURL] = item
             if IBTreeContainer.providedBy(item):    
                 self.indexBranch(tree,item)
 

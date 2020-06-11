@@ -4,11 +4,11 @@ from zopache.pages.pageactions import *
 from zopache.crud import actions as formactions
 from zopache.pages.pageactions import *
 from zopache.core.viewdecorators import *
-from zopache.ttw.html import CkScripts
-from zopache.ttw.html import AddCkHTMLBase
+from zopache.ttw.htmlviews import CkScripts
+from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
-from zopache.crud.forms import AddByTitleForm
+from zopache.crud.forms import AddByTitleForm, AddByURLForm
 from zopache.pages.interfaces import IMap, ILocation, IPage
 from zopache.pages.page import Page
 from zopache.pages import Map, Location
@@ -57,23 +57,30 @@ class AddPage(AddPageBase):
     factory = Page
 
 #ADD LINK
+from zopache.core.interfaces import ITreeSecurity
 from zopache.pages.page import Link
 from zopache.pages.interfaces import ILink
+from zopache.core.interfaces import ITreeSecurity
+
 @view_component
 @name('addLink')
 @target(IView)
 @context(IPage)
-class AddLink(AddPageBase):
-    interface = ILink
+@implementer(ITreeSecurity)
+class AddLink(AddByURLForm):
+    def update(self):
+        AddByURLForm.update(self)
+        if not self.isAuthenticated():
+           self.raiseUnauthorized
+           
     title = "Add a Link"
-    subtitle = "To a remote web page."
     factory = Link
+
     def update(self):
         AddPageBase.update(self)
         if self.isForestWiki():
             self.raiseUnauthorized()
   
-
 #LOCAION
 @view_component
 @name('addLocation')

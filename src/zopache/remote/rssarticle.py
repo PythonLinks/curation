@@ -6,7 +6,7 @@ from zopache.ttw.treewidget import TreeField
 from zopache.core.viewdecorators import *
 from zopache.remote.interfaces import IVoteable
 
-class IRSSLink(ILink,IVoteable):
+class IRSSArticle(ILink,IVoteable):
 
     title = schema.TextLine(
         title = 'Remote Article Name',
@@ -47,10 +47,11 @@ class IRSSLink(ILink,IVoteable):
     
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
-@implementer (IRSSLink)
-class RSSLink(Link,Voteable):
+@implementer (IRSSArticle)
+class RSSArticle(Link,Voteable):
     _category = ""
     webClass = "RSSLink"
+    emailApproved = True
     def getCategory(self):
       return self._category
   
@@ -59,8 +60,9 @@ class RSSLink(Link,Voteable):
        
     def preDeleteProcess(self,view):
         Page.preDeleteProcess(self,view)
-        articles = view.getArticles()
+        articles = view.getRemoteLinks()
         del articles [self.permaLink]
+        del self.rssFeed.articles [self.permaLink]
         
     def getSrcSet(self):
         pass

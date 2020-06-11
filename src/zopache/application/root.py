@@ -4,10 +4,10 @@ from zopache.core import Container
 from zopache.crud.interfaces import IRootContainer
 from zopache.ttw.principalfolder import PrincipalFolder
 from zopache.pages.interfaces import IContent
-
+from zopache.pages.allblogobjects import ProcessTree
 
 @implementer(IRootContainer)
-class RootContainer(Container):
+class RootContainer(Container,ProcessTree):
     icon="ttwicons/Container.svg"
     webClass = "Container"
     __name__ = "applicationRoot"

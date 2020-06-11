@@ -22,12 +22,10 @@ def recordingTypes():
     return SimpleVocabulary(terms)
 
 from zopache.remote.interfaces import IVoteable
-
-class IVideo (IVoteable):
-     pass 
+from zopache.core.interfaces import IVideo
  
 
-class IVideoBase(IPage,IVideo):
+class IVideoBase(IPage,IVideo,IVoteable):
     title = schema.TextLine(
         title = u'Video Title',
         description = u'What is the title of this video.?',

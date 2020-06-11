@@ -75,7 +75,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         required = False,
     )
 
-    url = schema.URI(
+    remoteURL = schema.URI(
         title = "The Politician's Website",
         description = """Please link to the Politician. Include  'https://'""",
         missing_value="",

@@ -5,6 +5,9 @@ from zopache.crud.actions import AddByTitle
 from zopache.pages.pageactions import AddAndView
 from zopache.crud.forms import AddByTitleToTree
 from zopache.pages.addpage import AddPageVeryBase
+from zopache.core.viewdecorators import *
+from zopache.pages.interfaces import IPage, ILink
+from zopache.pages.page import Link
 
 class AddToTreeAndView(AddByTitleToTree):
     def newURL(self,baseURL):
@@ -17,10 +20,16 @@ class AddAnonymous(AddPageVeryBase):
     allowAnonymous = True    
     actions = Actions()    
     def update(self):
-        self.actions = Actions(
+        if self.treeSecurity():
+           self.addAuthorizedActions()
+        else:
+           self.addUnauthorizedActions()    
+
+    def addUnauthorizedActions(self):    
+           self.actions = Actions(
                   AddAndView("Add and View", self.factory),
                   formactions.Cancel("Cancel","Cancel"))
-
+                   
     def postAddProcess(self,view = None):
         if self.treeSecurity():
             self.new.webApproved = True
@@ -41,3 +50,7 @@ class AddAnonymousToTree(AddAnonymous):
         self.actions = Actions(
                   AddToTreeAndView("Add and View", self.factory),
                   formactions.Cancel("Cancel","Cancel"))
+
+
+    
+        

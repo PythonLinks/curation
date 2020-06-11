@@ -1,12 +1,13 @@
 from zopache.pages.interfaces import IPage
+from zope.interface import Interface
+from dolmen.container import IBTreeContainer
 
 #FROM http://codeaffectionate.blogspot.com/2013/05/tree-iterator-in-python.html
-class AllBlogObjects:
+class AllChildObjects:
  
     def __init__(self, node, interface = None):
-        if interface == None:
-           interface = IPage
-        self.interface = interface   
+        # if no interface provided, include all child objects
+        self.interface = interface or Interface
         self.stack = [node]
  
     def __iter__(self):
@@ -16,11 +17,39 @@ class AllBlogObjects:
         return self.next()
     
     def __next__(self):
-        interface = self.interface
         if not self.stack: raise StopIteration
         node = self.stack.pop()
-        for item in  node.values():
-             if (interface.providedBy(item)):                   
+        if IBTreeContainer.providedBy(node):
+           for item in  node.values():
+              if (self.interface.providedBy(item)):                   
                   self.stack.append(item)
         return node
 
+#Kept for backwards compatibility.     
+class AllBlogObjects(AllChildObjects):
+    pass
+
+from zopache.pages.interfaces import IPage
+class AllWikiObjects(AllChildObjects):
+    def __init__(self, node):
+        return self.AllChildObjects(node,interface = IPage)
+
+from zopache.core.interfaces  import IVideo    
+class AllVideoObjects(AllChildObjects):
+    def __next__(self):
+        while True:
+           nextItem = AllChildObjects.__next__(self)
+           if IVideo.providedBy (nextItem):
+              yield nextItem      
+
+
+class ProcessTree(object):              
+    def allBlogObjects(self):
+        return AllBlogObjects(self)
+
+    def allWikiObjects(self):
+        return AllWikiObjects(self)        
+
+    def allVideoObjects(self):
+        return AllVideoObjects(self)
+              
