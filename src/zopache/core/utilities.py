@@ -53,7 +53,7 @@ class Utilities (object):
                                          self.parentsUpToSiteRoot()))
         parameters ["banner"] = (self.parentalAcquire("Banner.png")
                                      != None)
-        parameters ["logo"] = (self.parentalAcquire("Logo.png") != None)
+        parameters ["logo"] = (self.parentalAcquire("Logo") != None)
         parameters ["homePage"]= getSiteRoot(self.context).homePage
         
         if self.isAuthenticated():
