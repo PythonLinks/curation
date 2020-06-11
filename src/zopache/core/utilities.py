@@ -6,6 +6,13 @@ from cromlech.security import Unauthorized
 from dolmen.message.utils import send
 
 class Utilities (object):
+    def rename(self,item,newName):
+        parent = item.__parent__
+        del parent[item__name__]
+        parent[newName] = item
+        item.__parent__ = parent
+        item.__name__ = newName
+
     def className(self):
         return self.__class__.__name__
     def contextClassName(self):
