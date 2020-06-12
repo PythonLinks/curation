@@ -68,15 +68,9 @@ from zopache.core.interfaces import ITreeSecurity
 @context(IPage)
 @implementer(ITreeSecurity)
 class AddLink(AddByURLForm):
-    def update(self):
-        AddByURLForm.update(self)
-        if not self.isAuthenticated():
-           self.raiseUnauthorized
-           
     title = "Add a Link"
     factory = Link
-
-
+  
 #LOCAION
 @view_component
 @name('addLocation')

@@ -23,6 +23,7 @@ from zopache.pages.page import  News
 from zopache.pages.addpage import AddPageBase
 from zopache.pages.addanonymous import AddAnonymous
 from zopache.core.interfaces import ITreeSecurity
+from zopache.business.driver import IAddDriver, Driver
 
 #ADD NEWS
 @view_component
@@ -58,62 +59,11 @@ class AddOrganization(AddAnonymous,GeoCodeForm):
     interface = IOrganization
     factory = Organization
     title = "Add an Organization"
-
-
-
-@view_component
-@name('addOrgByURL')
-@target(IView)
-@context(IPage)
-@implementer(ITreeSecurity)
-class AddOrganizationByURL(AddByURLForm):
-    factory = Organization
-    title = "Add an Organization by URL"
-    subTitle = "This software will download the title, description and image of the group you linked to, and store that information.  You will also be able to edit it."
-    
-@view_component
-@name('addOnlineOrganization')
-@title("Add Online Organization")
-@target(IView)
-@context(IPage)    
-class AddOnlineOrganization(AddAnonymous,GeoCodeForm):
-    interface = IOnlineOrganization
-    factory = OnlineOrganization
-    title = "Add an Online Organization"
-        
-from dolmen.forms.base import interfaces
-@view_component
-@name('addPolitician')
-@target(IView)
-@context(IPage)    
-class AddPolitician(AddAnonymous,GeoCodeForm):
-    interface = IPolitician
-    factory = Politician
-    title = "Add a Politician"
     def update(self):
         AddAnonymous.update(self)
         GeoCodeForm.update(self)
 
-@view_component
-@name('addPolByURL')
-@target(IView)
-@context(IPage)
-@implementer(ITreeSecurity)
-class AddPoliticianByURL(AddByURLForm):
-    factory = Politician
-    title = "Add a Politician"
-    def update(self):
-        AddAnonymous.update(self)
-        GeoCodeForm.update(self)         
-    """
-    def updateWidgets(self):
-        ddBase.update(self)
-        #item =self.fields['endorsedBy']
-        it =object.__setattr__(item,'mode','multiselect')
-        super().updateWidgets()
-     """   
 
-from zopache.business.driver import IAddDriver, Driver    
 @view_component
 @name('addDriver')
 @target(IView)
@@ -126,6 +76,58 @@ class AddDriver(AddAnonymous,GeoCodeForm):
     def update(self):
         AddAnonymous.update(self)
         GeocodeForm.update(self) 
+
+@view_component
+@name('addOrgByURL')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddOrganizationByURL(AddByURLForm):
+    factory = Organization
+    title = "Add an Organization by URL"
+
+@view_component
+@name('addOnlineOrganization')
+@title("Add Online Organization")
+@target(IView)
+@context(IPage)    
+class AddOnlineOrganization(AddAnonymous,GeoCodeForm):
+    interface = IOnlineOrganization
+    factory = OnlineOrganization
+    title = "Add an Online Organization"
+        
+#from dolmen.forms.base import interfaces
+
+@view_component
+@name('addPolByURL')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddPoliticianByURL(AddByURLForm):
+    factory = Politician
+    title = "Add a Politician"
+    def update(self):
+        AddByURLForm.update(self)
+        GeoCodeForm.update(self)         
+    """
+    def updateWidgets(self):
+        ddBase.update(self)
+        #item =self.fields['endorsedBy']
+        it =object.__setattr__(item,'mode','multiselect')
+        super().updateWidgets()
+     """   
+@view_component
+@name('addPolitician')
+@target(IView)
+@context(IPage)    
+class AddPolitician(AddAnonymous,GeoCodeForm):
+    interface = IPolitician
+    factory = Politician
+    title = "Add a Politician"
+    def update(self):
+        AddAnonymous.update(self)
+        GeoCodeForm.update(self)
+
               
 @view_component
 @name('addCompanyMap')

@@ -31,7 +31,7 @@ class AddCMSNews(Base,AddNews):
 @name('iframe-addOnlineOrganization')
 @target(IView)
 @context(IPage)    
-class AddOnlineOrganziatin(Base,AddOnlineOrganization):
+class AddCMSOnlineOrganziatin(Base,AddOnlineOrganization):
     pass
     
 from dolmen.forms.base import interfaces
@@ -39,7 +39,7 @@ from dolmen.forms.base import interfaces
 @name('iframe-addPolitician')
 @target(IView)
 @context(IPage)    
-class AddPolitician(Base,AddPolitician):
+class AddCMSPolitician(Base,AddPolitician):
     pass
 
 
@@ -48,7 +48,7 @@ class AddPolitician(Base,AddPolitician):
 @name('iframe-addOnlineEvent')
 @target(IView)
 @context(IPage)
-class AddOnlineEvent(Base,AddOnlineEvent):
+class AddCMSOnlineEvent(Base,AddOnlineEvent):
     pass
 
 #ADD AN EVENT
@@ -56,6 +56,6 @@ class AddOnlineEvent(Base,AddOnlineEvent):
 @name('iframe-addEvent')
 @target(IView)
 @context(IPage)
-class AddEvent(Base,AddEvent):
+class AddCMSEvent(Base,AddEvent):
     pass
     

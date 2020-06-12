@@ -18,7 +18,7 @@ from zopache.core.relatives import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
-from zopache.pages.allblogobjects import ProcessTree
+from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
@@ -26,6 +26,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     branchSize=1
     description = ''
     webApproved = True
+    emailApproved = False
     
     def moveURL(self):
         if hasattr(self,'url'):
@@ -280,6 +281,8 @@ class RootPage(Branch,PageBase,PageMixIn):
        Branch.__init__(self)
        PageBase.__init__(self)
        cache = Cache()
-    
+       
+    def setJson(self):
+        pass
 
     
