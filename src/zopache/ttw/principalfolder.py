@@ -194,8 +194,8 @@ def key(item):
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
-    title = "Principal Folder"
-    description = "This is where the user details are stored. "
+    title = ""
+    description = ""
     branchSize = 1
     def html (self) :
         return ""
