@@ -281,6 +281,8 @@ class RootPage(Branch,PageBase,PageMixIn):
        Branch.__init__(self)
        PageBase.__init__(self)
        cache = Cache()
-    
+       
+    def setJson(self):
+        pass
 
     
