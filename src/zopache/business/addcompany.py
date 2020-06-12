@@ -99,7 +99,7 @@ class AddPolitician(AddAnonymous,GeoCodeForm):
 @target(IView)
 @context(IPage)
 @implementer(ITreeSecurity)
-class AddPolitician(AddByURLForm):
+class AddPoliticianByURL(AddByURLForm):
     factory = Politician
     title = "Add a Politician"
     def update(self):

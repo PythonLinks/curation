@@ -78,8 +78,8 @@ class AddByURLForm(AddFormBase,Breadcrumbs):
     description and the image url, and then download the image,  
     and store them to this server.  You will then 
     be able to edit the page content if you so wish. It all takes a few
-    seconds, so please be patient. It is so much faster than entering the 
-    data by hand """
+    seconds, so please be patient. It is so much faster than copying the image
+    by hand """
     
     def update(self):
         if self.isPerson() and not self.treeSecurity():
