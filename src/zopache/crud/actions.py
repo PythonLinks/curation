@@ -131,7 +131,7 @@ class AddByTitle (Add):
     
     def newName(self,data):    
         newName =  data['title']
-        return self.uniqueBothName(self.form.context,neName)
+        return self.uniqueBothName(self.form.context,newName)
     
 
 class AddByURL(AddByTitle):

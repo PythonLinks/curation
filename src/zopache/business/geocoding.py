@@ -20,13 +20,12 @@ class Base(object):
         self.setMarkerLatLng(lat,lng)
 
     def getLatLong(self,data):
-        #key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4')
-        key =''
-        siteRoot = getSiteRoot(self)
-        if hasattr(siteRoot,'googleClientId'):
-           if siteRoot.googleClientId:
-              key = siteRoot.googleClientId 
-        gmaps = googlemaps.Client()
+        key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4' 
+        #siteRoot = getSiteRoot(self)
+        #if hasattr(siteRoot,'googleClientId'):
+        #   if siteRoot.googleClientId:
+        #      key = siteRoot.googleClientId 
+        gmaps = googlemaps.Client(key)
         # Geocoding an address
         geocode_result = gmaps.geocode(data)
         result=geocode_result[0][u'geometry'] [u'location']
