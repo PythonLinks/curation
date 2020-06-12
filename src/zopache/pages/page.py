@@ -18,7 +18,7 @@ from zopache.core.relatives import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
-from zopache.pages.allblogobjects import ProcessTree
+from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''

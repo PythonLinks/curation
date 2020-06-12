@@ -5,10 +5,12 @@ from slugify import slugify, SLUG_OK
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
+#https://github.com/ludbek/webpreview
 from webpreview import web_preview
 import requests
 from html_to_etree import parse_html_bytes
 #https://github.com/fluquid/extract-social-media
+from extract_social_media import matches_string, find_links_tree
 
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
@@ -131,7 +133,7 @@ class AddByTitle (Add):
     
     def newName(self,data):    
         newName =  data['title']
-        return self.uniqueBothName(self.form.context,neName)
+        return self.uniqueBothName(self.form.context,newName)
     
 
 class AddByURL(AddByTitle):
@@ -209,31 +211,31 @@ class AddByURL(AddByTitle):
                   self.processURL(self,url,'facebookId',
                                  'acebook.com/')
                   continue
-             if 'twitter.com/' in item:  
+             if 'twitter.com/' in url:  
                   self.processURL(self,url,'twitterId',
                                  'witter.com/')
                   continue              
-             if 'twitter.com/intent/follow?screen_name=' in item:  
+             if 'twitter.com/intent/follow?screen_name=' in url:  
                   self.processURL(self,url,'twitterId',
                     'witter.com/intent/follow?screen_name=')
                   continue
-             if 'twitter.com/' in item:  
+             if 'twitter.com/' in url:  
                   self.processURL(self,url,'twitterId',
                                  'witter.com/')
                   continue              
-             if 'youtube.com/channel' in item:  
+             if 'youtube.com/channel' in url:  
                   self.processURL(self,url,'youtubeId',
                                  'youtube.com/channel/')
                   continue
-             if 'youtube.com/user' in item:  
+             if 'youtube.com/user' in url:  
                   self.processURL(self,url,'youtubeId',
                                  'youtube.com/user/')
                   continue
-             if 'youtube.com/' in item:  
+             if 'youtube.com/' in url:  
                   self.processURL(self,url,'youtubeId',
                                  'youtube.com/')
                   continue                            
-             if 'instagram.com/' in item:  
+             if 'instagram.com/' in url:  
                   self.processURL(self,url,'instagramId',
                                  'stagram.com/')
                   continue
