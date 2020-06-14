@@ -67,7 +67,8 @@ in a leaf of the tree.""",
     )      
 
     
-    
+
+from dolmen.forms.base.widgets import Widgets    
 @view_component
 @name('fromDiscord')
 @target(IView)
@@ -82,12 +83,18 @@ class AddLinkFromDiscord(AddAnonymousToTree):
     def updateWidgets(self):
         AddAnonymousToTree.updateWidgets(self)
         widgets = self.widgetDictionary()
+        style = "display:none;"
+
+        widgets['form-field-discordGuildId']._htmlAttributes['style'] = style
+        widgets['form-field-discordUserId']._htmlAttributes['style'] = style
+        widgets['form-field-discordUserName']._htmlAttributes['style'] = style
+        widgets['form-field-discordChannelId']._htmlAttributes['style'] = style
         widgets['form-field-discordGuildId'].component.mode = HIDDEN
         widgets['form-field-discordUserId'].component.mode = HIDDEN
         widgets['form-field-discordUserName'].component.mode = HIDDEN
-        widgets['form-field-discordChannelId'].component.mode = HIDDEN
+        widgets['form-field-discordChannelId'].component.mode = HIDDEN        
 
-
+        
     def postAddProcess(self, view=None):
         #del self.new.discordUserId
         #del self.new.discordUserId        

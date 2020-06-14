@@ -49,7 +49,7 @@
 	 tal:condition="error"
 	 tal:content="error.title" />
       <div tal:condition="widget.htmlId()=='form-field-source' and widget.visible" name="editorDiv" id="editorDiv"></div>
-      <tal:widget  tal:condition= " not view.isBool(widget) and widget.visible"  tal:content="structure widget.render()" />
+      <tal:widget  tal:condition= " not view.isBool(widget)"  tal:content="structure widget.render()" />
     </div>
   </tal:fields>
   <div>
