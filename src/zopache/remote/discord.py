@@ -101,4 +101,4 @@ class AddLinkFromDiscord(AddAnonymousToTree):
         #del self.new.discordGuild
         #del self.new.discordChannel        
         AddAnonymousToTree.postAddProcess(self,view=self)
-
+        self.new.webApproved = False
