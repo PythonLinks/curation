@@ -28,6 +28,7 @@ class AddFormBase(Form):
     is respected on the context.
     """
     error = ''
+    submissionError = ''
     label= ''
     subTitle='Add an Object'
     @property
@@ -69,10 +70,13 @@ class AddByTitleForm(AddFormBase):
               self.actions= actions
 
 
+    
 
 
 
+from zopache.forms.urlvalidator import DuplicateURLValidator              
 class AddByURLForm(AddFormBase,Breadcrumbs):
+    datavalidators = [DuplicateURLValidator]
     preamble = """This form may take a few seconds to process. 
     The software will download that webpage, capture the title, 
     description and the image url, and then download the image,  
@@ -109,9 +113,6 @@ class AddByURLForm(AddFormBase,Breadcrumbs):
         remoteLinks = self.getRemoteLinks()
         remoteLinks[self.new.remoteURL] = self.new
         
-class AddByTitleToTree(AddByTitleForm):
-     pass
- 
 
 class BaseEditForm(Form,Breadcrumbs):    
     """

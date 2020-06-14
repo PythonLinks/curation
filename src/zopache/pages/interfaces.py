@@ -45,13 +45,14 @@ class ILinkTop(Interface):
     )
     remoteURL= schema.URI(
         title = 'URL',
-        description = 'A URL That this page refers to. Please include https://',
+        description = """A URL That this page refers to. 
+             Please include 'https://'""",
         required = False,
     )
     
 class IPageBottom(Interface):
     description= schema.Text(
-        title = u'Description',
+        title = 'Description',
         description = """A brief introduction of this page.  
                         This is used by the search functions.""",
         required = False,

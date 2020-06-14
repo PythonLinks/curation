@@ -28,6 +28,11 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     webApproved = True
     emailApproved = False
     
+    def getDefaultThumbNailURL(self):
+        if 'Logo' in self:
+            return  self.shortURL (self,viewName ='Logo')
+        return ""
+    
     def moveURL(self):
         if hasattr(self,'url'):
            self.remoteURL = self.url
@@ -252,7 +257,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
     icon="ttwicons/WikiPage.png"
-
+    
+from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink    
 @implementer (ILink)     
 class Link(PageBase, PageMixIn):
@@ -261,7 +267,9 @@ class Link(PageBase, PageMixIn):
     def postAddProcess(self,view=None):
         siteRoot = self.getSiteRoot()
         siteRoot.valuesByToken[self.__name__] = self
-        self.createdBy = view.request.principal.__name__
+        principal = view.request.principal
+        if principal != Anonymous:
+           self.createdBy = view.request.principal.__name__
         PageBase.postAddProcess(self, view=view)
         #The Following is not needed.
         #PageMixIn.postAddProcess(self, view=view)       

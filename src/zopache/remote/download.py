@@ -71,7 +71,6 @@ async def fetchURLS(urls,processResponse):
         session = None
         responses = await fetch_all( urls,processResponse)
         results = {}
-        breakpoint()
         for item in responses:
             print  (item [0], item [1])
             results [item[1]]=item [2]

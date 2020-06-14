@@ -54,7 +54,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         value_type = schema.Choice(source = fromList(['Elected','Running'])),
         title="Already Elected Or Running For Office",
         description= "It could be both",
-        required = False)
+        required = False,)
     
 #    addTo=TreeField(
 #           title="Where to Add this Politician.",

@@ -3,17 +3,13 @@ from zopache.crud import actions as formactions
 from zopache.crud import actions as formactions
 from zopache.crud.actions import AddByTitle
 from zopache.pages.pageactions import AddAndView
-from zopache.crud.forms import AddByTitleToTree
-from zopache.pages.addpage import AddPageVeryBase
+from zopache.crud.actions import AddByTitleToTreeAndView
+from zopache.pages.addpage import AddPageBase
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage, ILink
 from zopache.pages.page import Link
 
-class AddToTreeAndView(AddByTitleToTree):
-    def newURL(self,baseURL):
-        return baseURL 
-
-class AddAnonymous(AddPageVeryBase):
+class AddAnonymousPage(AddPageBase):
     count = 0 
     layoutName = "UserMenu"
     subTitle = "All submissions are reviewed before becoming being publicly visible."
@@ -38,19 +34,17 @@ class AddAnonymous(AddPageVeryBase):
         self.new.postAddProcess (view = self)
         self.notifyAdminsNewPage()
 
-    def widgetJsonURL(self):
-        siteRoot = self.getSiteRoot()
-        mapName = siteRoot.mapName
-        uri ="https://" + self.getDomain() + "/" + mapName + "/json"
-        return uri
-        
 
-class AddAnonymousToTree(AddAnonymous):
-    def update(self):
-        self.actions = Actions(
-                  AddToTreeAndView("Add and View", self.factory),
-                  formactions.Cancel("Cancel","Cancel"))
+class AddAnonymousToTree(AddAnonymousPage):
 
-
-    
+    def addAuthorizedActions(self):   
+              actions = Actions(
+              formactions.AddByTitleToTreeAndView("Add", self.factory),
+              formactions.Cancel("Cancel"))
+              self.actions= actions
+              
+    def addUnauthorizedActions(self):    
+           self.actions = Actions(
+                  AddByTitleToTreeAndView("Add and View", self.factory),
+                  formactions.Cancel("Cancel","Cancel"))    
         

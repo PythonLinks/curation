@@ -6,8 +6,6 @@ from zopache.pages.page import Link, Page
 from zopache.core.viewdecorators import *
 from zopache.remote.ivideo import IBasicVideo, IPrincipalVideo
 from zopache.pages.page import Page
-from BTrees.OOBTree import OOBTree
-from zopache.ttw.treewidget import TreeField
 from zopache.crud.interfaces import IContainer
 from zopache.core.uniquename import UniqueName
 from BTrees.OOBTree import OOBTree
@@ -38,12 +36,7 @@ class IRSS(Interface):
 #        required = False,
 #    )      
 
-#    category=TreeField(
-#           title="Category Search",
-#           description= """You can use this widget to explore the category 
-#                          tree. It has no impact on the RSS feeds. """,
-#           required = False,
-#            )    
+
 
                           
 

@@ -13,15 +13,14 @@ from zopache.business.company import MapOrganization
 from zopache.business.interfaces import  IOnlineEvent, IEvent
 from zopache.business.company import Company, Organization, OnlineOrganization
 from zopache.business.map import Map
-from zopache.pages.addpage import AddPageBase
+from zopache.pages.addpage import AddAuthorizedPage
+from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
 from zopache.business.politician import IPolitician, Politician
 from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
-from zopache.pages.addpage import AddPageBase
-from zopache.pages.addanonymous import AddAnonymous
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.driver import IAddDriver, Driver
 
@@ -30,7 +29,7 @@ from zopache.business.driver import IAddDriver, Driver
 @name('addNews')
 @target(IView)
 @context(IPage)
-class AddNews(AddPageBase):
+class AddNews(AddAuthorizedPage):
     interface = INews
     emailApparoved = True
     title = "Add a News Item"
@@ -41,7 +40,7 @@ class AddNews(AddPageBase):
 @name('addCompany')
 @target(IView)
 @context(IPage)    
-class AddCompany(AddPageBase,GeoCodeForm):
+class AddCompany(AddAnonymousPage,GeoCodeForm):
     interface = ICompany
     label="Add a Company"
     factory = Company
@@ -55,12 +54,12 @@ class AddCompany(AddPageBase,GeoCodeForm):
 @title("Add Organization")
 @target(IView)
 @context(IPage)    
-class AddOrganization(AddAnonymous,GeoCodeForm):
+class AddOrganization(AddAnonymousPage,GeoCodeForm):
     interface = IOrganization
     factory = Organization
     title = "Add an Organization"
     def update(self):
-        AddAnonymous.update(self)
+        AddAnonymousPage.update(self)
         GeoCodeForm.update(self)
 
 
@@ -68,13 +67,13 @@ class AddOrganization(AddAnonymous,GeoCodeForm):
 @name('addDriver')
 @target(IView)
 @context(IPage)    
-class AddDriver(AddAnonymous,GeoCodeForm):
+class AddDriver(AddAnonymousPage,GeoCodeForm):
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
 
     def update(self):
-        AddAnonymous.update(self)
+        AddAnonymousPage.update(self)
         GeocodeForm.update(self) 
 
 @view_component
@@ -91,7 +90,7 @@ class AddOrganizationByURL(AddByURLForm):
 @title("Add Online Organization")
 @target(IView)
 @context(IPage)    
-class AddOnlineOrganization(AddAnonymous,GeoCodeForm):
+class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
     interface = IOnlineOrganization
     factory = OnlineOrganization
     title = "Add an Online Organization"
@@ -120,12 +119,12 @@ class AddPoliticianByURL(AddByURLForm):
 @name('addPolitician')
 @target(IView)
 @context(IPage)    
-class AddPolitician(AddAnonymous,GeoCodeForm):
+class AddPolitician(AddAnonymousPage,GeoCodeForm):
     interface = IPolitician
     factory = Politician
     title = "Add a Politician"
     def update(self):
-        AddAnonymous.update(self)
+        AddAnonymousPage.update(self)
         GeoCodeForm.update(self)
 
               
@@ -134,7 +133,7 @@ class AddPolitician(AddAnonymous,GeoCodeForm):
 @target(IView)
 @permissions('AddContent')
 @context(IPage)    
-class AddMap(AddPageBase):
+class AddMap(AddAuthorizedPage):
     subTitle = 'Add a map'
     interface = IMap
     label="Add a Map"
@@ -146,7 +145,7 @@ class AddMap(AddPageBase):
 @target(IView)
 @permissions('AddContent')
 @context(IPage)    
-class AddMapOrganization(AddPageBase):
+class AddMapOrganization(AddAuthorizedPage):
     subTitle = ''
     interface = IMapOrganization
     label="Add a Map Organizatin"

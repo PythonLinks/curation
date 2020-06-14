@@ -51,15 +51,12 @@ class Add(Action, UniqueName, TransactionNote):
         Action.__init__(self,title)
         self.factory = factory
 
-    def extractData(self):
-        return self.form.extractData()
-
     def __call__(self, form):
         self.form=form
         obj= form.factory()
         self.new=form.new=obj
 
-        data, errors = self.extractData()
+        data, errors = self.form.extractData()
         if errors:
             form.submissionError = errors
             return FAILURE
@@ -140,16 +137,6 @@ class AddByURL(AddByTitle):
     def newURL(self,baseURL):
         return baseURL + '/ckedit'
     
-    #checks that the url is not already in the database
-    def extractData(self):
-        data, errors = self.form.extractData()
-        if errors:
-            return data, errors
-        remoteURLs = self.form.getRemoteLinks()
-        if data['remoteURL'] in remoteURLs:
-            errors.append(Error("That URL is already in the Database"))
-            self.form.submissionError = errors            
-        return data, errors
     
     def newName(self,data):
         name =  self.new.title
@@ -176,6 +163,7 @@ class AddByURL(AddByTitle):
                      and image from that URL""")
             
             return Errors().append(error)
+        
         if new.description ==None:
             new.description = ""
             
@@ -253,15 +241,15 @@ class AddMultipleByURL(AddByURL):
         self.remoteURL = remoteURL
         return AddByURL.__call__(self,form)
         
-    def extractData(self):
-        return {'remoteURL':self.remoteURL}
+class AddByTitleToTreeAndView(AddByTitle):
+    def newURL(self,baseURL):
+        return baseURL
     
-class AddByTitleToTree(AddByTitle):    
     def getContext(self,data):
-        siteRoot = self.getSiteRoot()
-        addTo = data ['addTo']
-        addTo = siteRoot ['addTo']
-        return addTo
+        siteRoot = self.form.getSiteRoot()
+        categoryName = data ['categoryName']
+        category = siteRoot [categoryName]
+        return category
         
 class AddAndView(AddNamed):
     def newURL(self,baseURL):

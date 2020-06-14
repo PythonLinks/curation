@@ -41,7 +41,6 @@ class URLMethods(object):
             return name, title
         return name, name
 
-
     def getLongURL(self,item):
         return self.getZodbURL(item)
     
@@ -152,7 +151,6 @@ class URLMethods(object):
     def viewHref(self,obj,view,name):
         return self.href(self.url(obj)+ '/' + view, name)   
 
-
     def href(self,url,name,target=False):  
            result ='<a href=\"'
            result += url
@@ -164,8 +162,4 @@ class URLMethods(object):
               result += name
            result +='</a>'
            return result
-
-#viewName=viewName,
-#showTitles=showTitles)
-    
     

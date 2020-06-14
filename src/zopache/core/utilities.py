@@ -40,7 +40,7 @@ class Utilities (object):
     def widgetJsonURL(self):
         siteRoot = self.getSiteRoot()
         categoryName = siteRoot.categoryName
-        uri ="https://" + self.getDomain() + "/" + categoryName + "/json"
+        uri = "/" + categoryName + "/json"
         return uri
     
     def parameters(self):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dolmen.forms.base.errors import Error
+from dolmen.forms.base.errors import Error,Errors
 from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 
@@ -12,6 +12,10 @@ class UserExistsError (ValidationError):
     title = "User Exists"
 
 class NoPasswordError(ValidationError):
+    """ You need to login with Google Login """
+    title = "Please do a Google Login"
+
+class DuplicateURLError(ValidationError):
     """ You need to login with Google Login """
     title = "Please do a Google Login"
     
@@ -81,30 +85,7 @@ class AccessGoogle(object):
             return root.googleClientId
         return ''
     
-    """    
-        domain = form.getDomain()
-        if (domain == 'pythonlinks.info'):
-            clientId= '901181416018-8c8n8knds3b6koqkottchj7ivpncf409.apps.googleusercontent.com'
-        elif (domain == 'dev.pythonlinks.info'):
-            clientId = '901181416018-npba3s080378saoc1umjkn5jo7lipa1q.apps.googleusercontent.com'
-        elif (domain == 'forestwiki.com'):
-            clientId = '901181416018-8sh20u10e5tltf00jc4o8qfpq1jhmvh0.apps.googleusercontent.com'
-        elif (domain == 'rights.men'):
-            clientId = '901181416018-il4qps4qiqafom0uhmrppvcf9ao7ve07.apps.googleusercontent.com'
-        elif (domain == 'golangvideos.com'):
-            clientId = '901181416018-f6c7p85thdp79l9c6c3joccj9ffb5jug.apps.googleusercontent.com'
-        elif (domain == 'stopsmog.info'):
-            clientId = '3722083405-pf3uk2dkkpsoi6873i1etfea7rv55ig1.apps.googleusercontent.com'
-#        elif (domain == 'stopsmog.info'):
-#            clientId = '901181416018-gmg5itiqs6f4cp5j5eot1corta0gd558.apps.googleusercontent.com'            
-        elif (domain == 'mensgroups.info'):
-            clientId = '950419722294-r5peocg874brshvn5kk2bdi71iuhrlc5.apps.googleusercontent.com'
-        elif (domain == 'climateactivists.info'):
-            clientId = '832774817535-0e4d586gd3us7oq6pak88u0djtl8punn.apps.googleusercontent.com'            
-        else:
-            raise ValueError('Bad Domain')
-        return clientId
-    """
+
     def getTokenData(self,token):
 
         try : 
