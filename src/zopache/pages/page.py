@@ -145,6 +145,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         
     def postAddProcess(self,view=None):
         self.postProcess(view=view)
+        if hasattr(self,'remoteURL'):
+           siteRoot = self.getSiteRoot()
+           siteRoot.addRemoteURL(self)
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
 
@@ -252,7 +255,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def preDeleteProcess(self,view):
         if hasattr(self,'remoteURL'):
             siteRoot = self.getSiteRoot()
-            del siteRoot.remoteLinks [self.remoteURL]
+            siteRoot.deleteRemoteURL(self.remoteURL)
     
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):

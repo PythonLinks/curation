@@ -32,7 +32,7 @@ class Approve (EditForm,Breadcrumbs):
     def postProcess(self, view = None):
         context = self.context    
         self.root = self.getSiteRoot()
-        items =self.getremoteLinks().values()
+        items =self.getremoteURLs().values()
 
         if context.webApproved == True:
             for item in items:

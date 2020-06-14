@@ -110,8 +110,7 @@ class AddByURLForm(AddFormBase,Breadcrumbs):
     def postAddProcess(self,view=None):
         self.new.webApproved = True
         self.new.postAddProcess (view = self)
-        remoteLinks = self.getRemoteLinks()
-        remoteLinks[self.new.remoteURL] = self.new
+
         
 
 class BaseEditForm(Form,Breadcrumbs):    

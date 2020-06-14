@@ -21,8 +21,29 @@ class Branch(object):
     branchSize = 0
     def __init__(self):
        self.valuesByToken = OOBTree()
-       #self.tokensByValue = {}
+       self.remoteURLs = OOBTree
 
+    def urlOnly(self,link):
+       if link.startswith('http'):
+          link = link.split('://')[1:]
+          link =''.join(link)
+       return link
+
+    def existsRemoteURL(self,link):
+       link = self.urlOnly(link)
+       return self.remoteURLs.get(link,None)
+   
+    def addRemoteURL(self,anObject):
+       link = self.urlOnly(anObject.remoteURL)
+       if link in self.remoteURLs:
+          raise Exception (anObject.__name__+link) 
+       else:
+          self.remoteURLs[link] = anObject 
+           
+    def deleteRemoteURL(self,link):
+        link = self.urlOnly(link)
+        del self.getRemoteURL()[link]
+       
     def getUniqueNumberString(self):
         anInteger = random.randint (1,sys.maxsize)        
         while (True):
@@ -46,7 +67,7 @@ class Branch(object):
 
     def indexTree(self):
         self.valuesByToken=OOBTree()
-        self.remoteLinks = OOBTree()
+        self.remoteURLs = OOBTree()
         self.indexBranch(self,self)
 
 
@@ -55,7 +76,7 @@ class Branch(object):
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
             if hasattr(item,'remoteURL'):
-                self.remoteLinks[item.remoteURL] = item
+                self.addRemoteURL(item)
             if IBTreeContainer.providedBy(item):    
                 self.indexBranch(tree,item)
 

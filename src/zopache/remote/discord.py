@@ -68,12 +68,15 @@ in a leaf of the tree.""",
 
     
 
-from dolmen.forms.base.widgets import Widgets    
+from dolmen.forms.base.widgets import Widgets
+from zopache.business.exists import Duplicate
+from zopache.forms.urlvalidator import DuplicateURLValidator
 @view_component
 @name('fromDiscord')
 @target(IView)
 @context(IPage)
 class AddLinkFromDiscord(AddAnonymousToTree):
+    dataValidators = [Duplicate,DuplicateURLValidator]    
     ignoreRequest = False
     layoutName = "UserMenu"    
     interface = IDiscordForm 

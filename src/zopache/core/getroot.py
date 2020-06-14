@@ -103,12 +103,6 @@ class Root(object):
             result += item.render(self, view = self)
         return result
     
-    def getRemoteLinks (self):
-       siteRoot = self.getSiteRoot()
-       if not hasattr(siteRoot,'remoteLinks'):
-          siteRoot.remoteLinks = OOBTree()
-       return siteRoot.remoteLinks
-
     def resetArticles (self):
        siteRoot = self.getSiteRoot()
        siteRoot.articles = OOBTree()
