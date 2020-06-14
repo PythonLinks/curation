@@ -23,6 +23,7 @@ from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
     url = ''
+    source = ''
     branchSize=1
     description = ''
     webApproved = True

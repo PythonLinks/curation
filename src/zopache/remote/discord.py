@@ -35,7 +35,7 @@ class IDiscordForm(Interface):
         title = u'More Content',
         description = u'if the description is too long, please move part of it it here.',
         required = False,
-        default = u'',
+        default = '',
     )
     
     categoryName=TreeField(
