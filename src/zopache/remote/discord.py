@@ -82,10 +82,10 @@ class AddLinkFromDiscord(AddAnonymousToTree):
     def updateWidgets(self):
         AddAnonymousToTree.updateWidgets(self)
         widgets = self.widgetDictionary()
-        widgets['form-field-discordGuildId']._htmlAttributes['display'] = 'none'
-        widgets['form-field-discordUserId']._htmlAttributes['display'] = 'none'
-        widgets['form-field-discordUserName']._htmlAttributes['display'] = 'none'
-        widgets['form-field-discordChannelId']._htmlAttributes['display']= 'none'
+        widgets['form-field-discordGuildId'].component.mode = HIDDEN
+        widgets['form-field-discordUserId'].component.mode = HIDDEN
+        widgets['form-field-discordUserName'].component.mode = HIDDEN
+        widgets['form-field-discordChannelId'].component.mode = HIDDEN
 
 
     def postAddProcess(self, view=None):
