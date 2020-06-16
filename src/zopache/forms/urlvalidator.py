@@ -14,7 +14,9 @@ class DuplicateURLValidator(object):
     def validate(self, data):
         self.data = data
         #errors = Errors()
-        errors = []        
+        errors = []
+        if not 'remoteURL' in data:
+             return errors
         remoteURL = data['remoteURL']        
         if self.form.getSiteRoot().existsRemoteURL(remoteURL)!= None:
            error =DuplicateURLError("That url is already in the database "

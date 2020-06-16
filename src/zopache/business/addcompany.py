@@ -4,10 +4,11 @@ from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
-from zopache.crud.forms import AddByTitleForm, AddByURLForm
+from zopache.crud.addbyurl import  AddByURLForm
+from zopache.crud.forms import AddByTitleForm
 from zopache.business.interfaces import IMap, ICompany,IMapOrganization
 from zopache.business.interfaces import ICompanyOrOrganization
-from zopache.business.interfaces import IOrganization, IOnlineOrganization
+from zopache.business.interfaces import IAddOrganization, IOnlineOrganization
 from zopache.business.company import MapOrganization
 
 from zopache.business.interfaces import  IOnlineEvent, IEvent
@@ -18,7 +19,7 @@ from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
-from zopache.business.politician import IPolitician, Politician
+from zopache.business.politician import IAddPolitician, Politician
 from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
 from zopache.core.interfaces import ITreeSecurity
@@ -55,7 +56,7 @@ class AddCompany(AddAnonymousPage,GeoCodeForm):
 @target(IView)
 @context(IPage)    
 class AddOrganization(AddAnonymousPage,GeoCodeForm):
-    interface = IOrganization
+    interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
     def update(self):
@@ -95,39 +96,28 @@ class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
     factory = OnlineOrganization
     title = "Add an Online Organization"
         
-#from dolmen.forms.base import interfaces
 
-@view_component
-@name('addPolByURL')
-@target(IView)
-@context(IPage)
-@implementer(ITreeSecurity)
-class AddPoliticianByURL(AddByURLForm):
-    factory = Politician
-    title = "Add a Politician"
-    def update(self):
-        AddByURLForm.update(self)
-        GeoCodeForm.update(self)         
-    """
-    def updateWidgets(self):
-        ddBase.update(self)
-        #item =self.fields['endorsedBy']
-        it =object.__setattr__(item,'mode','multiselect')
-        super().updateWidgets()
-     """   
+
 @view_component
 @name('addPolitician')
 @target(IView)
 @context(IPage)    
 class AddPolitician(AddAnonymousPage,GeoCodeForm):
-    interface = IPolitician
+    interface = IAddPolitician
     factory = Politician
     title = "Add a Politician"
     def update(self):
         AddAnonymousPage.update(self)
         GeoCodeForm.update(self)
 
-              
+    """
+    def updateWidgets(self):
+        ddBase.update(self)
+        #item =self.fields['endorsedBy']
+        it =object.__setattr__(item,'mode','multiselect')
+        super().updateWidgets()
+     """
+    
 @view_component
 @name('addCompanyMap')
 @target(IView)

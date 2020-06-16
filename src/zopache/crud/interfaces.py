@@ -27,15 +27,9 @@ will be made web-safe.""",
            default=None)
 
 class IURLForm(Interface):
-    title = schema.TextLine(
-        title = u'Page Name',
-        description = u'Describe this page.',
-        required = True,
-    )
-    
     remoteURL= schema.URI(
         title = 'URL',
-        description = 'The url of the remote web page',
+        description = 'The url of the remote web page.  Please include "https://"',
         required = True,
     )      
 

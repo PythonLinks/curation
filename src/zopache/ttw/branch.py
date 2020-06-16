@@ -36,13 +36,13 @@ class Branch(object):
     def addRemoteURL(self,anObject):
        link = self.urlOnly(anObject.remoteURL)
        if link in self.remoteURLs:
-          raise Exception (anObject.__name__+link) 
+          raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
        else:
           self.remoteURLs[link] = anObject 
            
     def deleteRemoteURL(self,link):
         link = self.urlOnly(link)
-        del self.getRemoteURL()[link]
+        del self.remoteURLs[link]
        
     def getUniqueNumberString(self):
         anInteger = random.randint (1,sys.maxsize)        

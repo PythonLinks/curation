@@ -9,6 +9,9 @@ class Tests(object):
     def hasMembers(self):
         return hasattr(self.context,'isMember')
     
+    def isPerson(self):
+        return IPrincipal.implementedBy(self.context)
+    
     def isVideo(self,*item):
         if item:
            item = item[0]

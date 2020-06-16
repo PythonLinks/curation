@@ -82,12 +82,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         required = False,
     )
     
-    imageURL = schema.URI(
-        title = "The Politician's Image",
-        description = """Please link to the Politician. Include  'https://'""",
-        missing_value="",        
-        required = False,
-    )
+
     districtURL = schema.URI(
         title = "The Politician's District Map",
         description = """Please link to the Politician. Include  'https://'""",
@@ -145,6 +140,14 @@ class IPoliticianBase (ILocationLeaf,IFollow):
 
 class IPolitician(IPoliticianBase):
     pass
+
+class IAddPolitician(IPolitician):
+    imageURL = schema.URI(
+        title = "The Politician's Image",
+        description = """Please link to the Politician. Include  'https://'""",
+        missing_value="",        
+        required = False,
+    )   
 
 @implementer (IPolitician)
 class Politician (GeoBase):

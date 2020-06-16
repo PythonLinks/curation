@@ -99,16 +99,16 @@ class AddImageAction(AddFileAction):
 
     def createFile(self,formData):
          self.nextView = '/manage'
-         file = Image()
+         new = Image()
          imageData  = formData['data']
          imageData.file.seek(0)         
-         file.data = imageData #Inside it reads the file.read()
+         new.data = imageData #Inside it reads the file.read()
          imageData.file.seek(0)
-         image = PilImage.open(imageData.file, mode = 'r')
-         file.contentType = imageData.type
-         file.width = image.width
-         file.height = image.height
-         file.title = formData ["title"]   
-         return file
+         pilImage = PilImage.open(imageData.file, mode = 'r')
+         new.contentType = imageData.type
+         new.width = pilImage.width
+         new.height = pilImage.height
+         new.title = formData ["title"]   
+         return new
 
         

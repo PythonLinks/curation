@@ -61,9 +61,9 @@ class Image (File):
      
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()
-        response.headers['Cache-Control'] = 'public,max-age=3600'  
         response.content_type=view.context.contentType
         response.write(result or u'')
+        response.headers['Cache-Control'] = 'public,max-age=3600'  
         return response
 
 from cromlech.webob.response import Response

@@ -3,7 +3,8 @@ import feedparser
 import time
 
 from cromlech.security import Unauthorized
-from zopache.crud.forms import AddByTitleForm, AddByURLForm
+from zopache.crud.addbyurl import  AddByURLForm
+from zopache.crud.forms import AddByTitleForm
 from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage

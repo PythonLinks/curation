@@ -15,15 +15,10 @@ class AddAnonymousPage(AddPageBase):
     subTitle = "All submissions are reviewed before becoming being publicly visible."
     allowAnonymous = True    
     actions = Actions()    
-    def update(self):
-        if self.treeSecurity():
-           self.addAuthorizedActions()
-        else:
-           self.addUnauthorizedActions()    
 
     def addUnauthorizedActions(self):    
            self.actions = Actions(
-                  AddAndView("Add and View", self.factory),
+                  formactions.AddByTitle("Add and View", self.factory),
                   formactions.Cancel("Cancel","Cancel"))
                    
     def postAddProcess(self,view = None):
@@ -34,8 +29,7 @@ class AddAnonymousPage(AddPageBase):
         self.new.postAddProcess (view = self)
         self.notifyAdminsNewPage()
 
-
-class AddAnonymousToTree(AddAnonymousPage):
+class AddToTree(object):
 
     def addAuthorizedActions(self):   
               actions = Actions(

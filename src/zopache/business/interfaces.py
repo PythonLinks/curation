@@ -256,6 +256,15 @@ class IOrganization(IOrganizationBase,      ICompanyOrOrganization,ISocialMedia,
         required = False
     )
 
+class IAddOrganization(IOrganization):
+    imagegURL= schema.URI(
+        title = 'Image URL',
+        description = """An image or Logo for this organization. 
+             Please include 'https://
+             The image will be automatically downloaded'""",
+        required = False,
+    )            
+    
 from zopache.pages.interfaces import IMap as IMapBase
 
 class IMap (IMapBase,IFollow):

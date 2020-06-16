@@ -42,7 +42,8 @@ class View(Action):
         url = str(IURL(content, form.request))
         return SuccessMarker('Aborted', True, url=url)    
 
-
+from PIL import Image as PilImage
+from io import BytesIO
 class Add(Action, UniqueName, TransactionNote):
     """Add action for an IAdding context.
     """
@@ -110,7 +111,23 @@ class Add(Action, UniqueName, TransactionNote):
     def newName(self,data):
         name =  data['__name__']        
         return self.uniqueContainerName(self.form.context,name)
-    
+
+    def setImage(self,imageURL):
+        try:
+            response = requests.get(imageURL)            
+            zodbImage =Image()
+            zodbImage.contentType=response.headers['content-type']            
+            content = response.content
+            zodbImage.data = content
+            pilImage = PilImage.open(BytesIO(content))
+            zodbImage.width = pilImage.width
+            zodbImage.height = pilImage.height
+            new = self.form.new
+            new['Logo']= zodbImage
+            zodbImage.__parent__ = new
+        except:
+            pass 
+                     
 class AddNamed(Add):
     pass
 
@@ -124,6 +141,10 @@ class AddByTitle (Add):
         root = getSiteRoot(self.form.context)
         if hasattr(root,'addItem'):
             root.addItem(self.new)
+
+        if hasattr(self.new,'imageURL'):
+            self.setImage (self.new.imageURL)
+            del self.new.imageURL
             
     def getContext(self,data):
         return self.form.context
@@ -131,59 +152,16 @@ class AddByTitle (Add):
     def newName(self,data):    
         newName =  data['title']
         return self.uniqueBothName(self.form.context,newName)
-    
 
-class AddByURL(AddByTitle):
+class AddByTitleAndCkEdit(AddByTitle):    
     def newURL(self,baseURL):
         return baseURL + '/ckedit'
     
-    
-    def newName(self,data):
-        name =  self.new.title
-        return self.uniqueBothName(self.form.context,name)
-    
-    def setFields(self):
-        set_fields_data(self.form.fields, self.new, self.data)        
-        remoteURL = self.new.remoteURL
-        try:
-           source = requests.get(remoteURL).text
-        except:
-            error = Error("Failed to Fetch URL")
-            return Errors().append(error)
-        
-        new = self.new
-        try:
+class AddByTitleAndAceEdit(AddByTitle):    
+    def newURL(self,baseURL):
+        return baseURL + '/aceedit'    
 
-            result = web_preview( remoteURL,content= source,parser="html.parser")
-            #I do not use the title. 
-            title,new.description, image = result
-            
-        except:
-            error = Error("""Failed to Extract title, description 
-                     and image from that URL""")
-            
-            return Errors().append(error)
-        
-        if new.description ==None:
-            new.description = ""
-            
-        if image != None:
-            response = requests.get(image)
-            zodbImage =Image()
-            zodbImage.contentType=response.headers['content-type']            
-            zodbImage.data = response.content
-            new['Logo']= zodbImage
-            zodbImage.__parent__ = new
-
-    def processURL(self,url,attribute, split):
-         if not split in url:
-            return
-         parts = url.split(split)
-         if len (parts) < 2 :
-            return
-         setattr(self.new,attribute,parts[1])
-         print ("SETTNG", attribute, parts[1])
-         
+class NotUsed():
     def extractSocialMediaLinks(self,response):
          tree = parse_html_bytes(response.content,
                     response.headers.get('content-type'))
@@ -235,22 +213,20 @@ class AddByURL(AddByTitle):
               allLinks.append(oneLink)                    
               self.new.source = '<br>'.join(allLinks)
 
-#So This one can be called multiple times.               
-class AddMultipleByURL(AddByURL):
-    def __call__(self, form,remoteURL):
-        self.remoteURL = remoteURL
-        return AddByURL.__call__(self,form)
-        
 class AddByTitleToTreeAndView(AddByTitle):
-    def newURL(self,baseURL):
-        return baseURL
-    
+
     def getContext(self,data):
+        if not 'categoryName' in data:
+            return self.form.context
         siteRoot = self.form.getSiteRoot()
         categoryName = data ['categoryName']
         category = siteRoot [categoryName]
         return category
-        
+    
+    def setFields(self):
+            set_fields_data(self.form.fields, self.new, self.data)
+            return Errors()
+    
 class AddAndView(AddNamed):
     def newURL(self,baseURL):
         return baseURL + '/index'        

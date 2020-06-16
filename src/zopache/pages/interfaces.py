@@ -43,6 +43,7 @@ class ILinkTop(Interface):
         description = 'What is the title of this link?',
         required = True,
     )
+    
     remoteURL= schema.URI(
         title = 'URL',
         description = """A URL That this page refers to. 
@@ -67,14 +68,35 @@ class IPageBottom(Interface):
         default = u'',
     )
     
+
+    
+    
 class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
             IJSONInclude, IBTreeContainer,IUntrustedHTML):
     pass
 
+class IAddPage(IPage):
+    imagegURL= schema.URI(
+        title = 'Image URL',
+        description = """A URL That this page refers to. 
+             Please include 'https://
+             The image will be automatically downloaded'""",
+        required = False,
+    )        
+      
 
         
-class ILink(ILinkTop,IPage):
+class ILink(IPage,ILinkTop):
     pass
+
+class IAddLink(ILink):
+    imagegURL= schema.URI(
+        title = 'Image URL',
+        description = """A URL That this highlights this link. 
+             Please include 'https://
+             The image will be automatically downloaded'""",
+        required = False,
+    )        
     
 class IMarkdown (IAceHTML,ISourceLeaf):
     pass
