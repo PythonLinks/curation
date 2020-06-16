@@ -83,7 +83,7 @@ class BaseClass(AddAnonymousPage):
     layoutName = "UserMenu"    
         
     def updateWidgets(self):
-        AddAnonymous.updateWidgets(self)
+        AddAnonymousPage.updateWidgets(self)
         widgets = self.widgetDictionary()
         style = "display:none;"
 
