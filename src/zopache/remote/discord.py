@@ -97,7 +97,7 @@ class BaseClass(AddAnonymousPage):
         widgets['form-field-discordChannelId'].component.mode = HIDDEN        
         
     def postAddProcess(self, view=None):
-        AddAnonymousToTree.postAddProcess(self,view=self)
+        AddAnonymousPage.postAddProcess(self,view=self)
         self.new.webApproved = False
 
 @view_component
