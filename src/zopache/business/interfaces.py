@@ -241,7 +241,9 @@ class ISocialMedia(Interface):
 class IOnlineOrganization(IOrganizationBase,ICompanyOrOrganization,ISocialMedia):
           pass
 
-class IOrganization(IOrganizationBase,      ICompanyOrOrganization,ISocialMedia,ILocationContainer):
+class IOrganization(IOrganizationBase,
+                    ICompanyOrOrganization,
+                    ISocialMedia,ILocationContainer):
     isGlobal = schema.Bool(
 	    title = "Is this a global organization?",
 	    description = """Global Organizations are 
@@ -257,7 +259,7 @@ class IOrganization(IOrganizationBase,      ICompanyOrOrganization,ISocialMedia,
     )
 
 class IAddOrganization(IOrganization):
-    imagegURL= schema.URI(
+    imageURL= schema.URI(
         title = 'Image URL',
         description = """An image or Logo for this organization. 
              Please include 'https://
