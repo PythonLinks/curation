@@ -16,7 +16,10 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
 
-class AddPageBase(AddByTitleForm,AddCkHTMLBase,UniqueName,Notify):
+class AddPageBase(
+                  AddCkHTMLBase,
+                  AddByTitleForm,
+                  UniqueName,Notify):
     dataValidators = [Duplicate, DuplicateURLValidator]
     actions = Actions()
 
