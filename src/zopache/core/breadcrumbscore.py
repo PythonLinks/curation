@@ -60,7 +60,6 @@ class BreadcrumbsCore(object):
                    result += self.href(('/' + item.__name__ + slashViewName),
                                            item.title,
                                            target=target)
-                   result +=  ' &nbsp;(' + str(item.branchSize) + ')'
                    result +=  '</div>'
         result += "</div>"
         return result
@@ -106,6 +105,9 @@ class BreadcrumbsCore(object):
                 result.append( self.href(newURL,title))
         return ' / '+' / '.join(result)
              
+
+
+
     def divBreadcrumbs(self, node,viewName ='',widget= False,start = 0):
         items = self.parentsUpToSiteRoot()
         items = items [start:]
@@ -140,6 +142,31 @@ class BreadcrumbsCore(object):
                    result +=  '</div>'
         result += "</div>"
         return result
+
+        #HERE IS A SHORTER VERSION
+    def tagBreadcrumbs(self, node,viewName ='',widget= False,start = 0):
+        items = node.parentsUpToSiteRoot()
+        items = items [start:]
+        length = len(items)
+        if length > 50:
+            return "ERROR IN DIV BREADCRUMBS TOO DEEP A TREE"
+        result= '<div style = "text-align:left; ">'
+        target = False
+        indent = -1
+        for step,item in enumerate(items):
+                   indent += 1
+                   result += '<div style = "margin-left:' 
+                   result +=  str(indent) + 'em">'
+                   target = False
+                   slashViewName = self.slashViewName(item,viewName)
+                   result += self.href(('/' + item.__name__ + slashViewName),
+                                           item.title + str(item.branchSize),
+                                           target=target)
+                   result +=  ' &nbsp;(' + str(item.branchSize) + ')'
+                   result +=  '</div>'
+        result += "</div>"
+        return result
+
     
     def breadcrumbsIndex(self,item):
         return self.breadcrumbsView(item,viewName='',showTitles=True)
