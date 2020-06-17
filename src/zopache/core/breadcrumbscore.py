@@ -145,7 +145,7 @@ class BreadcrumbsCore(object):
 
         #HERE IS A SHORTER VERSION
     def tagBreadcrumbs(self, node,viewName ='',widget= False,start = 0):
-        items = node.parentsUpToSiteRoot()
+        items = self.parentsUpToSiteRoot(item=node)
         items = items [start:]
         length = len(items)
         if length > 50:
