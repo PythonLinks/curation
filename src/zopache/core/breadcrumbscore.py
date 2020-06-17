@@ -162,7 +162,6 @@ class BreadcrumbsCore(object):
                    result += self.href(('/' + item.__name__ + slashViewName),
                                            item.title + str(item.branchSize),
                                            target=target)
-                   result +=  ' &nbsp;(' + str(item.branchSize) + ')'
                    result +=  '</div>'
         result += "</div>"
         return result
