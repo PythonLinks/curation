@@ -32,6 +32,12 @@ class IForm(Interface):
         required = False,
         default = '',
     )
+    geocondingKey= TextLine(
+        title = "Google GeoCoding Key",
+        description = "Converts an address into latitude and longitude.",
+        required = False,
+        default = '',
+    )    
 
     youTubeKey= TextLine(
         title = "You Tube Key",

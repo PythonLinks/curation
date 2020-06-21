@@ -100,7 +100,7 @@ class TrustedHTML(HTMLBase):
            return self.getHTML()      
         try:
             view.count+= 1
-            if view.count>50:
+            if view.count>500:
                 raise HTMLRecursionError()
             context=view.context
             return self.callWithContext(view,context,**args)
