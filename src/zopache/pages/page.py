@@ -69,7 +69,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def childCategories(self):
         result =[]
         for item in self.values():
-            if IPage.providedBy (item):
+            if (IPage.providedBy (item) and item.webApproved):
                result.append (item)
         return result
     
