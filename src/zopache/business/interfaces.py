@@ -261,9 +261,10 @@ class IOrganization(IOrganizationBase,
 class IAddOrganization(IOrganization):
     imageURL= schema.URI(
         title = 'Image URL',
+        missing_value = '',
         description = """An image or Logo for this organization. 
-             Please include 'https://
-             The image will be automatically downloaded'""",
+             Please include "https://"
+             The image will be automatically downloaded.""",
         required = False,
     )            
     

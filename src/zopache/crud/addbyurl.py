@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 
 from webpreview import web_preview
-
+from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.errors import Error, Errors
 from dolmen.forms.base import Action, Actions,SuccessMarker
@@ -79,8 +79,8 @@ class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
               
 
 #So This one can be called multiple times.               
-class AddMultipleByURL(AddByURLForm):
-    def __call__(self, form,remoteURL):
-        self.remoteURL = remoteURL
-        return AddByURL.__call__(self,form)
-        
+#class AddMultipleByURL(AddByURLForm):
+#    def __call__(self, form,remoteURL):
+#        self.remoteURL = remoteURL
+#        return AddByURL.__call__(self,form)
+# MAYBE ADDBYURL NO LONGER EXISTS        

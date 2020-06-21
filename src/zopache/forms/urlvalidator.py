@@ -17,10 +17,13 @@ class DuplicateURLValidator(object):
         errors = []
         if not 'remoteURL' in data:
              return errors
-        remoteURL = data['remoteURL']        
+        remoteURL = data['remoteURL']
+        if remoteURL == "":
+             return errors             
         if self.form.getSiteRoot().existsRemoteURL(remoteURL)!= None:
-           error =DuplicateURLError("That url is already in the database "
-                                    + remoteURL)           
+           msg = "That url is already in the database " + remoteURL  
+           error =DuplicateURLError(msg)
+           error.title = msg
            errors.append(error)
 
         return errors        

@@ -36,7 +36,10 @@ class Branch(object):
     def addRemoteURL(self,anObject):
        link = self.urlOnly(anObject.remoteURL)
        if link in self.remoteURLs:
-          raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
+          print (link) 
+          print (anObject.__name__)
+          print (self.remoteURLs[link].__name__)
+          #raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
        else:
           self.remoteURLs[link] = anObject 
            

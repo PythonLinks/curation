@@ -1,4 +1,5 @@
 #THERE IS A COPY OF THIS IN zopache.core  as well       
+from collections import defaultdict
 from cromlech.browser.interfaces import IPublicationRoot
 from BTrees.OOBTree import OOBTree
 from zopache.crud.interfaces import IZodbRoot
