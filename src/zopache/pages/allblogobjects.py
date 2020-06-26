@@ -25,9 +25,21 @@ class AllChildObjects:
                   self.stack.append(item)
         return node
 
-#Kept for backwards compatibility.     
+
 class AllBlogObjects(AllChildObjects):
-    pass
+      pass
+
+#DELETES ALL BUT CATEGORY OBJECTS
+#    def __next__(self):
+#        if not self.stack: raise StopIteration
+#        node = self.stack.pop()
+#        for item in  node.allValuesAsList():
+#              if (item.__class__.__name__ == 'Category'):
+#                  self.stack.append(item)
+#              else: 
+#                  del item.__parent__[item.__name__]
+#        return node    
+
 
 from zopache.pages.interfaces import IPage
 class AllWikiObjects(AllChildObjects):
@@ -43,7 +55,14 @@ class AllVideoObjects(AllChildObjects):
               yield nextItem      
 
 
-class ProcessTree(object):              
+class ProcessTree(object):
+    def allChildrenOfClass(self,className):
+        result = {}
+        for item in self.allBlogObjects():
+            it item.__class__.__name__ == className:
+               result [className] = item.title
+        return result
+    
     def allBlogObjects(self):
         return AllBlogObjects(self)
 

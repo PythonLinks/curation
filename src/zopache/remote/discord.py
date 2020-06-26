@@ -37,8 +37,7 @@ class IBaseForm(Interface):
         required = False,
         default = '',
     )
-    
-    
+        
     discordGuildId = schema.TextLine(
         title = 'The Discord Server',
         required = True,
@@ -84,23 +83,12 @@ class BaseClass(AddAnonymousPage):
         
     def updateWidgets(self):
         AddAnonymousPage.updateWidgets(self)
-        widgets = self.widgetDictionary()
-        style = "display:none;"
-
-        widgets['form-field-discordGuildId']._htmlAttributes['style'] = style
-        widgets['form-field-discordUserId']._htmlAttributes['style'] = style
-        widgets['form-field-discordUserName']._htmlAttributes['style'] = style
-        widgets['form-field-discordChannelId']._htmlAttributes['style'] = style
-        widgets['form-field-discordGuildId'].component.mode = HIDDEN
-        widgets['form-field-discordUserId'].component.mode = HIDDEN
-        widgets['form-field-discordUserName'].component.mode = HIDDEN
-        widgets['form-field-discordChannelId'].component.mode = HIDDEN        
         
     def postAddProcess(self, view=None):
         AddAnonymousPage.postAddProcess(self,view=self)
         self.new.webApproved = False
 
-@view_component
+@form_component
 @name('fromDiscord')
 @target(IView)
 @context(IPage)
@@ -109,6 +97,20 @@ class AddLinkFromDiscord(AddToTree,BaseClass):
     interface = ILinkForm
     title = "Add a Link"
     factory = Link
+    def render(self):
+        response = ""
+        for item in self.formErrors:
+               response += item.title
+        for item in self.submissionErrors:
+               response += item.title
+        for widget in self.fieldWidgets:
+            if hasattr (widget, 'err') and widget.err:
+               response += widget.title               
+        if response:
+            return response
+        url = self.secureShortURL(context=self.new)
+        messaged = f" Here is your new posting <{url}>."
+        return "Success" + message
     
 from zopache.business.company import Organization        
 @view_component

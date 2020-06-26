@@ -26,6 +26,31 @@ I wonder if this will all work?
 """
 
 class URLMethods(object):
+    #THIS IS THE GOOD ONE
+    #HTTPS://Domain.Name/CanonicalName
+    def secureShortURL(self,context = None):
+        if context == None:
+           context = self.context
+        result = 'https://'
+        result += self.getDomain()
+        result += '/'
+        result += context.__name__
+        return result
+    
+    #Another Good One
+    # /CanonicalName
+    def shortURL(self,viewName=""):
+        result = ''
+        result += self.context.__name__
+        if viewName:
+           result += '/' + viewName
+        return result
+      
+    def getDomain(self):
+        return self.request.host_url.lower().split('://')[1]
+
+    def getHost(self):
+        return self.getDomain()
 
     def nameAndTitle(self,item,showTitles):
         """Choose a display name for the current context.
@@ -41,26 +66,28 @@ class URLMethods(object):
             return name, title
         return name, name
 
+    #RETURNS THE LONG PATH USING PARENTS
     def getLongURL(self,item):
         return self.getZodbURL(item)
     
+    #RETURNS THE LONG PATH USING PARENTS
     def getZodbURL(self,item):
         isZodbRoot = IZodbRoot.providedBy (item)
         if isZodbRoot:
-            base_url = ''
+            base_url = item.__name__
         else:
            container = item.__parent__
            base_url= self.getLongURL(container)+ '/' + item.__name__
         return base_url        
     
-    
+    #PROVIDES THE LONG PATH USING PARENTS
     def getSiteURL (self,item):
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
         if isSiteRoot:
-            base_url = '/' + item.__name__
+            base_url =  item.__name__
         elif isZodbRoot:
-            base_url = '/'
+            base_url = item.__name__
         else:
            container = item.__parent__
            base_url= self.getLongURL(container)+ '/' + item.__name__
@@ -86,8 +113,10 @@ class URLMethods(object):
             return '/' + viewName
 
     def IURLSegment(self,item):
-        return IURLSegment(item).getSegment()                
-
+        return IURLSegment(item).getSegment()
+    
+    #ANOTHER LONG PATH USING PARENTS
+    #WORKS ON CONTEXT OR ON AN ARGUMENT
     def url(self, *args):
         try:
           if len(args)==0:
@@ -101,46 +130,13 @@ class URLMethods(object):
         except:
             return "BROKEN-URL-IN-BREADCRUMBS"
         
+    #AND YET ANOTHER LONG SIMPLE URL    
     def contextURL(self, name=''):
         itemURL = self.simpleUrl(self.context)
         if name:
             itemURL += '/' + name
         return itemURL
            
-
-    def secureShortURL(self,context = None):
-        if context == None:
-           context = self.context
-        result = 'https://'
-        result += self.getDomain()
-        result += '/'
-        result += context.__name__
-        return result
-
-    def shortURL(self,viewName=""):
-        result = '/'
-        result += self.context.__name__
-        if viewName:
-           result += '/' + viewName
-        return result
-      
-    def getDomain(self):
-        return self.request.host_url.lower().split('://')[1]
-
-    def getHost(self):
-        return self.getDomain()
-
-    """
-    #Maybe he next one should be retired, 
-    def domain(self,item):
-        if IPublicationRoot.providedBy(item):
-           result = self.request.application_url[8:]
-           result = result.lower()
-           return result
-        container = item.__parent__
-        result = self.domain(container)
-        return result      
-    """
     
     def objectHref(self,obj,name):
         return self.href(self.url(obj),name)

@@ -9,21 +9,21 @@
 
 Tree  <span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li class="dropdown-item"><a href="/manage">Root</a>
+                <li class="dropdown-item"><a href="manage">Root</a>
                 </li>
-                <li class="dropdown-item"><a href="/configure">Configure</a>
+                <li class="dropdown-item"><a href="configure">Configure</a>
                 </li>
-                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="/Root/manage">Root</a>
+                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="Root/manage">Root</a>
                 </li>
-                <li class="dropdown-item"><a href="/Products/manage">Products</a>
+                <li class="dropdown-item"><a href="Products/manage">Products</a>
                 </li>
-                <li class="dropdown-item"><a href="/pack">Pack</a>
+                <li class="dropdown-item"><a href="pack">Pack</a>
                 </li>
-                <li class="dropdown-item"><a href="/undo">Transactions</a>
+                <li class="dropdown-item"><a href="undo">Transactions</a>
                 </li>
-                <li class="dropdown-item"><a href="/reIndex">ReIndex</a>
+                <li class="dropdown-item"><a href="reIndex">ReIndex</a>
                 </li>
-                <li class="dropdown-item"><a href="/person/manage">People</a>
+                <li class="dropdown-item"><a href="person/manage">People</a>
                 </li>
             </ul>
         </li>

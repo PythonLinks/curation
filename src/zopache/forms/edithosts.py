@@ -31,6 +31,5 @@ class EditPermissions (EditForm):
         return 'Edit Permissions'
 
     def updateWidgets(self):
-        breakpoint()        
         super().updateWidgets()
         pass

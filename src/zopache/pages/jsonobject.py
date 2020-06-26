@@ -265,6 +265,17 @@ class JSONCategories(View):
     def render(self):
             return self.context.jsonCategories(2)
 
+@view_component
+@name('allCategories')
+@target(IView)
+@context(IPage)
+class JSONCategories(View):
+    responseFactory = Response
+    make_response = make_json_response
+    def render(self):
+            return self.context.allChildrenOfClass('Category')
+        
+
 
 
  

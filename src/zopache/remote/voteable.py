@@ -51,7 +51,6 @@ class Voteable(object):
     def clearVotes(self):
         print(self.__name__)
         #if self.__name__ =='zest-releaser':
-        #    breakpoint()
         if hasattr(self,'likeCount'):
             self.likeCount = 0
         if hasattr(self,'dislikeCount'):

@@ -20,7 +20,6 @@ def createObjects(dataClass):
     allData  = []
     allDicts = []
     for theItem in items:
-        breakpoint()        
         image = theItem.img
         website = theItem.findAll("div", {"class": "views-field-website"})
         title = theItem.findAll("div", {"class": "views-field-title"})
