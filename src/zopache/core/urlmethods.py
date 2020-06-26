@@ -73,8 +73,11 @@ class URLMethods(object):
     #RETURNS THE LONG PATH USING PARENTS
     def getZodbURL(self,item):
         isZodbRoot = IZodbRoot.providedBy (item)
-        if isZodbRoot:
-            base_url = item.__name__
+        isRootContainer = item.__class__.__name__ == "RootContainer"
+        if isRootContainer:
+           base_url = "" 
+        elif isZodbRoot:
+           base_url = item.__name__
         else:
            container = item.__parent__
            base_url= self.getLongURL(container)+ '/' + item.__name__

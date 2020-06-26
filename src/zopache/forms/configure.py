@@ -64,7 +64,12 @@ class IForm(Interface):
         required = False, 
         default = u'',
     )    
-
+    basePath = TextLine(
+        title = u'Base Path',
+        description = "The base path for relative urls",
+        required = False, 
+        default = '/',
+    )
     categoryName = TextLine(
         title = u'JSON Category Root',
         description = "What is the root of the Categories for the tree widget.",

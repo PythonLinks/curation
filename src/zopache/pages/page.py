@@ -28,7 +28,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     description = ''
     webApproved = True
     emailApproved = False
-    
+    basePath = "/"
     def getDefaultThumbNailURL(self):
         if 'Logo' in self:
             return  self.shortURL (self,viewName ='Logo')
@@ -261,7 +261,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
     icon="ttwicons/WikiPage.png"
-    
+
 from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink    
 @implementer (ILink)     
@@ -293,7 +293,7 @@ class RootPage(Branch,PageBase,PageMixIn):
        Branch.__init__(self)
        PageBase.__init__(self)
        cache = Cache()
-       
+
     def setJson(self):
         pass
 

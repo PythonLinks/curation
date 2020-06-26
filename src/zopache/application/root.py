@@ -8,6 +8,7 @@ from zopache.pages.allblogobjects import ProcessTree
 
 @implementer(IRootContainer)
 class RootContainer(Container,ProcessTree):
+    basePath = "/"
     icon="ttwicons/Container.svg"
     webClass = "Container"
     __name__ = "applicationRoot"

@@ -192,11 +192,11 @@ class CMSIndex(Index):
         return self.divBreadcrumbs(self.context,viewName = 'wp-content')
 
     def command(self,name):
-        url = '/' + self.context.__name__ + '/cms-' + name
+        url =  self.context.__name__ + '/cms-' + name
         return url
 
     def page(self,name):
-        url = '/' + name +"/wp-content"
+        url =  name +"/wp-content"
         return url
 
 #INDEX IFRAME CLASS
@@ -211,11 +211,11 @@ class IFrameIndex(Index):
         return self.divBreadcrumbs(self.context,viewName = 'html-content')
         
     def command(self,name):
-        url = '/' + self.context.__name__ + '/iframe-' + name
+        url =  self.context.__name__ + '/iframe-' + name
         return url
 
     def page(self,name):
-        url = '/' + name +"/html-content"
+        url =  name +"/html-content"
         return url
 
     def remoteHref(self,url,title):

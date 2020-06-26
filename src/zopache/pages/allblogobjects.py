@@ -59,7 +59,7 @@ class ProcessTree(object):
     def allChildrenOfClass(self,className):
         result = {}
         for item in self.allBlogObjects():
-            it item.__class__.__name__ == className:
+            if item.__class__.__name__ == className:
                result [className] = item.title
         return result
     
