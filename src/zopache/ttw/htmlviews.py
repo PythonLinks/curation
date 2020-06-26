@@ -161,11 +161,11 @@ class Index(View,Breadcrumbs):
             return F'<a href="{url}" > {title}</a>'
 
     def command(self,name):
-        url = '/' + self.context.__name__ + '/' + name
+        url =  self.context.__name__ + '/' + name
         return url
 
     def page(self,name):
-        url = '/' + name 
+        url =  name 
         return url
         
         
