@@ -1,5 +1,4 @@
 #THERE IS A COPY OF THIS IN zopache.core  as well       
-from collections import defaultdict
 from cromlech.browser.interfaces import IPublicationRoot
 from BTrees.OOBTree import OOBTree
 from zopache.crud.interfaces import IZodbRoot
@@ -84,14 +83,6 @@ class Root(object):
 
     def getATempalate(self,name):
         return self.getTemplates().get (name,None)
-
-    def sortByClass(self,context=None):
-        if context==None:
-           context = self.context
-        result = defaultdict(list)   
-        for item in context.values():
-            result[context.__class__.__name__].append(item)
-        return result    
 
     def getHeaders(self):
         products = self.getProducts()

@@ -19,7 +19,8 @@ from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
 from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
-
+from collections import defaultdict
+    
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
     url = ''
@@ -33,6 +34,13 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         if 'Logo' in self:
             return  self.shortURL (self,viewName ='Logo')
         return ""
+
+    def sortByClass(self):
+        result = defaultdict(list)   
+        for item in context.values():
+            result[context.__class__.__name__].append(item)
+        return result    
+
     
     def moveURL(self):
         if hasattr(self,'url'):
