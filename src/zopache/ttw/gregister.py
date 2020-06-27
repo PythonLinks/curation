@@ -22,6 +22,7 @@ from zopache.forms.validator import GoogleValidator
 from zopache.ttw.mail import Notify
 from zopache.pages.interfaces import IPage
 
+from zopache.crud.actions import Cancel
 @form_component
 @name (u'gregister')
 @context(Interface)
@@ -54,7 +55,9 @@ class GoogleRegister(AddForm, Notify):
     
     @property
     def actions(self):
-        return Actions(GoogleRegisterAction("Please Register Me", self))
+        return Actions(
+            Cancel("Cancel","Cancel"),            
+            GoogleRegisterAction("Please Register Me", self))
 
     def newURL(self,new):
         if new.hirePermission:
