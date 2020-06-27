@@ -30,11 +30,15 @@ class Branch(object):
        return link
 
     def existsRemoteURL(self,link):
+       if link == "":
+           return False
        link = self.urlOnly(link)
        return self.remoteURLs.get(link,None)
    
     def addRemoteURL(self,anObject):
        link = self.urlOnly(anObject.remoteURL)
+       if link == "":
+           return
        if link in self.remoteURLs:
           print (link) 
           print (anObject.__name__)
@@ -44,6 +48,8 @@ class Branch(object):
           self.remoteURLs[link] = anObject 
            
     def deleteRemoteURL(self,link):
+        if link == "":
+           return 
         link = self.urlOnly(link)
         del self.remoteURLs[link]
        
