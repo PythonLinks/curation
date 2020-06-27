@@ -37,8 +37,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def sortByClass(self):
         result = defaultdict(list)   
-        for item in context.values():
-            result[context.__class__.__name__].append(item)
+        for item in self.values():
+            result[item.__class__.__name__].append(item)
         return result    
 
     

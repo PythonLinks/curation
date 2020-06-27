@@ -2,7 +2,7 @@
     <ul class="nav navbar-nav">
         <li tal:condition="not view.implements('zopache.ttw.interfaces.IWebClass')"
         class="nav-item">
-<a href="." class="nav-link">View</a>
+<a href="${view.contextURL()}" class="nav-link">View</a>
         </li>
         <li class="dropdown nav-item">
 <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
