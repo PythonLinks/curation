@@ -71,7 +71,7 @@ class Add(Action, UniqueName, TransactionNote):
         notify(ObjectCreatedEvent(obj))
         self.actuallyAdd(obj,data)
         form.message("Content created")
-        baseURL = self.form.getAbsoluteURL (self.new)
+        baseURL = self.form.absoluteURL (self.new)
         self.describeWithView(obj,form)
         if hasattr(form, 'newURL'):
            url=self.form.newURL(baseURL)

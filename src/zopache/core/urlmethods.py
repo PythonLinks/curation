@@ -71,7 +71,11 @@ class URLMethods(object):
         return self.getZodbURL(item)
 
 
-    def getAbsoluteURL(self,item):
+    def getAbsoluteURL(self,*args):
+        return self.absoluteURL (args)
+    
+    def absoluteURL(self,*args):
+        item = self.context if len(args)==0 else args [0]
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
@@ -85,7 +89,11 @@ class URLMethods(object):
         return base_url
 
     #RETURNS THE LONG PATH USING PARENTS
-    def getZodbURL(self,item):
+    def getZodbURL(self,*args):
+        return self.zodbURL(args)
+    
+    def relativeURL(self,*args):        
+        item = self.context if len(args)==0 else args [0]        
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"

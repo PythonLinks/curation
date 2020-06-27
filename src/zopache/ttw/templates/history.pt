@@ -19,12 +19,12 @@ Modified:  ${structure: view.results()[0]['time'].hour()} :
 <tr  tal:repeat="result view.results()" >
     <td tal:content=" repeat.result.length-repeat.result.index" >0, 1, 2 </td>
 <td>
-<a tal:attributes="href python: view.url(context) + 
+<a tal:attributes="href python: view.absoluteURL(context) + 
 '/++history++'+str(repeat['result'].index())+
 '/historicindex'">Source</a>
 </td>
 <td>
-<a tal:attributes="href python: view.url(context) + 
+<a tal:attributes="href python: view.absoluteURL(context) + 
 '/++history++'+str(repeat['result'].index())+
 '/restore'">Restore</a>
 </td>

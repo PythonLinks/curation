@@ -1,29 +1,29 @@
-<nav class="navbar navbar-expand-md">
+<nav class="navbar navbar-expand-md" tal:define="nodeURL view.relativeURL();siteURL view.relativeSiteURL()">
     <ul class="nav navbar-nav">
         <li tal:condition="not view.implements('zopache.ttw.interfaces.IWebClass')"
         class="nav-item">
-<a href="${view.contextURL()}" class="nav-link">View</a>
+<a href="${relativeURL}" class="nav-link">View</a>
         </li>
         <li class="dropdown nav-item">
 <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
 
 Tree  <span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li class="dropdown-item"><a href="manage">Root</a>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/manage">Root</a>
                 </li>
-                <li class="dropdown-item"><a href="configure">Configure</a>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/configure">Configure</a>
                 </li>
-                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="Root/manage">Root</a>
+                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="${relativeSiteURL}/ProductsRoot/manage">Root</a>
                 </li>
-                <li class="dropdown-item"><a href="Products/manage">Products</a>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/Products/manage">Products</a>
                 </li>
-                <li class="dropdown-item"><a href="pack">Pack</a>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/pack">Pack</a>
                 </li>
-                <li class="dropdown-item"><a href="undo">Transactions</a>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/undo">Transactions</a>
                 </li>
-                <li class="dropdown-item"><a href="reIndex">ReIndex</a>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/reIndex">ReIndex</a>
                 </li>
-                <li class="dropdown-item"><a href="person/manage">People</a>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/person/manage">People</a>
                 </li>
             </ul>
         </li>
@@ -38,35 +38,35 @@ Node  <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li tal:condition="view.implements('dolmen.container.IBTreeContainer')"
                 class="dropdown-item">
-<a href="./manage">Manage</a>
+<a href="${relativeURL}/manage">Manage</a>
                 </li>
                 <li tal:condition="view.implements('zopache.ttw.interfaces.IAceEdit')"
-                class="dropdown-item"><a href="./aceedit">AceEdit</a>
+                class="dropdown-item"><a href="${relativeURL}//aceedit">AceEdit</a>
                 </li>
                 <li tal:condition="view.implements('zopache.ttw.interfaces.ICkHTML')"
-                class="dropdown-item"><a href="./ckedit">CkEdit</a>
+                class="dropdown-item"><a href="${relativeURL}//ckedit">CkEdit</a>
                 </li>
                 <li tal:condition="view.implements('zopache.ttw.interfaces.ISource')"
-                class="dropdown-item"><a href="./history">History</a>
+                class="dropdown-item"><a href="${relativeURL}//history">History</a>
                 </li>
                 <li tal:condition="view.implements('zopache.pages.interfaces.IPage')"
-                class="dropdown-item"><a href="./json">JSON</a>
+                class="dropdown-item"><a href="${relativeURL}//json">JSON</a>
                 </li>
-                <li tal:condition="hasattr(context,'webClass')" class="dropdown-item"><a href="./editWebClass">Edit Web Class</a>
+                <li tal:condition="hasattr(context,'webClass')" class="dropdown-item"><a href="${relativeURL}//editWebClass">Edit Web Class</a>
                 </li>
-                <li class="dropdown-item"><a href="./delete">Delete</a>
+                <li class="dropdown-item"><a href="${relativeURL}//delete">Delete</a>
                 </li>
                 <li tal:condition="view.treeSecurity() and view.implements('dolmen.container.IBTreeContainer')"
                 class="dropdown-item">
-<a href="./forest-wiki-backup">Backup</a>
+<a href="${relativeURL}//forest-wiki-backup">Backup</a>
                 </li>
                 <li tal:condition="view.implements('dolmen.container.IBTreeContainer')"
                 class="dropdown-item">
-<a href="./restore">Restore</a>
+<a href="${relativeURL}//restore">Restore</a>
                 </li>
                 <li tal:condition="view.context.__class__.__name__ == 'InternalPrincipal'"
                 class="dropdown-item">
-<a href="./permissions">Permissions</a>
+<a href="${relativeURL}//permissions">Permissions</a>
                 </li>
             </ul>
         </li>
@@ -79,27 +79,27 @@ Node  <span class="caret"></span></a>
 
 + HTML  <span class="caret"></span></a>
      <ul class="dropdown-menu">
-                <li tal:condition="view.safeMethod('isPage')" class="dropdown-item"><a href="./addPage">Page</a>
+                <li tal:condition="view.safeMethod('isPage')" class="dropdown-item"><a href="${relativeURL}/addPage">Page</a>
                 </li>
-                <li class="dropdown-item"><a href="./addContainer">Container</a>
+                <li class="dropdown-item"><a href="${relativeURL}//addContainer">Container</a>
                 </li>
-                <li tal:condition="view.treeSecurity()" class="dropdown-item"><a href="./addHTML">HTML</a>
+                <li tal:condition="view.treeSecurity()" class="dropdown-item"><a href="${relativeURL}//addHTML">HTML</a>
                 </li>
-                <li tal:condition="view.treeSecurity()" class="dropdown-item"><a href="./addAceHTML">Ace HTML</a>
+                <li tal:condition="view.treeSecurity()" class="dropdown-item"><a href="${relativeURL}//addAceHTML">Ace HTML</a>
                 </li>
-                <li tal:condition="view.treeSecurity()" class="dropdown-item"><a href="./addPug">Pug</a>
+                <li tal:condition="view.treeSecurity()" class="dropdown-item"><a href="${relativeURL}//addPug">Pug</a>
                 </li>
-                <li tal:condition="view.isManager()" class="dropdown-item"><a href="./addSecureHTML">Secure HTML</a>
+                <li tal:condition="view.isManager()" class="dropdown-item"><a href="${relativeURL}//addSecureHTML">Secure HTML</a>
                 </li>
-                <li class="dropdown-item"><a href="./addCSS">CSS</a>
+                <li class="dropdown-item"><a href="${relativeURL}//addCSS">CSS</a>
                 </li>
-                <li class="dropdown-item"><a href="./addJavascript">JavaScript</a>
+                <li class="dropdown-item"><a href="${relativeURL}//addJavascript">JavaScript</a>
                 </li>
-                <li class="dropdown-item"><a href="./addImage">Image</a>
+                <li class="dropdown-item"><a href="${relativeURL}//addImage">Image</a>
                 </li>
-                <li class="dropdown-item"><a href="./addFile">File</a>
+                <li class="dropdown-item"><a href="${relativeURL}//addFile">File</a>
                 </li>
-                <li class="dropdown-item"><a href="./addContainer">Folder</a>
+                <li class="dropdown-item"><a href="${relativeURL}//addContainer">Folder</a>
                 </li>
             </ul>
         </li>
@@ -114,19 +114,19 @@ Node  <span class="caret"></span></a>
 <ul class="dropdown-menu ">
 
 
-<li class="dropdown-item "><a href="./addCategory ">Add Category</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addCategory ">Add Category</a></li>
 <li tal:condition="view.isConference()" class="dropdown-item ">
-<a href="./addVideo ">Add Video</a>
+<a href="${relativeURL}//addVideo ">Add Video</a>
  </li>
 
-<li class="dropdown-item "><a href="./addConference ">Add Conference</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addConference ">Add Conference</a></li>
 
-<li class="dropdown-item "><a href="./addPlayList ">Add PlayList</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addPlayList ">Add PlayList</a></li>
 
-<li class="dropdown-item "><a href="./addChannel ">Add Channel</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addChannel ">Add Channel</a></li>
 
 <li tal:condition="view.isVideo()" class="dropdown-item">
-	<a href="./starttime ">Start Time</a></li>
+	<a href="${relativeURL}//starttime ">Start Time</a></li>
 
 </ul>
 
@@ -142,29 +142,29 @@ Node  <span class="caret"></span></a>
 <ul class="dropdown-menu ">
 
 
-<li class="dropdown-item "><a href="./addPug ">Pug</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addPug ">Pug</a></li>
 
 <li tal:condition="view.isManager() " class="dropdown-item
-        "><a href="./addSecureHTML ">Secure HTML</a></li>
+        "><a href="${relativeURL}/addSecureHTML ">Secure HTML</a></li>
 
-<li class="dropdown-item "><a href="./addCoffeeScript ">CoffeeScript</a></li>
+<li class="dropdown-item "><a href="${relativeURL}/addCoffeeScript ">CoffeeScript</a></li>
 
-<li class="dropdown-item ">   <a href="./addPython ">Python</a></li>
-<li class="dropdown-item ">   <a href="./addPythonScript ">PythonScript</a></li>
+<li class="dropdown-item ">   <a href="${relativeURL}//addPython ">Python</a></li>
+<li class="dropdown-item ">   <a href="${relativeURL}//addPythonScript ">PythonScript</a></li>
 
-<li class="dropdown-item "><a href="./addJSON ">JSON</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addJSON ">JSON</a></li>
 
 <li tal:condition="view.safeMethod('isBTreeContainer') or view.safeMethod('isPythonFolder')
         " class="dropdown-item "> </li>
 
-<li class="dropdown-item "><a href="./addCSSFolder ">CSS Folder</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addCSSFolder ">CSS Folder</a></li>
 
-<li class="dropdown-item "><a href="./addJavascriptFolder ">Javascript Folder</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addJavascriptFolder ">Javascript Folder</a></li>
 
 <li tal:condition="view.safeMethod('isBTreeContainer') or view.safeMethod('isPythonFolder')
         " class="dropdown-item ">
 
-   <a href="./addPythonFolder ">Transcyprt Folder</a></li>
+   <a href="${relativeURL}//addPythonFolder ">Transcyprt Folder</a></li>
 
 </ul>
 </li>
