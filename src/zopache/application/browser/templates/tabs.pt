@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md" tal:define="nodeURL view.relativeURL();siteURL view.relativeSiteURL()">
+<nav class="navbar navbar-expand-md" tal:define="relativeURL view.relativeURL();relativeSiteURL view.relativeSiteURL()">
     <ul class="nav navbar-nav">
         <li tal:condition="not view.implements('zopache.ttw.interfaces.IWebClass')"
         class="nav-item">

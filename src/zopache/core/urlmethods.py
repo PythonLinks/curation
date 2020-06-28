@@ -68,11 +68,7 @@ class URLMethods(object):
 
     #RETURNS THE LONG PATH USING PARENTS
     def getLongURL(self,item):
-        return self.getZodbURL(item)
-
-
-    def getAbsoluteURL(self,*args):
-        return self.absoluteURL (args)
+        return self.absoluteURL(item)
     
     def absoluteURL(self,*args):
         item = self.context if len(args)==0 else args [0]
@@ -80,42 +76,57 @@ class URLMethods(object):
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
         if isRootContainer:
-           base_url = "" 
+           base_url = ""
+           print("isRootContainer ", base_url)
+           return base_url
         if isSiteRoot:
-            base_url =  item.basePath + item.__name__
+           base_url =  item.basePath
+           if base_url == "/":
+               base_url += item.__name__
+           print("isSiteRoot ", base_url)
+           print("basePath ", item.basePath)           
+           return base_url            
         else:
            container = item.__parent__
-           base_url= self.getAbsoluteURL(container)+ '/' + item.__name__
-        return base_url
+           base_url= self.absoluteURL(container)+ '/' + item.__name__
+           print("iterating  ", base_url)
+           return base_url
 
-    #RETURNS THE LONG PATH USING PARENTS
-    def getZodbURL(self,*args):
-        return self.zodbURL(args)
-    
     def relativeURL(self,*args):        
         item = self.context if len(args)==0 else args [0]        
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
         if isRootContainer:
-           base_url = "" 
+            base_url = ""
+            return base_url
         elif isZodbRoot:
-           base_url = item.__name__
+            base_url = item.__name__
+            return base_url
         if isSiteRoot:
             base_url =  item.__name__
+            return base_url            
         else:
-           container = item.__parent__
-           base_url= self.getLongURL(container)+ '/' + item.__name__
-        return base_url
+            container = item.__parent__
+            base_url= self.getLongURL(container)+ '/' + item.__name__
+            return base_url
+
+    def absoluteSiteURL(self):
+        site = self.getSiteRoot()
+        return self.absoluteURL(site)    
     
-    def getSiteURL(self,item):
-        return self.getZodbURL(item)
+    def relativeSiteURL(self):
+        site = self.getSiteRoot()
+        return self.relativeURL(site)
+
+    def siteURL(self):
+        return self.relativeSiteURL()    
 
     #And here is a much simpler implementation of URL.
     #Only good for this zodb application. 
     def simpleUrl(self,item):
-        return self.getSiteURL(item)        
-    
+        return self.relativeURL(item)
+        
     def urlEncode(self,str):
         return urllib.parse.quote(str)
     

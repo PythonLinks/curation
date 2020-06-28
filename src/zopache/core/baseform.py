@@ -35,18 +35,20 @@ class Form(BaseForm,Scripts,Breadcrumbs):
 
     def breadcrumbs(self):
         return self.breadcrumbsManage()
-                      
+    
+    @property
+    def action_url(self):
+        url = self.request.path[1:]
+        print ("IN BASE FORM" , url)
+        return url
+    
     def before(self,widget):
         field = widget.component._field
         result = ""
         if hasattr(field,"text"):
             result = field.text
         return result
-    
-    @property
-    def action_url(self):
-        return self.url()
-    
+        
     def widgetDictionary(self):
         return {c.htmlId():c for c in self.bootstrapWidgets()}
 
