@@ -73,11 +73,13 @@ class Add(Action, UniqueName, TransactionNote):
         self.actuallyAdd(obj,data)
         form.message("Content created")
         baseURL = self.form.absoluteURL (self.new)
+        print ("IN ADD", baseURL)
         self.describeWithView(obj,form)
         if hasattr(form, 'newURL'):
            url=self.form.newURL(baseURL)
         else:
            url=self.newURL(baseURL)
+        print ("AFTER ADD NEW URL", url)           
         if hasattr(form,'postAddProcess'):
                form.postAddProcess()
         elif hasattr(form.new,'postAddProcess'):

@@ -70,7 +70,7 @@ class ManageBase(Form,Contents):
  
     def getManageURL(self,item):
         try:
-           url = self.getZodbURL(item)
+           url = self.relativeURL(item)
            segment =  IURLSegment(item).getSegment()
            return url + '/' + segment
         except:
