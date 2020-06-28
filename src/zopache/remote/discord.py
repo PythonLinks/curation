@@ -93,6 +93,7 @@ class BaseClass(AddAnonymousPage):
 @target(IView)
 @context(IPage)
 class AddLinkFromDiscord(AddToTree,BaseClass):
+    submissionErrors = []
     allowAnonymous = True    
     interface = ILinkForm
     title = "Add a Link"
