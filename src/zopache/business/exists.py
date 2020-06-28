@@ -16,18 +16,17 @@ class Duplicate(object):
     
     def validate(self, data):
         errors = []
+        form = self.form
         siteRoot = self.form.context.getSiteRoot()
         title = data ['title']
         slug = slugify(title,lower=True)
-        errorMessage =    F""" Thank you for your suggesting "{title}", 
-but that object 
-is already in the database at /{slug}. If it is not a duplicate, and you still 
-want to submit it, then 
-please change the name or spelling, resubmit, and the submission should work.
-If the object has a location, you can also add the name of the city to distinguish it from the other 
-organization. """
         if slug in siteRoot:
-           error = OrganizationExistsError(errorMessage)
-           errors.append(error)
+            theItem = siteRoot[slug]
+            errorMessage =    f""" 
+Error: An object with that name "{title}" is already 
+in the database at  {form.secureShortURL(theItem)}
+"""
+            error = OrganizationExistsError(errorMessage)
+            errors.append(error)
         return errors
 

@@ -8,7 +8,7 @@ from zopache.crud.actions import AddByTitleToTreeAndView
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
 from zopache.pages.addanonymous import AddToTree, AddAnonymousPage
-
+from zopache.business.missingcategory import MissingCategory
 class IBaseForm(Interface):
     title = schema.TextLine(
         title = 'Page Title',
@@ -28,23 +28,24 @@ class IBaseForm(Interface):
                         You are encouraged to edit this 
                part to make it more relevant.""",
                required = False,
-               default = u'',
+               default = '',
                )
 
     source= schema.Text(
         title = u'More Content',
-        description = u'if the description is too long, please move part of it it here.',
+        description = """if the description is too long, 
+please move part of it here.""",
         required = False,
         default = '',
     )
-        
-    discordGuildId = schema.TextLine(
-        title = 'The Discord Server',
+
+    discordGuildId = schema.Int(
+        title = 'The Discord ServerId',
         required = True,
     )
     
-    discordChannelId = schema.TextLine(
-        title = 'The Discord Channel',
+    discordChannelId = schema.Int(
+        title = 'The Discord Channel Id',
         required = True,
     )
     
@@ -52,11 +53,17 @@ class IBaseForm(Interface):
         title = u'The Discord User Name',
         required = True,
     )
-    discordUserId = schema.TextLine(
+    discordUserId = schema.Int(
         title = u'The Discord User Id',
         required = True,
-    )      
+    )
+    
+    discordUserDiscriminator = schema.Int(
+        title = u'The Discord User Discriminator',
+        required = True,
+    )          
 
+    
 class ILinkForm(IBaseForm):    
     categoryName=TreeField(
            title="Category",
@@ -75,9 +82,11 @@ class INewsForm(IBaseForm):
 from dolmen.forms.base.widgets import Widgets
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
-
+from dolmen.view import make_view_response
 class BaseClass(AddAnonymousPage):
-    dataValidators = [Duplicate,DuplicateURLValidator]    
+    make_response = make_view_response
+    submissionErrors = []
+    dataValidators = [Duplicate,DuplicateURLValidator,MissingCategory]    
     ignoreRequest = False
     layoutName = "UserMenu"    
         
@@ -88,22 +97,23 @@ class BaseClass(AddAnonymousPage):
         AddAnonymousPage.postAddProcess(self,view=self)
         self.new.webApproved = False
 
-@form_component
+@view_component
 @name('fromDiscord')
 @target(IView)
 @context(IPage)
 class AddLinkFromDiscord(AddToTree,BaseClass):
-    submissionErrors = []
     allowAnonymous = True    
     interface = ILinkForm
     title = "Add a Link"
     factory = Link
     def render(self):
         response = ""
-        for item in self.formErrors:
-               response += item.title
-        for item in self.submissionErrors:
-               response += item.title
+        #for item in self.formErrors:
+        #       response += item.title + " "
+        #response += item.identifier
+        for item in self.submissionError:
+               response += item.title 
+               response += item.identifier              
         for widget in self.fieldWidgets:
             if hasattr (widget, 'err') and widget.err:
                response += widget.title               

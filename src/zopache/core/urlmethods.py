@@ -33,7 +33,7 @@ class URLMethods(object):
            context = self.context
         result = 'https://'
         result += self.getDomain()
-        result += '/'
+        result += self.getSiteRoot().basePath
         result += context.__name__
         return result
     
