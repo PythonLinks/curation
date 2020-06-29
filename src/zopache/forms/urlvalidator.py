@@ -40,7 +40,7 @@ class BaseValidator(object):
         categoryName = data ['categoryName']
         return siteRoot.get(categoryName,None)
    
-class DuplicateURLValidator(object):             
+class DuplicateURLValidator(BaseValidator):             
     def validate(self, data):        
         errors = Errors()
         if self.urlExists(data) != None:
