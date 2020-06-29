@@ -245,6 +245,7 @@ class BaseHTMLEditForm(BaseEditForm):
                 self.actions = Actions(action1,action2,action5)                
         
 class BaseAceEdit(AceScripts,BaseHTMLEditForm):
+    __name__ = "aceedit"
     subTitle="Ace Edit this object"
             
 
@@ -279,6 +280,7 @@ class AceDemoHTML(BaseAceEdit):
 
 
 class BaseCkEdit(CkScripts,BaseHTMLEditForm):
+    __name__ = "ckedit"
     subTitle="CkEdit this object"        
     
     def footerScripts(self):

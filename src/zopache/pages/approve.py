@@ -18,5 +18,4 @@ class Approve (EditForm):
     subTitle = ''
     interface = IApprove
     fields = Fields(IApprove)
-    
 

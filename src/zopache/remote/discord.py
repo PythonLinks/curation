@@ -8,7 +8,8 @@ from zopache.crud.actions import AddByTitleToTreeAndView
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
 from zopache.pages.addanonymous import AddToTree, AddAnonymousPage
-from zopache.business.missingcategory import MissingCategory
+from zopache.remote.validatediscord import ValidateDiscord
+
 class IBaseForm(Interface):
     title = schema.TextLine(
         title = 'Page Title',
@@ -38,7 +39,12 @@ please move part of it here.""",
         required = False,
         default = '',
     )
-
+    
+    webApproved = schema.Bool(
+        title = "Approved for publication on the web.",
+        required = False,
+        default = False)
+    
     discordGuildId = schema.Int(
         title = 'The Discord ServerId',
         required = True,
@@ -80,22 +86,28 @@ class INewsForm(IBaseForm):
     pass
 
 from dolmen.forms.base.widgets import Widgets
-from zopache.business.exists import Duplicate
-from zopache.forms.urlvalidator import DuplicateURLValidator
+from zopache.remote.validatediscord import ValidateDiscord
 from dolmen.view import make_view_response
+from dolmen.forms.base import Action, SuccessMarker
 class BaseClass(AddAnonymousPage):
     make_response = make_view_response
     submissionErrors = []
-    dataValidators = [Duplicate,DuplicateURLValidator,MissingCategory]    
+    dataValidators = [ValidateDiscord]
     ignoreRequest = False
-    layoutName = "UserMenu"    
+    layoutName = "UserMenu"
+    
+    def getReturn(self,url):
+        return SuccessMarker('Added', True)
         
     def updateWidgets(self):
         AddAnonymousPage.updateWidgets(self)
+
+    #Have to subclass, because addAnonymous sets
+    #webApproved to be False
+    def postAddProcess(self,view = None):
+        self.new.postAddProcess (view = self)
+        self.notifyAdminsNewPage()
         
-    def postAddProcess(self, view=None):
-        AddAnonymousPage.postAddProcess(self,view=self)
-        self.new.webApproved = False
 
 @view_component
 @name('fromDiscord')
@@ -111,17 +123,23 @@ class AddLinkFromDiscord(AddToTree,BaseClass):
         #for item in self.formErrors:
         #       response += item.title + " "
         #response += item.identifier
-        for item in self.submissionError:
-               response += item.title 
-               response += item.identifier              
+        #for item in self.submissionError:
+        #       response += item.title 
+        #       response += item.identifier 
+        for item in self.errors:
+                 response +=  item.title
         for widget in self.fieldWidgets:
             if hasattr (widget, 'err') and widget.err:
-               response += widget.title               
-        if response:
-            return response
-        url = self.secureShortURL(context=self.new)
-        messaged = f" Here is your new posting <{url}>."
-        return "Success" + message
+               response += widget.title
+               response += widget.identifier               
+        if response and response != "form":
+               return response
+           
+        if hasattr(self,'new'):
+           url = self.secureShortURL(context=self.new)
+           message = f" Here is your new posting <{url}>."
+           return "Success" + message
+        return "Error, nothing created!"
     
 from zopache.business.company import Organization        
 @view_component

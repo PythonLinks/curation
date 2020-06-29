@@ -59,6 +59,7 @@ class GoogleLoginAction(Action,AccessGoogle):
         if email in people.idByEmail:
             personId = people.idByEmail[email]
             person = people [personId]
+
             people.loginUser(person)   
             self.form.loggedIn = True
 

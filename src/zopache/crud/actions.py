@@ -57,7 +57,6 @@ class Add(Action, UniqueName, TransactionNote):
         self.form=form
         obj= form.factory()
         self.new=form.new=obj
-
         data, errors = self.form.extractData()
         if errors:
             form.submissionError = errors
@@ -75,16 +74,26 @@ class Add(Action, UniqueName, TransactionNote):
         baseURL = self.form.absoluteURL (self.new)
         print ("IN ADD", baseURL)
         self.describeWithView(obj,form)
+
+        #NOW DO Form Specific newURLs. 
         if hasattr(form, 'newURL'):
            url=self.form.newURL(baseURL)
         else:
            url=self.newURL(baseURL)
-        print ("AFTER ADD NEW URL", url)           
+
+        #Form Specific postAddProcessing   
         if hasattr(form,'postAddProcess'):
                form.postAddProcess()
         elif hasattr(form.new,'postAddProcess'):
                form.new.postAddProcess(view=form)
 
+        #Now do form specific returns
+        if hasattr(form,'getReturn'):
+            return form.getReturn(url)
+        elif hasattr(form.new,'postAddProcess'):
+            return self.getReturn(url)
+        
+    def getReturn(self,url):            
         return SuccessMarker('Added', True, url=url,code=307)
     
     def setFields(self):
@@ -250,7 +259,7 @@ class Update(Action,TransactionNote):
         elif hasattr(form.context,'postProcess'):
                form.context.postProcess(view=form)
 
-        baseURL = str(IURL(form.context, form.request))
+        baseURL = self.form.relativeURL()
         url=self.newURL(baseURL)
         self.describeWithView(form.context,form)
         if url == form.request.url:
@@ -262,7 +271,7 @@ class Update(Action,TransactionNote):
         if hasattr(self.form, 'newURL'):
             return self.form.newURL(baseURL)
         else:
-            return self.form.request.url
+            return baseURL + "/"  + self.form.__name__
 
     def postProcess(self):
             pass

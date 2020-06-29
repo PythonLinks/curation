@@ -155,7 +155,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.postProcess(view=view)
         if hasattr(self,'remoteURL'):
            siteRoot = self.getSiteRoot()
-           #siteRoot.addRemoteURL(self)
+           siteRoot.addRemoteURL(self)
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
 

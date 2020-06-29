@@ -38,7 +38,7 @@ class LocalBase(BaseClass):
         root = getSiteRoot(item)
         parent = item.__parent__
         valuesByToken = root.valuesByToken
-        if not IPage.providedBy(parent):
+        if not IPage.providedBy(item):
              return
 
         # DO NOTHING IF THIS IS A DUPLICATE 
@@ -72,7 +72,7 @@ class CategoryCopier(LocalBase,Copier):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectCutter)
-class CategoryCutter(LocalBase,Cutter):
+class PageCutter(LocalBase,Cutter):
     """Adapter for moving objects between containers
     """
     #IF IT IS A CATEOGRY DELETE FROM VALUESByTOKEN
@@ -89,7 +89,7 @@ class CategoryCutter(LocalBase,Cutter):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectPaster)
-class CategoryPaster(LocalBase,Paster,UniquePageName):
+class PagePaster(LocalBase,Paster,UniquePageName):
                            
     def paste(self,view):
         self.view = view        
@@ -116,7 +116,7 @@ class ItemNotFoundError(Exception):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectRenamer)
-class CategoryRenamer(LocalBase,Renamer,UniquePageName):
+class PageRenamer(LocalBase,Renamer,UniquePageName):
     def renameItem(self, oldName, newName,view):
         self.view = view
         item = self.context[oldName]
@@ -140,7 +140,7 @@ class CategoryRenamer(LocalBase,Renamer,UniquePageName):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectDeleter)
-class CategoryDeleter(Deleter,LocalBase):
+class PageDeleter(Deleter,LocalBase):
     def deleteItem(self,view):
         self.view = view
         contained=self.context
@@ -153,13 +153,15 @@ class CategoryDeleter(Deleter,LocalBase):
         #OKAY NOW DO THE WORK
         # DELETE THE CANNONICAL NAME
         # HAVE TO DO THIS FIRST
-        self.describeTransaction("Deleted an object with a Canonical URL",contained)        
+        self.describeTransaction("Deleted an object with a Canonical URL",contained)
+
         self.deleteToken(contained)
         # DELETE THE OBJECT
         container=contained.__parent__
-        #Have to do this before deleting the __parent__ Pointer. 
+        # So even though root is not used till later, 
+        #we have to do this before deleting the __parent__ Pointer. 
         if IPage.providedBy (container):
-            root = getSiteRoot(contained)
+           root = getSiteRoot(contained)
         if hasattr(contained,'preDeleteProcess'):
              contained.preDeleteProcess(view)
         del container[name]

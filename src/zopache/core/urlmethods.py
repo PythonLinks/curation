@@ -77,19 +77,15 @@ class URLMethods(object):
         isRootContainer = item.__class__.__name__ == "RootContainer"
         if isRootContainer:
            base_url = ""
-           print("isRootContainer ", base_url)
            return base_url
         if isSiteRoot:
            base_url =  item.basePath
            if base_url == "/":
                base_url += item.__name__
-           print("isSiteRoot ", base_url)
-           print("basePath ", item.basePath)           
            return base_url            
         else:
            container = item.__parent__
            base_url= self.absoluteURL(container)+ '/' + item.__name__
-           print("iterating  ", base_url)
            return base_url
 
     def relativeURL(self,*args):        

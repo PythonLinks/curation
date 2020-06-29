@@ -3,17 +3,6 @@ from dolmen.forms.base.errors import Error,Errors
 from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 
-class EmailExistsError (ValidationError):
-    """ That email address already exists in the database"""
-    title = "Email Exists"
-
-class UserExistsError (ValidationError):
-    """ That user name is already in use. """
-    title = "User Exists"
-
-class NoPasswordError(ValidationError):
-    """ You need to login with Google Login """
-    title = "Please do a Google Login"
 
 class DuplicateURLError(ValidationError):
     """ You need to login with Google Login """
@@ -30,32 +19,33 @@ class Validator(object):
     
     def validate(self, data):
         self.data = data
-        errors = []
+        errors = Errors()
         people = getPrincipalFolder(self.form.context)        
 
         # MAKE SURE THE EMAIL DOES NOT EXIST
         email = self.getEmail()
         if email in people.idByEmail:
-           error = EmailExistsError("That email address is already registered "                   + email)           
+           error = Error(title="That email address is already registered "                   + email, identifier = "Email.Exists.Error")           
            errors.append(error)
 
         #MAKE SURE THE HANDLE DOES NOT EXIST   
         handle = data['handle']
         if people.existsHandle (handle):
-           error = UserExistsError ("That user already exists: " + handle)
+           error = Error (title= "That user already exists: " + handle,
+                          identifier = "User.Exists.Error")
            errors.append(error)
         return errors
 
 class LoginValidator(Validator):
     def validate(self, data):
         self.data = data
-        errors = []
+        errors = Errors()
         people = getPrincipalFolder(self.form.context)        
         anId = self.getEmail()
         principal = people.getPrincipalByUserName(anId, default = None)
         if ((principal != None )and
             (principal._password == "")):
-           error = NoPasswordError("""Please Login using Google, 
+           error = Error(title = """Please Login using Google, 
                                     not local login.""")           
            errors.append(error)
         return errors
