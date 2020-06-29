@@ -3,11 +3,6 @@ from dolmen.forms.base.errors import Error,Errors
 from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 
-
-class DuplicateURLError(ValidationError):
-    """ You need to login with Google Login """
-    title = "Please do a Google Login"
-    
 class Validator(object):
 
     def __init__(self, fields, form):
