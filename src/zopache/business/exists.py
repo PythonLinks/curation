@@ -14,7 +14,7 @@ class Duplicate(BaseValidator):
 Error: An object with that name "{title}" is already 
 in the database at  {form.secureShortURL(theItem)}
 """
-            error = OrganizationExistsError(errorMessage)
+            error = Error(errorMessage)
             errors.append(error)
         return errors
 
