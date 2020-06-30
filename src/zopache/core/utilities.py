@@ -1,11 +1,17 @@
 import json
 from pydoc import locate
-from zopache.core.getroot import getSiteRoot
+import pyshorteners
 import hashlib
 from cromlech.security import Unauthorized
 from dolmen.message.utils import send
+from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
+    def shortenURL(self,url):
+        shortener = pyshorteners.Shortener()
+        url = shortener.tinyurl.short(url)
+        return url
+
     def rename(self,item,newName):
         parent = item.__parent__
         del parent[item.__name__]

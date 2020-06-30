@@ -29,7 +29,7 @@ class ValidateDiscord(BaseValidator):
         slugExists = self.slugExists(data)
         if slugExists != None:
             theItem = slugExists
-            errorMessage += f""" "{title}" already exists . """
+            errorMessage += f""" "{title[0:50]}" already exists . """
             
         urlExists = self.urlExists(data)    
         if urlExists != None:
@@ -39,9 +39,9 @@ class ValidateDiscord(BaseValidator):
         if (categoryExists == None or
             slugExists != None  or
             urlExists != None):
-            
-            errorMessage +=    f""" You can see the object at <{self.form.secureShortURL(theItem)}>
-"""
+            url = self.form.secureShortURL(theItem)
+            url = self.form.shortenURL(url)
+            errorMessage += f" You can see the object at <{url}>"
             error = ArgsError(title = errorMessage,
                           identifier = "slug-or-url")
             errors.append(error)

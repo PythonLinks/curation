@@ -137,6 +137,7 @@ class AddLinkFromDiscord(AddToTree,BaseClass):
            
         if hasattr(self,'new'):
            url = self.secureShortURL(context=self.new)
+           url = self.shortenURL(url)
            message = f" Here is your new posting <{url}>."
            return "Success" + message
         return "Error, nothing created!"
