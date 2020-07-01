@@ -97,10 +97,10 @@ class URLMethods(object):
             base_url = ""
             return base_url
         elif isZodbRoot:
-            base_url = item.__name__
+            base_url = ""
             return base_url
-        elif isSiteRoot:
-            base_url =  item.__name__
+        if isSiteRoot:
+            base_url =  ""
             return base_url            
         else:
             container = item.__parent__
