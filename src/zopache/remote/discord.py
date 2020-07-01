@@ -114,6 +114,7 @@ class BaseClass(AddAnonymousPage):
 @target(IView)
 @context(IPage)
 class AddLinkFromDiscord(AddToTree,BaseClass):
+    __name__ = "fromDiscord"
     allowAnonymous = True    
     interface = ILinkForm
     title = "Add a Link"
@@ -148,6 +149,7 @@ from zopache.business.company import Organization
 @target(IView)
 @context(IPage)
 class AddOrganizationFromDiscord(BaseClass):        
+    __name__ ="AddOrganizationFromDiscord"
     interface = IOrganizationForm
     title = "Add an Organization"
     factory = Organization
@@ -158,6 +160,7 @@ from zopache.remote.rss import RSS
 @target(IView)
 @context(IPage)
 class AddNewsSiteDiscord(BaseClass):        
+    __name__ = "addNewssiteFromDiscord"
     interface = INewsForm
     title = "Add a News Site"
     factory = RSS

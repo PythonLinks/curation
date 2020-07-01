@@ -99,12 +99,12 @@ class URLMethods(object):
         elif isZodbRoot:
             base_url = item.__name__
             return base_url
-        if isSiteRoot:
+        elif isSiteRoot:
             base_url =  item.__name__
             return base_url            
         else:
             container = item.__parent__
-            base_url= self.getLongURL(container)+ '/' + item.__name__
+            base_url= self.relativeURL(container)+ '/' + item.__name__
             return base_url
 
     def absoluteSiteURL(self):

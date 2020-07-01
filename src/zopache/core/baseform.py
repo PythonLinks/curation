@@ -38,7 +38,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     
     @property
     def action_url(self):
-        url = self.request.path[1:]
+        url = self.relativeURL()+ "/" + self.__name__
         print ("IN BASE FORM" , url)
         return url
     
