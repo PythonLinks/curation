@@ -26,7 +26,6 @@ class JsonObject(object):
          result+=',\n'
          result+=spacing
 
-
          #PROVIDE THE TEXT LINE
          name='title'
          text='\"'+name+'\": \"'
@@ -50,7 +49,6 @@ class JsonObject(object):
          result=''
          result+=',\n'
          result+=spacing
-
 
          #PROVIDE THE TITLE
          name='title'
@@ -113,7 +111,6 @@ class JsonObject(object):
          data += str(self.branchSize)
          data += '\"'
 
-
          if hasattr(self,'conference') and (self.conference != None):
               data+= ',\n   '
               name='conference'
@@ -124,11 +121,9 @@ class JsonObject(object):
                  data +="pycon-us-2018" 
               data += '\"'
 
-
          # END THE DATA SECTION
          data+='}'         
          
-
          return text+data
 
     def jsonTree(self,indent):
@@ -136,8 +131,6 @@ class JsonObject(object):
 
     def jsonCategories(self,indent):
         return '[' +  self.getJSONCategories(indent,'categoryVariables') + ']'    
-
-
 #AND HERE FOR JUST THE CATEOGIRES
     def getJSONCategories(self,indent,aFunction):
         result=''
@@ -150,28 +143,22 @@ class JsonObject(object):
         
         #NOW GET THE VARIBLgES
         result+=getattr(self,aFunction)(spacing)
-
         #NOW GET THE CONTAINED OBJECTS
-        valuesLength=len(list(self.values()))
+        childCategories = self.childCategories()
 
-        if valuesLength> 0:
+        if childCategories:
                   result+=',\n \"folder\":true'
                   result+=',\n'
                   result += spacing + '\"children\":'
                   result += '['
-
-        if IOrderedContainer.providedBy(self):
-            firstLine=True
-            for item in self.values():
-                if ((item.__class__.__name__ == 'Conference') or
-                    (item.__class__.__name__ == 'ConferenceContainer' )):
-
+        firstLine=True
+        for item in self.childCategories():
                    if not firstLine:
                       result+=',' 
                    else:
                       firstLine=False
                    result+=item.getJSONCategories(indent+1,aFunction)
-        if valuesLength> 0:
+        if childCategories:
              result+=']'
         result+='}'
         return result
