@@ -256,7 +256,6 @@ class MYJSON(View):
 
 @view_component
 @name('categories.json')
-@title("JSON")
 @target(IView)
 @context(IPage)
 class JSONCategories(View):
@@ -269,7 +268,7 @@ class JSONCategories(View):
 @name('allCategories')
 @target(IView)
 @context(IPage)
-class JSONCategories(View):
+class AllCategories(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
