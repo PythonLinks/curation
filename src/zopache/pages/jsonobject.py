@@ -144,7 +144,7 @@ class JsonObject(object):
         #NOW GET THE VARIBLgES
         result+=getattr(self,aFunction)(spacing)
         #NOW GET THE CONTAINED OBJECTS
-        childCategories = self.childCategories()
+        childCategories = self.listOfClass('Categpry')
 
         if childCategories:
                   result+=',\n \"folder\":true'
