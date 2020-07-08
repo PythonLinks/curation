@@ -222,22 +222,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def parentBranch(self):
         return parentWhichImplements(self,IBranch)
 
-    #COUNTS ALL NODES           
-    def countLeaves(self):
-        total=1
-        for item in self.values():
-            if IPage.providedBy(item):
-                if not item.webApproved:
-                   continue
-                if IPage.providedBy(item): 
-                    total+=item.countLeaves()
-                else:
-                    total+=item.branchSize
-
-        self.branchSize=total
-        return total
-
-
                   
     def hasContent(self):
          if len(self.source)<2:
