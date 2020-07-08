@@ -11,13 +11,10 @@ from zopache.python.interfaces import IDirectory
 from zopache.ttw.interfaces import ISourceLeaf
 from cromlech.file import FileField
 from zopache.ttw.interfaces import IAceHTML
-
+from zopache.core.interfaces import ICountable
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
     pass
-
-class ICountable(Interface):
-      pass
 
 #THINGS THAT HAPPEN AT  A POINT IN TIME  
 class ITime(Interface):
@@ -86,7 +83,7 @@ class IAddPage(IPage):
       
 
         
-class ILink(IPage,ILinkTop):
+class ILink(IPage,ILinkTop,ICountable):
     pass
 
 class IAddLink(ILink):

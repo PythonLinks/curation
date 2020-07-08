@@ -20,7 +20,8 @@ from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
 from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
 from collections import defaultdict
-    
+from zopache.core.interfaces import ICountable
+
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
     url = ''
@@ -30,6 +31,25 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     webApproved = True
     emailApproved = False
     basePath = "/"
+
+    def countMe (self,item):
+        if not item.webApproved:
+            return False
+        if (ICountable.providedBy(item) or
+             len (item.source) > 5):
+            return True
+        return False
+
+    def countLeaves(self):
+        total=0
+        for item in self.childCategories():
+            if self.countMe(item):   
+                   total += 1
+            if IPage.providedBy(item):
+                    total+=item.countLeaves()
+        self.branchSize=total
+        return total    
+    
     def getDefaultThumbNailURL(self):
         if 'Logo' in self:
             return  self.shortURL (self,viewName ='Logo')

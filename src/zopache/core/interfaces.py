@@ -6,5 +6,8 @@ class ITreeSecurity(Interface):
 class IUserSecurity(Interface):
     pass
 
-class IVideo (Interface):
+class ICountable(Interface):
+      pass
+
+class IVideo (ICountable):
      pass 
