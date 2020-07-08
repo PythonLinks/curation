@@ -119,6 +119,7 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
+        item.countLeaves()
         pass
     
     def moveTo(self,childName):

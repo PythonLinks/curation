@@ -32,19 +32,19 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     emailApproved = False
     basePath = "/"
 
-    def countMe (self,item):
-        if not item.webApproved:
+    def countMe (self):
+        if not self.webApproved:
             return False
-        if (ICountable.providedBy(item) or
-             len (item.source) > 5):
+        if (ICountable.providedBy(self) or
+             len (self.source) > 5):
             return True
         return False
 
     def countLeaves(self):
         total=0
+        if self.countMe():   
+            total += 1        
         for item in self.childCategories():
-            if self.countMe(item):   
-                   total += 1
             if IPage.providedBy(item):
                     total+=item.countLeaves()
         self.branchSize=total
