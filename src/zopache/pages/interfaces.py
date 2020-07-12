@@ -90,6 +90,7 @@ class IAddLink(ILink):
         description = """A URL That this highlights this link. 
              Please include 'https://
              The image will be automatically downloaded'""",
+        missing_value = '',
         required = False,
     )        
     
