@@ -273,7 +273,7 @@ class Update(Action,TransactionNote):
         if hasattr(self.form, 'newURL'):
             return self.form.newURL(baseURL)
         else:
-            return baseURL + "/"  + self.form.__name__
+            return baseURL + "/"  + getattr(self,"crom.name")
 
     def postProcess(self):
             pass
