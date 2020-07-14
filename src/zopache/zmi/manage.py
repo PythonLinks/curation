@@ -35,7 +35,19 @@ class ManageBase(Form,Contents):
     template = tal_template('manage.pt')
     actions= Actions()
     
-    def setActions(self):
+    @property    
+    def actions(self):
+        #FIRST TEST SECURITY
+        if (IPrincipalFolder.providedBy(self.context) or
+            IInternalPrincipal.providedBy(self.context)):
+            if not self.treeSecurity():
+               raise Unauthorized()
+           
+        #RETURN IF THEY DO NOT HAVE PERMISSION   
+        if not self.treeSecurity():        
+           return Actions()
+
+        
         act1 = ReName("ReName","ReName")
         act2 = ReTitle("ReTitle","ReTitle")
         act3 = ReBoth("ReBoth","ReBoth")        
@@ -53,16 +65,9 @@ class ManageBase(Form,Contents):
         if self.hasClipboardContents():
            actionList.append (act6)
         actionList.append (act7)
-        self.actions = Actions(*actionList)
+        return Actions(*actionList)
 
-    def update (self):
-        if (IPrincipalFolder.providedBy(self.context) or
-            IInternalPrincipal.providedBy(self.context)):
-            if not self.treeSecurity():
-               raise Unauthorized()
-        if self.treeSecurity():        
-           self.setActions()
-        
+
     """
     #USE THIS TO DEFINE MANAGFE TEMPLATES IN THE ZODB
           products = self.getProducts()
@@ -120,6 +125,7 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
+        item.countLeaves()
         pass
     
     def moveTo(self,childName):

@@ -14,6 +14,11 @@ class IApprove(Interface):
         title = "Approved for publication in Emails.",
         required = False,
         default = False)
+
+    private = schema.Bool(
+        title = "Should this page be private?",
+        required = False,
+        default = False)    
     
     """
     hidden = schema.Bool(

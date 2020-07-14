@@ -20,16 +20,36 @@ from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
 from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
 from collections import defaultdict
-    
+from zopache.core.interfaces import ICountable
+
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
-    url = ''
+    private = False
     source = ''
     branchSize=1
     description = ''
     webApproved = True
     emailApproved = False
     basePath = "/"
+
+    def countMe (self):
+        if not self.webApproved:
+            return False
+        if (ICountable.providedBy(self) or
+             len (self.source) > 5):
+            return True
+        return False
+
+    def countLeaves(self):
+        total=0
+        if self.countMe():   
+            total += 1        
+        for item in self.childCategories():
+            if IPage.providedBy(item):
+                    total+=item.countLeaves()
+        self.branchSize=total
+        return total    
+    
     def getDefaultThumbNailURL(self):
         if 'Logo' in self:
             return  self.shortURL (self,viewName ='Logo')
@@ -153,6 +173,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         
     def postAddProcess(self,view=None):
         self.postProcess(view=view)
+        if ((self.new.__parent__ != None) and
+            self.new.private):
+            self.private = True
         if hasattr(self,'remoteURL'):
            siteRoot = self.getSiteRoot()
            siteRoot.addRemoteURL(self)
@@ -201,22 +224,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         
     def parentBranch(self):
         return parentWhichImplements(self,IBranch)
-
-    #COUNTS ALL NODES           
-    def countLeaves(self):
-        total=1
-        for item in self.values():
-            if IPage.providedBy(item):
-                if not item.webApproved:
-                   continue
-                if IPage.providedBy(item): 
-                    total+=item.countLeaves()
-                else:
-                    total+=item.branchSize
-
-        self.branchSize=total
-        return total
-
 
                   
     def hasContent(self):
@@ -303,6 +310,4 @@ class RootPage(Branch,PageBase,PageMixIn):
        cache = Cache()
 
     def setJson(self):
-        pass
-
-    
+         self.json=self.jsonTree(0)    

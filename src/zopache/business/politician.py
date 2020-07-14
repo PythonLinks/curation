@@ -57,7 +57,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         required = False,)
 
     localOrNational = schema.Set(
-        value_type = schema.Choice(source = fromList(['Local','National'])),
+        value_type = schema.Choice(source = fromList(['Local','State-Wide','National'])),
         title="Local Or National",
         description= "Are they running for local or congressional office",
         required = False,)    

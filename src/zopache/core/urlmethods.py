@@ -76,23 +76,15 @@ class URLMethods(object):
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
         if isSiteRoot:
-           base_url = item.basePath
-           if (
-                (len(base_url) > 1) and
-                (base_url [-1] == '/')):
-               base_url = base_url [0:-1]
-           if base_url == "/":
-               base_url += item.__name__
-           print("SiteRootURL = ", base_url)    
-           return base_url
+           return item.basePath
         elif isRootContainer:
-           base_url = ""
-           print("Root Container URL = ", base_url)               
-           return base_url
-       
+           return "/"
         else:
            container = item.__parent__
-           base_url= self.absoluteURL(container)+ '/' + item.__name__
+           base_url= self.absoluteURL(container)
+           if base_url[-1] != "/":
+               base_url += "/"
+           base_url += item.__name__
            print("ITERATING URL URL = ", base_url)               
            return base_url
 

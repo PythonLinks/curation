@@ -129,6 +129,7 @@ class AddLinkFromDiscord(AddToTree,BaseClass):
         #       response += item.identifier 
         for item in self.errors:
                  response +=  item.title
+                 response +=  " " + item.identifier
         for widget in self.fieldWidgets:
             if hasattr (widget, 'err') and widget.err:
                response += widget.title

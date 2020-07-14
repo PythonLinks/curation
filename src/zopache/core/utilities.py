@@ -7,6 +7,14 @@ from dolmen.message.utils import send
 from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
+    def shouldDisplay(self):
+        if self.context.private == False:
+           return
+        if self.context.private == True:
+           if self.treeSecurity():
+              return
+        self.raiseUnauthorized()
+        
     def shortenURL(self,url):
         shortener = pyshorteners.Shortener()
         url = shortener.tinyurl.short(url)

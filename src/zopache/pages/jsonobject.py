@@ -26,23 +26,48 @@ class JsonObject(object):
          result+=',\n'
          result+=spacing
 
-
          #PROVIDE THE TEXT LINE
          name='title'
          text='\"'+name+'\": \"'
          text += self.title 
          text+='\"'
 
-         #PROVIDE THE WebCLASS
-         text+= ',\n   '
-         name='class'
-         text += '\"'+name+'\": \"'
-         webClass = self.getClientClass()
-         text += webClass
-         text += '\"' 
-         
+         text += self.descriptionUrlAndWebClass()         
          return text
 
+    def descriptionUrlAndWebClass(self):
+         data = ""
+         
+         #PROVIDE THE webCLASS
+         data+= ',\n   '
+         name='class'
+         data += '\"'+name+'\": \"'
+         data += self.webClass
+         data += '\"'
+
+         #PROVIDE THE URL
+         if (hasattr(self,'remoteURL') and (self.remoteURL != "")):
+             data+= ',\n   '
+             name='url'
+             data += '\"'+name+'\": \"'
+             data += self.remoteURL
+             data += '\"'          
+
+         #PROVIDE THE DESCRIPTION
+         data+= ',\n   '
+         name='description'
+         data += '\"'+name+'\": \"'
+
+         data += self.description
+         data += '\"' 
+
+         #PROVIDE THE BRANCH SIZE
+         data+= ',\n   '
+         name='branchSize'
+         data += '\"'+name+'\": \"'
+         data += str(self.branchSize)
+         data += '\"'
+         return data
      
     #FUNCTION TO GET VARIABLE FOR A PAGE TREE
     def treeVariables(self,spacing):
@@ -51,12 +76,10 @@ class JsonObject(object):
          result+=',\n'
          result+=spacing
 
-
          #PROVIDE THE TITLE
          name='title'
          text='\"'+name+'\": \"'
          text += self.title 
-
          text+='\"' 
 
          #AND NOW THE DATA
@@ -81,38 +104,9 @@ class JsonObject(object):
          name='title'
          data += '\"'+name+'\": \"'
          data += self.title
-         data += '\"' 
-
-         #PROVIDE THE webCLASS
-         data+= ',\n   '
-         name='class'
-         data += '\"'+name+'\": \"'
-         data += self.webClass
          data += '\"'
 
-         #PROVIDE THE URL
-         if (hasattr(self,'url') and (self.url != "")):
-             data+= ',\n   '
-             name='url'
-             data += '\"'+name+'\": \"'
-             data += self.url
-             data += '\"'          
-
-         #PROVIDE THE DESCRIPTION
-         data+= ',\n   '
-         name='description'
-         data += '\"'+name+'\": \"'
-
-         data += self.description
-         data += '\"' 
-
-         #PROVIDE THE BRANCH SIZE
-         data+= ',\n   '
-         name='branchSize'
-         data += '\"'+name+'\": \"'
-         data += str(self.branchSize)
-         data += '\"'
-
+         data += self.descriptionUrlAndWebClass()
 
          if hasattr(self,'conference') and (self.conference != None):
               data+= ',\n   '
@@ -124,11 +118,9 @@ class JsonObject(object):
                  data +="pycon-us-2018" 
               data += '\"'
 
-
          # END THE DATA SECTION
          data+='}'         
          
-
          return text+data
 
     def jsonTree(self,indent):
@@ -136,8 +128,6 @@ class JsonObject(object):
 
     def jsonCategories(self,indent):
         return '[' +  self.getJSONCategories(indent,'categoryVariables') + ']'    
-
-
 #AND HERE FOR JUST THE CATEOGIRES
     def getJSONCategories(self,indent,aFunction):
         result=''
@@ -150,28 +140,22 @@ class JsonObject(object):
         
         #NOW GET THE VARIBLgES
         result+=getattr(self,aFunction)(spacing)
-
         #NOW GET THE CONTAINED OBJECTS
-        valuesLength=len(list(self.values()))
+        childCategories = self.childCategories()
 
-        if valuesLength> 0:
+        if childCategories:
                   result+=',\n \"folder\":true'
                   result+=',\n'
                   result += spacing + '\"children\":'
                   result += '['
-
-        if IOrderedContainer.providedBy(self):
-            firstLine=True
-            for item in self.values():
-                if ((item.__class__.__name__ == 'Conference') or
-                    (item.__class__.__name__ == 'ConferenceContainer' )):
-
+        firstLine=True
+        for item in self.childCategories():
                    if not firstLine:
                       result+=',' 
                    else:
                       firstLine=False
                    result+=item.getJSONCategories(indent+1,aFunction)
-        if valuesLength> 0:
+        if childCategories:
              result+=']'
         result+='}'
         return result
@@ -256,7 +240,6 @@ class MYJSON(View):
 
 @view_component
 @name('categories.json')
-@title("JSON")
 @target(IView)
 @context(IPage)
 class JSONCategories(View):
@@ -269,7 +252,7 @@ class JSONCategories(View):
 @name('allCategories')
 @target(IView)
 @context(IPage)
-class JSONCategories(View):
+class AllCategories(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
