@@ -75,17 +75,25 @@ class URLMethods(object):
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
-        if isRootContainer:
-           base_url = ""
-           return base_url
         if isSiteRoot:
-           base_url =  item.basePath
+           base_url = item.basePath
+           if (
+                (len(base_url) > 1) and
+                (base_url [-1] == '/')):
+               base_url = base_url [0:-1]
            if base_url == "/":
                base_url += item.__name__
-           return base_url            
+           print("SiteRootURL = ", base_url)    
+           return base_url
+        elif isRootContainer:
+           base_url = ""
+           print("Root Container URL = ", base_url)               
+           return base_url
+       
         else:
            container = item.__parent__
            base_url= self.absoluteURL(container)+ '/' + item.__name__
+           print("ITERATING URL URL = ", base_url)               
            return base_url
 
     def relativeURL(self,*args):        
@@ -93,15 +101,22 @@ class URLMethods(object):
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
-        if isRootContainer:
+
+        if isSiteRoot:
+            basePath =  item.basePath
+            if len (basePath) <= 1:
+                return item.__name__
+            if basePath [0] =="/":
+                basePath = basePath [1:]
+            if basePath [-0] == "/":
+                basePath = basePath [0:-1]
+            return basePath
+        elif isRootContainer:
             base_url = ""
             return base_url
         elif isZodbRoot:
             base_url = ""
-            return base_url
-        if isSiteRoot:
-            base_url =  ""
-            return base_url            
+            return base_url        
         else:
             container = item.__parent__
             base_url= self.relativeURL(container)+ '/' + item.__name__

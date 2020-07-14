@@ -38,8 +38,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     
     @property
     def action_url(self):
-        url = self.relativeURL()+ "/" + self.__name__
-        print ("IN BASE FORM" , url)
+        url = self.relativeURL()+ "/"  + getattr(self,'crom.name')        
         return url
     
     def before(self,widget):

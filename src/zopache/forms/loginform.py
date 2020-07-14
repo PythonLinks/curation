@@ -55,6 +55,7 @@ class LoginAction(Action):
 class LoginForm(Form):
     """ Used to login
     """
+    __name__ = "login2"
     dataValidators = [LoginValidator]    
     layoutName = "UserMenu"
     title='Log in '

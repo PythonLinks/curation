@@ -258,8 +258,7 @@ class Update(Action,TransactionNote):
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):
                form.context.postProcess(view=form)
-
-        baseURL = self.form.relativeURL()
+        baseURL = self.form.absoluteURL()
         url=self.newURL(baseURL)
         self.describeWithView(form.context,form)
         if url == form.request.url:
