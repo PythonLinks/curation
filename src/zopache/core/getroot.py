@@ -27,8 +27,6 @@ def getRoot(object,anInterface):
 
 def getSiteRoot(item):
     root = getRoot(item, IPublicationRoot)
-    if root.basePath == "/root/":
-       root.basePath = "/"
     return root
 
 def getZodbRoot(item):

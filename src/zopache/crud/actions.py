@@ -2,6 +2,9 @@
 #This software is subject to the CV and Zope Public Licenses.
 import requests
 from slugify import slugify, SLUG_OK
+
+from webpreview import web_preview
+
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
@@ -260,6 +263,7 @@ class Update(Action,TransactionNote):
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):
                form.context.postProcess(view=form)
+
         baseURL = self.form.absoluteURL()
         url=self.newURL(baseURL)
         self.describeWithView(form.context,form)
@@ -268,11 +272,18 @@ class Update(Action,TransactionNote):
         else:
            return SuccessMarker('Updated', True, url=url)
 
+    def appendName(self,baseURL,name):
+        if baseURL [-1] != "/":
+            baseURL += "/"
+        baseURL += name
+        return baseURL
+
     def newURL(self,baseURL):
         if hasattr(self.form, 'newURL'):
             return self.form.newURL(baseURL)
         else:
-            return baseURL + "/"  + self.form.__name__
+           result = self.appendName(baseURL,getattr(self.form,"crom.name"))
+           return result
 
     def postProcess(self):
             pass
@@ -285,11 +296,12 @@ class AddByCrawl(Add):
         self.form = form
         self.data = form.request['form.field.data']
 
-        soup = BeautifulSoup(html_doc, 'html.parser')
+        soup = BeautifulSoup(self.data, 'html.parser')
         divs = soup.findAll("div", {"class": "views-rows"})
         for item in divs:
+            new = form.factory
             new.imageURL = item.img.src
-            title = item.find("div",{"class":views-field-title})
+            title = item.find("div",{"class":"views-field-title"})
             title = title.h2.a.content
 #views-field-field-website
 # .a .urlind_all('a'):
@@ -298,20 +310,22 @@ class AddByCrawl(Add):
     def setFields(self):
             set_fields_data(self.fields, self.new, self.data)
             
-    def createItem(self):       
+    def createItem(self):
+        errors = Errors()
         new = self.new=self.form.factory()
         remoteURL = new.remoteURL
         try:
-            result = webp_review(remoteURL, parser="html.parser")
+            result = web_preview(remoteURL, parser="html.parser")
             new.title = result[0]
             new.description = result[1]
             new.imageURL = result[2]
         except:
+
             error = Error("Failed to Fetch and Parse URL")
             errors.append(error)
         if hasattr(new,'imageURL'):
-           self.setimage(imageURL) 
-        return Errors()
+           self.setimage(new.imageURL) 
+        return errors
 
         
 #JUST TO MAKE IT EASIER TO UNDERSTAND        

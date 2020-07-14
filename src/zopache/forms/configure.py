@@ -17,6 +17,7 @@ class IForm(Interface):
         title = u'Domain.',
         description = "Domain of this server",
         required = False,
+        missing_value = "",
     )
 
     googleClientId= TextLine(

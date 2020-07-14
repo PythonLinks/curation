@@ -2,6 +2,9 @@
 import urllib.parse
 from urllib.parse import quote
 from urllib.parse import quote_plus
+
+from bs4 import BeautifulSoup
+
 from cromlech.location import resolve_url
 from cromlech.browser import IPublicationRoot
 from zopache.zmi.interfaces import IURLSegment
