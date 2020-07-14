@@ -24,7 +24,7 @@ from zopache.core.interfaces import ICountable
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
-    url = ''
+    private = False
     source = ''
     branchSize=1
     description = ''
@@ -173,6 +173,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         
     def postAddProcess(self,view=None):
         self.postProcess(view=view)
+        if ((self.new.__parent__ != None) and
+            self.new.private):
+            self.private = True
         if hasattr(self,'remoteURL'):
            siteRoot = self.getSiteRoot()
            siteRoot.addRemoteURL(self)
@@ -307,6 +310,4 @@ class RootPage(Branch,PageBase,PageMixIn):
        cache = Cache()
 
     def setJson(self):
-        pass
-
-    
+         self.json=self.jsonTree(0)    

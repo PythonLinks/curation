@@ -80,8 +80,8 @@ class URLMethods(object):
            return base_url
         if isSiteRoot:
            base_url =  item.basePath
-           if base_url == "/":
-               base_url += item.__name__
+           #if base_url == "/":
+           #    base_url += item.__name__
            return base_url            
         else:
            container = item.__parent__

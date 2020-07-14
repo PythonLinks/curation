@@ -32,16 +32,42 @@ class JsonObject(object):
          text += self.title 
          text+='\"'
 
-         #PROVIDE THE WebCLASS
-         text+= ',\n   '
-         name='class'
-         text += '\"'+name+'\": \"'
-         webClass = self.getClientClass()
-         text += webClass
-         text += '\"' 
-         
+         text += self.descriptionUrlAndWebClass()         
          return text
 
+    def descriptionUrlAndWebClass(self):
+         data = ""
+         
+         #PROVIDE THE webCLASS
+         data+= ',\n   '
+         name='class'
+         data += '\"'+name+'\": \"'
+         data += self.webClass
+         data += '\"'
+
+         #PROVIDE THE URL
+         if (hasattr(self,'remoteURL') and (self.remoteURL != "")):
+             data+= ',\n   '
+             name='url'
+             data += '\"'+name+'\": \"'
+             data += self.remoteURL
+             data += '\"'          
+
+         #PROVIDE THE DESCRIPTION
+         data+= ',\n   '
+         name='description'
+         data += '\"'+name+'\": \"'
+
+         data += self.description
+         data += '\"' 
+
+         #PROVIDE THE BRANCH SIZE
+         data+= ',\n   '
+         name='branchSize'
+         data += '\"'+name+'\": \"'
+         data += str(self.branchSize)
+         data += '\"'
+         return data
      
     #FUNCTION TO GET VARIABLE FOR A PAGE TREE
     def treeVariables(self,spacing):
@@ -54,7 +80,6 @@ class JsonObject(object):
          name='title'
          text='\"'+name+'\": \"'
          text += self.title 
-
          text+='\"' 
 
          #AND NOW THE DATA
@@ -79,37 +104,9 @@ class JsonObject(object):
          name='title'
          data += '\"'+name+'\": \"'
          data += self.title
-         data += '\"' 
-
-         #PROVIDE THE webCLASS
-         data+= ',\n   '
-         name='class'
-         data += '\"'+name+'\": \"'
-         data += self.webClass
          data += '\"'
 
-         #PROVIDE THE URL
-         if (hasattr(self,'url') and (self.url != "")):
-             data+= ',\n   '
-             name='url'
-             data += '\"'+name+'\": \"'
-             data += self.url
-             data += '\"'          
-
-         #PROVIDE THE DESCRIPTION
-         data+= ',\n   '
-         name='description'
-         data += '\"'+name+'\": \"'
-
-         data += self.description
-         data += '\"' 
-
-         #PROVIDE THE BRANCH SIZE
-         data+= ',\n   '
-         name='branchSize'
-         data += '\"'+name+'\": \"'
-         data += str(self.branchSize)
-         data += '\"'
+         data += self.descriptionUrlAndWebClass()
 
          if hasattr(self,'conference') and (self.conference != None):
               data+= ',\n   '
@@ -144,7 +141,7 @@ class JsonObject(object):
         #NOW GET THE VARIBLgES
         result+=getattr(self,aFunction)(spacing)
         #NOW GET THE CONTAINED OBJECTS
-        childCategories = self.listOfClass('Categpry')
+        childCategories = self.childCategories()
 
         if childCategories:
                   result+=',\n \"folder\":true'
