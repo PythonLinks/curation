@@ -35,7 +35,6 @@
     </style>
   </head>
   <body class="bg-light">
-    ${view.getSiteRoot().basePath}
     <div style = "float:right; padding: 20px;">
     <span  tal:condition="view.isAuthenticated()"><a href="./logout">Logout</a></span>
     <span tal:condition="not view.isAuthenticated()"><a href="./login">Login</a>

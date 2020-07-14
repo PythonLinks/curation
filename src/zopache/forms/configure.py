@@ -13,12 +13,21 @@ from zopache.pages.interfaces import IRootPage
 
 class IForm(Interface):
 
+<<<<<<< HEAD
     #domain= DottedName(
     #    title = u'Domain.',
     #    description = "Domain of this server",
     #    required = False,
     #    missing_value = ""
     #)
+=======
+    domain= DottedName(
+        title = u'Domain.',
+        description = "Domain of this server",
+        required = False,
+        missing_value = "",
+    )
+>>>>>>> 392b50289b7cd6682a4f1fde1c5ce5ffaf11c3ce
 
     googleClientId= TextLine(
         title = "Google Oauth Client Id",

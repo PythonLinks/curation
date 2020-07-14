@@ -32,7 +32,7 @@ from zopache.ttw import tal_template
 @title("Google Login")
 class GoogleLogin(Form):
     factory = InternalPrincipal
-    title='PythonLinks.info'
+    title="Login Form"
     subTitle='Login: to be called from Javascript App'
     fields = Fields(IGLogin)
     ignoreContent = True
@@ -50,5 +50,7 @@ class GoogleLogin(Form):
     def render (self,*args, **argv):
         if self.loggedIn:
            return "Success"
-        return Form.render(self,*args, **argv)
+        else:
+           return "Failed To Login."
+
     

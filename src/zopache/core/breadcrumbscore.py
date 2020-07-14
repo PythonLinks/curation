@@ -23,7 +23,7 @@ class BreadcrumbsCore(object):
             for ancestor in parents:
                 name, title = self.nameAndTitle(ancestor,showTitles)
                 slashViewName = self.slashViewName(ancestor,viewName)
-                base_url = self.getLongURL(ancestor)
+                base_url = self.relativeURL(ancestor)
                 newURL= base_url + slashViewName
                 if newURL == '':
                     newURL = '/'

@@ -43,11 +43,14 @@ class BaseValidator(object):
 class DuplicateURLValidator(BaseValidator):             
     def validate(self, data):        
         errors = Errors()
-        if self.urlExists(data) != None:
+        theItem = self.urlExists(data) 
+        if theItem != None:
+           form = self.form
            msg = "That url is already in the database "
-           msg +=  form.secureShortURL(urlObject)
-           error =ArgsError(title=msg, identifirer="url.validator")
-           error.title = msg
+           url=  form.secureShortURL(theItem)
+           url = form.shortenURL(url)
+           msg +=  url
+           error =Error(title=msg, identifirer="url.validator")
            errors.append(error)
         return errors        
 

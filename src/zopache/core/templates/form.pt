@@ -1,4 +1,4 @@
-<form action="." tal:attributes="action view.action_url;
+<form tal:attributes="action view.action_url;
                                  id view.htmlId();
                                  method view.formMethod;
                                  enctype view.enctype">

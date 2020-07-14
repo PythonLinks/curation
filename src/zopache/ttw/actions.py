@@ -2,37 +2,31 @@ from zopache.crud.actions import Add, Update
 
 class AddAndCkEdit(Add):
     def newURL(self,baseURL):
-        return baseURL + '/ckedit'
-
+       return self.appendName(baseURL,"ckedit")        
+        
 class AddAndAceEdit(Add):
     def newURL(self,baseURL):
-        return baseURL + '/aceedit'
- 
+       return self.appendName(baseURL,"aceedit")        
+
 class AddAndSearch(Add):
     def newURL(self,baseURL):
-        return baseURL + '/search'   
+       return self.appendName(baseURL,"search")                
 
 class AddAndViewSource(Add):
     def newURL(self,baseURL):
-        return baseURL + '/viewsource'    
-    
+       return self.appendName(baseURL,"viewsource")             
+
 class AddAndManage(Add):
     def newURL(self,baseURL):
-        return baseURL + '/manage'
+       return self.appendName(baseURL,"manage")            
 
 class SaveAndCkEdit(Update):
     def newURL(self,baseURL):
-        return baseURL + '/ckedit'
-
-fred = """
-
-
-
-"""    
-    
+       return self.appendName(baseURL,"ckedit")
+   
 class SaveAndAceEdit(Update):
     def newURL(self,baseURL):
-        return baseURL + '/aceedit'                
+       return self.appendName(baseURL,"aceedit")        
 
 
     

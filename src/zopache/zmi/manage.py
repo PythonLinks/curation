@@ -28,6 +28,7 @@ from zopache.ttw.interfaces import IPrincipalFolder,IInternalPrincipal
 
 #Breadcrumbs is included in Form
 class ManageBase(Form,Contents):
+    __name__ = 'manage'
     supportsPaste = True
     title = "Forest Wiki Management Interface"
     subTitle='Rename and Retitle Objects. Cut, Copy and Paste them.  '
