@@ -45,30 +45,15 @@ please move part of it here.""",
         required = False,
         default = False)
     
-    discordGuildId = schema.Int(
-        title = 'The Discord ServerId',
-        required = True,
-    )
-    
-    discordChannelId = schema.Int(
-        title = 'The Discord Channel Id',
-        required = True,
-    )
-    
     discordUserName = schema.TextLine(
         title = u'The Discord User Name',
         required = True,
     )
+    
     discordUserId = schema.Int(
         title = u'The Discord User Id',
         required = True,
-    )
-    
-    discordUserDiscriminator = schema.Int(
-        title = u'The Discord User Discriminator',
-        required = True,
-    )          
-
+    )    
     
 class ILinkForm(IBaseForm):    
     categoryName=TreeField(
