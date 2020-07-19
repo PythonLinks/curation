@@ -173,8 +173,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         
     def postAddProcess(self,view=None):
         self.postProcess(view=view)
-        if ((self.new.__parent__ != None) and
-            self.new.private):
+        if ((self.__parent__ != None) and
+            self.__parent__.private):
             self.private = True
         if hasattr(self,'remoteURL'):
            siteRoot = self.getSiteRoot()
