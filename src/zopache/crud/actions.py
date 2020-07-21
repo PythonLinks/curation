@@ -50,7 +50,9 @@ from io import BytesIO
 class Add(Action, UniqueName, TransactionNote):
     """Add action for an IAdding context.
     """
-
+    def appendName(self,url,name):
+        return url + "/" + name
+    
     def __init__(self, title, factory):
         Action.__init__(self,title)
         self.factory = factory

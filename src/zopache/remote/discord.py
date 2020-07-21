@@ -74,12 +74,19 @@ from dolmen.forms.base.widgets import Widgets
 from zopache.remote.validatediscord import ValidateDiscord
 from dolmen.view import make_view_response
 from dolmen.forms.base import Action, SuccessMarker
+import pyshorteners
+
 class BaseClass(AddAnonymousPage):
     make_response = make_view_response
     submissionErrors = []
     dataValidators = [ValidateDiscord]
     ignoreRequest = False
     layoutName = "UserMenu"
+    
+    def shortenURL(self,url):
+        shortener = pyshorteners.Shortener()
+        url = shortener.tinyurl.short(url)
+        return url
     
     def getReturn(self,url):
         return SuccessMarker('Added', True)

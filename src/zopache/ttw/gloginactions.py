@@ -23,7 +23,6 @@ class Cancel(Action):
     """
 
     def __call__(self, form):
-        breakpoint()
         content = form.getContentData().getContent()
         url = str(IURL(content, form.request))
         return SuccessMarker('Aborted', True, url=url)

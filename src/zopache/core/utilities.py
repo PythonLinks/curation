@@ -1,6 +1,5 @@
 import json
 from pydoc import locate
-import pyshorteners
 import hashlib
 from cromlech.security import Unauthorized
 from dolmen.message.utils import send
@@ -15,11 +14,9 @@ class Utilities (object):
               return
         self.raiseUnauthorized()
         
-    def shortenURL(self,url):
-        shortener = pyshorteners.Shortener()
-        url = shortener.tinyurl.short(url)
+    def shortenURL(self,url):        
         return url
-
+    
     def rename(self,item,newName):
         parent = item.__parent__
         del parent[item.__name__]

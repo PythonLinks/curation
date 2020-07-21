@@ -57,8 +57,10 @@ class MapOrLocation (PageBase):
         hasFutureEvent = self.hasFutureEvent()
         choose = {('Politician',True):"orange",
                   ('Organization',True):"red",
+                  ('MapOrganization',True):"red",                  
                   ('Politician',False):"blue",
                   ('Organization',False):"red",
+                  ('MapOrganization',False):"red",                  
                   ('Location',True):"bluered",
                   ('Location',False):"blue",
                   ('Company',True):"yellow2x",

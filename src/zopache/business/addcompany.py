@@ -31,7 +31,6 @@ from zopache.business.driver import IAddDriver, Driver
 @target(IView)
 @context(IPage)
 class AddNews(AddAuthorizedPage):
-    __name__ = "addNews"
     interface = INews
     emailApparoved = True
     title = "Add a News Item"
@@ -43,7 +42,6 @@ class AddNews(AddAuthorizedPage):
 @target(IView)
 @context(IPage)    
 class AddCompany(AddAnonymousPage,GeoCodeForm):
-    __name__ = "addCompany"
     interface = ICompany
     label="Add a Company"
     factory = Company
@@ -58,7 +56,6 @@ class AddCompany(AddAnonymousPage,GeoCodeForm):
 @target(IView)
 @context(IPage)    
 class AddOrganization(AddAnonymousPage,GeoCodeForm):
-    __name__ = "addOrganization"
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
@@ -72,7 +69,6 @@ class AddOrganization(AddAnonymousPage,GeoCodeForm):
 @target(IView)
 @context(IPage)    
 class AddDriver(AddAnonymousPage,GeoCodeForm):
-    __name__ = "addVolunteer"
     interface = IAddDriver
     factory = Driver
     title = "Offer to be a driver."
@@ -87,7 +83,6 @@ class AddDriver(AddAnonymousPage,GeoCodeForm):
 @context(IPage)
 @implementer(ITreeSecurity)
 class AddOrganizationByURL(AddByURLForm):
-    __name__ = "addOrgByURL"
     factory = Organization
     title = "Add an Organization by URL"
 
@@ -97,7 +92,6 @@ class AddOrganizationByURL(AddByURLForm):
 @target(IView)
 @context(IPage)    
 class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
-    __name__ = "addOnlineOrganization"
     interface = IOnlineOrganization
     factory = OnlineOrganization
     title = "Add an Online Organization"
@@ -109,7 +103,6 @@ class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
 @target(IView)
 @context(IPage)    
 class AddPolitician(AddAnonymousPage,GeoCodeForm):
-    __name__ = "addPolitician"
     interface = IAddPolitician
     factory = Politician
     title = "Add a Politician"
@@ -131,7 +124,6 @@ class AddPolitician(AddAnonymousPage,GeoCodeForm):
 @permissions('AddContent')
 @context(IPage)    
 class AddMap(AddAuthorizedPage):
-    __name__ = "addCompanyMap"
     subTitle = 'Add a map'
     interface = IMap
     label="Add a Map"
@@ -141,13 +133,12 @@ class AddMap(AddAuthorizedPage):
 @view_component
 @name('addMapOrganization')
 @target(IView)
-@permissions('AddContent')
-@context(IPage)    
+@context(IPage)
+@implementer(ITreeSecurity)
 class AddMapOrganization(AddAuthorizedPage):
-    __name__ = "addMapOrganization"
-    subTitle = ''
+    title = "Add an Organization with a Map"
+    subTitle = 'Usually for state parties. '
     interface = IMapOrganization
-    label="Add a Map Organizatin"
     factory = MapOrganization    
     
 import crom

@@ -269,8 +269,8 @@ class IAddOrganization(IOrganization):
         required = False,
     )            
     
-from zopache.pages.interfaces import IMap as IMapBase
 
+from zopache.pages.interfaces import IMap as IMapBase
 class IMap (IMapBase,IFollow):
     showCities = schema.Bool(
 	    title = "Show Cities?",
@@ -284,11 +284,45 @@ class IMap (IMapBase,IFollow):
 	    required = False,
 	    default = False)   
     
-class IMapOrganization(IOrganization, IMap):
-       pass
+class IMapOrganizationBase(IOrganization):
+    lattitude = schema.Float(
+        title = u'Lattitude',
+        description = u'Lattitude',
+        min=-90.,
+        max=90.,
+        default = 51.509865,
+        required = True,
+        )
+
+    longitude = schema.Float(
+        title = u'Longitude',
+        description = u'Longitude ',
+        min=-180.,
+        max=180.,
+        default = 0.,
+        required = True,
+    )
+
+    zoomLevel = schema.Float(
+        title = u'Google Maps Zoom Level',
+        description = u'Google Maps Zoom Level',
+        min=0.,
+        max=22.,
+        default = 5., 
+        required = True,
+    )
+    
+    showChildren = schema.Bool(
+	    title = "Show Children?",
+	    description = "Should it show the objects in the children?",           
+	    required = False,
+	    default = False)
+class IMapOrganization(IMapOrganizationBase,IMapBase):    
+      pass
 
 class IEndorsingOrganization(IMapOrganization):
        pass
+
 class IMeetup (IPage,IFollow):
     title = schema.TextLine(
         title = 'Meetup Name',

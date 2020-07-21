@@ -79,7 +79,7 @@ class URLMethods(object):
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
         if isSiteRoot:
-           return item.basePath
+           return "/"
         elif isRootContainer:
            return "/"
         else:
@@ -97,7 +97,10 @@ class URLMethods(object):
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
 
-        if isSiteRoot:
+        if isRootContainer:
+            base_url = ""
+            return base_url
+        elif isSiteRoot:
             basePath =  item.basePath
             if len (basePath) <= 1:
                 return item.__name__
@@ -106,9 +109,6 @@ class URLMethods(object):
             if basePath [-0] == "/":
                 basePath = basePath [0:-1]
             return basePath
-        elif isRootContainer:
-            base_url = ""
-            return base_url
         elif isZodbRoot:
             base_url = ""
             return base_url        
