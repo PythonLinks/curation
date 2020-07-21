@@ -68,14 +68,17 @@ class Organization  (GeoBase):
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
 from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
+from zopache.business.map import Map
+from zopache.business.subscribe import Member        
 from zopache.pages.location import MapBase
+
 @implementer (IMapOrganization)
-class MapOrganization(MapBase,Organization):
+class MapOrganization(Organization,MapBase,Member):
     interface = IMapOrganization
     webClass = 'MapOrganization'
     #LocationBase inherits from Page
     def __init__(self):
-        MapBase.__init__(self)
+        Map.__init__(self)
         Organization.__init__(self)
 
 from zopache.core.getroot import getSiteRoot

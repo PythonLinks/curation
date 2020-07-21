@@ -320,7 +320,7 @@ class IMapOrganizationBase(IOrganization):
 class IMapOrganization(IMapOrganizationBase,IMapBase):    
       pass
 
-class IEndorsingOrganization(IMapOrganization):
+class IEndorsingOrganization(IMapOrganization,IMap):
        pass
 
 class IMeetup (IPage,IFollow):
