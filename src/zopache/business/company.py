@@ -73,9 +73,9 @@ from zopache.business.subscribe import Member
 from zopache.pages.location import MapBase
 
 @implementer (IMapOrganization)
-class MapOrganization(Organization,MapBase,Member):
+class MapOrganization(MapBase,Member,Organization):
     interface = IMapOrganization
-    webClass = 'MapOrganization'
+    webClass = 'GeoJsonMap'
     #LocationBase inherits from Page
     def __init__(self):
         Map.__init__(self)

@@ -18,37 +18,33 @@ def createObjects(dataClass):
     items = soup.find_all('p')
     mydivs = soup.findAll("div", {"class": "views-row"})
     allData  = []
-    allDicts = []
     for theItem in items:
-        image = theItem.img
-        website = theItem.findAll("div", {"class": "views-field-website"})
+        new = Data()
+        new.imageURL = theItem.img
+        new.remoteURL = theItem.findAll("div", {"class": "views-field-website"})
         title = theItem.findAll("div", {"class": "views-field-title"})
-        title = title.extract()
-        phone = theItem.findAll("div", {"class": "views-field-phone"})        
-        email = theItem.findAll("div", {"class": "views-field-email"})        
-        data = Data()
-        allDicts.append(data.__dict__)
-        allData.append(data) 
-        data.title = strong.text
+        new.title = title.extract()
+        new.phone = theItem.findAll("div", {"class": "views-field-phone"})        
+        new.email = theItem.findAll("div", {"class": "views-field-email"})             data.title = strong.text
         links = party.find_all('a')
-    return allDicts, allData
+        allData.append(new)
+    return allData
 
 
 from slugify import slugify
 def createOrganizations(context):
     from zopache.business.company import Organization
-    allDicts, allData = createObjects(Organization)
+    allData = createObjects(Organization)
     for party in allData:
        title = party.title
-       slug = slugify (title)
-       
+       slug = slugify (title)   
        context [slug] = party
        party.__parent__ = context
     print("Data is loaded")    
        
 
 def getAllDicts(dataClass):
-    allDicts, allData = createObjects(dataClass)
+    allData = createObjects(dataClass)
     return allDicts    
 
 if __name__ == "__main__":    

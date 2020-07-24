@@ -262,7 +262,7 @@ class IOrganization(IOrganizationBase,
 class IAddOrganization(IOrganization):
     imageURL= schema.URI(
         title = 'Image URL',
-        missing_value = '',
+        missing_value = "",
         description = """An image or Logo for this organization. 
              Please include "https://"
              The image will be automatically downloaded.""",
@@ -314,9 +314,10 @@ class IMapOrganizationBase(IOrganization):
     
     showChildren = schema.Bool(
 	    title = "Show Children?",
-	    description = "Should it show the objects in the children?",           
+	    description = "Should it show the objects in the children?",    
 	    required = False,
-	    default = False)
+	    default = True)
+    
 class IMapOrganization(IMapOrganizationBase,IMapBase):    
       pass
 
