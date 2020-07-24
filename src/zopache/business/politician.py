@@ -15,7 +15,7 @@ from zopache.pages.interfaces import IPage
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zopache.application.choices import fromList
 from zopache.ttw.treewidget import TreeField
-
+from zopache.pages.location import LocationContainer
 items = [ ("sunshineMovement", "Sunshine Movemement"),
           ("courageToChange","Courage To Change"),
           ("justiceDemocrats","Justice Democrats")
@@ -156,7 +156,7 @@ class IAddPolitician(IPolitician):
     )   
 
 @implementer (IPolitician)
-class Politician (GeoBase):
+class Politician (GeoBase,LocationContainer):
     webClass = "Politician"
     clientClass = "category"
 

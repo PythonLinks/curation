@@ -136,6 +136,7 @@ class LocationContainer (MarkerLocation):
 @implementer(ILocation)
 class Location(LocationContainer):
     pass
+
 import googlemaps
 class MapBase(LocationContainer):
     zoomLevel=5.
