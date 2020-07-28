@@ -50,7 +50,9 @@ class DuplicateURLValidator(BaseValidator):
            url=  form.secureShortURL(theItem)
            url = form.shortenURL(url)
            msg +=  url
-           error =Error(title=msg, identifirer="url.validator")
+           error =Error(title=msg, identifier="url.validator")
+           error.args = [msg]
+                
            errors.append(error)
         return errors        
 

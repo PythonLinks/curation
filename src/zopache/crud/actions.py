@@ -60,7 +60,6 @@ class Add(Action, UniqueName, TransactionNote):
 
     def __call__(self, form):
         self.form=form
-
         obj= form.factory()
         self.new=form.new=obj
         data, errors = self.form.extractData()
@@ -95,13 +94,13 @@ class Add(Action, UniqueName, TransactionNote):
                form.new.postAddProcess(view=form)
 
         #Now do form specific returns
+        
+        #DISCORD USES THIS, DOES NOT REDIRECT
         if hasattr(form,'getReturn'):
             return form.getReturn(url)
-        elif hasattr(form.new,'postAddProcess'):
-            return self.getReturn(url)
-        
-    def getReturn(self,url):            
-        return SuccessMarker('Added', True, url=url,code=307)
+        else:
+           url = self.form.urlQuotePlus(url)
+           return SuccessMarker('Added', True, url=url,code=307)
     
     def setFields(self):
             set_fields_data(self.form.fields, self.new, self.data)

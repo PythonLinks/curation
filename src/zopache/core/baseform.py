@@ -18,7 +18,7 @@ from .breadcrumbs import Breadcrumbs
 #FOR MONKEY PATCHING ACTION WIDGETS
 def htmlClass(self):
     return "action btn"
-
+   
 class Form(BaseForm,Scripts,Breadcrumbs):
     title=""
     subTitle=u""

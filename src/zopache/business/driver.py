@@ -11,7 +11,7 @@ from zopache.pages.interfaces import IPage, ILocationLeaf
 from zopache.business.interfaces import IFollow, ILatLng, IAddress
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage
-
+from zopache.pages.location import LocationContainer
 
 class IDriverBase (ILocationLeaf,IPage):
 
@@ -96,7 +96,7 @@ class IAddDriver(IDriverBase):
     pass
 
 @implementer (IDriver)
-class Driver (GeoBase):
+class Driver (GeoBase,LocationContainer):
     webClass = "Driver"
     clientClass = "category"
 

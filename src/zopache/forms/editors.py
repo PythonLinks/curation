@@ -44,7 +44,6 @@ class IEditors(Interface):
 @name (u'editors')
 @permissions('Manage')    
 @context(Interface)
-@title("Assign Editors")
 class EditEditors(EditForm):
     title = 'Assign Editors'
     interface = IEditors
@@ -52,7 +51,4 @@ class EditEditors(EditForm):
     ignoreContent = False
   #  mode = 'multiselect'
  
-    #def update(self):
-    #    editorsField=self.fields['editors']
-    #    editorsField.
 

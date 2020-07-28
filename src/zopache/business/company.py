@@ -32,7 +32,7 @@ class Base(VeryBase,Page):
         Page.__init__(self)    
 
 #GeoBase inherits  Page from Location
-class GeoBase(GeoCodeObject,Base,LocationContainer):
+class GeoBase(GeoCodeObject,Base):
     longitude = 0.
     lattitude = 0.
         
@@ -48,7 +48,7 @@ class GeoBase(GeoCodeObject,Base,LocationContainer):
              raise Unauthorized 
     
 @implementer (ICompany)
-class Company  (GeoBase):
+class Company  (GeoBase,LocationContainer):
     webClass = "Company"
     clientClass = "category"
 
@@ -59,7 +59,7 @@ class OnlineOrganization  (Base):
     webApproved = False
 
 @implementer (IOrganization)
-class Organization  (GeoBase):
+class Organization  (GeoBase,LocationContainer):
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
@@ -73,7 +73,14 @@ from zopache.business.subscribe import Member
 from zopache.pages.location import MapBase
 
 @implementer (IMapOrganization)
-class MapOrganization(MapBase,Member,Organization):
+
+#class MapOrganization(MapBase,Member,Organization):
+
+class MapOrganization(GeoBase,
+                      MapBase,
+                      Member,
+                      Page):
+
     interface = IMapOrganization
     webClass = 'GeoJsonMap'
     #LocationBase inherits from Page
