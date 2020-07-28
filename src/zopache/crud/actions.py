@@ -99,7 +99,7 @@ class Add(Action, UniqueName, TransactionNote):
         if hasattr(form,'getReturn'):
             return form.getReturn(url)
         else:
-           url = self.form.urlQuotePlus(url)
+           #url = self.form.urlQuotePlus(url)
            return SuccessMarker('Added', True, url=url,code=307)
     
     def setFields(self):
