@@ -1,6 +1,11 @@
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions
-from zopache.ttw.fileaction  import AddFileAction, AddImageAction
+from zopache.ttw.fileaction  import(
+    AddFileAction,
+    AddImageAction,
+    AddLogoAction,
+    AddBannerAction)    
+
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IFile, IImage
 from zopache.core.viewdecorators import *
@@ -36,6 +41,45 @@ class AddImage(AddFile):
     def actions(self):
         return Actions(
               AddImageAction("Add and View"),
+              formactions.Cancel("Cancel","Cancel"))
+    
+#ADD A BANNER IMAGE
+@form_component
+@name('addBanner')
+@context(IBTreeContainer)
+@implementer(ITreeSecurity)
+class AddBanner(AddFile):
+    subTitle='Add a Banner'
+    ignoreContent = True
+    interface = IImage    
+    @property
+    def fields(self):
+        return  Fields(self.interface)
+    
+    @property
+    def actions(self):
+        return Actions(
+              AddBannerAction("Add and View"),
+              formactions.Cancel("Cancel","Cancel"))
+    
+
+#ADD A LOGO IMAGE
+@form_component
+@name('addLogo')
+@context(IBTreeContainer)
+@implementer(ITreeSecurity)
+class AddLogo(AddFile):
+    subTitle='Add a Banner'
+    ignoreContent = True
+    interface = IImage    
+    @property
+    def fields(self):
+        return  Fields(self.interface)
+    
+    @property
+    def actions(self):
+        return Actions(
+              AddLogoAction("Add and View"),
               formactions.Cancel("Cancel","Cancel"))
     
 

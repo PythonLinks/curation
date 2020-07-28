@@ -42,15 +42,18 @@ class AddFileAction(Action):
         return SuccessMarker('Added', True, url=nextURL ,code=307)
 
     def nextURL(self):
-        baseURL = self.form.url(self.form.context)
+        baseURL = self.form.absoluteURL()
         return baseURL + "/manage"
 
     def message(self):    
         message(u"File Uplaoded")        
 
+    def getName(self,formData):    
+        return formData['__name__']
+
     def upload(self, formData):
         file = self.createFile(formData)
-        name=formData['__name__']
+        name = self.getName (formData)
         context = self.form.context
         newName=self.form.uniqueContainerName(context,name)        
         context[newName] = file
@@ -111,4 +114,10 @@ class AddImageAction(AddFileAction):
          new.title = formData ["title"]   
          return new
 
-        
+class AddLogoAction(AddImageAction): 
+    def getName(self,formData):    
+        return 'Logo'
+
+class AddBannerAction(AddImageAction): 
+    def getName(self,formData):    
+        return 'Banner'    
