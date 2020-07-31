@@ -31,6 +31,10 @@ class Notify (object):
         message = Message()
         message['From'] = aFrom
         message['To'] = to
+        if self.isAuthenticated():
+           replyTo = self.request.principal.email
+           if replyTo != to:
+              message['Reply-To'] = replyTo
         message['Subject'] = subject
         #text = 'To: ' + to + ' \n'
         #text +='From: ' + from + ' \n'
@@ -97,13 +101,19 @@ class Notify (object):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
         if mailer == None:
            return ''
-       
+
+        subject = "New " + self.new.__class__.__name__
+        
         if self.treeSecurity():
-            subject = "Approved: "
-        else:
-            subject = "New "
+            subject += " Approved By: " + self.request.principal.title 
             
-        subject += self.new.__class__.__name__
+        elif self.isAuthenticated():
+            subject += " By " + self.request.principal.title + " "
+            
+        else:
+            subject += " By Anonymous "
+            
+
         content = self.secureShortURL (context = self.new)
         self.notify (mailer.noReply,mailer.postMaster, subject, content)
         self.sendTheMail()

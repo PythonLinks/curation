@@ -6,16 +6,17 @@ from z3c.schema.email import RFC822MailAddress as Email
 from cromlech.security import Unauthorized
 
 from zopache.pages.interfaces import ILocationLeaf, IPage
-from zopache.pages.page import Page
+from zopache.pages.page import Page,RootPage
 from zopache.business.company import GeoBase
 from zopache.business.interfaces import IFollow, ILatLng, IAddress, ISocialMedia
 from zopache.business.geocoding import Address
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage,IRootPage
 
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zopache.application.choices import fromList
 from zopache.ttw.treewidget import TreeField
-from zopache.pages.location import LocationContainer
+from zopache.pages.location import LocationLeaf
+
 items = [ ("sunshineMovement", "Sunshine Movemement"),
           ("courageToChange","Courage To Change"),
           ("justiceDemocrats","Justice Democrats")
@@ -149,6 +150,11 @@ class IPoliticianBase (ILocationLeaf,IFollow):
 class IPolitician(IPoliticianBase):
     pass
 
+
+from zopache.pages.interfaces import ISiteRoot
+class IPoliticiansSite(IPolitician,ISiteRoot):
+   pass
+
 class IAddPolitician(IPolitician):
     imageURL = schema.URI(
         title = "The Politician's Image",
@@ -156,10 +162,18 @@ class IAddPolitician(IPolitician):
         missing_value="",        
         required = False,
     )   
-
+    
 @implementer (IPolitician)
-class Politician (GeoBase,LocationContainer):
+class Politician (GeoBase,LocationLeaf):
     webClass = "Politician"
     clientClass = "category"
 
-
+from zopache.pages.page import SiteRoot    
+@implementer (IPoliticiansSite)
+class PoliticiansSite (GeoBase,LocationLeaf,SiteRoot):
+    webClass = "Politician"
+    clientClass = "category"    
+    def __init__(self):
+        SiteRoot.__init__(self)
+        GeoBase.__init__(self)
+        LocationLeaf.__init__(self)

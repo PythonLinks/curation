@@ -72,12 +72,15 @@ class Add(Action, UniqueName, TransactionNote):
             form.submissionError = errors
             return FAILURE        
         return self.callInner(obj,data,form)
+    
+    def baseURL(self):
+        return self.form.absoluteURL (self.new)
         
     def callInner(self,obj,data,form):     
         notify(ObjectCreatedEvent(obj))
         self.actuallyAdd(obj,data)
         form.message("Content created")
-        baseURL = self.form.absoluteURL (self.new)
+        baseURL = self.baseURL()
         print ("IN ADD", baseURL)
         self.describeWithView(obj,form)
 
@@ -86,7 +89,7 @@ class Add(Action, UniqueName, TransactionNote):
            url=self.form.newURL(baseURL)
         else:
            url=self.newURL(baseURL)
-
+        breakpoint()
         #Form Specific postAddProcessing   
         if hasattr(form,'postAddProcess'):
                form.postAddProcess()
@@ -99,7 +102,6 @@ class Add(Action, UniqueName, TransactionNote):
         if hasattr(form,'getReturn'):
             return form.getReturn(url)
         else:
-           url = self.form.urlQuotePlus(url)
            return SuccessMarker('Added', True, url=url,code=307)
     
     def setFields(self):
@@ -163,6 +165,10 @@ class AddByTitle (Add):
             self.setImage (self.new.imageURL)
             del self.new.imageURL
             
+    def baseURL(self):
+        result = "/" + self.form.urlEncode(self.new.__name__)
+        return result
+    
     def getContext(self,data):
         return self.form.context
     
@@ -264,7 +270,6 @@ class Update(Action,TransactionNote):
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):
                form.context.postProcess(view=form)
-
         baseURL = self.form.absoluteURL()
         url=self.newURL(baseURL)
         self.describeWithView(form.context,form)
@@ -274,7 +279,9 @@ class Update(Action,TransactionNote):
            return SuccessMarker('Updated', True, url=url)
 
     def appendName(self,baseURL,name):
-        if baseURL [-1] != "/":
+        if baseURL == "":
+           baseURL = "/"
+        elif baseURL [-1] != "/":
             baseURL += "/"
         baseURL += name
         return baseURL

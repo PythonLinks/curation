@@ -24,6 +24,7 @@ from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.driver import IAddDriver, Driver
+from zopache.business.politician import IPoliticiansSite, PoliticiansSite
 
 #ADD NEWS
 @view_component
@@ -117,7 +118,22 @@ class AddPolitician(AddAnonymousPage,GeoCodeForm):
         it =object.__setattr__(item,'mode','multiselect')
         super().updateWidgets()
      """
-    
+
+from zopache.pages.addpage import AddPageBase    
+from zopache.application.interfaces import IRootContainer
+@view_component
+@name('addPoliticiansSite')
+@target(IView)
+@context(IRootContainer)    
+class AddPoliticiansSite(AddPageBase,GeoCodeForm):
+    interface = IPoliticiansSite
+    dataValidators = []
+    factory = PoliticiansSite
+    title = "Create a Website for a Politician"
+    def update(self):
+        AddPageBase.update(self)
+        GeoCodeForm.update(self)
+        
 @view_component
 @name('addCompanyMap')
 @target(IView)

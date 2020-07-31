@@ -78,10 +78,10 @@ class URLMethods(object):
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
         isRootContainer = item.__class__.__name__ == "RootContainer"
-        if isSiteRoot:
+        if isRootContainer:
+           return ""
+        elif isSiteRoot:
            return "/" + item.__name__
-        elif isRootContainer:
-           return "/"
         else:
            container = item.__parent__
            base_url= self.absoluteURL(container)

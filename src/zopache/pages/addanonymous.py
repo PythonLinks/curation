@@ -25,7 +25,7 @@ class AddAnonymousPage(AddPageBase):
         if self.treeSecurity():
             self.new.webApproved = True
         else:
-            self.webApproved = False        
+            self.new.webApproved = False        
         self.new.postAddProcess (view = self)
         self.notifyAdminsNewPage()
 
