@@ -1,13 +1,12 @@
 import dawnlight
 from cromlech.dawnlight import DawnlightPublisher
-from  zopache.ttw.traverser import Traverser
+from  zopache.application.traverser import Traverser
 from cromlech.dawnlight.utils import safeguard
 from cromlech.browser import IPublisher, IView, IResponseFactory
 from zope.interface.interfaces import ComponentLookupError
 from zopache.ttw.historyitem import HistoryTraverser
 
 from cromlech.dawnlight.publish import shortcuts, PublicationError
-from zopache.application.virtualhost import getSiteRootFromRequest
 
 class Publisher (DawnlightPublisher):
     """Traverses model objects, and looks up views. 
@@ -19,18 +18,27 @@ class Publisher (DawnlightPublisher):
     def publish(self, request, root,handle_errors):
         view=None
         path = self.base_path(request)
-
+        context=root
+        hostName = request.domain
         #Maybe traverse to a lower level SiteRoot
         crumbs = dawnlight.parse_path(path, shortcuts)
-        context=root
+
         if crumbs:
-           aType, name=crumbs.popleft()
-           if not name in context:
-              if not name in ['manage','fix','editors',
-                              'addRootCategory', 'editHosts']: 
-                 context = getSiteRootFromRequest(request,context)
+             aType, name=crumbs.popleft()
+             if  name in context:
+                 pass
+             elif  name in ['manage',
+                          'fix',
+                          'editors',
+                          'aceedit',  
+                          'addRootCategory',
+                          'addPoliticiansSite',  
+                          'editHosts']:
+                 pass
+             else:
+                context = context.getSiteRootFor(hostName)
         else:
-                 context = getSiteRootFromRequest(request,context)
+                context = context.getSiteRootFor(hostName)
                  
         traverser=Traverser(self.view_locator)
         

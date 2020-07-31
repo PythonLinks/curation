@@ -8,21 +8,21 @@ from dolmen.container import BTreeContainer,IBTreeContainer
 from cromlech.browser import IView
 from zope import schema
 from zope.schema import Text, TextLine, Password , DottedName
+from zopache.crud.interfaces import IEditable
 from zopache.ttw.interfaces import ILeaf, IHTMLContainer
 from zopache.ttw.interfaces import IHTML
-from zopache.crud.interfaces import IRootContainer
+from zopache.crud.interfaces import IImutable
+from zopache.zmi.interfaces import IZMI
+from zopache.crud.interfaces import IZodbRoot
 
+#The Root Container also has to implement IPublicationRoot      
+#But you cannot delete or rename the root container
+#So no IDeletable or IRenameable
+class IRootContainer(IPublicationRoot,IImutable,IZMI,IZodbRoot):
+     pass
 
-class IVirtualHost(ILeaf):
-    """Map domains to paths"""
-    mapping = schema.Dict(
-        title = u'Virtual Host Definitions',
-        description = u'Map from domain names to child directory name.',
-        required = False,
-        key_type = DottedName(max_dots = 0) ,
-        value_type = DottedName(max_dots = 0) , 
-    )
-
+class IEditableRootContainer(IRootContainer, IEditable):
+      pass
 
 class ILogin(Interface):
     email = TextLine(
@@ -40,6 +40,5 @@ class IContentContainer(IHTMLContainer):
 class IChat(IHTMLContainer):
     pass
     
-#class IRootContentContainer(IRootContainer,IContentContainer):
-#   pass
+
 

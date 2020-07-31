@@ -38,8 +38,8 @@ class AddPageBase(
     def addAuthorizedActions(self):       
         self.actions = Actions(
               AddAndView("Add and View", self.factory),
-              AddAndAceEdit("Add and ckEdit", self.factory),
-              AddAndCkEdit("Add and AceEdit", self.factory),
+              AddAndAceEdit("Add and aceEdit", self.factory),
+              AddAndCkEdit("Add and ckEdit", self.factory),
               Cancel("Cancel","Cancel"))
         
     def postAddProcess(self,view = None):

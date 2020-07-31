@@ -2,7 +2,7 @@
 #This software is subject to the CV and Zope Public Licenses.
 
 from cromlech.browser.interfaces import IView
-from zopache.ttw.publisher  import Publisher
+from zopache.application.publisher import Publisher
 from cromlech.dawnlight import ViewLookup, view_locator
 from cromlech.i18n import EnvironLocale
 from cromlech.security import ContextualInteraction

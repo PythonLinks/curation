@@ -141,7 +141,10 @@ class INotebook (ISourceLeaf,IDirectory):
 class INews (IPage,IRecent):
     pass
 
-class IRootPage(IBranch,IPublicationRoot,IZodbRoot,IPage):
+class ISiteRoot(IBranch,IPublicationRoot,IPage):
+    pass
+
+class IRootPage(ISiteRoot,IZodbRoot):
     pass
 
 class INotPage (Interface):

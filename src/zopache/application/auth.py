@@ -8,9 +8,10 @@ from cromlech.browser import getSession
 from cromlech.browser.interfaces import IPublicationRoot
 from zope.interface import implementer
 from zope.location import Location
-from zopache.application.virtualhost import getSiteRoot
 
-
+def getSiteRootFrom ( environ, root):      
+            host = environ["HTTP_HOST"].lower()
+            return root.getSiteRootFor (host)
 
 def secured(app):
 
@@ -24,7 +25,7 @@ def secured(app):
             conn = environ["zodb.connection"]
             connRoot=conn.root()
             zodbRoot= connRoot ["applicationRoot"]
-            siteRoot = getSiteRoot (environ, zodbRoot)
+            siteRoot = getSiteRootFrom (environ, zodbRoot)
             principalFolder = siteRoot["person"]
             principal = principalFolder.getPrincipalByUserName(userName)
 

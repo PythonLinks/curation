@@ -298,9 +298,10 @@ class News (Page,RecentMixIn):
     webClass = 'NewsItem'
     pass
 
+from zopache.pages.interfaces import ISiteRoot
 from zopache.pages.cache import Cache
-@implementer(IRootPage)
-class RootPage(Branch,PageBase,PageMixIn):
+@implementer(ISiteRoot)
+class SiteRoot(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     homePage = ''
     
@@ -310,4 +311,9 @@ class RootPage(Branch,PageBase,PageMixIn):
        cache = Cache()
 
     def setJson(self):
-         self.json=self.jsonTree(0)    
+         breakpoint()
+         self.json=self.jsonTree(0)
+         
+@implementer(IRootPage)         
+class RootPage(SiteRoot):
+    pass
