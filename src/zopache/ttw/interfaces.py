@@ -87,6 +87,12 @@ class IImage(IFile):
         description = u'Describe this Image, so that the user has some idea what they are looking at. ',
         required = True,
     )
+    remoteURL = schema.URI(
+        title = "The url to visit when the image is clicked.",
+        description = """The html template can use this info.. Include  'https://'""",
+        missing_value="",
+        required = False,
+    )    
     data = FileField(title=u'Upload an Image')         
 
 #I THINK ALL OD MY ZODB OBJECTS GET THIS ONE    
