@@ -313,9 +313,9 @@ class SiteRoot(Branch,PageBase,PageMixIn):
        cache = Cache()
 
     def setJson(self):
-         breakpoint()
          self.json=self.jsonTree(0)
          
 @implementer(IRootPage)         
 class RootPage(SiteRoot):
-    pass
+    def getSiteRootFor(self,hostName):
+        return self
