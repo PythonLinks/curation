@@ -88,7 +88,7 @@ class IImage(IFile):
         required = True,
     )
     remoteURL = schema.URI(
-        title = "The url to visit when clicked",
+        title = "The url to visit when the image is clicked.",
         description = """The html template can use this info.. Include  'https://'""",
         missing_value="",
         required = False,
