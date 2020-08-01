@@ -55,7 +55,7 @@ class ImageAdaptor(object):
     def __init__(self,context):
         self.context=context   
     def getSegment(self):
-        return 'index'        
+        return 'edit'        
 
 
 @crom.adapter

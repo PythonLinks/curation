@@ -164,12 +164,14 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.description=self.description.replace ('"' , "&ldquo;", 1)
         self.description=self.description.replace ('"' , "&rdquo;", 1)
         self.description=self.description.replace ('"' , "&ldquo;")
-        self.description=self.description.replace ('\n' , " ")        
+        self.description=self.description.replace ('\n' , " ")
+        self.description=self.description.replace ('\r' , " ")                
 
         self.title=self.title.replace ('"' , "&ldquo;", 1)
         self.title=self.title.replace ('"' , "&rdquo;", 1)
         self.title=self.title.replace ('"' , "&ldquo;")
-        self.title=self.title.replace ('\n' , " ")        
+        self.title=self.title.replace ('\n' , " ")
+        self.title=self.title.replace ('\r' , " ")                
         
     def postAddProcess(self,view=None):
         self.postProcess(view=view)
