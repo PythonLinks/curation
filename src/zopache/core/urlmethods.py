@@ -85,7 +85,7 @@ class URLMethods(object):
         else:
            container = item.__parent__
            base_url= self.absoluteURL(container)
-           if base_url[-1] != "/":
+           if not base_url or base_url[-1] != "/":
                base_url += "/"
            base_url += item.__name__
            print("ITERATING URL URL = ", base_url)               
