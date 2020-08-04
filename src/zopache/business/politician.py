@@ -112,23 +112,24 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         default = '',
     )    
 
-    facebookId= schema.TextLine(
+    facebookId = schema.URI(
         title = u'FaceBook Id (Optional)',
-        description = u'Not the domain name, just the part after "https/facebook.com/". ',
+        description = """Copy and paste the Facebook URL (Not the Group). """,
+        missing_value="",
         required = False,
-        default = '',
     )
 
-    facebookGroup= schema.TextLine(
-        title = u'Facebook Group (Optional)',
-        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+    facebookGroup = schema.URI(
+        title = u'FaceBook Group (Optional)',
+        description = """Copy and paste the Facebook GROUP url. """,
+        missing_value="",
         required = False,
-        default = '',
-    )
+    )    
+    
 
     instagramId= schema.TextLine(
         title = u'Instagram Id (Optional)',
-        description = 'Not the domain name, Just the part after https://facebook.com/groups/',
+        description = 'Not the domain name, Just the part after https://instagram.com/',
         required = False,
         default = '',
     )        

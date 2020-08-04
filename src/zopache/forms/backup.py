@@ -13,7 +13,7 @@ def make_file_response(view, result, *args, **kwargs):
 @view_component
 @name('forest-wiki-backup')
 @context(Interface)
-@implementer(ITreeSecurity)
+@permissions('Manage')
 class Index(View):
     responseFactory = Response
     make_response = make_file_response

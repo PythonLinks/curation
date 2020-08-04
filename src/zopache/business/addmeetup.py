@@ -34,7 +34,7 @@ class AddEvent(AddAnonymousPage):
     factory = Event
     title = "Add a Real World Event"
     def update(self):
-        AddAnonymous.update(self)
+        AddAnonymousPage.update(self)
         GeoCodeForm.update(self)     
     
 

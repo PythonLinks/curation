@@ -88,7 +88,6 @@ class URLMethods(object):
            if not base_url or base_url[-1] != "/":
                base_url += "/"
            base_url += item.__name__
-           print("ITERATING URL URL = ", base_url)               
            return base_url
 
     def relativeURL(self,*args):        
