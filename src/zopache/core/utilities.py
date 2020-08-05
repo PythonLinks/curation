@@ -39,7 +39,7 @@ class Utilities (object):
          return self.webClassAcquire('navbar.py')(self)
   
     def getDefaultImage(self):
-        inage  = self.parentalAcquire('SocialMediaImage')
+        image  = self.parentalAcquire('SocialMediaImage')
         if image == None:
             image = self.parentalAcquire('Logo')
         return image
