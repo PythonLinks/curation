@@ -48,7 +48,7 @@ class AddImage(AddFile):
 @name('addBanner')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddBanner(AddFile):
+class AddBanner(AddImage):
     subTitle='Add a Banner'
     ignoreContent = True
     interface = IImage    
@@ -68,7 +68,7 @@ class AddBanner(AddFile):
 @name('addLogo')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddLogo(AddFile):
+class AddLogo(AddImage):
     subTitle='Add a Banner'
     ignoreContent = True
     interface = IImage    

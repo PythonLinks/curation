@@ -6,7 +6,7 @@ from dolmen.container import OrderedBTreeContainer
 from zopache.core import Leaf
 from zopache.ttw.interfaces import IFile, IImage
 from zopache.core.interfaces import ITreeSecurity
-          
+from zopache.core.breadcrumbs import Breadcrumbs          
 
 class FileBase(object):    
 
@@ -66,6 +66,7 @@ def make_file_response(view, result, *args, **kwargs):
         response.headers['Cache-Control'] = 'public,max-age=3600'  
         return response
 
+    
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
 from zopache.core.viewdecorators import *
@@ -80,7 +81,6 @@ class IndexFile(View):
     def render(self):
                return self.context.data
 
-#And the same for images           
 @view_component
 @name('index')
 @context(IImage)
@@ -89,9 +89,33 @@ class IndexImage(View):
     make_response = make_file_response
         
     def render(self):
-               return self.context.data
+               return self.context.data           
 
-
+from dolmen.view import make_layout_response
+#DISPLAY THE IMAGE WITH THE HEADER AND MENU BAR
+@view_component
+@name('displayImage')
+@context(IImage)
+class DisplayImage(View,Breadcrumbs):
+    responseFactory = Response
+    make_response = make_layout_response
+    label=''
+    subTitle='Uploaded Image'
+    
+    def headerScripts(self):
+        return ""
+    def footerScripts(self):
+        return ""
+    
+    def breadcrumbs(self):
+        return self.breadcrumbsManage()
+    
+    def render(self):
+        #result = "<center><h2>Please Reload the page to view the image.</h2>"
+        #result += "</center>"
+        result = '<img src="' + self.absoluteURL(self.context)+ '"\>'
+        return result
+    
 def make_logo_response(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.headers['Cache-Control'] = 'public,max-age=3600'  
