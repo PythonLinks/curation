@@ -113,7 +113,11 @@ class AddImageAction(AddFileAction):
          new.height = pilImage.height
          new.title = formData ["title"]   
          return new
-
+     
+    def nextURL(self):
+        baseURL = self.form.absoluteURL(self.new)
+        return baseURL + "/displayImage"
+    
 class AddLogoAction(AddImageAction): 
     def getName(self,formData):    
         return 'Logo'
