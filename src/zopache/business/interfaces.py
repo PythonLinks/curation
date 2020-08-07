@@ -35,6 +35,14 @@ class IEventBase(IPage,IFollow,ITime):
         max_length = 200,
         default = '',
     )
+
+    joinURL = schema.URI(
+        title = u'The Meetup URL',
+        description = """How to join this meetup.  Maybe include a link to the 
+discord server invite.   Include  'https://'""",
+        required = False,
+        missing_value ='',
+    )    
     
     source= schema.Text(
         title = 'More Informatton',

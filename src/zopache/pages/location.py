@@ -55,12 +55,13 @@ class MapOrLocation (PageBase):
 
         #SELECT BASED On (CLASS, FUTURE EVENTS)
         hasFutureEvent = self.hasFutureEvent()
-        choose = {('Politician',True):"orange",
-                  ('Organization',True):"red",
-                  ('MapOrganization',True):"red",                  
+        choose = {
+                  ('Politician',True):"orange",
                   ('Politician',False):"blue",
-                  ('Organization',False):"red",
                   ('MapOrganization',False):"red",                  
+                  ('MapOrganization',True):"orange",                  
+                  ('Organization',False):"red",
+                  ('Organization',True):"orange",
                   ('Location',True):"bluered",
                   ('Location',False):"blue",
                   ('Company',True):"yellow2x",
@@ -113,7 +114,10 @@ class LocationContainer (MarkerLocation):
                 continue
 
             if not item.webApproved:
-                continue 
+                continue
+
+            if item.__class__.__name__ in ['Event','OnlineEvent']:
+                continue
 
             if ILocationLeaf.providedBy(item):
                 result.append(item)
