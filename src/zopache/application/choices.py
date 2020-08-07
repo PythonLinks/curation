@@ -1,3 +1,4 @@
+from slugify import slugify
 from zope.schema.vocabulary import SimpleVocabulary
 
 def fromList(aList,includeNone=False):
@@ -7,7 +8,8 @@ def fromList(aList,includeNone=False):
         terms.append(term)
         
     for item in aList:
-        term = SimpleVocabulary.createTerm(item,item,item)
+        token = slugify (item)
+        term = SimpleVocabulary.createTerm(token,item,item)
         terms.append(term)
     return SimpleVocabulary(terms)
 

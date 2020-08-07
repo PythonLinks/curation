@@ -96,6 +96,33 @@ class Notify (object):
         self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()
 
+    def notifyAdminsNewVolunteer(self):
+        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        if mailer == None:
+           return ''                
+        subject = "New Volunteer "
+        subject += self.request.context.title
+        url = self.secureShortURL (context = self.context)        
+        content = F"{self.request.principal.title}"
+        content += " is volunteering to help  {self.contextg.url}.  "
+        content += "Just reply to this email."
+
+        self.notify (mailer.noReply, mailer.postMaster, subject, content)
+        self.sendTheMail()
+
+    def notifyAdminsVolunteerResigned(self):
+        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        if mailer == None:
+           return ''                
+        subject = "Volunteer Resigned From:"
+        subject += self.request.context.title
+        url = self.secureShortURL (context = self.context)        
+        content = F"{self.request.principal.title}"
+        content = " is resigning from  {self.contextg.url}.  "
+        content += "Just reply to this email."        
+        self.notify (mailer.noReply, mailer.postMaster, subject, content)
+        self.sendTheMail()                
+
         
     def notifyAdminsNewPage(self):
         self.mailer = mailer = self.parentalAcquire ("MailHost")

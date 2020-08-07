@@ -56,10 +56,10 @@ class MapOrLocation (PageBase):
         #SELECT BASED On (CLASS, FUTURE EVENTS)
         hasFutureEvent = self.hasFutureEvent()
         choose = {('Politician',True):"orange",
-                  ('Organization',True):"red",
-                  ('MapOrganization',True):"red",                  
-                  ('Politician',False):"blue",
+                  ('Politician',False):"blue",                  
+                  ('Organization',True):"orange",
                   ('Organization',False):"red",
+                  ('MapOrganization',True):"orange",                  
                   ('MapOrganization',False):"red",                  
                   ('Location',True):"bluered",
                   ('Location',False):"blue",

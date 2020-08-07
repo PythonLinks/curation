@@ -93,7 +93,8 @@ class IImage(IFile):
         missing_value="",
         required = False,
     )    
-    data = FileField(title=u'Upload an Image')         
+    data = FileField(title=u'Upload an Image',
+                     required = True,)         
 
 #I THINK ALL OD MY ZODB OBJECTS GET THIS ONE    
 class ICanonical (Interface):

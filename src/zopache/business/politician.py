@@ -5,6 +5,7 @@ from z3c.schema.email import RFC822MailAddress as Email
 
 from cromlech.security import Unauthorized
 
+from zopache.application.choices import fromList
 from zopache.pages.interfaces import ILocationLeaf, IPage
 from zopache.pages.page import Page,RootPage
 from zopache.business.company import GeoBase
@@ -64,6 +65,16 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         title="Local Or National",
         description= "Are they running for local or congressional office",
         required = False,)    
+
+    affiliation = schema.Choice(
+        source = fromList(['Green Party',
+                           'Independent',
+                           'Write In']),
+        title="Which Party is he running as?",
+        description= "One of three.",
+        default = "green-party",
+        required = True,)
+
     
 #    addTo=TreeField(
 #           title="Where to Add this Politician.",

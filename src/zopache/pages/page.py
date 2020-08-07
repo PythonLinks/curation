@@ -155,10 +155,22 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         else:
            return self.webClass
        
-    def postProcess(self,view=None):
+    def postProcessCore(self,view=None):
         self.partialPostProcess(view=view)
         self.recalculateRootJSON()
         cache.resetCache(self)
+        
+    def postProcess(self,view=None):
+        self.modificationTime=time.time()        
+        self.postProcesCore(view = view)
+        principal = view.request.principal
+        if principal != Anonymous:
+           name = view.request.principal.__name__
+           try:
+              name = int(name)
+           except:
+              pass
+           self.editedBy = name
         
     def partialPostProcess(self, view=None):        
         self.description=self.description.replace ('"' , "&ldquo;", 1)
@@ -172,18 +184,33 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.title=self.title.replace ('"' , "&ldquo;")
         self.title=self.title.replace ('\n' , " ")
         self.title=self.title.replace ('\r' , " ")                
+
         
     def postAddProcess(self,view=None):
-        self.postProcess(view=view)
+        self.postProcessCore(view=view)        
+        principal = view.request.principal
+        if principal != Anonymous:
+           name = view.request.principal.__name__
+           try:
+              name = int(name)
+           except:
+              pass
+           self.createdBy = name
+        
         if ((self.__parent__ != None) and
             self.__parent__.private):
             self.private = True
+            
         if hasattr(self,'remoteURL'):
            siteRoot = self.getSiteRoot()
            siteRoot.addRemoteURL(self)
+           
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
-
+           
+        #The Following is not needed.
+        #PageMixIn.postAddProcess(self, view=view)
+        
     def recalculateRootJSON(self):
          jsonRoot = self.getSiteRoot()
          if jsonRoot:
@@ -285,16 +312,7 @@ from zopache.pages.interfaces import ILink
 class Link(PageBase, PageMixIn):
     webClass='Link'
     icon="ttwicons/WikiPage.png"
-    def postAddProcess(self,view=None):
-        siteRoot = self.getSiteRoot()
-        siteRoot.valuesByToken[self.__name__] = self
-        principal = view.request.principal
-        if principal != Anonymous:
-           self.createdBy = view.request.principal.__name__
-        PageBase.postAddProcess(self, view=view)
-        #The Following is not needed.
-        #PageMixIn.postAddProcess(self, view=view)       
-    
+
 @implementer (INews)     
 class News (Page,RecentMixIn):
     webClass = 'NewsItem'

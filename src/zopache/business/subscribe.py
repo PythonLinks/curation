@@ -2,13 +2,15 @@
 
 from BTrees.OOBTree import OOBTree
 
-from cromlech.browser.exceptions import HTTPFound
 from cromlech.security import Unauthorized
+from dolmen.view import  make_view_response
 from dolmen.view import name, context, view_component
 from cromlech.security import unauthenticated_principal as anonymous
+from cromlech.browser.exceptions import HTTPFound
+
 from zopache.core.page  import  Page
 from zopache.business.interfaces import IFollow
-from dolmen.view import  make_view_response
+from zopache.ttw.mail import Notify
 
 class Member(object):
     def __init__ (self):
@@ -35,9 +37,9 @@ class BaseMembers(Page):
               
     
 @view_component
-@name('follow')
+@name('volunteer')
 @context(IFollow)
-class Follow(BaseMembers):
+class Follow(BaseMembers,Notify):
     def update(self):
          principal = self.request.principal
          
@@ -50,21 +52,21 @@ class Follow(BaseMembers):
          self.context.members [principalId] = principalId
          principal.groups.add (self.context.__name__)
          principal._p_changed = True
+         self.notifyAdminsNewVolunteer()
          raise HTTPFound(location=".")
 
 @view_component
-@name('cms-follow')
+@name('cms-volunteer')
 @context(IFollow)
-class CMSFollow(BaseMembers):     
+class CMSFollow(Follow):     
     make_response = make_view_response     
 
 @view_component
-@name('unfollow')
+@name('resign')
 @context(IFollow)
-class UnFollow(BaseMembers):
+class Resign(BaseMembers,Notify):
     def update(self):
          principal = self.request.principal
-
          if principal == anonymous:
             return 
          self.addVariables()       
@@ -72,11 +74,12 @@ class UnFollow(BaseMembers):
          del self.context.members [principalId] 
          principal.groups.remove (self.context.__name__)
          principal._p_changed = True         
+         self.notifyAdminsVolunteerResigned()
          raise HTTPFound(location=".")                  
 
 @view_component
-@name('cms-unfollow')
+@name('cms-resign')
 @context(IFollow)
-class CMSUnFollow(UnFollow):    
+class CMSResign(Resign):    
     make_response = make_view_response
 

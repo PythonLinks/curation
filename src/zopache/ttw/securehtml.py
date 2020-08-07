@@ -2,12 +2,12 @@ from zopache.core.viewdecorators import *
 from .interfaces import ISecureHTML , IWeb
 from .html import  SecureHTML, HTMLPage
 from .htmlviews import Index
+from zopache.core.interfaces import ITreeSecurity
 
 @view_component
 @name (u'index')
 @context(ISecureHTML)
-@title("SecureIndex")
-@permissions('Manage')
+@implementer (ITreeSecurity)
 @implementer(IWeb)  
 class SecureIndex(Index):
      pass

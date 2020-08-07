@@ -6,6 +6,7 @@ from zope.interface import directlyProvides
 from zope.schema.interfaces import IContextSourceBinder
 from zopache.ttw.acquisition import ParentalAcquire
 from zopache.ttw.treewidget import TreeField
+from zopache.application.choices import fromList
 
 """
 choiceDict = {"All":"all",
@@ -49,8 +50,17 @@ class IOrganizationBase (Interface):
         source = possibleFocus,
         title="Specialization",
         description= "What is this groups focus?",
-        required = False)                
-
+        required = False)
+    
+    ballotStatus = schema.Choice(
+        source = fromList(['On Ballot',
+                           'Petitioning',
+                           'Minor Party',
+                           'Unrecognized']),
+        title="Which Party is he running as?",
+        description= "One of three.",
+        default = "on-ballot",
+        required = False,)
 #    addTo=TreeField(
 #           title="Where should this organization be?",
 #           description= "To be approved, please place it in a leaf of the tree.?",
