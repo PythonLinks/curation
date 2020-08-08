@@ -24,7 +24,7 @@ class Tests(object):
     
     def isForestWiki(self):
         root = self.getSiteRoot()
-        return root.__class__.__name__ == 'Page'
+        return root.__class__.__name__ == 'RootPage'
         
     def treeSecurity(self):
         tree = TreeSecurity(self)
@@ -41,6 +41,9 @@ class Tests(object):
 
     def isManager(self):
         return self.hasPermission('Manage')
+    
+    def isDeveloper(self):
+        return self.hasPermission('Develop')    
 
     def hasValue(self,attribute):
         return self.hasTrueAttribute(attribute)

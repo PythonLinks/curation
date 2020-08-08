@@ -21,6 +21,8 @@ from zopache.core import AllObjects
 from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
 from collections import defaultdict
 from zopache.core.interfaces import ICountable
+from cromlech.security import unauthenticated_principal as Anonymous
+from zopache.pages.interfaces import ILink,IAction
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
@@ -162,7 +164,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         
     def postProcess(self,view=None):
         self.modificationTime=time.time()        
-        self.postProcesCore(view = view)
+        self.postProcessCore(view = view)
         principal = view.request.principal
         if principal != Anonymous:
            name = view.request.principal.__name__
@@ -300,14 +302,18 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         if hasattr(self,'remoteURL'):
             siteRoot = self.getSiteRoot()
             siteRoot.deleteRemoteURL(self.remoteURL)
+
+@implementer (IAction)
+class Action(PageBase, PageMixIn):
+    webClass='Action'
+    icon="ttwicons/WikiPage.png"
     
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
     icon="ttwicons/WikiPage.png"
 
-from cromlech.security import unauthenticated_principal as Anonymous
-from zopache.pages.interfaces import ILink    
+
 @implementer (ILink)     
 class Link(PageBase, PageMixIn):
     webClass='Link'

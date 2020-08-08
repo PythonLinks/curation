@@ -72,7 +72,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
                            'Write In']),
         title="Which Party is he running as?",
         description= "One of three.",
-        default = "green-party",
+        default = "Green-Party",
         required = True,)
 
     

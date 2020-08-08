@@ -71,7 +71,10 @@ class InternalPrincipal(FileBase,Page):
         self.modificationTime=time.time()
         Page.__init__(self)
         FileBase.__init__(self)
-
+        
+    def postProcessCore(self,view=None):
+        pass
+    
     def logout(self,session=None, view = None):
         if session is None:
             session = getSession()

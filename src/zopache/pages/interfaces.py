@@ -12,6 +12,8 @@ from zopache.ttw.interfaces import ISourceLeaf
 from cromlech.file import FileField
 from zopache.ttw.interfaces import IAceHTML
 from zopache.core.interfaces import ICountable
+from zopache.crud.interfaces import ILeaf
+
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
     pass
@@ -65,8 +67,14 @@ class IPageBottom(Interface):
         default = u'',
     )
     
-
-    
+class IAction(ILinkTop, ILeaf, IOrdered,
+              IJSONInclude, IBTreeContainer,ICountable):
+    description= schema.Text(
+        title = 'Description',
+        description = "A brief introduction to this Action.",
+        required = True,
+        default = u'',
+    )       
     
 class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
             IJSONInclude, IBTreeContainer,IUntrustedHTML):

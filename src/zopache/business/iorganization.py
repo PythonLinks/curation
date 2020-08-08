@@ -59,7 +59,7 @@ class IOrganizationBase (Interface):
                            'Unrecognized']),
         title="Which Party is he running as?",
         description= "One of three.",
-        default = "on-ballot",
+        default = "On-Ballot",
         required = False,)
 #    addTo=TreeField(
 #           title="Where should this organization be?",

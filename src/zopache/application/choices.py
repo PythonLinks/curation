@@ -8,7 +8,7 @@ def fromList(aList,includeNone=False):
         terms.append(term)
         
     for item in aList:
-        token = slugify (item)
+        token = item.replace(' ','-')
         term = SimpleVocabulary.createTerm(token,item,item)
         terms.append(term)
     return SimpleVocabulary(terms)

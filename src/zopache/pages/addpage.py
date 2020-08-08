@@ -8,8 +8,8 @@ from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.pages.interfaces import IMap, ILocation, IPage, IAddLink
-from zopache.pages.page import Page, Link
+from zopache.pages.interfaces import IMap, ILocation, IPage, IAddLink, IAction
+from zopache.pages.page import Page, Link, Action
 from zopache.pages import Map, Location
 from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
@@ -67,6 +67,17 @@ class AddPage(AddAuthorizedPage):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
+    
+
+@view_component
+@name('addAction')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddPage(AddAuthorizedPage):
+    interface = IAction
+    label="Add a Remote Action"
+    factory = Action
 
 
 @view_component
