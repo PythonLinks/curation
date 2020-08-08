@@ -33,7 +33,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     webApproved = True
     emailApproved = False
     basePath = "/"
-
+    createdBy = None
+    editedBy = None
+    
     def countMe (self):
         if not self.webApproved:
             return False

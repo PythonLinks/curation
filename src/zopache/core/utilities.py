@@ -6,6 +6,30 @@ from dolmen.message.utils import send
 from zopache.core.getroot import getSiteRoot
 
 class Utilities (object):
+    def createdBy(self,*args):
+        item = self.context if len(args)==0 else args [0]        
+        siteRoot = self.getSiteRoot()
+        createdBy = item.createdBy
+        if createdBy == None:
+            return "Anonymous"
+        elif type (createdBy) == int:
+            item = siteRoot[str(createdBy)]
+            return item.title
+        else:
+            return createdBy
+        
+    def editedBy(self,*args):
+        item = self.context if len(args)==0 else args [0]        
+        siteRoot = self.getSiteRoot()
+        editedBy = item.editedBy
+        if editedBy == None:
+            return "Anonymous"
+        elif type (editedBy) == int:
+            item = siteRoot[str(editedBy)]
+            return item.title
+        else:
+            return editedBy
+        
     def shouldDisplay(self):
         if self.context.private == False:
            return
