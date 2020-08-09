@@ -70,7 +70,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
         source = fromList(['Green Party',
                            'Independent',
                            'Write In']),
-        title="Which Party is he running as?",
+        title="Ballot Status",
         description= "One of three.",
         default = "Green-Party",
         required = True,)

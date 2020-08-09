@@ -22,7 +22,7 @@ from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
 from collections import defaultdict
 from zopache.core.interfaces import ICountable
 from cromlech.security import unauthenticated_principal as Anonymous
-from zopache.pages.interfaces import ILink,IAction
+from zopache.pages.interfaces import ILink,IActionNetwork
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
@@ -305,8 +305,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
             siteRoot = self.getSiteRoot()
             siteRoot.deleteRemoteURL(self.remoteURL)
 
-@implementer (IAction)
-class Action(PageBase, PageMixIn):
+@implementer (IActionNetwork)
+class ActionNetwork(PageBase, PageMixIn):
     webClass='Action'
     icon="ttwicons/WikiPage.png"
     

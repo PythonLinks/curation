@@ -101,7 +101,7 @@ class Notify (object):
         if mailer == None:
            return ''                
         subject = "New Volunteer "
-        subject += self.request.context.title
+        subject += self.context.title
         url = self.secureShortURL (context = self.context)        
         content = F"{self.request.principal.title}"
         content += " is volunteering to help  {self.contextg.url}.  "
@@ -115,7 +115,7 @@ class Notify (object):
         if mailer == None:
            return ''                
         subject = "Volunteer Resigned From:"
-        subject += self.request.context.title
+        subject += self.context.title
         url = self.secureShortURL (context = self.context)        
         content = F"{self.request.principal.title}"
         content = " is resigning from  {self.contextg.url}.  "
