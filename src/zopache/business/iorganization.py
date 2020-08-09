@@ -8,16 +8,7 @@ from zopache.ttw.acquisition import ParentalAcquire
 from zopache.ttw.treewidget import TreeField
 from zopache.application.choices import fromList
 
-"""
-choiceDict = {"All":"all",
-            "Divorce": "divorce",
-            "Intactivism": "intactivism",
-            "Support For the Accused":"support-for-the-accused",
-            "Politics": "politics",
-            "News":"news",
-            "College":"college"  
-            }    
-"""
+
 
 def possibleFocus (context):
     return fromDict(getDict(context))
@@ -57,8 +48,8 @@ class IOrganizationBase (Interface):
                            'Petitioning',
                            'Minor Party',
                            'Unrecognized']),
-        title="Which Party is he running as?",
-        description= "One of three.",
+        title="Ballot Status?",
+        description= "One of four.",
         default = "On-Ballot",
         required = False,)
 #    addTo=TreeField(

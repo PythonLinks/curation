@@ -8,7 +8,6 @@ from zopache.core.interfaces import ITreeSecurity
 @name (u'index')
 @context(ISecureHTML)
 @implementer (ITreeSecurity)
-@implementer(IWeb)  
 class SecureIndex(Index):
      pass
 
