@@ -67,8 +67,12 @@ class IPageBottom(Interface):
         default = u'',
     )
     
-class IAction(ILinkTop, ILeaf, IOrdered,
-              IJSONInclude, IBTreeContainer,ICountable):
+class IActionNetwork(ILinkTop,
+                     ILeaf,
+                     IOrdered,
+                     IJSONInclude,
+                     IBTreeContainer,
+                     ICountable):
     description= schema.Text(
         title = 'Description',
         description = "A brief introduction to this Action.",

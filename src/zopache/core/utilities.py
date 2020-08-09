@@ -14,7 +14,7 @@ class Utilities (object):
             return "Anonymous"
         elif type (createdBy) == int:
             item = siteRoot[str(createdBy)]
-            return item.title
+            return item.handle
         else:
             return createdBy
         
@@ -26,7 +26,7 @@ class Utilities (object):
             return "Anonymous"
         elif type (editedBy) == int:
             item = siteRoot[str(editedBy)]
-            return item.title
+            return item.handle
         else:
             return editedBy
         

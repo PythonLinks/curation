@@ -8,8 +8,10 @@ from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.pages.interfaces import IMap, ILocation, IPage, IAddLink, IAction
-from zopache.pages.page import Page, Link, Action
+from zopache.pages.interfaces import (IMap, ILocation,
+                                      IPage, IAddLink,
+                                      IActionNetwork)
+from zopache.pages.page import Page, Link, ActionNetwork
 from zopache.pages import Map, Location
 from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
@@ -74,10 +76,10 @@ class AddPage(AddAuthorizedPage):
 @target(IView)
 @context(IPage)
 @implementer(ITreeSecurity)
-class AddPage(AddAuthorizedPage):
-    interface = IAction
+class AddAction(AddAuthorizedPage):
+    interface = IActionNetwork
     label="Add a Remote Action"
-    factory = Action
+    factory = ActionNetwork
 
 
 @view_component

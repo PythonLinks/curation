@@ -9,7 +9,6 @@ from zopache.ttw.treewidget import TreeField
 from zopache.application.choices import fromList
 
 
-
 def possibleFocus (context):
     return fromDict(getDict(context))
 
@@ -49,6 +48,7 @@ class IOrganizationBase (Interface):
                            'Minor Party',
                            'Unrecognized']),
         title="Ballot Status?",
+
         description= "One of four.",
         default = "On-Ballot",
         required = False,)
