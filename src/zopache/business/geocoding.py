@@ -44,6 +44,7 @@ class GeoCodeObject(Base):
     def postAddProcess(self,view=None):
         self.hidden = False
         Page.postAddProcess(self, view = view)
+        self.postProcess(view=view)
         #Page calls post process, so lat lng  is not needed. 
         #self.editors=[view.request.principal.__name__]    
 
