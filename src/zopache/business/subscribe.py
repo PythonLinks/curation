@@ -25,6 +25,11 @@ class Member(object):
         if name in self.members:
             return True
         return False
+
+    def getMembers(self,view):
+        if not hasattr(self,'members'):
+           return {}
+        return self.members
     
     
 class BaseMembers(Page):

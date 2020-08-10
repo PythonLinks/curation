@@ -15,7 +15,7 @@ from zopache.pages.interfaces import IPage
 @context(IPage)
 @implementer(ITreeSecurity)
 class AddLinkByURL(AddByURLForm):
-    title = "Add a Link"
+    title = "Add a Link By URL"
     def newURL(self,base):
         return base + '/addLink'
 
@@ -25,7 +25,7 @@ class AddLinkByURL(AddByURLForm):
 @context(IPage)
 class AddOrganizationByURL(AddByURLForm):
     allowAnonymous = True
-    title = "Add an Organizatino"
+    title = "Add an Organization By URL"
     def newURL(self,base):
         return base + '/addOrganization'
 
@@ -46,7 +46,7 @@ class AddRSSByURL(AddByURLForm):
 @context(IPage)
 class AddPoliticianByURL(AddByURLForm):
     allowAnonymous = True
-    title = "Add a News Site"
+    title = "Add a Politician By URL "
     subTitle = "Not an article, just the home page. "
     def newURL(self,base):
         return base + '/addPolitician'        

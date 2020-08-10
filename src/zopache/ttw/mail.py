@@ -132,13 +132,14 @@ class Notify (object):
         subject = "New " + self.new.__class__.__name__
         
         if self.treeSecurity():
-            subject += " Approved By: " + self.request.principal.title 
+           return
             
         elif self.isAuthenticated():
             subject += " By " + self.request.principal.title + " "
+            subject += "Needs Approval" 
             
         else:
-            subject += " By Anonymous "
+            subject += " By Anonymous Needs Approval "
             
 
         content = self.secureShortURL (context = self.new)
