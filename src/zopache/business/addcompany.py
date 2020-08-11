@@ -6,7 +6,12 @@ from zopache.ttw.htmlviews import AddCkHTMLBase
 from zopache.core.uniquename import UniqueName
 from zopache.crud.addbyurl import  AddByURLForm
 from zopache.crud.forms import AddByTitleForm
-from zopache.business.interfaces import IMap, ICompany,IMapOrganization,ICity
+from zopache.business.interfaces import (IMap,
+                                         IMapBase,
+                                         ICompany,
+                                         IMapOrganization,
+                                         ICity)
+
 from zopache.business.interfaces import ICompanyOrOrganization
 from zopache.business.interfaces import IAddOrganization, IOnlineOrganization
 from zopache.business.company import MapOrganization
@@ -68,9 +73,9 @@ class AddOrganization(AddAll):
 @view_component
 @name('addCity')
 @target(IView)
-@context(IMap)
+@context(IMapBase)
 @implementer(ITreeSecurity)
-class AddLocation(AddAuthorizedPage, GeoCodeForm):
+class AddCity(AddAuthorizedPage, GeoCodeForm):
     interface = ICity
     label="Add a City"
     subTitle = 'Add a city to a map'
