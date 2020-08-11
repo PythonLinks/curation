@@ -17,7 +17,16 @@ from z3c.schema.email import RFC822MailAddress as Email
 from zopache.business.geocoding import Address
 from zopache.pages.interfaces import IPage, ITime
 from zopache.business.iorganization import IOrganizationBase
-   
+
+class ICity (ILocationContainer):
+    address= Address(
+        title = u'City Address',
+        description = """This is used to locate the city  on the map.  You only need the name of the city and country """,
+        required = False
+    )
+    
+
+
 class IFollow(Interface):
     pass
 

@@ -6,7 +6,7 @@ from zopache.ttw.htmlviews import AddCkHTMLBase
 from zopache.core.uniquename import UniqueName
 from zopache.crud.addbyurl import  AddByURLForm
 from zopache.crud.forms import AddByTitleForm
-from zopache.business.interfaces import IMap, ICompany,IMapOrganization
+from zopache.business.interfaces import IMap, ICompany,IMapOrganization,ICity
 from zopache.business.interfaces import ICompanyOrOrganization
 from zopache.business.interfaces import IAddOrganization, IOnlineOrganization
 from zopache.business.company import MapOrganization
@@ -25,6 +25,7 @@ from zopache.pages.page import  News
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.driver import IAddDriver, Driver
 from zopache.business.politician import IPoliticiansSite, PoliticiansSite
+from zopache.business.map import City
 
 #ADD NEWS
 @view_component
@@ -37,33 +38,54 @@ class AddNews(AddAuthorizedPage):
     title = "Add a News Item"
     subtitle = "Because the MSM does not cover it."
     factory = News
-    
+
+class AddAll(AddAnonymousPage,GeoCodeForm):
+    def update(self):
+        AddPageBase.update(self)
+        GeoCodeForm.update(self) 
+
 @view_component
 @name('addCompany')
 @target(IView)
 @context(IPage)    
-class AddCompany(AddAnonymousPage,GeoCodeForm):
+class AddCompany(AddAll):
     interface = ICompany
     label="Add a Company"
     factory = Company
     title = "Add a Company"
-    def update(self):
-        AddPageBase.update(self)
-        GeoCodeForm.update(self) 
-    
+
 @view_component
 @name('addOrganization')
 @title("Add Organization")
 @target(IView)
 @context(IPage)    
-class AddOrganization(AddAnonymousPage,GeoCodeForm):
+class AddOrganization(AddAll):
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
-    def update(self):
-        AddAnonymousPage.update(self)
-        GeoCodeForm.update(self)
 
+#CITY    
+@view_component
+@name('addCity')
+@target(IView)
+@context(IMap)
+@implementer(ITreeSecurity)
+class AddLocation(AddAuthorizedPage, GeoCodeForm):
+    interface = ICity
+    label="Add a City"
+    subTitle = 'Add a city to a map'
+    factory = City
+    preamble = "If two map pins are too close together, they overlap.  The "
+    preamble += "user can only see one pin, they can only click on one pin. "
+    preamble += 'The solution to this problem is to add a "City" object. '
+    preamble += 'And then cut the overlapping pins from the map using the'
+    preamble += 'Manage->Manage manu, past them into the city object. '
+    preamble += 'The city title can then be "San Jose (2 items)" '
+    preamble += 'Or even "San Jose / Santa Clara (two items)" '
+    preamble += 'Check out San Jose in California for an example. '
+    def update(self):
+        AddAuthorizedPage.update(self)
+        GeoCodeForm.update(self)         
 
 @view_component
 @name('addDriver')

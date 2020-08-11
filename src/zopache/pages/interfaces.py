@@ -168,7 +168,7 @@ class ILocationOrMap(Interface):
 #This is the legacy Location,
 #Used in pages.location.Location
 #So it has to stay
-class ILocation(ILocationOrMap,IRecent,ICanonical):
+class ILocation(ILocationOrMap,IRecent,ICanonical,IPage):
     pass
 
 #For Politicians

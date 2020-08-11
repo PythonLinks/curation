@@ -1,14 +1,15 @@
-
-from .interfaces import ILocation,IMap
 from zope.interface import implementer
-from .geo import geoCache
+from zopache.pages.geo import geoCache
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
-#from zopache.business.interfaces import IMap, ICompanyOrOrganization
 from zopache.pages.page import PageBase
-from zopache.pages.interfaces import IPage , IRootPage
-from zopache.pages.interfaces  import (ILocationContainer,
+from zopache.pages.interfaces  import (IPage,
+                                       IRootPage,
+                                       ILocationContainer,
                                        ILocationOrMap,
-                                       ILocationLeaf)
+                                       ILocationLeaf,
+                                       ILocation,
+                                       IMap
+                                       )
 
 class MapOrLocation (PageBase):
     latitude = 45.
@@ -58,6 +59,8 @@ class MapOrLocation (PageBase):
         choose = {
                   ('Politician',True):"orange",
                   ('Politician',False):"blue",
+                  ('City',True):"orange",
+                  ('City',False):"blue",            
                   ('MapOrganization',False):"red",                  
                   ('MapOrganization',True):"orange",                  
                   ('Organization',False):"red",
@@ -95,7 +98,8 @@ class LocationLeaf (MarkerLocation):
     icon="ttwicons/Location.svg"
     def getCompanies(self):
         return self
-    def getCompaniesRecursively(self,context,result):
+    
+    def getCompaniesRecursively(self,result,showChildren = False):
         return result.append(self)
         
 @implementer (ILocationContainer)
@@ -140,6 +144,8 @@ class LocationContainer (MarkerLocation):
 @implementer(ILocation)
 class Location(LocationContainer):
     pass
+
+    
 
 import googlemaps
 class MapBase(LocationContainer):

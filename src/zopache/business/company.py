@@ -65,6 +65,10 @@ class Organization  (GeoBase,LocationContainer):
     clientClass = "Category"
     webApproved = False    
 
+
+
+
+    
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
 from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization

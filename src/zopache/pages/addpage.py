@@ -8,8 +8,10 @@ from zopache.ttw.htmlviews import AddCkHTMLBase
 
 from zopache.core.uniquename import UniqueName
 from zopache.crud.forms import AddByTitleForm
-from zopache.pages.interfaces import (IMap, ILocation,
-                                      IPage, IAddLink,
+from zopache.pages.interfaces import (IMap,
+                                      ILocation,
+                                      IPage,
+                                      IAddLink,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, ActionNetwork
 from zopache.pages import Map, Location
@@ -104,6 +106,7 @@ class AddLocation(AddAuthorizedPage):
     subTitle = 'Add a point on a map'
     factory = Location
 
+    
 #MAP
 @view_component
 @name('addSimpleMap')

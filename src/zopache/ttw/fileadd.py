@@ -12,6 +12,8 @@ from zopache.core.viewdecorators import *
 from zopache.crud.forms import AddForm
 from zopache.core.uniquename import UniqueName
 from zopache.core.interfaces import ITreeSecurity
+from zopache.forms.imagevalidator import BannerValidator, LogoValidator
+
 
 @form_component
 @name('addFile')
@@ -49,6 +51,7 @@ class AddImage(AddFile):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddBanner(AddImage):
+    dataValidators = [BannerValidator]     
     subTitle='Add a Banner'
     ignoreContent = True
     interface = IImage    
@@ -69,6 +72,7 @@ class AddBanner(AddImage):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddLogo(AddImage):
+    dataValidators = [LogoValidator] 
     subTitle='Add a Banner'
     ignoreContent = True
     interface = IImage    
