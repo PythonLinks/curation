@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
+import transaction
 from PIL import Image as PilImage
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
@@ -39,6 +40,7 @@ class AddFileAction(Action):
         self.message()
         nextURL = self.nextURL()
         #self.new.postAddProcess(view=form)
+        transaction.commit()        
         return SuccessMarker('Added', True, url=nextURL ,code=307)
 
     def nextURL(self):
