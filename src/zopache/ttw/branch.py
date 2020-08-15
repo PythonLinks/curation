@@ -77,6 +77,7 @@ class Branch(object):
     def indexTree(self):
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
+        self.politicians = OOBTree()
         self.indexBranch(self,self)
 
 
@@ -84,12 +85,12 @@ class Branch(object):
         for item in branch.values():
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
+            if IPolitician.providedBy(item):
+                self.politician[item.__name__]=item                
             if hasattr(item,'remoteURL'):
                 self.addRemoteURL(item)
             if IBTreeContainer.providedBy(item):    
                 self.indexBranch(tree,item)
-
-
 
     def __contains__(self, key):
         return (key in self._data  or 
