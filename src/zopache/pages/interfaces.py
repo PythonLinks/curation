@@ -51,21 +51,6 @@ class ILinkTop(Interface):
     )
     
 class IPageBottom(Interface):
-    description= schema.Text(
-        title = 'Description',
-        description = """A brief introduction of this page.  
-                        This is used by the search functions.""",
-        required = False,
-        default = u'',
-    )
-
-    
-    source= schema.Text(
-        title = u'Content',
-        description = u'This is the main content for this page',
-        required = False,
-        default = u'',
-    )
     
 class IActionNetwork(ILinkTop,
                      ILeaf,

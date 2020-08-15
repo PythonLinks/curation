@@ -63,10 +63,19 @@ class Utilities (object):
          return self.webClassAcquire('navbar.py')(self)
   
     def getDefaultImage(self):
-        image  = self.parentalAcquire('SocialMediaImage')
-        if image == None:
-            image = self.parentalAcquire('Logo')
-        return image
+        context = self.context
+        
+        if (banner := context.get('Banner',None)):
+            return banner
+        
+        if (logo := context.get('Logo',None)):
+            return logo
+        
+        if image := self.parentalAcquire('SocialMediaImage'): 
+           return image
+       
+        return  self.parentalAcquire('Logo')
+
 
     def getSiteName(self):
         siteRoot = self.getSiteRoot()

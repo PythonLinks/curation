@@ -58,6 +58,7 @@ class IPoliticianBase (ILocationLeaf,IFollow):
                                                       'Former'])),
         title="Already Elected Or Running For Office",
         description= "It could be both",
+        default ="Running",
         required = False,)
 
     localOrNational = schema.Set(

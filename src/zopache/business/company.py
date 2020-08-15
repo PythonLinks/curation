@@ -58,8 +58,9 @@ class OnlineOrganization  (Base):
     clientClass = "Category"
     webApproved = False
 
+from zopache.business.regioin import Region    
 @implementer (IOrganization)
-class Organization  (GeoBase,LocationContainer):
+class Organization  (GeoBase,LocationContainer,Region):
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
