@@ -19,12 +19,13 @@ from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
+from zopache.pages.htmlvalidator import HTMLValidator
 
 class AddPageBase(
                   AddCkHTMLBase,
                   AddByTitleForm,
                   UniqueName,Notify):
-    dataValidators = [Duplicate, DuplicateURLValidator]
+    dataValidators = [Duplicate, DuplicateURLValidator, HTMLValidator]
     actions = Actions()
 
     def updateWidgets(self):

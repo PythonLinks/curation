@@ -2,7 +2,6 @@ from zope import schema
 
 from zope.interface import Interface
 
-from zopache.pages.interfaces import IAddress
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
@@ -14,9 +13,12 @@ from zopache.pages.interfaces  import (
                                        ILocationContainer,
                                        ILocationLeaf)
 from z3c.schema.email import RFC822MailAddress as Email
-from zopache.business.geocoding import Address
+from zopache.pages.address import Address
+from zopache.pages.interfaces import IAddress
+
 from zopache.pages.interfaces import IPage, ITime
 from zopache.business.iorganization import IOrganizationBase
+from zopache.business.ifollow import IFollow
 
 class ICity (ILocationContainer):
     address= Address(
@@ -27,8 +29,22 @@ class ICity (ILocationContainer):
     
 
 
-class IFollow(Interface):
-    pass
+
+class IOrganizationOrPolitician(Interface):
+    
+    eventsPageURL = schema.URI(
+        title = u'Where are the Events Listed?',
+        description = """ Link to where related events are posted. Please
+   Include  'https://'""",
+        required = False,
+        missing_value ='',
+    )
+    isGlobal = schema.Bool(
+	    title = "Is this a global organization?",
+	    description = """Global Organizations are 
+                              listed in the table below the map. """,
+	    required = False,
+	    default = False)    
 
 class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
@@ -255,8 +271,10 @@ class ISocialMedia(Interface):
     )
        
     
-
-class IOnlineOrganization(IOrganizationBase,ICompanyOrOrganization,ISocialMedia):
+class IOnlineOrganization(IOrganizationBase,
+                          ICompanyOrOrganization,
+                          ISocialMedia,
+                          IOrganizationOrPolitician):
           pass
 
 class IOrganization(IOrganizationBase,

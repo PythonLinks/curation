@@ -1,14 +1,16 @@
 from zope import schema
 from zope.interface import Interface
-from zope.interface import implementer
 from z3c.schema.email import RFC822MailAddress as Email
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
-from zopache.pages.interfaces import IPage,IRootPage
+from zopache.pages.address import Address
+from zopache.pages.interfaces import IPage,IRootPage,ILocationLeaf
 from zopache.application.choices import fromList
 from zopache.ttw.treewidget import TreeField
-from zopache.business.interfaces import (IFollow,
+from zopache.business.ifollow import IFollow
+from zopache.business.interfaces import (
                                          ILatLng,
                                          IAddress,
+                                         IOrganizationOrPolitician,
                                          ISocialMedia)
 
 items = [ ("sunshineMovement", "Sunshine Movemement"),
@@ -29,7 +31,7 @@ def getVocabulary(context):
     return myVocabulary
 
 from zopache.ttw.editprincipal import possibleItems
-class IPoliticianBase (ILocationLeaf,IFollow):
+class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
 
     title = schema.TextLine(
         title = "Politician's Name",

@@ -6,6 +6,7 @@ from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.interface import directlyProvides
 from zopache.core.getroot import getPrincipalFolder
+from zopache.core.interfaces import ITreeSecurity
 
 def possibleEditors(context):
     people = getPrincipalFolder(context)
@@ -41,9 +42,9 @@ class IEditors(Interface):
 
     
 @form_component
-@name (u'editors')
-@permissions('Manage')    
+@name (u'assignEditors')
 @context(Interface)
+@implementer(ITreeSecurity)
 class EditEditors(EditForm):
     title = 'Assign Editors'
     interface = IEditors

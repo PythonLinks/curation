@@ -15,6 +15,7 @@ from .interfaces import IBranch
 from zopache.pages.interfaces import IRootPage
 from zopache.ttw.interfaces import IWebClass, IProducts
 from zopache.ttw.interfaces import IInternalPrincipal
+#from zopache.business.ipolitician import IPolitician
 
 @implementer (IBranch)
 class Branch(object):
@@ -77,7 +78,7 @@ class Branch(object):
     def indexTree(self):
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
-        self.politicians = OOBTree()
+        self.nationalPoliticians = OOBTree()
         self.indexBranch(self,self)
 
 
@@ -85,8 +86,9 @@ class Branch(object):
         for item in branch.values():
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
-            if IPolitician.providedBy(item):
-                self.politician[item.__name__]=item                
+            if item.__class__.__name__=='Politician':
+                if  'National' in item.localOrNational:                
+                    self.nationalPoliticians[item.__name__]=item                
             if hasattr(item,'remoteURL'):
                 self.addRemoteURL(item)
             if IBTreeContainer.providedBy(item):    

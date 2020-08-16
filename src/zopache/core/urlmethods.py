@@ -189,7 +189,7 @@ class URLMethods(object):
              result += ' target="_blank" '
            result+='>'
            if name != None:
-              result += name
+                result += name
            result +='</a>'
            return result
     

@@ -1,13 +1,13 @@
 from zope import schema
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.interface import Interface
-from zopache.application.choices import fromDict
 from zope.interface import directlyProvides
 from zope.schema.interfaces import IContextSourceBinder
+
+from zopache.application.choices import fromDict
 from zopache.ttw.acquisition import ParentalAcquire
 from zopache.ttw.treewidget import TreeField
 from zopache.application.choices import fromList
-
 
 def possibleFocus (context):
     return fromDict(getDict(context))

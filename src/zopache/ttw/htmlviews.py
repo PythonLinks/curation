@@ -66,11 +66,11 @@ class CkScripts(object):
 </script>
         """ 
 
-
+from zopache.pages.htmlvalidator import HTMLValidator
 class AddHTMLBase(object):
     interface = IHTML
     ignoreContent = True
-
+    datavalidators = [HTMLValidator]
 
 class AddCkHTMLBase(AddHTMLBase,CkScripts):
     subTitle="Add an HTML Object"
@@ -223,7 +223,7 @@ class IFrameIndex(Index):
 
 class BaseHTMLEditForm(BaseEditForm):
     actions = Actions()
-    
+    dataValidators = [HTMLValidator]    
     def update(self):
         if self.treeSecurity():
             self.setActions()

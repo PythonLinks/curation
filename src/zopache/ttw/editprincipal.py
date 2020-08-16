@@ -1,5 +1,6 @@
 from zope.interface import Interface
 from zope.schema import TextLine , URI, Password
+from zope import schema
 from z3c.schema.email  import RFC822MailAddress as Email
 
 #from cromlech.security import permissions
@@ -41,12 +42,39 @@ def possibleItems():
 
 
 class IEdit(Interface):
+    description= schema.Text(
+        title = 'Description',
+        description = """A brief introduction for this person.  """,
+        required = False,
+        default = u'',
+    )
+
+    remoteURL= schema.URI(
+        title = 'URL',
+        description = """A URL for this person. 
+             Please include 'https://'""",
+        required = False,
+        missing_value = "",
+    )
+    
+    source= schema.Text(
+        title = u'Content',
+        description = u'This is the main content for this page',
+        required = False,
+        default = u'',
+    )
+
+
+    """    
     professionalURL = TextLine(
         title="Your Proessinal URL",
         description="Your professional website, or Linkedin page.",
         required=False,
         default=u'',
         missing_value=u'')
+
+
+    
 
     data = FileField( title ="Or Post Your CV or Resume",
                       description = "It is only shown to those whom you allow to see it..",
@@ -56,24 +84,22 @@ class IEdit(Interface):
     who = Set(
         value_type =Choice(source=possibleItems()),
         title="View Permissions",
-        description= """Who is allowed to see 
-                         your information?""",
+        description= "Who is allowed to see your information?",
         required = False)                
-    """
+
     where=TreeField(
         title="Location Permissions",
         description= "Where can people see your information?",
         required = False,
     )
     """
-    
+
 @form_component
-@name (u'edit')
+#@name (u'edit')
 @context(IInternalPrincipal)
 class EditPrincipal(BaseEditForm):
     title = 'Your Profile'
     interface = IEdit
-    fields = Fields(IEdit)    
     actions = Actions(formactions.SaveAndRoot("Save","Save"),
                           formactions.Cancel("Cancel","Cancel"))
     def acquireTitle(self):
@@ -93,26 +119,29 @@ class EditPrincipal(BaseEditForm):
 @implementer(ITreeSecurity)
 class AceEditPrincipal(AceEdit):
     title = 'Ace Edit Your Profile'
-    interface = IPage
-    fields = Fields(IPage)
-
+    interface = IEdit
+    @property
+    def fields(self):
+        return  Fields(self.interface)
+    
 @form_component
 @name (u'ckedit')
 @context(IInternalPrincipal)
 @implementer(ITreeSecurity)
 class CkEditPrincipal(CkEdit):
     title = 'CkEdit Your Profile'
-    interface = IPage
-    fields = Fields(IPage)        
-
-
+    interface = IEdit
+    @property
+    def fields(self):
+        return  Fields(self.interface)
+    
 @form_component
-@name (u'support')
+#@name (u'support')
 @context(IInternalPrincipal)
 @title("Edit")
 class EditSupport (EditPrincipal):
-    interface = ISupport
-    fields = Fields(ISupport)
+    interface = IEdit
+
     preamble = """ If you like this website, please support the business 
                    model by checkng one of the following two boxes. """
     postamble = """What is 

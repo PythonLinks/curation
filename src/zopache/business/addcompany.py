@@ -29,7 +29,8 @@ from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.driver import IAddDriver, Driver
-from zopache.business.politician import IPoliticiansSite, PoliticiansSite
+from zopache.business.ipolitician import IPoliticiansSite
+from zopache.business.politician import  PoliticiansSite
 from zopache.business.map import City
 
 #ADD NEWS

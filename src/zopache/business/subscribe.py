@@ -11,10 +11,20 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.core.page  import  Page
 from zopache.business.interfaces import IFollow
 from zopache.ttw.mail import Notify
+from zopache.business.ifollow import IFollow
 
 class Member(object):
+    eventsPageURL = ""
+    hasScheduledEvents = False
+    
     def __init__ (self):
         self.members = OOBTree()
+
+    def hasFutureEvent(self):
+        if self.eventsPageURL != "":
+           if self.hasScheduledEvents:
+               return 1
+        return 0  
         
     def isMember(self,view):
         if not view.isAuthenticated():

@@ -58,8 +58,9 @@ class OnlineOrganization  (Base):
     clientClass = "Category"
     webApproved = False
 
+from zopache.business.region import Region    
 @implementer (IOrganization)
-class Organization  (GeoBase,LocationContainer):
+class Organization  (GeoBase,LocationContainer,Region):
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
@@ -83,7 +84,8 @@ from zopache.pages.location import MapBase
 class MapOrganization(GeoBase,
                       MapBase,
                       Member,
-                      Page):
+                      Page,
+                      Region):
 
     interface = IMapOrganization
     webClass = 'GeoJsonMap'

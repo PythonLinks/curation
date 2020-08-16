@@ -80,16 +80,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
                    result.append(item)
         return result
 
-    def hasFutureEvent(self):
-        result = 0
-        for item in self.childCategories():
-            if (ITime.providedBy (item)):
-                now = datetime.datetime.now()
-                if item.time == None:
-                   continue
-                if now < item.time: 
-                   result +=1
-        return result
                               
     def allPagesAsList(self):
         pages = []

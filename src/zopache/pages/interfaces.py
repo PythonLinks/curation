@@ -51,6 +51,7 @@ class ILinkTop(Interface):
     )
     
 class IPageBottom(Interface):
+
     description= schema.Text(
         title = 'Description',
         description = """A brief introduction of this page.  
@@ -67,6 +68,7 @@ class IPageBottom(Interface):
         default = u'',
     )
     
+
 class IActionNetwork(ILinkTop,
                      ILeaf,
                      IOrdered,
@@ -208,7 +210,7 @@ class IMap(ILocationOrMap,ILatLng):
         required = True,
     )
 
-
+from zopache.pages.address import Address
 class IAddress(Interface):
     pass
     """"
