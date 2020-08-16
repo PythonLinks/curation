@@ -18,6 +18,7 @@ class TreeSecurity(Parents):
         return False
     
     def hasEditorPermission(self):
+         breakpoint()
          view = self.view
          principal = view.request.principal
          if principal.__class__  == UnauthenticatedPrincipal:
