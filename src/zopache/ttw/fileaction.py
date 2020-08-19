@@ -17,7 +17,7 @@ from zopache.ttw.html import HTML
 from zopache.ttw.javascript import Javascript
 from zopache.ttw.css import CSS
 from zopache.ttw.JSON import JSON
-from zopache.ttw  import File, Image
+from zopache.ttw.file  import File, Image, BTreeImage
 from ZODB.blob import Blob
 
 def message(message):
@@ -104,7 +104,7 @@ class AddImageAction(AddFileAction):
 
     def createFile(self,formData):
          self.nextView = '/manage'
-         new = Image()
+         new = BTreeImage()
          imageData  = formData['data']
          imageData.file.seek(0)         
          new.data = imageData #Inside it reads the file.read()
@@ -113,6 +113,7 @@ class AddImageAction(AddFileAction):
          new.contentType = imageData.type
          new.width = pilImage.width
          new.height = pilImage.height
+
          new.title = formData ["title"]   
          return new
      

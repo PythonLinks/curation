@@ -73,7 +73,7 @@ run a chat and voting server"""
 from cromlech.file import FileField
 
 
-class IFile(ILeaf):
+class IFileBase(Interface):    
     title = TextLine(
         title = u'File Desciption',
         description = u'Describe this File.',
@@ -81,7 +81,8 @@ class IFile(ILeaf):
     )      
     data = FileField(title=u'Upload a File')
 
-class IImage(IFile):
+
+class IImageBase(Interface):    
     title = TextLine(
         title = u'Image Desciption',
         description = u'Describe this Image, so that the user has some idea what they are looking at. ',
@@ -96,6 +97,15 @@ class IImage(IFile):
     data = FileField(title=u'Upload an Image',
                      required = True,)         
 
+class IFile(IFileBase,ILeaf):
+    pass
+
+class IImage(IImageBase,ILeaf):
+    pass
+
+class IBTreeImage(IImage,IBTreeContainer):
+    pass
+    
 #I THINK ALL OD MY ZODB OBJECTS GET THIS ONE    
 class ICanonical (Interface):
       pass   

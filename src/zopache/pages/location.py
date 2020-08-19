@@ -185,14 +185,14 @@ class MapBase(LocationContainer):
                if item.focus == value:
                   result.append(item)
         return result          
-        
-    def getLocationsJSONCore(self,firstItem,result,view):
+
+    def getPoints(self):
         if self.showChildren == True:
              mapPoints = self.values()
         else:
              mapPoints = self.getCompanies()
-        if view != None:
-            mapPoints = self.filter(mapPoints,view)
+        #if view != None:
+        #    mapPoints = self.filter(mapPoints,view)
 
         for item in mapPoints:
              if not ILocationOrMap.providedBy(item):
@@ -208,8 +208,12 @@ class MapBase(LocationContainer):
              
              # IF LOCATION GET THE JSON
              if ( ILocationOrMap.providedBy(item)):
-                result, firstItem= item.getOneMarker(firstItem,result)
-
+                mapPoints.append(item)
+        return mapPoints
+     
+    def getLocationsJSONCore(self,firstItem,result,view):
+        for item in self.mapPoints():
+            result, firstItem= item.getOneMarker(firstItem,result)
         return result , firstItem
 
     #ITERATE THROUGH THE CHILDREN

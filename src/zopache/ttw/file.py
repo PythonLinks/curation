@@ -1,15 +1,22 @@
+from PIL import Image as PilImage
+import io
 from ZODB.blob import Blob, BlobFile
 from ZODB.POSException import POSKeyError
-
+from zopache.ttw.acquisition import ParentalAcquire           
+from dolmen.container import IBTreeContainer, BTreeContainer
 from zope.interface import Interface, implementer
 from dolmen.container import OrderedBTreeContainer
 from zopache.core import Leaf
-from zopache.ttw.interfaces import IFile, IImage
+from zopache.ttw.interfaces import (IFile,
+                                    IImage,
+                                    IFileBase,
+                                    IImageBase,
+                                    IBTreeImage)
+
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.breadcrumbs import Breadcrumbs          
 
 class FileBase(object):    
-
         
     @property
     def size(self):
@@ -40,14 +47,13 @@ class FileBase(object):
     data = property(getData,setData)
     
 @implementer(IFile)
-class File(FileBase,Leaf):    
+class File(Leaf,FileBase):    
      pass
- 
-@implementer(IImage)
-class Image (File):
+
+class ImageBase(FileBase): 
     icon="ttwicons/Image.svg"
     def getHTML(self, view=None, style = ''):
-        url = view.url(self)
+        url = view.absoluteURL(self)
 
         tag = F"""<img src="{url}" """
         if hasattr(self,'title') and self.title!= '':
@@ -58,7 +64,116 @@ class Image (File):
              tag += """ width ="{self.width}" height = "{self.height}" """
         tag += ">"
         return tag
-     
+
+@implementer(IImage)
+class Image (Leaf,ImageBase):
+    def replace (self):
+        parent = self.__parent__
+        name = self.__name__
+        new = BTreeImage()
+        new.blob = self.blob
+        new.contentType = self.contentType
+        new.width = self.width
+        new.height = self.height
+        del parent [self.__name__]             
+        parent  [name] = new
+        new.__name__ = name
+        
+    def getTitle(self):
+        if self.__parent__.__class__ == BTreeImage:
+           return self.__parent__.title
+        else:
+           return self.__getattr_("title")
+
+    def setTitle(self,value):
+        if self.__parent__.__class__ == BTreeImage:
+           self.__parent__.__setattr__('title',value)
+        else:
+           self.__setattr__("title",value)       
+       
+    def getRemoteURL(self):
+        if self.__parent__.__class__ == BTreeImage:
+           return self.__parent__.remoteURL
+        else:
+           return self.__getattr_("remoteURL")        
+
+    def setRemoteURL(self,value):
+        if self.__parent__.__class__ == BTreeImage:
+           self.__parent__.__setattr__('remoteURL',value)
+        else:
+           self.__setattr__("remoteURL",value)       
+    
+    remoteURL = property (getRemoteURL,setRemoteURL)
+    title = property (getTitle,setTitle)
+    
+#BTreeImages have child thumbnails which are Images, and use
+#the parent title and remoteURL.
+@implementer (IBTreeImage)
+class BTreeImage(ImageBase,BTreeContainer):
+    def __init__(self):
+        ImageBase.__init__(self)
+        BTreeContainer.__init__(self)
+        
+    def get(self,name,default=None):
+        if name in self:
+           return self[name]
+
+        if name in ['600W','601W','100W','100H','200H','300H']:
+              return self.shrink(name) 
+        return default
+
+    def shrink(self,name):
+         intName = int(name[0:-1])
+         new = Image()
+         
+         if name [-1] == "H":
+             ratio = intName/self.height
+             newWidth = int(ratio * self.width)
+             newHeight = intName
+         elif name [-1] == "W":
+             ratio = intName/self.width
+             newWidth = intName
+             newHeight = int(ratio * self.height)
+         else:
+             newWwidth = self.width
+             newHeight = self.height
+             
+         size = (newWidth,newHeight)
+         byteImgIO = io.BytesIO()
+         byteImgIO.write(self.data)
+         byteImgIO.seek(0)
+         pilImage = PilImage.open(byteImgIO)
+         pilImage = pilImage.resize(size)
+         pilImage = pilImage.crop((0,0,newWidth,newHeight))
+         pilImage = self.crop(pilImage,intName)
+         byteImgIO = io.BytesIO()         
+         pilImage.save(byteImgIO,'PNG')
+         byteImgIO.seek(0)
+         
+         new.data = byteImgIO.read()
+         new.contentType = "image/png"
+         new.width = pilImage.width
+         new.height = pilImage.height
+
+         #new.data = self.data
+         new.width = self.width
+         new.height = self.height
+         
+         self._setitemf(name,new)
+         new.__name__ = name
+         new.__parent__ = self
+         return new
+
+    def crop(self,image, height):
+        if image.width <  image.height:
+            return image
+        maxWidth= height
+        width = image.width
+        left = (width -maxWidth )/2
+        top = 0
+        right = width -left
+        return image.crop((left,top,right,height))
+    
 def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.content_type=view.context.contentType
@@ -83,7 +198,7 @@ class IndexFile(View):
 
 @view_component
 @name('index')
-@context(IImage)
+@context(IImageBase)
 class IndexImage(View):
     responseFactory = Response
     make_response = make_file_response
@@ -95,7 +210,7 @@ from dolmen.view import make_layout_response
 #DISPLAY THE IMAGE WITH THE HEADER AND MENU BAR
 @view_component
 @name('displayImage')
-@context(IImage)
+@context(IImageBase)
 class DisplayImage(View,Breadcrumbs):
     responseFactory = Response
     make_response = make_layout_response
@@ -128,8 +243,7 @@ def make_logo_response(view, result, *args, **kwargs):
         response.write(result or '')
         return response
 
-from zopache.ttw.acquisition import ParentalAcquire           
-from dolmen.container import IBTreeContainer
+
 @view_component
 @name('Logo')
 @context(IBTreeContainer)

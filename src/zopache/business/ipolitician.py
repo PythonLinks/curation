@@ -56,7 +56,7 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
         required = False,)
 
     localOrNational = schema.Set(
-        value_type = schema.Choice(source = fromList(['Local','State-Wide','National'])),
+        value_type = schema.Choice(source = fromList(['Local','State','National'])),
         title="Local Or National",
         description= "Are they running for local or congressional office",
         required = False,)    
@@ -84,20 +84,32 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
 #          )
 #    endorsedBy.mode = 'multiselect'
     
-    source= schema.Text(
-        title = 'Content',
-        description = """Please describe this politician further. Add relevant links, and links to images.""",
-        required = False,
-    )
-
     remoteURL = schema.URI(
         title = "The Politician's Website",
         description = """Please link to the Politician. Include  'https://'""",
         missing_value="",
         required = False,
     )
-    
 
+    source= schema.Text(
+        title = 'Content',
+        description = """Please describe this politician further. Add relevant links, and links to images.""",
+        required = False,
+    )
+
+    eventsPageURL = schema.URI(
+        title = "Events Page URL ",
+        description = """An optional link to their events page.  Please include   'https://'""",
+        missing_value="",
+        required = False,
+    )
+    
+    hasScheduledEvents = schema.Bool(
+	    title = "Does the events page have events scheduled?",
+	    description = """If so, then the pin will light up. """,
+	    required = False,
+	    default = False)    
+    
     districtURL = schema.URI(
         title = "The Politician's District Map",
         description = """Please link to the Politician. Include  'https://'""",
@@ -119,14 +131,14 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
     )    
 
     facebookId = schema.URI(
-        title = u'FaceBook Id (Optional)',
+        title = u'FaceBook URL  (Optional, Not the Group URL.)',
         description = """Copy and paste the Facebook URL (Not the Group). """,
         missing_value="",
         required = False,
     )
 
     facebookGroup = schema.URI(
-        title = u'FaceBook Group (Optional)',
+        title = u'FaceBook Group URL (Optional)',
         description = """Copy and paste the Facebook GROUP url. """,
         missing_value="",
         required = False,

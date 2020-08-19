@@ -122,7 +122,9 @@ class CutObjects(BaseAction):
     
 class PasteObjects(BaseAction):            
     def __call__(self,form):
+
         target = form.context
+
         paster = IObjectPaster(target)
         paster.paste(form)
         cache.resetCache(form.context)

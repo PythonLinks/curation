@@ -39,13 +39,7 @@ class IOrganizationOrPolitician(Interface):
         required = False,
         missing_value ='',
     )
-    isGlobal = schema.Bool(
-	    title = "Is this a global organization?",
-	    description = """Global Organizations are 
-                              listed in the table below the map. """,
-	    required = False,
-	    default = False)    
-
+    
 class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
         title = 'Event Name',
@@ -275,7 +269,15 @@ class IOnlineOrganization(IOrganizationBase,
                           ICompanyOrOrganization,
                           ISocialMedia,
                           IOrganizationOrPolitician):
-          pass
+    
+    isGlobal = schema.Bool(
+	    title = "Is this a global organization?",
+	    description = """Global Organizations are 
+                              listed in the table below the map. """,
+	    required = False,
+	    default = False)    
+
+          
 
 class IOrganization(IOrganizationBase,
                     ICompanyOrOrganization,

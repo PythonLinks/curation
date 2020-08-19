@@ -14,12 +14,6 @@ class Politician (GeoBase,LocationLeaf):
     localOrNational = ""
     webClass = "Politician"
     clientClass = "category"
-    def preDeleteProcess(self,view):
-        siteRoot = self.getSiteRoot()
-        nationalPoliticians = siteRoot.nationalPoliticians
-        if self.__name__ in nationalPoliticians:
-            del nationalPoliticians[self.__name__]
-        LocationLeaf.preDeleteProcess(self,view)
 
 
 @implementer (IPoliticiansSite)

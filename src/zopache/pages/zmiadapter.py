@@ -32,34 +32,11 @@ class LocalBase(BaseClass):
         else:
             print (message , " NO TOKEN")
             
-    #Delete token first, then add item
-    def deleteToken(self,item):
-        name = item.__name__
-        root = getSiteRoot(item)
-        parent = item.__parent__
-        valuesByToken = root.valuesByToken
-        if not IPage.providedBy(item):
-             return
-
-        # DO NOTHING IF THIS IS A DUPLICATE 
-        if  ((name in valuesByToken) and 
-            (valuesByToken[name]==item)):
-            del valuesByToken[name]
-            
-
-    #Add item first, then add token     
-    def addToken (self, item):
-        if not IPage.providedBy(item.__parent__):
-           self.view.error += item.__name__ +  "NOT ADDED TO valuesByToken "
-        root = getSiteRoot(item)
-        valuesByToken = root.valuesByToken
-        name = item.__name__
-        if name in valuesByToken:
-            raise Exception()
         
-        valuesByToken[name] = item
 
-                
+
+
+            
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectCopier)
@@ -107,7 +84,6 @@ class PagePaster(LocalBase,Paster,UniquePageName):
             orig_name = item.__name__
             new_name=self.uniqueName(toContainer,orig_name,"Copy")
             self.moveFrom(fromFolder, orig_name, toContainer, new_name)
-            #self.addToken(item)  
         cache.resetCache(view.context)
 
             
@@ -128,9 +104,7 @@ class PageRenamer(LocalBase,Renamer,UniquePageName):
         if obj is None:
             raise ItemNotFoundError(self.container, oldName)
         newName=self.uniqueName(container,newName)
-        self.deleteToken(obj)
         self.moveFrom(container,oldName, container, newName)
-        #self.addToken(obj)
 
         
 #FOR DELETING CATEGORIES
@@ -155,7 +129,6 @@ class PageDeleter(Deleter,LocalBase):
         # HAVE TO DO THIS FIRST
         self.describeTransaction("Deleted an object with a Canonical URL",contained)
 
-        self.deleteToken(contained)
         # DELETE THE OBJECT
         container=contained.__parent__
         # So even though root is not used till later, 

@@ -99,7 +99,6 @@ class BaseEditForm(Form,Breadcrumbs):
 
     @property
     def fields(self):
-        breakpoint()
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
 

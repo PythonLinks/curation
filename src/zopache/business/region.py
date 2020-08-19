@@ -13,7 +13,13 @@ class Region(object):
              item=item.__parent__
            return result
 
-    def getPoliticians (self):
+    def getMapPoliticians (self):
+        return self.getPoliticians(True)        
+               
+    def getListPoliticians(self):
+        return self.getPoliticians(False)
+       
+    def getPoliticians (self,isMap):        
         parents = self.parentsWhichImplement(IOrganization)
         parents.reverse()
         parentLength = len(parents)
@@ -21,8 +27,14 @@ class Region(object):
         #THE NATIONAL PAGE
         if parentLength == 1:
             siteRoot = self.getSiteRoot()
-            nationalPoliticians = siteRoot.nationalPoliticians.values()
-            return nationalPoliticians
+            allPoliticians = siteRoot.politicians.values()
+            if isMap:
+               return list(allPoliticians)            
+            nationalPoliticians = []
+            for item in allPoliticians:
+                  if  'National' in item.localOrNational:
+                      nationalPoliticians.append(item)
+            return nationalPoliticians 
 
         #FOR STATE AND LOCAL MAPS FIRST GET THE TWO NATIONAL
         #POLITICIANS IN THE NATIONAL MAP.  HOWIE AND ANGELA
@@ -47,3 +59,29 @@ class Region(object):
                         print (item.__name__)
                         politicians.append(item)
             return politicians    
+
+    def mapPoints(self):
+        result = []
+
+        politicians = self.getMapPoliticians()
+        return politicians  +  self.getOrganizations()
+    
+    def getOrganizations(self):
+        result = []
+        showChildren = self.showChildren
+        for item in self.values():
+            if not IOrganization.providedBy(item):
+                continue
+
+            if not item.webApproved:
+                continue
+
+            if item.hasFutureEvent() :
+                    result.append(item)
+
+            if showChildren  :
+                result.append(item)
+            else:
+                result = result + item.getOrganizations()
+        return result
+        

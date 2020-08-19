@@ -3,13 +3,13 @@ from zope.interface import Interface
 from dolmen.container import IBTreeContainer
 
 #FROM http://codeaffectionate.blogspot.com/2013/05/tree-iterator-in-python.html
+from zope.interface import Interface
 class AllChildObjects:
- 
-    def __init__(self, node, interface = None):
-        # if no interface provided, include all child objects
-        self.interface = interface or Interface
+
+    def __init__(self, node, interface = Interface):
         self.stack = [node]
- 
+        self.interface = interface
+        
     def __iter__(self):
         return self
 
@@ -57,10 +57,10 @@ class AllVideoObjects(AllChildObjects):
 
 class ProcessTree(object):
     def allChildrenOfClass(self,className):
-        result = {}
-        for item in self.allBlogObjects():
+        result = []
+        for item in AllChildObjects(self):
             if item.__class__.__name__ == className:
-               result [className] = item.title
+               result.append(item)
         return result
     
     def allBlogObjects(self):

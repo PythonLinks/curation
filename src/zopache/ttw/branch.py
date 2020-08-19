@@ -44,7 +44,7 @@ class Branch(object):
           print (link) 
           print (anObject.__name__)
           print (self.remoteURLs[link].__name__)
-          #raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
+          raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
        else:
           self.remoteURLs[link] = anObject 
            
@@ -78,7 +78,7 @@ class Branch(object):
     def indexTree(self):
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
-        self.nationalPoliticians = OOBTree()
+        self.politicians = OOBTree()
         self.indexBranch(self,self)
 
 
@@ -87,8 +87,7 @@ class Branch(object):
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
             if item.__class__.__name__=='Politician':
-                if  'National' in item.localOrNational:                
-                    self.nationalPoliticians[item.__name__]=item                
+                    self.politicians[item.__name__]=item
             if hasattr(item,'remoteURL'):
                 self.addRemoteURL(item)
             if IBTreeContainer.providedBy(item):    

@@ -165,7 +165,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
            except:
               pass
            self.editedBy = name
-        
+            
     def partialPostProcess(self, view=None):        
         self.description=self.description.replace ('"' , "&ldquo;", 1)
         self.description=self.description.replace ('"' , "&rdquo;", 1)
@@ -195,12 +195,16 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
             self.__parent__.private):
             self.private = True
             
-        if hasattr(self,'remoteURL'):
-           siteRoot = self.getSiteRoot()
-           siteRoot.addRemoteURL(self)
-           
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
+
+        siteRoot = self.getSiteRoot()
+           
+        if hasattr(self,'remoteURL'):
+            siteRoot.addRemoteURL(self)
+           
+        if self.__class__.__name__=='Politician':
+           siteRoot.politicians[self.__name__] = self
            
         #The Following is not needed.
         #PageMixIn.postAddProcess(self, view=view)
@@ -239,15 +243,30 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
             if IPage.providedBy(item):
                 yield item                   
 
+    def __delitem__(self,key):
+        item = self[key]
+        OrderedBTreeContainer.__delitem__(self,key)
+        siteRoot = self.getSiteRoot()
+        if IPage.providedBy(item):
+            del siteRoot.valuesByToken[key]
+        if item.__class__.__name__ == 'Politician':
+           del siteRoot.politicians[item.name]  
+        if hasattr(item,'remoteURL'):
+            siteRoot.deleteRemoteURL(item.remoteURL)
+           
+
     def __setitem__(self,  key,item):
         OrderedBTreeContainer.__setitem__(self,key,item)
+        siteRoot = self.getSiteRoot()
         if IPage.providedBy(item):
-           valuesByToken=self.parentBranch().valuesByToken
-           valuesByToken[key]=item     
-        
-    def parentBranch(self):
-        return parentWhichImplements(self,IBranch)
-
+           siteRoot.valuesByToken[key]=item
+           
+        if item.__class__.__name__ == 'Politician':
+           siteRoot.politicians[item.name]  = item
+           
+        if hasattr(item,'remoteURL'):
+            siteRoot.addRemoteURL(item)
+            
                   
     def hasContent(self):
          if len(self.source)<2:
@@ -290,11 +309,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def getName(self):
          return self.__name__
      
-    def preDeleteProcess(self,view):
-        if hasattr(self,'remoteURL'):
-            siteRoot = self.getSiteRoot()
-            siteRoot.deleteRemoteURL(self.remoteURL)
-
 @implementer (IActionNetwork)
 class ActionNetwork(PageBase, PageMixIn):
     webClass='Action'
