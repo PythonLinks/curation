@@ -250,7 +250,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         if IPage.providedBy(item):
             del siteRoot.valuesByToken[key]
         if item.__class__.__name__ == 'Politician':
-           del siteRoot.politicians[item.name]  
+            del siteRoot.politicians[key]  
         if hasattr(item,'remoteURL'):
             siteRoot.deleteRemoteURL(item.remoteURL)
            

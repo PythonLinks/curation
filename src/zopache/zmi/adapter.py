@@ -8,7 +8,7 @@ from slugify import slugify
 from zope.interface import Interface
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.zmi.interfaces import IObjectRetitler
-from zopache.pages.zmiadapter  import LocalBase as BaseClass
+from zopache.zmi.cutcopypaste import BaseClass
 
 
 #GENERIC RETITLER

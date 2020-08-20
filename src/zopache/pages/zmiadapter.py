@@ -3,7 +3,7 @@ import crom
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.core.getroot import getSiteRoot
 from zopache.pages.interfaces import IPage
-from zopache.zmi.cutcopypaste import BaseClass, Cutter, Copier, Deleter
+from zopache.zmi.cutcopypaste import Cutter, Copier, Deleter
 from zopache.zmi.cutcopypaste import Paster, Renamer
 from zopache.pages.interfaces import IPage
 from zopache.pages.uniquename import UniquePageName
@@ -21,26 +21,12 @@ from zopache.core.transactionnote import TransactionNote
 from zopache.core.getroot import getSiteRoot
 from zopache.pages.cache import cache
 
-class LocalBase(BaseClass):
-    def printToken(self,obj, message):
-        root = getSiteRoot(obj)
-        valuesByToken = root.valuesByToken
-        name = obj.__name__
-
-        if name in valuesByToken:
-            print (message, "TOKEN EXITS")
-        else:
-            print (message , " NO TOKEN")
-            
-        
-
-
 
             
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectCopier)
-class CategoryCopier(LocalBase,Copier):
+class CategoryCopier(Copier):
     # YOU NEVER WANT TO COPY CATEGORIES
     #REALLY WANT PROXY OBJECTS
     def allowed(self,item):
@@ -49,24 +35,18 @@ class CategoryCopier(LocalBase,Copier):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectCutter)
-class PageCutter(LocalBase,Cutter):
+class PageCutter(Cutter):
     """Adapter for moving objects between containers
     """
     #IF IT IS A CATEOGRY DELETE FROM VALUESByTOKEN
     def cut(self,view):
-        self.view = view
-        obj=self.context
-        if not self.allowed(obj):
-            self.view.error = obj.__name__ + " CUT IN NOT ALLOWED"
-            return
-        self.deleteToken(obj)
         super().cut(view)
         cache.resetCache(view.context)
         
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectPaster)
-class PagePaster(LocalBase,Paster,UniquePageName):
+class PagePaster(Paster,UniquePageName):
                            
     def paste(self,view):
         self.view = view        
@@ -92,7 +72,7 @@ class ItemNotFoundError(Exception):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectRenamer)
-class PageRenamer(LocalBase,Renamer,UniquePageName):
+class PageRenamer(Renamer,UniquePageName):
     def renameItem(self, oldName, newName,view):
         self.view = view
         item = self.context[oldName]
@@ -114,7 +94,7 @@ class PageRenamer(LocalBase,Renamer,UniquePageName):
 @crom.adapter
 @crom.sources(IPage)
 @crom.target(IObjectDeleter)
-class PageDeleter(Deleter,LocalBase):
+class PageDeleter(Deleter):
     def deleteItem(self,view):
         self.view = view
         contained=self.context

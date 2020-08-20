@@ -46,6 +46,90 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
         max_length = 200,
         default = '',
     )
+    
+    remoteURL = schema.URI(
+        title = "The Politician's Website",
+        description = """Please link to the Politician. Include  'https://'""",
+        missing_value="",
+        required = False,
+    )
+
+    source= schema.Text(
+        title = 'Content',
+        description = """Please describe this politician further. Add relevant links, and links to images.""",
+        required = False,
+    )
+    
+    address= Address(
+        title = "Politician's District Office Address",
+        description = """This is used to 
+                 locate the politician on the map. """,
+           required = True,
+    )
+
+    twitterId= schema.TextLine(
+        title = u'TwitterId (Optional)',
+        description = u'Do not include the @ symbol.',
+        required = False,
+        default = '',
+    )    
+
+    facebookId = schema.URI(
+        title = u'FaceBook URL  (Optional, Not the Group URL.)',
+        description = """Copy and paste the Facebook URL (Not the Group). """,
+        missing_value="",
+        required = False,
+    )
+
+    facebookGroup = schema.URI(
+        title = u'FaceBook Group URL (Optional)',
+        description = """Copy and paste the Facebook GROUP url. """,
+        missing_value="",
+        required = False,
+    )    
+
+
+    eventsPageURL = schema.URI(
+        title = "Events Page URL ",
+        description = """An optional link to their events page.  Please include   'https://'""",
+        missing_value="",
+        required = False,
+    )
+    
+    hasScheduledEvents = schema.Bool(
+	    title = "Does the events page have events scheduled?",
+	    description = """If so, then the pin will light up. """,
+	    required = False,
+	    default = False)    
+    
+    districtURL = schema.URI(
+        title = "The Politician's District Map",
+        description = """Please link to the Politician. Include  'https://'""",
+        required = False,
+        missing_value="",                
+    )    
+
+    phone= schema.TextLine(
+        title = u'Phone Number (Optional)',
+        description = u'Can they call you?',
+        required = False,
+    )
+
+
+    instagramId= schema.TextLine(
+        title = u'Instagram Id (Optional)',
+        description = 'Not the domain name, Just the part after https://instagram.com/',
+        required = False,
+        default = '',
+    )        
+
+    email= Email(
+        title = u'Email Address (Optional)',
+        description = u'Can they email you? Make sure there are no spaces.. ',
+        missing_value = "",
+        required = False,
+    )
+
 
     status = schema.Set(
         value_type = schema.Choice(source = fromList(['Elected',
@@ -83,89 +167,8 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
 #          description = "Which organizations endorsed this politician?",       
 #          )
 #    endorsedBy.mode = 'multiselect'
+
     
-    remoteURL = schema.URI(
-        title = "The Politician's Website",
-        description = """Please link to the Politician. Include  'https://'""",
-        missing_value="",
-        required = False,
-    )
-
-    source= schema.Text(
-        title = 'Content',
-        description = """Please describe this politician further. Add relevant links, and links to images.""",
-        required = False,
-    )
-
-    eventsPageURL = schema.URI(
-        title = "Events Page URL ",
-        description = """An optional link to their events page.  Please include   'https://'""",
-        missing_value="",
-        required = False,
-    )
-    
-    hasScheduledEvents = schema.Bool(
-	    title = "Does the events page have events scheduled?",
-	    description = """If so, then the pin will light up. """,
-	    required = False,
-	    default = False)    
-    
-    districtURL = schema.URI(
-        title = "The Politician's District Map",
-        description = """Please link to the Politician. Include  'https://'""",
-        required = False,
-        missing_value="",                
-    )    
-
-    phone= schema.TextLine(
-        title = u'Phone Number (Optional)',
-        description = u'Can they call you?',
-        required = False,
-    )
-
-    twitterId= schema.TextLine(
-        title = u'TwitterId (Optional)',
-        description = u'Do not include the @ symbol.',
-        required = False,
-        default = '',
-    )    
-
-    facebookId = schema.URI(
-        title = u'FaceBook URL  (Optional, Not the Group URL.)',
-        description = """Copy and paste the Facebook URL (Not the Group). """,
-        missing_value="",
-        required = False,
-    )
-
-    facebookGroup = schema.URI(
-        title = u'FaceBook Group URL (Optional)',
-        description = """Copy and paste the Facebook GROUP url. """,
-        missing_value="",
-        required = False,
-    )    
-    
-
-    instagramId= schema.TextLine(
-        title = u'Instagram Id (Optional)',
-        description = 'Not the domain name, Just the part after https://instagram.com/',
-        required = False,
-        default = '',
-    )        
-
-    email= Email(
-        title = u'Email Address (Optional)',
-        description = u'Can they email you? Make sure there are no spaces.. ',
-        missing_value = "",
-        required = False,
-    )
-    
-    address= Address(
-        title = "Politician's District Office Address",
-        description = """This is used to 
-                 locate the politician on the map. """,
-           required = True,
-    )
-
 class IPolitician(IPoliticianBase):
     pass
 
