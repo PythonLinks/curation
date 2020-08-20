@@ -46,6 +46,8 @@ class IOrganizationBase (Interface):
         source = fromList(['On Ballot',
                            'Petitioning',
                            'Minor Party',
+                           'Independent',
+                           'Write-In',
                            'Unrecognized']),
         title="Ballot Status?",
 

@@ -198,16 +198,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
 
-        siteRoot = self.getSiteRoot()
-           
-        if hasattr(self,'remoteURL'):
-            siteRoot.addRemoteURL(self)
-           
-        if self.__class__.__name__=='Politician':
-           siteRoot.politicians[self.__name__] = self
-           
-        #The Following is not needed.
-        #PageMixIn.postAddProcess(self, view=view)
         
     def recalculateRootJSON(self):
          jsonRoot = self.getSiteRoot()

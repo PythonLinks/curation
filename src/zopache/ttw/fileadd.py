@@ -73,7 +73,7 @@ class AddBanner(AddImage):
 @implementer(ITreeSecurity)
 class AddLogo(AddImage):
     dataValidators = [LogoValidator] 
-    subTitle='Add a Banner'
+    subTitle="Add a Logo or politician's photo."
     ignoreContent = True
     interface = IImage    
     @property

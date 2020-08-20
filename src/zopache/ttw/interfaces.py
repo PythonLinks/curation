@@ -84,7 +84,7 @@ class IFileBase(Interface):
 
 class IImageBase(Interface):    
     title = TextLine(
-        title = u'Image Desciption',
+        title = u'Image Description',
         description = u'Describe this Image, so that the user has some idea what they are looking at. ',
         required = True,
     )
