@@ -104,6 +104,18 @@ class Branch(object):
       if name in self.valuesByToken:
           return self.valuesByToken[name]
 
+      if "." in name:
+          words = name.split(".")
+          if words[0] in self.valuesByToken:
+             context = self
+             length = len(words)
+             for index in range(1,length):
+                 slug = ".".join(words[0:index])
+                 context = context.get(slug,object))
+                 if context == None:
+                     return default
+             return context
+      
       # IF ALL ELSE FAILS
       return default
     

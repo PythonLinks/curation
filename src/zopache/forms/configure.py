@@ -92,7 +92,13 @@ class IForm(Interface):
         default = u'',
     )
 
-
+    tempalteRoot = TextLine(
+        title = "Template Root",
+        description = "What is the name of the page used for site templates?",
+        required = False,
+        default = '',
+    )
+    
 @form_component
 @name ('configure')
 @context(IPublicationRoot)

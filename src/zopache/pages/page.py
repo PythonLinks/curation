@@ -48,7 +48,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         total=0
         if self.countMe():   
             total += 1        
-        for item in self.childCategories():
+        for item in self.realChildCategories():
             if IPage.providedBy(item):
                     total+=item.countLeaves()
         self.branchSize=total
@@ -93,7 +93,16 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         for item in self.values():
             if (IPage.providedBy (item) and item.webApproved):
                result.append (item)
+            if (IImaginary.providedBy (item) and item.webApproved):
+               result.append (item)               
         return result
+
+    def realChildCategories(self):
+        result =[]
+        for item in self.values():
+            if (IPage.providedBy (item) and item.webApproved):
+               result.append (item)
+        return result    
     
     def canView(self,view):
         return True

@@ -64,8 +64,11 @@ class Organization  (GeoBase,LocationContainer,Region):
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
-    webApproved = False    
-
+    webApproved = False
+    #USED SO IT LOOKS LIKE A POLITICIAN
+    #TO THE TEMPLATES
+    def proxyValues():
+        return self.values()
 
 
 

@@ -21,7 +21,7 @@ class Contents(object):
 
     def contents(self):
         result = []
-        for item in self.context.values():
+        for item in self.context.realValues():
             result.append (Adapter(item,self))
         return result
     
