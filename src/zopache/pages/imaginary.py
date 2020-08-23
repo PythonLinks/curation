@@ -1,27 +1,37 @@
 from zope.interface import Interface, implementer
-
-class IImaginary(Interface)
-   pass
+from dolmen.container import IBTreeContainer
+from zopache.ttw.interfaces import IImage
+from zopache.pages.iimaginary import IImaginary, IImaginaryBTree
+from zopache.pages.interfaces import IPage
 
     
-@implementer IImaginary
+@implementer (IImaginary)
 class Imaginary(object):
 
     realObject = None
     def __init__(self,parent,realObject):
         self.__parent__ = parent
         self.__name__ = parent.__name__ + '.' + realObject.__name__
+        self.realObject = realObject
 
+    def html(self):
+        return self.realObject.html()
+    def childCategories(self):
+        return []
+    
+    def isImaginary(self):
+       return True
+    
     def getTitle(self):
-        return realObject.title
+        return self.realObject.title
     def getDescription(self):
-        return realObject.description
+        return self.realObject.description
     def getSource(self):
-        return realObject.source
-    def getWebCLass(self):
-        return realObject.webClass
+        return self.realObject.source
+    def getWebClass(self):
+        return self.realObject.webClass
     def getWebApproved(self):
-        return realObject.webApproved     
+        return self.realObject.webApproved     
     
     title = property(getTitle)
     description = property(getDescription)
@@ -30,12 +40,47 @@ class Imaginary(object):
     webApproved = property(getWebApproved)
     
 
-@implementer ImaginaryBTree    
-class ImaginaryBTree(Imaginary):
+@implementer (IImaginaryBTree)
+class ImaginaryBTree(Imaginary,dict):
+    def __init__(self, parent,realObject):
+       Imaginary.__init__(self, parent,realObject)
+       dict.__init__(self)
+
+                 
+    def getImaginary(self, name,default):
+        """Return the named object, or raise ``KeyError`` if the object
+           is not found.
+        """
+        try:
+           return self.__getitem__(name)
+        except(KeyError):
+           return default
+    
+    def __getitem__(self,name):
+
+           item = self.realObject [name]
+           if IImage.providedBy(item):
+               return item
+           if IBTreeContainer.providedBy(item):              
+              return ImaginaryBTree(self,item)
+           else:
+              return Imaginary(self,item)
+
+        
     def values(self):
-        retult = []
+        result = []
+        realObject = self.realObject
         for item in realObject.values():
            result.append(Imaginary(self,item))
-           
+        return result
+    
     def realValues(self):
         return []
+
+    def childCategories(self):
+        result =[]
+        for item in self.values():
+            realObject = item.realObject
+            if (IPage.providedBy (realObject) and realObject.webApproved):
+               result.append (item)
+        return result
