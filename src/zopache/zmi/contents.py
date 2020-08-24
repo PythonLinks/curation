@@ -10,6 +10,7 @@ from zopache.zmi.interfaces import IObjectPaster, IObjectDeleter
 from zopache.crud.utilities import title_or_name
 from zopache.zmi.cutcopypaste import Cutter, Paster, Copier, Deleter
 from .adapter import ZMIAdapter as Adapter
+from zopache.pages.iimaginary import IImaginary
 
 class Contents(object):
     error = ''
@@ -21,8 +22,9 @@ class Contents(object):
 
     def contents(self):
         result = []
-        for item in self.context.realValues():
-            result.append (Adapter(item,self))
+        for item in self.context.values():
+            if not IImaginary.providedBy(item):
+               result.append (Adapter(item,self))
         return result
     
     #Check if any ids in a WebOb request.POST

@@ -52,6 +52,12 @@ class File(Leaf,FileBase):
 
 class ImageBase(FileBase): 
     icon="ttwicons/Image.svg"
+    
+    #JUST A QUICK BUG FIX AVOIDANCE
+    def get(self,arg):
+        print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
+        return self
+    
     def getHTML(self, view=None, style = ''):
         url = view.absoluteURL(self)
 

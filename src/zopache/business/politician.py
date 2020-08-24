@@ -1,5 +1,7 @@
 from zope.interface import implementer
 
+from dolmen.container import IBTreeContainer
+
 from zopache.business.company import GeoBase
 from zopache.pages.location import LocationLeaf
 from zopache.business.ipolitician import (IPolitician,
@@ -7,45 +9,16 @@ from zopache.business.ipolitician import (IPolitician,
                                           IPoliticiansSite)
 from zopache.pages.page import SiteRoot
 from zopache.business.region import Region
-
+from zopache.pages.interfaces import IPage
+from zopache.business.imaginarypage import ImaginaryPage
+    
 
 @implementer (IPolitician)
-class Politician (GeoBase,LocationLeaf):
+class Politician (ImaginaryPage,GeoBase,LocationLeaf):
     localOrNational = ""
     webClass = "Politician"
     clientClass = "category"
    
-
-    def proxyValues(self):
-       real = list(self.values())
-       webClass = getWebClass  **
-       imaginary = self.proxyChildren(webClass)
-       return real + imaginary
-       
-    def proxyChildren(self,origin):
-       result = []
-       For item in origin():
-           if ITemplate.providedBy (item):
-           result.append(Imaginary(self,item)):
-       return result                
-
-
-    #I THINK THIS IS NEVER USED. 
-    def get(self,name,default = None):
-       result = super().get(name,default)
-       if result:
-          return result
-       
-       siteRoot = self.getSiteRoot()
-       templateRoot = siteRoot[siteRoot.templateRoot]
-       slugs = name.split(".")
-       if name in templateRoot:
-          item = templateRoot [name]
-          if IBTreeContainer.providedBy(item):              
-             return ImaginaryBTree(name,item)
-          else:
-             return Imaginary(name,item)              
-       return default
 
 @implementer (IPoliticiansSite)
 class PoliticiansSite (GeoBase,LocationLeaf,SiteRoot):

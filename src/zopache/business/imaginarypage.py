@@ -19,6 +19,13 @@ class ImaginaryPage(object):
                result.append (item)
         result += self.imaginaryCategories()
         return result
+
+    def realCategories(self):
+        result =[]
+        for item in self.values():
+            if (IPage.providedBy (item) and item.webApproved):
+               result.append (item)
+        return result
     
     def imaginaryCategories(self):
         result = []

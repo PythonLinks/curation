@@ -141,6 +141,7 @@ class Utilities (object):
     def debug(self,*args):
         import pdb;pdb.set_trace()
         fred = 1
+        self.context.childCategories()
         if args:
           fred = args
           item = args [0]

@@ -4,6 +4,7 @@ from dolmen.container import IBTreeContainer
 from pydoc import locate
 from zopache.core.interfaces import IVideo
 
+
 class Tests(object):
     
     def hasMembers(self):
@@ -49,9 +50,11 @@ class Tests(object):
         return self.hasTrueAttribute(attribute)
     
     def hasTrueAttribute(self,attribute):
-        if (hasattr(self.context, attribute) and
-            getattr(self.context,attribute)):
-            return True
+        
+        if hasattr(self.context, attribute):
+            value = getattr(self.context,attribute,None)
+            if value:
+               return True
         return False
 
     def implements (self,dottedName):
@@ -68,7 +71,19 @@ class Tests(object):
        return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
 
     def isBTreeContainer(self,*args):
-        if (len (args)==0):
-           return  IBTreeContainer.providedBy(self.context)    
-        return  IBTreeContainer.providedBy(args[0])    
+        item = self.context if len(args)==0 else args [0]        
+        return  IBTreeContainer.providedBy(item)
+
+    #SHOULD BE USING
+    #from zopache.pages.iimaginary import IImaginaryBTree
+    #BUT THAT BREAKS THE BUILD
+    def isContainer(self,*args):
+        item = self.context if len(args)==0 else args [0]        
+        if IBTreeContainer.providedBy(item):
+            return True
+        if hasattr(item,'isImaginary') and item.isImaginary():
+            return True
+        return False
+    
+        
     

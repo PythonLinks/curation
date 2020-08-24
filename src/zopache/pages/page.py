@@ -23,6 +23,7 @@ from collections import defaultdict
 from zopache.core.interfaces import ICountable
 from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink,IActionNetwork
+from zopache.pages.iimaginary import IImaginary, IImaginaryBTree
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
@@ -93,16 +94,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         for item in self.values():
             if (IPage.providedBy (item) and item.webApproved):
                result.append (item)
-            if (IImaginary.providedBy (item) and item.webApproved):
-               result.append (item)               
         return result
 
-    def realChildCategories(self):
-        result =[]
-        for item in self.values():
-            if (IPage.providedBy (item) and item.webApproved):
-               result.append (item)
-        return result    
     
     def canView(self,view):
         return True
@@ -308,6 +301,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def getName(self):
          return self.__name__
      
+    def allValues(self):
+        return self.values()
+    
 @implementer (IActionNetwork)
 class ActionNetwork(PageBase, PageMixIn):
     webClass='Action'

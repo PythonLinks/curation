@@ -16,6 +16,7 @@ from zopache.pages.interfaces import IRootPage
 from zopache.ttw.interfaces import IWebClass, IProducts
 from zopache.ttw.interfaces import IInternalPrincipal
 #from zopache.business.ipolitician import IPolitician
+from zopache.pages.iimaginary import IImaginary
 
 @implementer (IBranch)
 class Branch(object):
@@ -83,6 +84,9 @@ class Branch(object):
 
 
     def indexBranch(self,tree,branch,itemType=ICanonical):
+        if IImaginary.providedBy(branch):
+            return
+        
         for item in branch.values():
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
@@ -109,16 +113,17 @@ class Branch(object):
           if words[0] in self.valuesByToken:
              context = self
              length = len(words)
+             context = self.get(words[0],default = object)
              for index in range(1,length):
-                 slug = ".".join(words[0:index])
-                 context = context.get(slug,object))
-                 if context == None:
+
+                 shortName = words[index]
+                 context = context.getImaginary(shortName,default = default)
+                 if context == default:
                      return default
              return context
       
       # IF ALL ELSE FAILS
       return default
-    
 
     def checkName(self, name, object):
         """See zope.container.interfaces.INameChooser

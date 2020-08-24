@@ -11,6 +11,7 @@ from zopache.pages.page import Page
 from zopache.business.geocoding import GeoCodeObject
 from zopache.business.subscribe import Member
 from zopache.business.geocoding import GeoCodeObject
+from zopache.business.imaginarypage import ImaginaryPage
 
 class VeryBase (Member):
     hidden = False
@@ -60,18 +61,15 @@ class OnlineOrganization  (Base):
 
 from zopache.business.region import Region    
 @implementer (IOrganization)
-class Organization  (GeoBase,LocationContainer,Region):
+class Organization  (ImaginaryPage,
+                     GeoBase,
+                     LocationContainer,
+                     Region):
+    
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
     webApproved = False
-    #USED SO IT LOOKS LIKE A POLITICIAN
-    #TO THE TEMPLATES
-    def proxyValues():
-        return self.values()
-
-
-
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
@@ -81,7 +79,8 @@ from zopache.business.subscribe import Member
 from zopache.pages.location import MapBase
 
 @implementer (IMapOrganization)
-class MapOrganization(GeoBase,
+class MapOrganization(ImaginaryPage,
+                      GeoBase,
                       MapBase,
                       Member,
                       Page,

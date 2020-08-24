@@ -25,7 +25,7 @@ from zopache.core.getroot import getSiteRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
 from zopache.core.transactionnote import TransactionNote
-from zopache.ttw.file import Image
+from zopache.ttw.file import BTreeImage
 
 class Cancel(Action):
     """Cancel the current form and return on the default content view.
@@ -134,7 +134,7 @@ class Add(Action, UniqueName, TransactionNote):
     def setImage(self,imageURL):
         try:
             response = requests.get(imageURL)            
-            zodbImage =Image()
+            zodbImage =BTreeImage()
             zodbImage.contentType=response.headers['content-type']            
             content = response.content
             zodbImage.data = content

@@ -92,7 +92,7 @@ class IForm(Interface):
         default = u'',
     )
 
-    tempalteRoot = TextLine(
+    templateRoot = TextLine(
         title = "Template Root",
         description = "What is the name of the page used for site templates?",
         required = False,
