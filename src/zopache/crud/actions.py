@@ -266,7 +266,7 @@ class Update(Action,TransactionNote):
             return FAILURE
         apply_data_event(form.fields, form.getContentData(), data)
         form.message(_(u"URL updated"))
-        
+        breakpoint()        
         if hasattr(form,'postProcess'):        
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):

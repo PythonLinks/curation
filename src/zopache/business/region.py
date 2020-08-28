@@ -54,9 +54,7 @@ class Region(object):
             politicians = []
             for parent in parents:
                 for item in parent.values():
-                    print (parent.__name__, item.__name__)
                     if IPolitician.providedBy(item):
-                        print (item.__name__)
                         politicians.append(item)
             return politicians    
 

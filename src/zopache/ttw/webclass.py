@@ -35,7 +35,7 @@ class BaseWebClass (Container):
     def postAddProcess(self,view=None):
         getProducts(self).indexTree()
         
-    def postProcess(self):
+    def postProcess(self,view = None):
         pass
     
 @implementer(IMoveableWebClass)

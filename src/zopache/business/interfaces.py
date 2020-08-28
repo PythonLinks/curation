@@ -39,6 +39,14 @@ class IOrganizationOrPolitician(Interface):
         required = False,
         missing_value ='',
     )
+
+    donationPageURL = schema.URI(
+        title = u'Where can one donate money??',
+        description = """ Link to where they can donate money. Please
+   Include  'https://'""",
+        required = False,
+        missing_value ='',
+    )    
     
 class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
@@ -281,13 +289,8 @@ class IOnlineOrganization(IOrganizationBase,
 
 class IOrganization(IOrganizationBase,
                     ICompanyOrOrganization,
-                    ISocialMedia,ILocationContainer):
-    isGlobal = schema.Bool(
-	    title = "Is this a global organization?",
-	    description = """Global Organizations are 
-                              listed in the table below the map. """,
-	    required = False,
-	    default = False)
+                    ISocialMedia,ILocationContainer,
+                    IOrganizationOrPolitician):
     
     address= Address(
         title = u'Organization Address',

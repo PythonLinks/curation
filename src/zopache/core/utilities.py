@@ -70,17 +70,20 @@ class Utilities (object):
   
     def getDefaultImage(self):
         context = self.context
-        
+        socialMediaImage = context.get('SocialMediaImage',None)
+        if socialMediaImage != None:
+            return socialMediaImage
+          
         banner = context.get('Banner',None)
-        if banner:
+        if banner != None:
             return banner
         
         logo = context.get('Logo',None)
-        if logo:
+        if logo != None:
             return logo
 
         image = self.parentalAcquire('SocialMediaImage')
-        if image:
+        if image != None:
            return image
        
         return  self.parentalAcquire('Logo')

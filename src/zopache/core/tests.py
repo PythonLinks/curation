@@ -46,17 +46,18 @@ class Tests(object):
     def isDeveloper(self):
         return self.hasPermission('Develop')    
 
-    def hasValue(self,attribute):
-        return self.hasTrueAttribute(attribute)
-    
-    def hasTrueAttribute(self,attribute):
-        
-        if hasattr(self.context, attribute):
+    def hasValue(self,attribute,*args):
+        item = self.context if len(args)==0 else args [0]
+        if hasattr(item, attribute):
             value = getattr(self.context,attribute,None)
             if value:
                return True
         return False
 
+    #I DO NOT THINK THIS IS USED ANYWHERE
+    #def hasTrueAttribute(self,attribute):
+    #    return self.hasValue(attribute)
+    
     def implements (self,dottedName):
         return self.itemImplements(self.context,dottedName)
     

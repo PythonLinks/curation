@@ -96,6 +96,14 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
         required = False,
     )
     
+    donationPageURL = schema.URI(
+        title = u'Where can one donate money??',
+        description = """ Link to where they can donate money. Please
+   Include  'https://'""",
+        required = False,
+        missing_value ='',
+    )    
+    
     hasScheduledEvents = schema.Bool(
 	    title = "Does the events page have events scheduled?",
 	    description = """If so, then the pin will light up. """,

@@ -48,7 +48,20 @@ class IEdit(Interface):
         required = False,
         default = u'',
     )
-
+    twitterId= schema.TextLine(
+        title = u'TwitterId (Optional)',
+        description = u'Do not include the @ symbol.',
+        required = False,
+        default = '',
+    )
+    
+    preferredmail= Email(
+        title = u'Email Address (Optional)',
+        description = u'Can they email you? Make sure there are no spaces. ',
+        required = False,
+        missing_value = '',
+    )
+    
     remoteURL= schema.URI(
         title = 'URL',
         description = """A URL for this person. 
