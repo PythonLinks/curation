@@ -1,9 +1,14 @@
+from zope.interface import implementer
+
 from zopache.core.relatives import Parents
 from zopache.business.ipolitician import IPolitician
 from zopache.business.interfaces import IOrganization
 from zopache.business.ipolitician import IPolitician
+from zopache.pages.location import LocationContainer
+from zopache.business.interfaces import IRegion
 
-class Region(object):
+@implementer(IRegion)
+class Region(LocationContainer):
     def parentsWhichImplement(self,interface):
            item = self
            result=[]
@@ -18,7 +23,10 @@ class Region(object):
                
     def getListPoliticians(self):
         return self.getPoliticians(False)
-       
+
+    def hasFutureEvent(self):
+        return False
+    
     def getPoliticians (self,isMap):        
         parents = self.parentsWhichImplement(IOrganization)
         parents.reverse()

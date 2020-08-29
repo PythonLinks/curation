@@ -60,6 +60,18 @@ class AddCompany(AddAll):
     factory = Company
     title = "Add a Company"
 
+from zopache.business.interfaces import IRegion
+from zopache.business.region import Region
+@view_component
+@name('addRegion')
+@target(IView)
+@context(IPage)    
+class AddRegion(AddAll):
+    interface = IRegion
+    factory = Region
+    title = "Add a Region"
+
+    
 @view_component
 @name('addOrganization')
 @title("Add Organization")

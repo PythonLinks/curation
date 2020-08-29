@@ -63,7 +63,6 @@ from zopache.business.region import Region
 @implementer (IOrganization)
 class Organization  (ImaginaryPage,
                      GeoBase,
-                     LocationContainer,
                      Region):
     
     interface = IOrganization

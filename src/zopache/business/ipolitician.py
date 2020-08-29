@@ -19,7 +19,7 @@ items = [ ("sunshineMovement", "Sunshine Movemement"),
           ]
 
 terms = []
-for item in items:
+bfor item in items:
     new = SimpleTerm(value=item[0],
                      token=item [0],
                      title=item[1] )

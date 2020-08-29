@@ -15,12 +15,12 @@ from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zope.schema._field import Choice
 from zope.schema import Text, Set, List
 from zopache.core.viewdecorators import *
-from zopache.crud.forms import BaseEditForm
+from zopache.crud.forms import EditForm
 from zopache.ttw.interfaces import IInternalPrincipal, ISupport
 from zopache.ttw.treewidget import TreeField
 from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
-
+from zopache.application.choices import fromList
 
 
 def possibleItems():
@@ -42,19 +42,52 @@ def possibleItems():
 
 
 class IEdit(Interface):
+    publicName= schema.TextLine(
+        title = u'Your Public Name(optional)',
+        description = 'Privacy is important.',
+        required = False,
+        default = '',
+    )
+    
     description= schema.Text(
         title = 'Description',
         description = """A brief introduction for this person.  """,
         required = False,
         default = u'',
     )
+    preferredChannel = schema.Choice(
+        source = fromList(['Phone Call',
+                                                      'SMS',
+                                                      'Email',                                                                       'Twitter',
+                                                      'Facebook',
+                                                      'Signal',
+                                                      'Telegram']),
+        title="Preferred Contact Channel",
+        description= "How do you like to be contacted?",
+        required = False,)
+
+
     twitterId= schema.TextLine(
         title = u'TwitterId (Optional)',
         description = u'Do not include the @ symbol.',
         required = False,
         default = '',
     )
-    
+
+    facebookId= schema.TextLine(
+        title = 'Facebook Page (Optional)',
+        description = "Please include 'https://'.",
+        required = False,
+        default = '',
+    )
+
+    phoneNumber= schema.TextLine(
+        title = 'Phone Number(Optional)',
+        description = "This one should be obvious",
+        required = False,
+        default = '',
+    )
+
     preferredmail= Email(
         title = u'Email Address (Optional)',
         description = u'Can they email you? Make sure there are no spaces. ',
@@ -69,52 +102,17 @@ class IEdit(Interface):
         required = False,
         missing_value = "",
     )
-    
-    source= schema.Text(
-        title = u'Content',
-        description = u'This is the main content for this page',
-        required = False,
-        default = u'',
-    )
 
-
-    """    
-    professionalURL = TextLine(
-        title="Your Proessinal URL",
-        description="Your professional website, or Linkedin page.",
-        required=False,
-        default=u'',
-        missing_value=u'')
-
-
-    
-
-    data = FileField( title ="Or Post Your CV or Resume",
-                      description = "It is only shown to those whom you allow to see it..",
-                      required = True 
-    )
-    
-    who = Set(
-        value_type =Choice(source=possibleItems()),
-        title="View Permissions",
-        description= "Who is allowed to see your information?",
-        required = False)                
-
-    where=TreeField(
-        title="Location Permissions",
-        description= "Where can people see your information?",
-        required = False,
-    )
-    """
 
 @form_component
-#@name (u'edit')
+@name (u'edit')
 @context(IInternalPrincipal)
-class EditPrincipal(BaseEditForm):
+class EditPrincipal(EditForm):
     title = 'Your Profile'
     interface = IEdit
     actions = Actions(formactions.SaveAndRoot("Save","Save"),
                           formactions.Cancel("Cancel","Cancel"))
+
     def acquireTitle(self):
         return 'Your Profile'
 
@@ -125,58 +123,6 @@ class EditPrincipal(BaseEditForm):
            return 
         raise Unauthorized()
 
-
-@form_component
-@name (u'aceedit')
-@context(IInternalPrincipal)
-@implementer(ITreeSecurity)
-class AceEditPrincipal(AceEdit):
-    title = 'Ace Edit Your Profile'
-    interface = IEdit
     @property
     def fields(self):
         return  Fields(self.interface)
-    
-@form_component
-@name (u'ckedit')
-@context(IInternalPrincipal)
-@implementer(ITreeSecurity)
-class CkEditPrincipal(CkEdit):
-    title = 'CkEdit Your Profile'
-    interface = IEdit
-    @property
-    def fields(self):
-        return  Fields(self.interface)
-    
-@form_component
-#@name (u'support')
-@context(IInternalPrincipal)
-@title("Edit")
-class EditSupport (EditPrincipal):
-    interface = IEdit
-
-    preamble = """ If you like this website, please support the business 
-                   model by checkng one of the following two boxes. """
-    postamble = """What is 
-                   the business model?  I am a recruiter.  Instead of spamming 
-                   people, I publish good information, earn their respect, 
-                   and if I see a job they would like, I recruit them. By 
-                   checking one of the GDPR boxes above you give me 
-                   permission to do so.  
-                   In practice I already have GDPR permission for over 
-                   200 candidates, what I am short on is clients.    
-               """
-    def acquireTitle(self):
-        return 'GDPR Permissions'
-    
-    subTitle = " "
-
-    actions = Actions(formactions.SaveAndViewURL("Save","Save"),
-                          formactions.Cancel("Cancel","Cancel"))    
-
-    def newURL(self,new):
-        if self.context.hirePermission:
-            newURL = '/' + self.context.__name__ + "/edit"
-        else:
-            newURL = '/'
-        return newURL

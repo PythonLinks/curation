@@ -28,7 +28,8 @@ class ICity (ILocationContainer):
     )
     
 
-
+class IRegion(ILocationContainer):
+    pass
 
 class IOrganizationOrPolitician(Interface):
     
