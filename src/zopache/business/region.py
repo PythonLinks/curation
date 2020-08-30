@@ -27,6 +27,14 @@ class Region(LocationContainer):
     def hasFutureEvent(self):
         return False
     
+    def isGreen(self,item):
+        if hasattr(item,'affiliation'):
+            if item.affiliation == 'Independent':
+                return False
+            if item.affiliation == 'Democrat':
+                return False
+        return True
+    
     def getPoliticians (self,isMap):        
         parents = self.parentsWhichImplement(IOrganization)
         parents.reverse()
@@ -41,7 +49,8 @@ class Region(LocationContainer):
             nationalPoliticians = []
             for item in allPoliticians:
                   if  'National' in item.localOrNational:
-                      nationalPoliticians.append(item)
+                      if self.isGreen(item):
+                         nationalPoliticians.append(item)
             return nationalPoliticians 
 
         #FOR STATE AND LOCAL MAPS FIRST GET THE TWO NATIONAL
@@ -54,7 +63,8 @@ class Region(LocationContainer):
             children = self.getCompaniesRecursively(children)
             for item in children:
                 if IPolitician.providedBy(item):
-                   politicians.append(item)
+                      if self.isGreen(item):                    
+                         politicians.append(item)
             return politicians
         
         #FOR LOCAL PAGES 

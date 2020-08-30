@@ -19,7 +19,7 @@ items = [ ("sunshineMovement", "Sunshine Movemement"),
           ]
 
 terms = []
-bfor item in items:
+for item in items:
     new = SimpleTerm(value=item[0],
                      token=item [0],
                      title=item[1] )
@@ -156,6 +156,8 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
     affiliation = schema.Choice(
         source = fromList(['Green Party',
                            'Independent',
+                           'Socialist',
+                           'Democrat',                           
                            'Write In']),
         title="Ballot Status",
         description= "One of three.",
