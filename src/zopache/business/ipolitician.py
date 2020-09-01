@@ -96,7 +96,7 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
         required = False,
     )
     
-    donationPageURL = schema.URI(
+    donationsPageURL = schema.URI(
         title = u'Where can one donate money??',
         description = """ Link to where they can donate money. Please
    Include  'https://'""",

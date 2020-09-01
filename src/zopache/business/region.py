@@ -7,8 +7,9 @@ from zopache.business.ipolitician import IPolitician
 from zopache.pages.location import LocationContainer
 from zopache.business.interfaces import IRegion
 
-@implementer(IRegion)
-class Region(LocationContainer):
+class RegionBase(LocationContainer):
+
+    
     def parentsWhichImplement(self,interface):
            item = self
            result=[]
@@ -24,8 +25,6 @@ class Region(LocationContainer):
     def getListPoliticians(self):
         return self.getPoliticians(False)
 
-    def hasFutureEvent(self):
-        return False
     
     def isGreen(self,item):
         if hasattr(item,'affiliation'):
@@ -101,3 +100,9 @@ class Region(LocationContainer):
                 result = result + item.getOrganizations()
         return result
         
+    
+@implementer(IRegion)
+class Region(RegionBase):
+
+    def hasFutureEvent(self):
+        return False

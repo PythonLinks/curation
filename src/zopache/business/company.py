@@ -59,11 +59,11 @@ class OnlineOrganization  (Base):
     clientClass = "Category"
     webApproved = False
 
-from zopache.business.region import Region    
+from zopache.business.region import RegionBase
 @implementer (IOrganization)
 class Organization  (ImaginaryPage,
                      GeoBase,
-                     Region):
+                     RegionBase):
     
     interface = IOrganization
     webClass = "Organization"
@@ -83,7 +83,7 @@ class MapOrganization(ImaginaryPage,
                       MapBase,
                       Member,
                       Page,
-                      Region):
+                      RegionBase):
 
     interface = IMapOrganization
     webClass = 'SmallParty'

@@ -8,7 +8,6 @@ from zopache.business.ipolitician import (IPolitician,
                                           IAddPolitician,
                                           IPoliticiansSite)
 from zopache.pages.page import SiteRoot
-from zopache.business.region import Region
 from zopache.pages.interfaces import IPage
 from zopache.business.imaginarypage import ImaginaryPage
     

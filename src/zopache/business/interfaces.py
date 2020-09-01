@@ -1,4 +1,4 @@
-from zope import schema
+fipolirom zope import schema
 
 from zope.interface import Interface
 
@@ -41,7 +41,7 @@ class IOrganizationOrPolitician(Interface):
         missing_value ='',
     )
 
-    donationPageURL = schema.URI(
+    donationsPageURL = schema.URI(
         title = u'Where can one donate money??',
         description = """ Link to where they can donate money. Please
    Include  'https://'""",
