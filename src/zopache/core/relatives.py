@@ -55,11 +55,29 @@ class Parents(object):
         return parents
 
 
+    def parentsUpToSubDomain(self,item):
+        domain = self.getDomain()
+        splitDomain= domain.lower().split(".")
+        if len(splitDomain) == 3:
+           siteRootName = splitDomain[0]
+        else:
+           siteRootName = ""
+        parents=[]
+        while (item!=None):
+           parents.append(item)
+           if item.__name__ == siteRootName :
+              break     
+           if IPublicationRoot.providedBy(item):
+              break
+           item=item.__parent__
+        parents.reverse()   
+        return parents
+
+
     def parentsUpToSiteRoot(self,item=None):
         if item ==None:
            item = self.context 
         parents = self.reversedParentsUpToSiteRoot(item)
-        parents.reverse()
         return parents
     
     def parentsUpToZodbRoot(self, item = None):

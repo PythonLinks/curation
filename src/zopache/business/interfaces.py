@@ -1,4 +1,4 @@
-fipolirom zope import schema
+from zope import schema
 
 from zope.interface import Interface
 
