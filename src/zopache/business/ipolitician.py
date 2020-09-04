@@ -75,8 +75,8 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
     )    
 
     facebookId = schema.URI(
-        title = u'FaceBook URL  (Optional, Not the Group URL.)',
-        description = """Copy and paste the Facebook URL (Not the Group). """,
+        title = u'FaceBook Page URL  (Optional)',
+        description = """Copy and paste the Facebook Page URL. """,
         missing_value="",
         required = False,
     )
@@ -88,6 +88,12 @@ class IPoliticianBase (ILocationLeaf,IFollow,IOrganizationOrPolitician):
         required = False,
     )    
 
+    youTubeChannelURL = schema.URI(
+        title = u'YouTube Channel URL  (Optional)',
+        description = """Copy and paste the YouTube Chanel  URL. """,
+        missing_value="",
+        required = False,
+    )
 
     eventsPageURL = schema.URI(
         title = "Events Page URL ",

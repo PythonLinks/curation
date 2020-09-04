@@ -252,19 +252,25 @@ class ISocialMedia(Interface):
     )
     
     facebookId = schema.URI(
-        title = u'FaceBook Id (Optional)',
-        description = """Copy and paste the Facebook URL (Not the Group). """,
+        title = u'FaceBook Page URL (Optional)',
+        description = """Copy and paste the Facebook page URL. """,
         missing_value="",
         required = False,
     )
 
     facebookGroup = schema.URI(
         title = u'FaceBook Group (Optional)',
-        description = """Copy and paste the Facebook GROUP url. """,
+        description = """Copy and paste the Facebook GROUP URL. """,
         missing_value="",
         required = False,
     )
-    
+
+    youTubeChannelURL = schema.URI(
+        title = u'YouTube Channel URL  (Optional)',
+        description = """Copy and paste the YouTube Chanel  URL. """,
+        missing_value="",
+        required = False,
+    )    
 
     email= Email(
         title = u'Email Address (Optional)',
