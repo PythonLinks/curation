@@ -300,7 +300,13 @@ class IHTMLClass(ICkHTML, IAceHTML, IIndexHTML,ILeaf):
     pass
 
 class IAceHTMLClass(IAceHTML, IIndexHTML,ILeaf):
-    pass
+    layout = schema.DottedName(
+        title = u'Layout',
+        max_dots=1,
+         missing_value=u'',
+        description = u'Renders the layout, with this html as the content.',
+        required = False,
+    )
 
 class IAceCMSClass(IAceHTMLClass):
     pass

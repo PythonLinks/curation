@@ -43,7 +43,8 @@ class Publisher (DawnlightPublisher):
                 splitDomain= domain.lower().split(".")
                 if len(splitDomain) == 3:
                    siteRootName = splitDomain[0]
-                   context = context[siteRootName]
+                   if siteRootName in context:
+                      context = context[siteRootName]
                 
                  
         traverser=Traverser(self.view_locator)

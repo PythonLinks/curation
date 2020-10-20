@@ -166,8 +166,7 @@ class Index(View,Breadcrumbs):
 
     def page(self,name):
         url =  name 
-        return url
-        
+        return url        
         
     def render(self):
         #In the case of /index/index
@@ -180,7 +179,20 @@ class Index(View,Breadcrumbs):
                return ('Your templates recursion exceeded 50 calls'+
                       self.zopacheTemplate.source)               
 
-
+@view_component
+@name('index')
+@context(IAceHTMLClass)
+class AceObjectIndex(Index):           
+    def render(self):
+        content = Index.render(self)
+        zopacheTemplate = self.zopacheTemplate
+        layout = zopacheTemplate.layout
+        if layout == "":
+            return content
+        template = self.parentalAcquire(layout, context = zopacheTemplate)
+        view = self
+        return template.__call__(view,content=content)
+    
 @view_component
 @name('index')
 @context(IAceCMSClass)
@@ -246,8 +258,7 @@ class BaseHTMLEditForm(BaseEditForm):
         
 class BaseAceEdit(AceScripts,BaseHTMLEditForm):
     __name__ = "aceedit"
-    subTitle="Ace Edit this object"
-            
+    subTitle="Ace Edit this object" 
 
     def footerScripts(self):
         return AceScripts.footerScripts(self)
@@ -259,7 +270,7 @@ class BaseAceEdit(AceScripts,BaseHTMLEditForm):
 class AceEdit(BaseAceEdit):
     pass            
         
-#HERE IS THE DEVELOPER ACE EDIT FORM
+#REGULAR ACE HTML FORM
 @form_component
 @context(IAceHTML)
 @name("aceedit")
@@ -267,6 +278,13 @@ class AceEdit(BaseAceEdit):
 class AceEditForm(AceEdit):
           pass
 
+#ACE HTML FOR FOR THE ACE HTML CLASS. 
+@form_component
+@context(IAceHTMLClass)
+@name("aceedit")
+@implementer (ITreeSecurity)
+class AceEditForm(AceEdit):
+    interface = IAceHTMLClass
 
 #AND HERE IS THE DEMO ACE EDIT FORM
 @form_component

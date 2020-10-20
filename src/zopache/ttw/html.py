@@ -161,8 +161,16 @@ class HTML(TrustedHTML,Leaf):
 
 @implementer(IAceHTMLClass)
 class AceHTML(TrustedHTML,Leaf):
+    template = ""    
     icon="ttwicons/HTML.svg"
-    
+    """
+    def __call__(self,view,**kwargs):
+        content = TrustedHTML.__call__(self,view,**kwargs)
+        if self.template == "":
+            return content
+        template = parentalAcquire (self)[self.template]
+        return template.__call__(view,content=content,**kwargs)
+    """ 
 @implementer(IAceCMSClass)
 class AceCMSHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
