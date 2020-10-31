@@ -7,6 +7,7 @@ from zopache.core import View
 from zopache.core.breadcrumbs import Breadcrumbs
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions, i18n as _
+from zopache.crud import update as updateactions
 from . import actions  as ttwactions
 from zopache.core.interfaces import ITreeSecurity
 from chameleon import PageTemplate
@@ -186,6 +187,8 @@ class AceObjectIndex(Index):
     def render(self):
         content = Index.render(self)
         zopacheTemplate = self.zopacheTemplate
+        if not hasattr(zopacheTemplate,'layout'):
+            return content
         layout = zopacheTemplate.layout
         if layout == "":
             return content
@@ -242,7 +245,7 @@ class BaseHTMLEditForm(BaseEditForm):
 
     def setActions(self):        
         action1=ttwactions.SaveAndAceEdit("Save","Save")
-        action2=formactions.SaveAndView("Save  and View","Save -> View")
+        action2=updateactions.SaveAndView("Save  and View","Save -> View")
 
         action3=ttwactions.SaveAndCkEdit(
                 "Save and CkEdit","Save -> ckEdit")
@@ -311,10 +314,11 @@ class BaseCkEdit(CkScripts,BaseHTMLEditForm):
 class CkEdit(BaseCkEdit):
     def setActions(self):
         self.actions = Actions(
-              formactions.SaveAndView(_("Save  and View","Save -> View")),
+              updateactions.SaveAndView(_("Save  and View","Save -> View")),
               ttwactions.SaveAndCkEdit(_("Save","Save")),
               ttwactions.SaveAndAceEdit(_("Save  and AceEdit","Save -> AceEdit")),
-              formactions.SaveAndTest(_("Save  and Test","Save -> Test")),                   formactions.Cancel(_("Cancel","Cancel")))
+              #ttwactions.SaveAndTest(_("Save  and Test","Save -> Test")),
+              formactions.Cancel(_("Cancel","Cancel")))
 
 
                 

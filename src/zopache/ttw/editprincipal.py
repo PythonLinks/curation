@@ -21,7 +21,7 @@ from zopache.ttw.treewidget import TreeField
 from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
 from zopache.application.choices import fromList
-
+from zopache.crud import update as editactions
 
 def possibleItems():
     terms = []
@@ -110,7 +110,7 @@ class IEdit(Interface):
 class EditPrincipal(EditForm):
     title = 'Your Profile'
     interface = IEdit
-    actions = Actions(formactions.SaveAndRoot("Save","Save"),
+    actions = Actions(editactions.SaveAndRoot("Save","Save"),
                           formactions.Cancel("Cancel","Cancel"))
 
     def acquireTitle(self):

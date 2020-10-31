@@ -11,6 +11,7 @@ from zopache.core.baseform import Form
 from zope.interface import Interface
 from zopache.core import Container
 from zopache.crud import actions as formactions, i18n as _
+from zopache.crud import update  as updateactions
 from zopache.ttw import actions as ttwactions
 
 from zopache.ttw.html import HTML

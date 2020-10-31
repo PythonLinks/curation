@@ -1,4 +1,6 @@
-from zopache.crud.actions import Add, Update
+from zopache.crud.actions import Add
+
+from zopache.crud.update import  Update
 
 class AddAndCkEdit(Add):
     def newURL(self,baseURL):

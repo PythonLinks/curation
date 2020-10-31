@@ -8,7 +8,6 @@ from zopache.business.interfaces import (ICompany, IMap,
                                          IOnlineOrganization,
                                          ICompanyBase)
 from zopache.pages.page import Page
-from zopache.business.geocoding import GeoCodeObject
 from zopache.business.subscribe import Member
 from zopache.business.geocoding import GeoCodeObject
 from zopache.business.imaginarypage import ImaginaryPage

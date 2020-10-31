@@ -247,8 +247,10 @@ class IJSON(IJavascript):
         title = u'JSON Source',
         description = u'The JSON  goes here.',
         required = False,
-        default = u'',
+        default = '{}',
     )
+
+
     
 class ITestSource (ISource, ITestURL):
    pass
@@ -332,17 +334,25 @@ class ISourceContainer(ISource,
                ): 
      pass
 
-class IAceContainer(IAceHTML,IIndexHTML,ISourceContainer):
+class IAceContainer(IAceHTMLClass,IIndexHTML,ISourceContainer):
     pass
  
 class IHTMLContainer(ISourceContainer,IHTML):
    pass
 
-class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable):
+class IJavascriptFolder(IJavascript,ISourceContainer):
         "Basic Javascript Folder Form"
         pass
 
-
+class IJSONContainer(IJSON, ISourceContainer):
+        description= schema.Text(
+        title = 'Description',
+        description = """A brief introduction of this page.  
+                        This is used by the search functions.""",
+        required = False,
+        default = u'',
+    )
+        
 class IUntrustedHTML(IHTML):
    pass
 

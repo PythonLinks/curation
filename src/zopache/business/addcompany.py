@@ -139,25 +139,7 @@ class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
         
 
 
-@view_component
-@name('addPolitician')
-@target(IView)
-@context(IPage)    
-class AddPolitician(AddAnonymousPage,GeoCodeForm):
-    interface = IAddPolitician
-    factory = Politician
-    title = "Add a Politician"
-    def update(self):
-        AddAnonymousPage.update(self)
-        GeoCodeForm.update(self)
 
-    """
-    def updateWidgets(self):
-        ddBase.update(self)
-        #item =self.fields['endorsedBy']
-        it =object.__setattr__(item,'mode','multiselect')
-        super().updateWidgets()
-     """
 
 from zopache.pages.addpage import AddPageBase    
 from zopache.application.interfaces import IRootContainer

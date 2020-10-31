@@ -54,7 +54,7 @@ class JavascriptBase(SourceBase):
 
     def createJavascriptCaches(self):
         parentJavascriptFolders=Parents(self
-                         ).parentsWhichImplement(ISearchable)
+                         ).parentsWhichImplement(IJavascriptFolder)
         for folder in parentJavascriptFolders:
              folder.sourceCache= folder.getCompressedCode()
 
@@ -211,7 +211,6 @@ class BaseJavascript(AceScripts):
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
-
     def footerScripts(self):
         return AceScripts.footerScripts(self)
 
@@ -241,7 +240,7 @@ class AceDemoJavascript(BaseJavascript,EditDemoForm):
 @name('search')
 @title("Search")
 @target(IView)
-@context(ISearchable)
+@context(IJavascriptFolder)
 class Search(Page):
     subTitle=u'Search The Javascript'
     template = tal_template('javascriptFolder.pt')

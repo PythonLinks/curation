@@ -54,8 +54,10 @@ class Utilities (object):
         item.__parent__ = parent
         item.__name__ = newName
 
-    def className(self):
-        return self.__class__.__name__
+    def className(self,*args):
+        item = self.context if len(args)==0 else args [0]
+        return item.__class__.__name__
+
     def contextClassName(self):
         return self.context.__class__.__name__    
     

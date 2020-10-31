@@ -21,10 +21,15 @@ class Member(object):
         self.members = OOBTree()
 
     def hasFutureEvent(self):
-        if self.eventsPageURL != "":
-           if self.hasScheduledEvents:
-               return 1
-        return 0  
+        total = 0
+        try:
+           if self.candidateInfo["eventsPageURL"] != "":
+              if self.candidateInfo["hasScheduledEvents"]:
+                total +=  1
+        except:
+            pass
+        total += len(self.listFutureEvents())
+        return total
         
     def isMember(self,view):
         if not view.isAuthenticated():

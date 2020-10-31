@@ -36,14 +36,36 @@ class MapOrLocation (PageBase):
                   result += ','
                   lat,lng = self.getMarkerLatLng()
                   result +=  str(lat)  
-                  result += ','    
+                  result += ","                   
                   result += str(lng)
-                  color = self.getColor()
-                  result += ",'" + color +"'"
-                  result += "," + str(self.hasFutureEvent())
+                  aClass = self.__class__.__name__[0]
+                  result += self.getArg(aClass)
+                  hasFutureEvent =  str(self.hasFutureEvent())
+                  result += self.getArg(hasFutureEvent)
+                  if self.__class__.__name__ == "Politician":
+                     result += self.getArg(str(hasattr(self,'candidateInfo'))[0])
+                     result += self.getArg(str(self.isElectedOfficial())[0])
+                     result += self.getArg(
+                          str(hasattr(self,'partyOfficer'))[0])
                   result += "]"
                   return result, firstItem
               
+    def isElectedOfficial(self):
+        if hasattr(self,'electedOfficial'):
+           return True
+        if self.getCandidateInfo("result") =="Won":
+           return True
+        return False                                   
+
+    def getArg(self,aString,comma = True):
+          result = ""
+          if comma:
+              result += ","
+          result += "'"
+          result += aString
+          result += "'"
+          return result
+      
     def getColor(self):
         #COLOR BASED ON CLASS
         choose = {'Driver':'black',

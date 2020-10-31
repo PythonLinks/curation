@@ -5,7 +5,8 @@ from dolmen.forms.base import Actions
 
 from zopache.core.viewdecorators import *
 from zopache.crud.actions import Cancel
-from zopache.crud.actions import AddByTitle, Edit
+from zopache.crud.actions import AddByTitle
+from zopache.crud.update import Edit
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from cromlech.webob.response import Response
 from dolmen.view import  make_view_response

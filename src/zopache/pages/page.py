@@ -199,7 +199,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
             
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
-
         
     def recalculateRootJSON(self):
          jsonRoot = self.getSiteRoot()

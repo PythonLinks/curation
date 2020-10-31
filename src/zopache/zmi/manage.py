@@ -125,7 +125,10 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        pass
+        #for it in item.politicians.values():
+        #    print (it.title)
+        #    it.convert()
+        #pass
     
     def moveTo(self,childName):
         self.moveItem('personCopy1',childName,'person')

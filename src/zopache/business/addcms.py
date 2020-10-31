@@ -1,11 +1,11 @@
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
 
-from zopache.business.addcompany import (AddPolitician,
+from zopache.business.addcompany import (
                                          AddOrganization,
                                          AddOnlineOrganization,
                                          AddNews)
-
+from zopache.business.editpolitician import AddCandidate
 from zopache.business.addmeetup import AddEvent, AddOnlineEvent
 
 class Base(object):
@@ -39,7 +39,7 @@ from dolmen.forms.base import interfaces
 @name('iframe-addPolitician')
 @target(IView)
 @context(IPage)    
-class AddCMSPolitician(Base,AddPolitician):
+class AddCMSPolitician(Base,AddCandidate):
     pass
 
 

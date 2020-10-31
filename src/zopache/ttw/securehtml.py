@@ -1,14 +1,14 @@
 from zopache.core.viewdecorators import *
 from .interfaces import ISecureHTML , IWeb
 from .html import  SecureHTML, HTMLPage
-from .htmlviews import Index
+from .htmlviews import AceObjectIndex
 from zopache.core.interfaces import ITreeSecurity
 
 @view_component
 @name (u'index')
 @context(ISecureHTML)
 @implementer (ITreeSecurity)
-class SecureIndex(Index):
+class SecureIndex(AceObjectIndex):
      pass
 
 from dolmen.container import IBTreeContainer

@@ -12,7 +12,8 @@ from dolmen.view import view_component
 
 from cromlech.security import permissions
 from cromlech.browser.directives import title
-from zopache.crud import actions as formactions, i18n as _
+from zopache.crud import actions as formactions
+
 
 from dolmen.forms.base import Fields
 

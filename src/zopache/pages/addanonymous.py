@@ -1,6 +1,5 @@
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions
-from zopache.crud import actions as formactions
 from zopache.crud.actions import AddByTitle
 from zopache.pages.pageactions import AddAndView
 from zopache.crud.actions import AddByTitleToTreeAndView
