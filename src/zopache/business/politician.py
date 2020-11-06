@@ -61,7 +61,7 @@ class Politician (ImaginaryPage,LocationLeaf,Member,Convert):
         return self.getJsonValue('connect',arg)
     
     def getCandidateInfo(self,arg):
-        return self.getJsonValue('candidateinfo',arg)
+        return self.getJsonValue('candidateInfo',arg)
     
     def getElectedOfficial(self,arg):
         return self.getJsonValue('electedOfficial',arg)        

@@ -47,6 +47,10 @@ class MapOrLocation (PageBase):
                      result += self.getArg(str(self.isElectedOfficial())[0])
                      result += self.getArg(
                           str(hasattr(self,'partyOfficer'))[0])
+                     outcome = self.getCandidateInfo("result")
+                     if len(outcome) > 0:
+                         outcome = outcome [0]
+                     result += ",'" + outcome + "'"    
                   result += "]"
                   return result, firstItem
               
