@@ -41,7 +41,7 @@ class AceContainer(TrustedHTML,Container):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class ContainerAddForm(AddForm):
-    subTitle = 'Add a Container'
+    subTitle = 'Add a WYSIWYG HTML Folder'
     interface = Interface
     ignoreContent = True
     factory=HTMLContainer
@@ -56,11 +56,11 @@ class ContainerAddForm(AddForm):
 
 from zopache.ttw.htmlviews import AddAceHTML
 @form_component
-@name (u'addAceContainer')
+@name (u'addAceFolder')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AceContainerAddForm(AddAceHTML):
-    subTitle = 'Add an Ace Container'
+    subTitle = 'Add an Ace HTML Folder'
     interface = IAceContainer
     ignoreContent = True
     factory=AceContainer

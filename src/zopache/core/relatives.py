@@ -115,7 +115,15 @@ class Parents(object):
            item = self.context
         result  = self.parentsUpToSiteRoot()
         return result
-       
+
+    def reversedParents(self,item = None):
+        if item == None:
+           item = self.context
+        result  = self.parentsUpToSiteRoot()
+        result.reverse()
+        return result
+
+
     def lineage (self,item):
         return lineage_chain(item)
 

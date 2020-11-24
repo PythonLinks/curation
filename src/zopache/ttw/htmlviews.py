@@ -129,6 +129,15 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
+from zopache.ttw.html import Jinja2
+@form_component
+@name (u'addJinja2')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddJinja2(AddAceHTMLBase,AddForm):
+    title = "And a Jinja2 Object"
+    subtitle = "Great for html prototyping."
+    factory = Jinja2
 
 @form_component
 @name (u'addAceIFrame')
@@ -283,7 +292,7 @@ class AceEditForm(AceEdit):
 
 #ACE HTML FOR FOR THE ACE HTML CLASS. 
 @form_component
-@context(IAceHTMLClass)
+@context(IAceHTML)
 @name("aceedit")
 @implementer (ITreeSecurity)
 class AceEditForm(AceEdit):

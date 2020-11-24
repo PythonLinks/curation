@@ -7,7 +7,7 @@ from zopache.core import Container
 from zopache.application.interfaces import IRootContainer
 from zopache.ttw.principalfolder import PrincipalFolder
 from zopache.pages.interfaces import IContent
-from zopache.pages.allblogobjects import ProcessTree
+from zopache.application.allblogobjects import ProcessTree
 
 @implementer(IRootContainer)
 class RootContainer(Container,ProcessTree):

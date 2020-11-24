@@ -72,6 +72,10 @@ class JSONDict(JSON,OrderedBTreeContainer):
 
         return json2
     
+@implementer(IJSON)
+class JSONFolder(JSONDict):
+    pass
+
 class  AceScriptsLocal(AceScripts):
     def  footerScripts(self):
         return self.aceEditorFooter + """ 
@@ -90,18 +94,16 @@ class AddJSON(AceScripts,AceAddForm):
     ignoreContent = True
     factory=JSON
 
-
 @form_component
-@name('addJSONDict')
+@name('addJSONFolder')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddJSONDict(AceScripts,AceAddForm):
     subTitle='Add a JSON Object'
     interface = IJSONContainer
     ignoreContent = True
-    factory=JSONDict
+    factory=JSONFolder
     
-
 def makeResponse(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.write(result or u'')

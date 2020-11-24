@@ -152,4 +152,15 @@ class IPNotebookAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'source'        
+        return 'source'
+
+    
+from zopache.pages.interfaces import IMarkdown
+@crom.adapter
+@crom.sources(IMarkdown)
+@crom.target(IURLSegment)
+class IPNotebookAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'aceedit'        

@@ -18,7 +18,7 @@ from zopache.core.relatives import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
-from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
+from zopache.application.allblogobjects import ProcessTree, AllBlogObjects
 from collections import defaultdict
 from zopache.core.interfaces import ICountable
 from cromlech.security import unauthenticated_principal as Anonymous

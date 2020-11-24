@@ -43,7 +43,10 @@ class ImaginaryPage(object):
        imaginary = self.imaginaryValues()
        return real
     """
+    #NO ONE IS USING THIS SO CUT IT OFF
     def imaginaryValues(self):
+        if self.__class__.__name__ != "Politician":
+            return self
         result = []
         realObject = self.realObject
         for item in realObject.values():
@@ -55,8 +58,13 @@ class ImaginaryPage(object):
         return result
     
     def getImaginary(self,shortName,default = None):
+
         siteRoot = self.getSiteRoot()
-        realObject = siteRoot[siteRoot.templateRoot]
+        templateRoot = siteRoot.templateRoot
+        if templateRoot == "root":
+            realObject = siteRoot
+        else:     
+            realObject = siteRoot[templateRoot]
         if shortName in realObject:
            item = realObject [shortName]
            if IBTreeContainer.providedBy(item):              

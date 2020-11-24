@@ -42,11 +42,21 @@ class MapOrLocation (PageBase):
                   result += self.getArg(aClass)
                   hasFutureEvent =  str(self.hasFutureEvent())
                   result += self.getArg(hasFutureEvent)
+                  if self.__class__.__name__ in [
+                          "Organization","MapOrganization"]:
+                      focus = getattr(self,'focus',"")
+                      focus = focus [:4]
+                      result += ",'" + focus + "'"
+                      
                   if self.__class__.__name__ == "Politician":
-                     result += self.getArg(str(hasattr(self,'candidateInfo'))[0])
-                     result += self.getArg(str(self.isElectedOfficial())[0])
+                     result += self.getArg(str(hasattr(
+                                        self,'candidateInfo'))[0])
+                     result += self.getArg(str(hasattr(
+                                        self,'electedOfficial'))[0])
                      result += self.getArg(
                           str(hasattr(self,'partyOfficer'))[0])
+                     result += self.getArg(
+                          str(hasattr(self,'history'))[0])                     
                      outcome = self.getCandidateInfo("result")
                      if len(outcome) > 0:
                          outcome = outcome [0]

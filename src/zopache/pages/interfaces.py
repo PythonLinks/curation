@@ -84,7 +84,7 @@ class IActionNetwork(ILinkTop,
     )       
     
 class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
-            IJSONInclude, IBTreeContainer,IUntrustedHTML):
+            IJSONInclude, IBTreeContainer,IUntrustedHTML,IAceHTML):
     pass
 
 class IAddPage(IPage):

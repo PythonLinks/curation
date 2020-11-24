@@ -11,13 +11,17 @@ class Markdown (Page):
 
     def postProcess(self, view = None):        
         self._html = mistune.markdown(self.source)
+        Page.postProcess(self)
 
     def postAddProcess(self, view = None):                
         self.postProcess(view = view)
         
     def getHTML(self):
         return self._html
-      
+
+    def html(self):
+        return self._html
+    
 
 
 
