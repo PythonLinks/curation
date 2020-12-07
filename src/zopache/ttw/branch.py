@@ -91,6 +91,9 @@ class Branch(object):
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
             if item.__class__.__name__=='Politician':
+                if (hasattr(item, 'candidateInfo') or
+                    hasattr(item, 'electedOfficial') or                    
+                    hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
             if hasattr(item,'remoteURL'):
                 self.addRemoteURL(item)

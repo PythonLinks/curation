@@ -51,7 +51,8 @@ class Politician (ImaginaryPage,LocationLeaf,Member,Convert):
     def setSource(self,value):
         if 'source' in self.__dict__:
             self.__dict__["source"] = value
-        self.content["english"]["source"] = value                
+        else:    
+            self.content["english"]["source"] = value                
 
     #title = property(getTitle,setTitle)
     description = property(getDescription,setDescription)
@@ -77,6 +78,40 @@ class Politician (ImaginaryPage,LocationLeaf,Member,Convert):
                  return item1 [arg2]
         return ""     
 
+    def isCandidate(self):
+        return hasattr(self,'candidateInfo')
+
+    def isElectedOfficial(self):
+        return hasattr(self,'electedOfficial')
+
+    def isPartyOfficer(self):
+        return hasattr(self,'partyOfficer')
+
+    def hasHistory(self):
+        return hasattr(self,'history')
+
+    def isNational(self):
+        if not self.isCandidate():
+           raise Exception("No Candidate Info")
+        localOrNational = self.getCandidateInfo("localOrNational")
+        return  'National' in localOrNational
+
+    def isGreen(self):
+        if self.isElectedOfficial():
+            return True
+        if not self.isCandidate():
+           return False
+        affiliation = self.getCandidateInfo("affiliation")
+        if affiliation == 'Independent':
+                return False
+        if affiliation == 'Democrat':
+                return False
+        return True
+    
+    def isActive(self):
+        return (self.isCandidate() or
+                self.isElectedOffical() or
+                self.isPartyOfficer())
     
 from zopache.business.company import GeoBase        
 @implementer (IPoliticiansSite)

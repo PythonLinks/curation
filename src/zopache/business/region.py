@@ -20,50 +20,86 @@ class RegionBase(LocationContainer):
            return result
 
     def getMapPoliticians (self):
-        return self.getPoliticians(True)        
-               
-    def getListPoliticians(self):
-        return self.getPoliticians(False)
 
+        if self.isNationalMap():
+           return self.searchAllPoliticians(
+                  candidates = True,
+                  electedOfficials = True,
+                  partyOfficers = True,
+                  isGreen = True
+                 )
+        else:
+           return self.searchBranchPoliticians(
+                  candidates = True,
+                  electedOfficials = True,
+                  partyOfficers = True
+                 )            
+
+                      
+    def getListPoliticians(self):
+        if self.isNationalMap():
+           return self.searchAllPoliticians(
+                  candidates = True,
+                  electedOfficials = True,
+                  partyOfficers = True,
+                  isGreen = True,
+                  isNational = True
+                 )
+        else:
+           return self.searchBranchPoliticians(
+                  candidates = True,
+                  electedOfficials = True,
+                  partyOfficers = True,
+                 )
     
-    def isGreen(self,item):
-        if hasattr(item,'affiliation'):
-            if item.affiliation == 'Independent':
-                return False
-            if item.affiliation == 'Democrat':
-                return False
-        return True
-    
-    def getPoliticians (self,isMap):        
+    def isNationalMap (self):        
+        return self.parentLength() == 1
+
+    def parentLength(self):        
         parents = self.parentsWhichImplement(IOrganization)
-        parents.reverse()
         parentLength = len(parents)
-        
-        #THE NATIONAL PAGE
-        if parentLength == 1:
+        return parentLength    
+
+    def searchAllPoliticians(self,
+                             all = False, 
+                             candidates = False,
+                             electedOfficials = False,
+                             partyOfficers = False,
+                             isGreen = False,
+                             isNational = False
+                             ):
+    
             siteRoot = self.getSiteRoot()
             allPoliticians = siteRoot.politicians.values()
-            if isMap:
-               return list(allPoliticians)            
-            nationalPoliticians = []
-            for item in allPoliticians:
-                  if  'National' in item.localOrNational:
-                      if self.isGreen(item):
-                         nationalPoliticians.append(item)
-            return nationalPoliticians 
-
-        #FOR STATE AND LOCAL MAPS FIRST GET THE TWO NATIONAL
-        #POLITICIANS IN THE NATIONAL MAP.  HOWIE AND ANGELA
-        byClass = list(map(lambda x: x.sortByClass(), parents))
-        politicians = byClass[0]['Politician']
+            return self.actuallySearch(                       
+                       allPoliticians,
+                       all,
+                       candidates,
+                       electedOfficials,
+                       partyOfficers,
+                       isGreen,
+                       isNational)
+        
+    def searchBranchPoliticians(self,
+                             all = False, 
+                             candidates = False,
+                             electedOfficials = False,
+                             partyOfficers = False,
+                             isGreen = False,
+                             isNational = False
+    ):
+        politicians = [] 
+        parents = self.parentsWhichImplement(IOrganization)
+        parentLength = len(parents)
+        
         #THE STATE PAGES
         if parentLength == 2:
             children = []
             children = self.getCompaniesRecursively(children)
             for item in children:
                 if IPolitician.providedBy(item):
-                      if self.isGreen(item):                    
-                         politicians.append(item)
+                         if item.isCandidate() or item.isElectedOfficial():
+                             politicians.append(item)
             return politicians
         
         #FOR LOCAL PAGES 
@@ -74,6 +110,38 @@ class RegionBase(LocationContainer):
                     if IPolitician.providedBy(item):
                         politicians.append(item)
             return politicians    
+        
+    def actuallySearch(self,
+                       aList,
+                       all,
+                       candidates,
+                       electedOfficials,
+                       partyOfficers,
+                       isGreen,
+                       isNational):
+        result = []
+        for person in aList:
+            if all:
+                result = self.maybeAppend(person, result, isGreen, isNational)
+            elif candidates and person.isCandidate():
+                result = self.maybeAppend(person, result, isGreen, isNational)
+            elif electedOfficials and person.isElectedOfficial():
+                result = self.maybeAppend(person, result, isGreen, isNational)
+            elif partyOfficers and person.isPartyOfficer():
+                result = self.maybeAppend(person, result, isGreen, isNational)
+        return result
+        
+    def maybeAppend(self,person, result, isGreen, isNational):
+           if not isGreen or person.isGreen():
+               if not isNational or person.isNational():
+                  result.append(person)       
+           return  result
+
+        #FOR STATE AND LOCAL MAPS FIRST GET THE TWO NATIONAL
+        #POLITICIANS IN THE NATIONAL MAP.  HOWIE AND ANGELA
+        #byClass = list(map(lambda x: x.sortByClass(), parents))
+        #politicians = byClass[0]['Politician']
+
 
     def mapPoints(self):
         result = []

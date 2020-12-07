@@ -74,3 +74,31 @@ class IOrganizationBase (Interface):
         required = False,
         default = '',
     )    
+
+    duesURL = schema.URI(
+        title = u'Where to donate money URL',
+        description = """Please support your party. Include  'https://'""",
+        required = False,
+        missing_value ='',           
+    )
+
+    registerURL = schema.URI(
+        title = u'The URL to the register to vote page. ',
+        description = """Where to register to vote. Include  'https://'""",
+        required = False,
+        missing_value ='',           
+    )
+
+    joinURL = schema.URI(
+        title = u'The URL to join the party. . ',
+        description = """The page to join the local party.  Include  'https://'""",
+        required = False,
+        missing_value ='',           
+    )    
+
+
+
+
+
+
+    
