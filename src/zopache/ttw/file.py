@@ -15,6 +15,9 @@ from zopache.ttw.interfaces import (IFile,
 
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.breadcrumbs import Breadcrumbs          
+from zope.interface import implementer
+
+from dolmen.forms.base import  name, context
 
 class FileBase(object):    
         
@@ -190,7 +193,7 @@ def make_file_response(view, result, *args, **kwargs):
     
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
-from zopache.core.viewdecorators import *
+from dolmen.view import view_component
 
 @view_component
 @name('index')
@@ -268,7 +271,6 @@ from zopache.ttw.interfaces import IInternalPrincipal
 @view_component
 @name('index')
 @context(IInternalPrincipal)
-@title("View CV")
 @implementer(ITreeSecurity)
 class IndexCV(View):
     responseFactory = Response

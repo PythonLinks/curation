@@ -1,5 +1,5 @@
 from jsmin import jsmin
-from . import tal_template
+from zopache.ttw import tal_template
 from html import escape
 from zope import interface
 from zope import schema

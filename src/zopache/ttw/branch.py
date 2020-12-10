@@ -90,13 +90,18 @@ class Branch(object):
         for item in branch.values():
             if itemType.providedBy(item):
                 self.valuesByToken[item.__name__]=item
+                
             if item.__class__.__name__=='Politician':
+                if not item.webApproved:
+                   continue
                 if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
+                    
             if hasattr(item,'remoteURL'):
                 self.addRemoteURL(item)
+                
             if IBTreeContainer.providedBy(item):    
                 self.indexBranch(tree,item)
 
