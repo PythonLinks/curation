@@ -3,6 +3,7 @@ from zopache.crud import actions as formactions
 from zopache.ttw.fileaction  import(
     AddFileAction,
     AddImageAction,
+    AddSocialMediaImageAction,
     AddLogoAction,
     AddBannerAction)    
 
@@ -85,5 +86,26 @@ class AddLogo(AddImage):
         return Actions(
               AddLogoAction("Add and View"),
               formactions.Cancel("Cancel","Cancel"))
+
+
+    #ADD A SOCIAL MEDIA  IMAGE
+@form_component
+@name('addSocialMediaImage')
+@context(IBTreeContainer)
+@implementer(ITreeSecurity)
+class AddSocialMediaImage(AddImage):
+    dataValidators = [LogoValidator] 
+    subTitle="Add a Social Media Image."
+    ignoreContent = True
+    interface = IImage    
+    @property
+    def fields(self):
+        return  Fields(self.interface)
     
+    @property
+    def actions(self):
+        return Actions(
+              AddSocialMediaImageAction("Add and View"),
+              formactions.Cancel("Cancel","Cancel"))
+
 

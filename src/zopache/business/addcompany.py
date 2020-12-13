@@ -83,17 +83,16 @@ class AddOrganization(AddAll):
     title = "Add an Organization"
 
 
-
-from zopache.business.phonetree import PhoneTree
-from zopache.business.iphonetree import IPhoneTree
+from zopache.business.socialnode import SocialNode
+from zopache.business.iphonetree import ISocialNode
 @view_component
-@name('addPhoneTree')
+@name('addSocialNode')
 @target(IView)
 @context(IPage)    
 class AddPhoneTree(AddAll):
-    interface = IPhoneTree
-    factory = PhoneTree
-    title = "Add a Phone Tree Node"    
+    interface = ISocialNode
+    factory = SocialNode
+    title = "Add a Social Node"    
 
 #CITY    
 @view_component

@@ -24,10 +24,14 @@ class Branch(object):
     def __init__(self):
        self.valuesByToken = OOBTree()
        self.remoteURLs = OOBTree
-
+       self.politicians = OOBTree()
+       self.pagesByTwitterId = OOBTree()
+       self.phoneTreeByTwitterId = OOBTree()
+        
     def urlOnly(self,link):
        if link.startswith('http'):
           link = link.split('://')[1:]
+          #Just to be cautious.
           link =''.join(link)
        return link
 
@@ -42,9 +46,6 @@ class Branch(object):
        if link == "":
            return
        if link in self.remoteURLs:
-          print (link) 
-          print (anObject.__name__)
-          print (self.remoteURLs[link].__name__)
           raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
        else:
           self.remoteURLs[link] = anObject 
@@ -67,10 +68,12 @@ class Branch(object):
             
     def addItem(self,item):
         self.valuesByToken[item.__name__]= item
+        self.indexItem(item,itemType = ICanonical)
+        
+    def deleteItem(self,item):
+       self.unIndexItem(item) 
+       del self.valuesByToken[item.__name__]
        
-    def deleteItem(self,item):       
-       del self.valuesByToken[item.__name__]       
-
     def test(self,item):
         if IBTreeContainer.providedBy(item):
            return True
@@ -80,31 +83,68 @@ class Branch(object):
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
         self.politicians = OOBTree()
+        self.pagesByTwitterId = OOBTree()
+        self.phoneTreeByTwitterId = OOBTree()
         self.indexBranch(self,self)
-
 
     def indexBranch(self,tree,branch,itemType=ICanonical):
         if IImaginary.providedBy(branch):
             return
-        
+
         for item in branch.values():
-            if itemType.providedBy(item):
-                self.valuesByToken[item.__name__]=item
-                
-            if item.__class__.__name__=='Politician':
+            if hasattr(item,'webApproved'):
                 if not item.webApproved:
                    continue
-                if (hasattr(item, 'candidateInfo') or
-                    hasattr(item, 'electedOfficial') or                    
-                    hasattr(item, 'partyOfficer')):
-                    self.politicians[item.__name__]=item
-                    
-            if hasattr(item,'remoteURL'):
-                self.addRemoteURL(item)
-                
+               
+            self.indexItem(item, itemType = itemType)
+            
             if IBTreeContainer.providedBy(item):    
                 self.indexBranch(tree,item)
 
+    def indexItem(self,item, itemType=ICanonical):
+        if itemType.providedBy(item):
+            self.valuesByToken[item.__name__]=item
+
+        if hasattr(item,'remoteURL'):
+            self.addRemoteURL(item)
+        if hasattr(item,'twitterId'):
+            twitterId = item.twitterId
+            if twitterId != "":
+                self.pagesByTwitterId[twitterId] = item
+                
+        if item.__class__.__name__ in [ "PhoneTree","SocialNode"]:
+            for id in item.allIdsAsArray():
+                self.phoneTreeByTwitterId[id] = item
+                     
+        if item.__class__.__name__=='Politician':
+            if (hasattr(item, 'candidateInfo') or
+                    hasattr(item, 'electedOfficial') or                    
+                    hasattr(item, 'partyOfficer')):
+                    self.politicians[item.__name__]=item
+
+    def unIndexItem(self,item, itemType=ICanonical):
+        if itemType.providedBy(item):
+           del self.valuesByToken[item.__name__]
+
+        if hasattr(item,'remoteURL'):
+                self.deleteRemoteURL(item.remoteURL)
+
+        if hasattr(item,'twitterId'):
+            twitterId = item.twitterId
+            if twitterId != "":
+                del self.pagesByTwitterId [twitterId]
+                                
+        if item.__class__.__name__ == "PhoneTree":
+            phoneTreeByTwitterId = self.phoneTreeByTwitterId
+            for id in item.arrayOfTwitterIds():
+                del phoneTreeByTwitterId[id]                
+                     
+        if item.__class__.__name__=='Politician':
+            if (hasattr(item, 'candidateInfo') or
+                    hasattr(item, 'electedOfficial') or                    
+                    hasattr(item, 'partyOfficer')):
+                    del self.politicians[item.__name__]
+                    
     def __contains__(self, key):
         return (key in self._data  or 
                 key in self.valuesByToken)

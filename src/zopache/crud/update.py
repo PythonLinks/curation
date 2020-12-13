@@ -15,6 +15,9 @@ class Update(Action,TransactionNote):
         if errors:
             form.submissionError = errors
             return FAILURE
+        context = form.context
+        if hasattr(context, "preProcess"):
+           context.preProcess(form)        
         if hasattr(form,'applyData'):
            form.applyData()
         else:   

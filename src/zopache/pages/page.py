@@ -155,6 +155,10 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.partialPostProcess(view=view)
         self.recalculateRootJSON()
         cache.resetCache(self)
+
+    def preProcess(self,view=None):
+        siteRoot = view.getSiteRoot()
+        siteRoot.unIndexItem(self)
         
     def postProcess(self,view=None):
         self.modificationTime=time.time()        
@@ -181,6 +185,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.title=self.title.replace ('\n' , " ")
         self.title=self.title.replace ('\r' , " ")                
 
+    def preDeleteProcess(self,view = None):
+        siteRoot = view.getSiteRoot()
+        siteRoot.unIndexItem(self)
         
     def postAddProcess(self,view=None):
         self.postProcessCore(view=view)        
@@ -237,27 +244,15 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def __delitem__(self,key):
         item = self[key]
         OrderedBTreeContainer.__delitem__(self,key)
-        siteRoot = self.getSiteRoot()
         if IPage.providedBy(item):
-            del siteRoot.valuesByToken[key]
-        if item.__class__.__name__ == 'Politician':
-            del siteRoot.politicians[key]  
-        if hasattr(item,'remoteURL'):
-            siteRoot.deleteRemoteURL(item.remoteURL)
-           
+            siteRoot = self.getSiteRoot()        
+            siteRoot.deleteItem(item)
 
     def __setitem__(self,  key,item):
         OrderedBTreeContainer.__setitem__(self,key,item)
-        siteRoot = self.getSiteRoot()
         if IPage.providedBy(item):
-           siteRoot.valuesByToken[key]=item
-           
-        if item.__class__.__name__ == 'Politician':
-           siteRoot.politicians[item.name]  = item
-           
-        if hasattr(item,'remoteURL'):
-            siteRoot.addRemoteURL(item)
-            
+           siteRoot = self.getSiteRoot()     
+           siteRoot.addItem(self)
                   
     def hasContent(self):
          if len(self.source)<2:
@@ -331,6 +326,9 @@ class SiteRoot(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     homePage = ''
     
+    def preProcess(self,view=None):
+        pass
+        
     def __init__(self):
        Branch.__init__(self)
        PageBase.__init__(self)

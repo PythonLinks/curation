@@ -24,7 +24,7 @@ class BaseAction(Action):
         branch=self.upload(formData)
         context = form.context
         self.processImport(context,branch)
-        baseURL = self.form.contextURL()
+        baseURL = self.form.absoluteURL()
         url = baseURL + "/manage"        
         return SuccessMarker('Added', True, url=url,code=307)
 

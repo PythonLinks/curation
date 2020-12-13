@@ -121,6 +121,10 @@ class AddLogoAction(AddImageAction):
     def getName(self,formData):    
         return 'Logo'
 
+class AddSocialMediaImageAction(AddImageAction): 
+    def getName(self,formData):    
+        return 'SocialMediaImage'    
+
 class AddBannerAction(AddImageAction): 
     def getName(self,formData):    
         return 'Banner'    

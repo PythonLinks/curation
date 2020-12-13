@@ -54,6 +54,14 @@ class Politician (ImaginaryPage,LocationLeaf,Member,Convert):
         else:    
             self.content["english"]["source"] = value                
 
+    def getTwitterId(self):
+        return self.getConnect("twitterId")
+
+    def getRemoteURL(self):
+        return self.getConnect("remoteURL")
+    
+    remoteURL = property(getRemoteURL)
+    twitterId = property(getTwitterId)        
     #title = property(getTitle,setTitle)
     description = property(getDescription,setDescription)
     source = property(getSource,setSource)        
