@@ -6,8 +6,12 @@ from zopache.pages.location import LocationContainer
 from zopache.business.interfaces import (ICompany, IMap,
                                          IOrganization,
                                          IOnlineOrganization,
-                                         ICompanyBase)
+                                         ICompanyBase,
+                                         IMapOrganization)
+from zopache.business.ipolitician import IPolitician
+
 from zopache.pages.page import Page
+from zopache.pages.interfaces import IPage
 from zopache.business.subscribe import Member
 from zopache.business.geocoding import GeoCodeObject
 from zopache.business.imaginarypage import ImaginaryPage
@@ -90,7 +94,21 @@ class MapOrganization(ImaginaryPage,
     def __init__(self):
         Map.__init__(self)
         Organization.__init__(self)
-
+        
+    def childCategories(self):
+        result =[]
+        for item in self.values():
+            if IPolitician.providedBy(item):
+                continue
+            
+            if IOrganization.providedBy(item):
+                continue
+            
+            if (IPage.providedBy (item) and item.webApproved):
+               result.append (item)
+               
+        return result
+    
 from zopache.core.getroot import getSiteRoot
 from zopache.business.interfaces import IEndorsingOrganization
 @implementer(IEndorsingOrganization)    

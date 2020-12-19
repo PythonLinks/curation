@@ -125,6 +125,7 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
+        #item.leaderNodes()
         #for it in item.politicians.values():
         #    print (it.title)
         #    it.convert()

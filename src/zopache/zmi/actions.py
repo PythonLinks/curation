@@ -127,7 +127,6 @@ class PasteObjects(BaseAction):
 
         paster = IObjectPaster(target)
         paster.paste(form)
-        cache.resetCache(form.context)
         return SuccessMarker('Pasted', True)
     
 class DeleteObjects(BaseAction):        

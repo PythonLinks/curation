@@ -152,6 +152,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
            return self.webClass
        
     def postProcessCore(self,view=None):
+        siteRoot = view.getSiteRoot()
+        siteRoot.indexItem(self)        
         self.partialPostProcess(view=view)
         self.recalculateRootJSON()
         cache.resetCache(self)
@@ -244,15 +246,12 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def __delitem__(self,key):
         item = self[key]
         OrderedBTreeContainer.__delitem__(self,key)
-        if IPage.providedBy(item):
-            siteRoot = self.getSiteRoot()        
-            siteRoot.deleteItem(item)
 
     def __setitem__(self,  key,item):
         OrderedBTreeContainer.__setitem__(self,key,item)
         if IPage.providedBy(item):
            siteRoot = self.getSiteRoot()     
-           siteRoot.addItem(self)
+           siteRoot.addItem(item)
                   
     def hasContent(self):
          if len(self.source)<2:

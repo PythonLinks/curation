@@ -56,7 +56,8 @@ class PagePaster(Paster,UniquePageName):
         fromFolder=cutFolder(view)
         #Modifying a BTree while iterating over it does not work. 
         items=[]
-        items = list( fromFolder.values())                   
+        items = list( fromFolder.values())
+        siteRoot = view.getSiteRoot()
         for item in items:
             if not self.allowed(item):
                  self.view.error = "Not Pasted"
@@ -84,8 +85,10 @@ class PageRenamer(Renamer,UniquePageName):
         if obj is None:
             raise ItemNotFoundError(self.container, oldName)
         newName=self.uniqueName(container,newName)
+        siteRoot = obj.getSiteRoot()
+        siteRoot.unIndexItem(obj)
         self.moveFrom(container,oldName, container, newName)
-
+        siteRoot.indexItem(obj)
         
 #FOR DELETING CATEGORIES
 #IF VIDEO DELETE LINK FROM CONFERENCE
@@ -112,7 +115,7 @@ class PageDeleter(Deleter):
         # DELETE THE OBJECT
         container=contained.__parent__
         # So even though root is not used till later, 
-        #we have to do this before deleting the __parent__ Pointer. 
+        #we have to do this before deleting the __parent__ Pointer.
         if IPage.providedBy (container):
            root = getSiteRoot(contained)
         if hasattr(contained,'preDeleteProcess'):
@@ -121,7 +124,7 @@ class PageDeleter(Deleter):
         
         # IF IT IS A VIDEO DELETE IT FROM THE CONFERENCE
         if contained.isVideo():
-           self.describeTransactionWithText("It was a Videoa Video")            
+           self.describeTransactionWithText("It was a Video")           
            del contained.conference.talks[name]
            
         # UNLESS IT IS THE ROOT CATEGORY, RECALCULATE THE JSON   

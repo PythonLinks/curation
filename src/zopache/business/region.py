@@ -128,7 +128,7 @@ class RegionBase(LocationContainer):
             elif electedOfficials and person.isElectedOfficial():
                 result = self.maybeAppend(person, result, isGreen, isNational)
             elif partyOfficers and person.isPartyOfficer():
-                result = self.maybeAppend(person, result, isGreen, isNational)
+                result.append(person)
         return result
         
     def maybeAppend(self,person, result, isGreen, isNational):

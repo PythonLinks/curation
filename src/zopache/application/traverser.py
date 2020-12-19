@@ -48,6 +48,7 @@ class Traverser(object):
                  raise Exception (
                      "%s does not support method setZopacheTempalte",
                                    zopacheTemplate.__name__)
+
         #TRAVERSE THE CONTAINER
         if (IBTreeContainer.providedBy(context) or
            IDirectory.providedBy(context)):
