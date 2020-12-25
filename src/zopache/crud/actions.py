@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
-import requests
 from slugify import slugify, SLUG_OK
 
 from webpreview import web_preview
@@ -25,9 +24,7 @@ from zopache.core.getroot import getSiteRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
 from zopache.core.transactionnote import TransactionNote
-from zopache.ttw.file import BTreeImage
-from PIL import Image as PilImage
-from io import BytesIO
+from zopache.crud.getimage import getImage
 
 class Add(Action, UniqueName, TransactionNote):
     """Add action for an IAdding context.
@@ -40,7 +37,6 @@ class Add(Action, UniqueName, TransactionNote):
         self.factory = factory
 
     def __call__(self, form):
-
         self.form=form
         obj= form.factory()
         self.new=form.new=obj
@@ -73,6 +69,7 @@ class Add(Action, UniqueName, TransactionNote):
            url=self.newURL(baseURL)
            
         #Form Specific postAddProcessing
+
         if hasattr(form,'postAddProcess'):
                form.postAddProcess()
         elif hasattr(form.new,'postAddProcess'):
@@ -112,21 +109,7 @@ class Add(Action, UniqueName, TransactionNote):
         name =  data['__name__']        
         return self.uniqueContainerName(self.form.context,name)
 
-    def setImage(self,imageURL):
-        try:
-            response = requests.get(imageURL)            
-            zodbImage =BTreeImage()
-            zodbImage.contentType=response.headers['content-type']            
-            content = response.content
-            zodbImage.data = content
-            pilImage = PilImage.open(BytesIO(content))
-            zodbImage.width = pilImage.width
-            zodbImage.height = pilImage.height
-            new = self.form.new
-            new['Logo']= zodbImage
-            zodbImage.__parent__ = new
-        except:
-            pass 
+
                      
 class AddNamed(Add):
     pass
@@ -143,7 +126,7 @@ class AddByTitle (Add):
             root.addItem(self.new)
 
         if hasattr(self.new,'imageURL'):
-            self.setImage (self.new.imageURL)
+            getImage (self.new,self.new.imageURL)
             del self.new.imageURL
             
     def baseURL(self):
@@ -233,7 +216,7 @@ class AddByCrawl(Add):
             error = Error("Failed to Fetch and Parse URL")
             errors.append(error)
         if hasattr(new,'imageURL'):
-           self.setimage(new.imageURL) 
+           getImage(new,new.imageURL) 
         return errors
 
 class Cancel(Action):

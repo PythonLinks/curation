@@ -1,24 +1,23 @@
 from zope.interface import Interface
 from zope import schema
-from zopache.pages.interfaces import ILink
-from zopache.pages.page import Link
-from zopache.ttw.treewidget import TreeField
+from zopache.pages.interfaces import IPage
+from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from zopache.remote.interfaces import IVoteable
+from zopache.crud.getimage import getImage
 
-class IRSSArticle(ILink,IVoteable):
+class IRSSArticle(IPage,IVoteable):
 
     title = schema.TextLine(
         title = 'Remote Article Name',
         description = 'What is the title of this link?',
-        readonly = True,
         required = True,
     )
-    remoteURL= schema.URI(
-        title = 'URL',
+    
+    articleURL= schema.URI(
+        title = 'Article URL',
         description = 'The url of the remote article',
-        readonly = True,
-        required = True,
+        required = False,
     )
     
     description= schema.Text(
@@ -27,48 +26,66 @@ class IRSSArticle(ILink,IVoteable):
                         This is used by the search functions.""",
         required = False,
         default = u'',
-        readonly = True,
     )
 
     source= schema.Text(
         title = 'Content',
         description = 'This is the main content for this page',
         required = False,
-        readonly = True,
         default = '',
     )
 
-    category=TreeField(
-           title="Category Search",
-           description= """You can use this widget to explore the category 
-                          tree. It has no impact on the RSS feed. """,
-           required = False,
-            )
     
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
 @implementer (IRSSArticle)
-class RSSArticle(Link,Voteable):
+class RSSArticle(Page,Voteable):
     _category = ""
     webClass = "RSSLink"
     emailApproved = True
+    publicationApproved = False
     def getCategory(self):
       return self._category
+
+    def moveTo(self,category):
+              name = self.__name__
+              del self.__parent__[name]
+              category [name] = self
+              self.__name__ = name
   
     def setCategory(self,value):       
       self._category = value
        
     def preDeleteProcess(self,view):
         Page.preDeleteProcess(self,view)
-        articles = view.getRemoteLinks()
-        del articles [self.permaLink]
-        del self.rssFeed.articles [self.permaLink]
+        del self.rssFeed.localArticles [self.permaLink]
         
     def getSrcSet(self):
         pass
     
     def getDefaultThumbNailURL(self):
         pass
-   
 
- 
+    def getCreationTime(self):
+        return self.publishedAt
+
+    def setCreationTime (self, aTime):
+        self.__dict__['creationTime'] = aTime
+        
+    creationTime = property(getCreationTime,setCreationTime)
+
+    def postAddProcess (self, view = None):
+        Link.postAddProcess(self,view = view)
+        if "exclusive for subscribers" in self.title.lower():
+           self.webApproved = False
+           
+    def addImage(self):
+           if  'Logo' in self:
+               return
+           if hasattr(self,'imageURL'):
+               if self.imageURL != "":
+                     getImage(context,imageURL)           
+           elif  hasattr(self,'links'):
+                for item in self.links:
+                    if "image" in item.type:
+                       getImage(self,item.href)

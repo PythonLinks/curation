@@ -18,6 +18,6 @@ class ReIndex(Form):
               root.indexTree()
            products = getProducts (self.context)
            products.indexTree()
-           self.status='Branch was indexed'
+           self.status='The tree of pages was indexed'
            Form.update(self)
 

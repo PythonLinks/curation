@@ -64,7 +64,7 @@ class OnlineOrganization  (Base):
 
 from zopache.business.region import RegionBase
 @implementer (IOrganization)
-class Organization  (ImaginaryPage,
+class Organization  (
                      GeoBase,
                      RegionBase):
     

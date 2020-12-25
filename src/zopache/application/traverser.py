@@ -52,6 +52,7 @@ class Traverser(object):
         #TRAVERSE THE CONTAINER
         if (IBTreeContainer.providedBy(context) or
            IDirectory.providedBy(context)):
+
             item = context.get(name,object)
             if item != object:
                 return item, None

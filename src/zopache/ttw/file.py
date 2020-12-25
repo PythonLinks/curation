@@ -127,7 +127,7 @@ class BTreeImage(ImageBase,BTreeContainer):
         if name in self:
            return self[name]
 
-        if name in ['400W','600W','600W','100W','100H','200H','300H']:
+        if name in ['400W','600W','600W','100W','200W','100H','200H','300H']:
               return self.shrink(name) 
         return default
 
@@ -154,7 +154,7 @@ class BTreeImage(ImageBase,BTreeContainer):
          pilImage = PilImage.open(byteImgIO)
          pilImage = pilImage.resize(size)
          pilImage = pilImage.crop((0,0,newWidth,newHeight))
-         pilImage = self.crop(pilImage,intName)
+         #pilImage = self.cropSquare(pilImage,intName)
          byteImgIO = io.BytesIO()         
          pilImage.save(byteImgIO,'PNG')
          byteImgIO.seek(0)
@@ -173,7 +173,9 @@ class BTreeImage(ImageBase,BTreeContainer):
          new.__parent__ = self
          return new
 
-    def crop(self,image, height):
+    #THE FOLLOWING METHOD I THINK CUTS A PORTRAIT MODE PICTURE SQUARE
+    #I THINK IT BREAKS ON LANDSCAPE MODE
+    def cropSquare(self,image, height):
         if image.width <  image.height:
             return image
         maxWidth= height

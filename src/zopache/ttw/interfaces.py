@@ -151,7 +151,7 @@ class ISearchSchema(Interface):
 class IBranch (IBTreeContainer):
     pass
 
-class IPrincipalFolder(ICopyable,IImutable):
+class IPrincipalFolder(ICopyable,IImutable,ICanonical):
     pass
 
 #    def getIdByEmail(self,email):

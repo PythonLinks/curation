@@ -37,6 +37,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     createdBy = None
     editedBy = None
     
+    def className(self):
+        return self.__class__.__name__
+    
     def countMe (self):
         if not self.webApproved:
             return False
@@ -245,6 +248,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def __delitem__(self,key):
         item = self[key]
+        if IPage.providedBy(item):
+           siteRoot = self.getSiteRoot()     
+           siteRoot.deleteItem(item)        
         OrderedBTreeContainer.__delitem__(self,key)
 
     def __setitem__(self,  key,item):

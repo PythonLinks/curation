@@ -77,7 +77,9 @@ class TrustedHTML(HTMLBase):
                  if self.trusted == False:
                     return     
                  source=self.getHTML()
-                 self._v_compiledTemplate = PageTemplate(source)
+                 template = PageTemplate(source)
+                 template.filename = self.__name__
+                 self._v_compiledTemplate = template
                  #return self._v_compiledTemplate
 
     def postProcess(self,view=None):

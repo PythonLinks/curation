@@ -18,6 +18,7 @@ from zopache.ttw.interfaces import IWebClass, IProducts
 from zopache.ttw.interfaces import IInternalPrincipal
 #from zopache.business.ipolitician import IPolitician
 from zopache.pages.iimaginary import IImaginary
+from zopache.ttw.interfaces import  ICanonical
 
 @implementer(IBranch)
 class SimpleBranch(object):
@@ -33,6 +34,7 @@ class SimpleBranch(object):
 
     def indexTree(self):
         self.valuesByToken=OOBTree()
+        """
         if hasattr(self,"phoneTreeByTwitterId"):
             del self.phoneTreeByTwitterId
         if hasattr(self,"remoteURLS"):            
@@ -43,13 +45,13 @@ class SimpleBranch(object):
             del self.pagesByTwitterId
         if hasattr(self,"socialNodeByTwitterId"):                    
             del self.socialNodeByTwitterId
-
+        """
+        
         self.indexBranch(self,self)
         
     def __contains__(self, key):
         return (key in self._data  or 
                 key in self.valuesByToken)
-
 
     def __getitem__(self, name):
         if BTreeContainer.__contains__(self,name):
@@ -90,7 +92,8 @@ class Branch(SimpleBranch):
        self.politicians = OOBTree()
        self.pagesByTwitterId = OOBTree()
        self.socialNodeByTwitterId = OOBTree()
-        
+       self.remoteArticles = OOBTree()
+       
     def urlOnly(self,link):
        if link.startswith('http'):
           link = link.split('://')[1:]
@@ -144,23 +147,21 @@ class Branch(SimpleBranch):
         self.politicians = OOBTree()
         self.pagesByTwitterId = OOBTree()
         self.socialNodeByTwitterId = OOBTree()
+        self.globalArticles = OOBTree()
         self.indexBranch(self,self)
-
-    def indexBranch(self,tree,branch,itemType=IPage):
+        
+    def indexBranch(self,tree,branch,itemType=ICanonical):
         if IImaginary.providedBy(branch):
             return
 
-        
         for item in branch.values():
             if itemType.providedBy(item):
-                self.valuesByToken[item.__name__]=item
-               
-            self.indexItem(item, itemType = itemType)
-            
-            if IBTreeContainer.providedBy(item):    
-                self.indexBranch(tree,item)
+                self.indexItem(item, itemType = itemType)           
+                if IBTreeContainer.providedBy(item):    
+                   self.indexBranch(tree,item)
 
-    def indexItem(self,item, itemType=IPage):
+    def indexItem(self,item, itemType=ICanonical):
+        self.valuesByToken[item.__name__] = item       
         if (hasattr(item,'webApproved') and
                    not item.webApproved ):
                    return
@@ -181,7 +182,10 @@ class Branch(SimpleBranch):
                 twitterId= node.twitterId
                 if twitterId:
                     self.socialNodeByTwitterId[twitterId] = item
-                     
+                    
+        if item.__class__.__name__  == "RSSArticle":
+            self.globalArticles [item.permaLink] = item
+            
         if item.__class__.__name__=='Politician':
             if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
@@ -194,12 +198,18 @@ class Branch(SimpleBranch):
 
         del self.valuesByToken[item.__name__]
        
-        if getattr(item,'remoteURL',""):
-            self.deleteRemoteURL(item.remoteURL)
-
-        if getattr(item,'twitterId',""):
-            twitterId = item.twitterId
-            del self.pagesByTwitterId [twitterId]
+        if hasattr(item,'remoteURL'):
+            remoteURL = item.remoteURL
+            if remoteURL:
+                self.deleteRemoteURL(remoteURL)
+                
+        if item.className() == "RSSArticle":
+            del self.globalArticles [item.permaLink]
+            
+        if hasattr(item,'twitterId'):
+            twitterId = item.twitterId            
+            if twitterId:
+                del self.pagesByTwitterId [twitterId]
 
         if item.__class__.__name__ in [ "SocialNode"]:
             for node in item.allNodes():
