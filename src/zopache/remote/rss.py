@@ -35,8 +35,8 @@ class IRSS(ILink):
         required = True,
         )
 
-    rssURL=schema.Bool(
-        title = "htmlSummary",
+    htmlSummary=schema.Bool(
+        title = "Is the Summary HTML?",
         description ="For those sources where the summary contains html tags",
         required = False,
         default = False,

@@ -75,7 +75,7 @@ class RSSArticle(Page,Voteable):
     creationTime = property(getCreationTime,setCreationTime)
 
     def postAddProcess (self, view = None):
-        Link.postAddProcess(self,view = view)
+        Page.postAddProcess(self,view = view)
         if "exclusive for subscribers" in self.title.lower():
            self.webApproved = False
            

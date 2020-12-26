@@ -1,0 +1,34 @@
+
+
+
+separators =["/","\"]
+
+def getInclude(context):
+
+    def include (path):
+        if not isinstance(path, str):
+           return error("The path needs to be a string.")
+        if len(path)==0:
+           return error("Your path is of zero length")
+        if path[0] in separators:
+           context = getSiteRoot(context)
+        else if path[0]=='.':
+           while (path and
+                 (path[0] in separators)):
+           context = self.context.__parent__
+        if '/' in path and '\' in path:
+             return error ("Do not use both '/' and '\' as segment separators")      
+        if '/' in path:
+           segments = path.split('/')
+        if '\' in path:
+           segments = path.split('\')              
+        for item in segments:
+            if item in context:
+               context = context[item]
+            else if ((item == 'javascript') and 
+                     (context.__class__.__name__ == 'Pug')):
+                return context.includeHTML()
+         return context.includeHTML()
+    return include  
+
+    

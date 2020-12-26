@@ -155,8 +155,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
            return self.webClass
        
     def postProcessCore(self,view=None):
-        siteRoot = view.getSiteRoot()
-        siteRoot.indexItem(self)        
+        #siteRoot = view.getSiteRoot()
+        #siteRoot.indexItem(self)        
         self.partialPostProcess(view=view)
         self.recalculateRootJSON()
         cache.resetCache(self)

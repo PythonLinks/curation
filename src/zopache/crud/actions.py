@@ -121,9 +121,9 @@ class AddByTitle (Add):
         context[newName]=item
         item.__parent__ = context
         item.__name__ = newName
-        root = getSiteRoot(self.form.context)
-        if hasattr(root,'addItem'):
-            root.addItem(self.new)
+        #root = getSiteRoot(self.form.context)
+        #if hasattr(root,'addItem'):
+        #    root.addItem(self.new)
 
         if hasattr(self.new,'imageURL'):
             getImage (self.new,self.new.imageURL)
