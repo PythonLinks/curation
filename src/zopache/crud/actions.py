@@ -109,7 +109,6 @@ class Add(Action, UniqueName, TransactionNote):
         name =  data['__name__']        
         return self.uniqueContainerName(self.form.context,name)
 
-
                      
 class AddNamed(Add):
     pass

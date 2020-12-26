@@ -131,6 +131,9 @@ class URLMethods(object):
     #Only good for this zodb application. 
     def simpleUrl(self,item):
         return self.relativeURL(item)
+
+    def urllibParseURLEncode(self,aDict):
+        return urllib.parse.urlencode(aDict)
         
     def urlEncode(self,str):
         return urllib.parse.quote(str)
