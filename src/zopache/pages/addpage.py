@@ -11,6 +11,7 @@ from zopache.crud.forms import AddByTitleForm
 from zopache.pages.interfaces import (IMap,
                                       ILocation,
                                       IPage,
+                                      IProxyPage,
                                       IAddLink,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, ActionNetwork
@@ -20,6 +21,7 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
 from zopache.pages.htmlvalidator import HTMLValidator
+from zopache.pages.proxypage import ProxyPage
 
 class AddPageBase(
                   AddCkHTMLBase,
@@ -72,6 +74,16 @@ class AddPage(AddAuthorizedPage):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
+
+@view_component
+@name('addProxyPage')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddProxyPage(AddAuthorizedPage):
+    interface = IProxyPage
+    label="Add a ProxyPage"
+    factory = ProxyPage    
     
 
 @view_component

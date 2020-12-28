@@ -82,13 +82,15 @@ class IActionNetwork(ILinkTop,
         required = True,
         default = u'',
     )       
-    
+
 class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
             IJSONInclude, IBTreeContainer,IUntrustedHTML,IAceHTML):
     pass
 
-class IProxyPage(IPage)
+class IProxyPage(IPage):
     pass
+
+
 
 class IAddPage(IPage):
     imagegURL= schema.URI(

@@ -1,16 +1,18 @@
 from zopache.pages.page import Page
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage, IProxyPage
+
+
 from zope.interface import implementer
 
-@implementer(IProxyPage)
+#@implementer(IProxyPage)
 class ProxyPage (Page):
 
     def getRemotePageName(self):
-        return "us-politics"
-
+        #return "us-politics"
+        return "biden-administration"
     def getRemotePage(self):
         siteRoot = self.getSiteRoot()
-        remotePageName = self.getRemotePageName
+        remotePageName = self.getRemotePageName()
         if remotePageName in siteRoot:
             return siteRoot[remotePageName]
         else:
@@ -18,22 +20,23 @@ class ProxyPage (Page):
         
     def __contains__(self, key):
         return (key in self._data  or 
-                key in self.getRemotePage())
+                key == self.getRemotePageName())
 
     def __getitem__(self, name):
-        if BTreeContainer.__contains__(self,name):
-           return  BTreeContainer.__getitem__(self,name)
+        if Page.__contains__(self,name):
+           return  Page.__getitem__(self,name)
+        elif name == self.getRemotePageName():            
+           return self.getRemotePage()
         else:
-           return self.getRemoePage()[name]
+           raise Exception(f"""Cannot Find an object called "{name}" """) 
     
     def get(self,name,default=None):
-      if name in self:
-         return self[name]
+        try:
+           return self.__get__item(name)
+        except:
+           return default
 
-      # IF ALL ELSE FAILS
-      return default
-
-    def values(self):
-        yield Page.values(self)
-        yield self.getRemotePage.values(self)
+    def childCategories(self):
+        return (Page.childCategories(self) +
+              [self.getRemotePage()])
         

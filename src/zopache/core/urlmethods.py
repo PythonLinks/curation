@@ -37,14 +37,28 @@ class URLMethods(object):
         result = 'https://'
         result += self.getDomain()
         result += self.getSiteRoot().basePath
-        result += context.__name__
+        result += self.getShortPath()
         return result
+    
+    def getShortPath(self):
+        return self.context.__name__
+        #all = []
+        #for item in self.publisher.shortPath:
+        #    all.append(item.__name__)
+        #return "/".join(all)
+
+    def getLongPath(self):    
+        all = []
+        for item in self.publisher.longPath:
+            all.append(item.__name__)
+        return "/".join(all)    
+
     
     #Another Good One
     # /CanonicalName
     def shortURL(self,viewName=""):
         result = ''
-        result += self.context.__name__
+        result += self.getShortPath()
         if viewName:
            result += '/' + viewName
         return result
