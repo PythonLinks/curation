@@ -39,7 +39,6 @@ class BaseAction(Action):
     
 class ReName(BaseAction):
     def __call__(self,form):
-
         ids = self.getValues(form,
                "You did not specify any object to rename")
         newIds = self.getValues(form,
@@ -65,6 +64,7 @@ class ReTitle(BaseAction):
 
 class ReBoth(BaseAction):
     def __call__(self,form):
+
         result = self.reTitle(form)
         if not hasattr(form.context, "valuesAsList"):
             return result

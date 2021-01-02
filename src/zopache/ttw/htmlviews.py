@@ -192,7 +192,7 @@ class Index(View,Breadcrumbs):
 @view_component
 @name('index')
 @context(IAceHTMLClass)
-class AceObjectIndex(Index):           
+class AceObjectIndex(Index,Breadcrumbs):           
     def render(self):
         content = Index.render(self)
         zopacheTemplate = self.zopacheTemplate
@@ -201,7 +201,7 @@ class AceObjectIndex(Index):
         layout = zopacheTemplate.layout
         if layout == "":
             return content
-        template = self.parentalAcquire(layout, context = zopacheTemplate)
+        template = self.layoutAcquire(layout)
         view = self
         return template.__call__(view,content=content)
     

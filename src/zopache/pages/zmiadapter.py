@@ -86,9 +86,9 @@ class PageRenamer(Renamer,UniquePageName):
             raise ItemNotFoundError(self.container, oldName)
         newName=self.uniqueName(container,newName)
         siteRoot = obj.getSiteRoot()
-        siteRoot.unIndexItem(obj)
+        #siteRoot.unIndexItem(obj)
         self.moveFrom(container,oldName, container, newName)
-        siteRoot.indexItem(obj)
+
         
 #FOR DELETING CATEGORIES
 #IF VIDEO DELETE LINK FROM CONFERENCE

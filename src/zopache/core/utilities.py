@@ -72,7 +72,11 @@ class Utilities (object):
         raise Unauthorized
     
     def getNavBar(self):
-         return self.webClassAcquire('navbar.py')(self)
+         navbar = self.webClassAcquire('navbar.py')
+         if navbar != object:
+           return navbar(self)
+         else:
+           return ""
   
     def getDefaultImage(self):
         context = self.context
