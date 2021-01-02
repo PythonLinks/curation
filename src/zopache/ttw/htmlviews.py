@@ -192,7 +192,7 @@ class Index(View,Breadcrumbs):
 @view_component
 @name('index')
 @context(IAceHTMLClass)
-class AceObjectIndex(Index):           
+class AceObjectIndex(Index,Breadcrumbs):           
     def render(self):
         content = Index.render(self)
         zopacheTemplate = self.zopacheTemplate

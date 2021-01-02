@@ -10,7 +10,7 @@ from cromlech.browser import IPublicationRoot
 from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IURLSegment
 from zopache.crud.interfaces import IZodbRoot
-
+from cromlech.browser.exceptions import HTTPTemporaryRedirect
 
 """
 The problem is that there is a site root, and a zodb root.  They may or may 
@@ -29,6 +29,15 @@ I wonder if this will all work?
 """
 
 class URLMethods(object):
+    def possiblyRedirect(self):
+        domain = self.acquireAttribute("domain")
+        if domain == "":
+            return
+        currentDomain = self.getDomain()
+        if domain != currentDomain:
+           newURL = "https://" + domain + "/" + self.context.__name__
+           raise HTTPTemporaryRedirect(newURL)
+       
     #THIS IS THE GOOD ONE
     #HTTPS://Domain.Name/CanonicalName
     def secureShortURL(self,context = None):

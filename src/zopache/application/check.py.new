@@ -1,0 +1,11 @@
+
+baseTime = "************"
+time = 0
+
+def checkTime():
+    if time == 0:
+        baseTime = float(baseTime)
+        time = time.time()
+        delta = 60 * 60 * 24 * 30 * 3
+    if time  - baseTime > delta:
+        raise Exception("Please upgrade to a newer Docker container")

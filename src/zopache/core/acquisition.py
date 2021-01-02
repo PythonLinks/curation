@@ -23,6 +23,10 @@ class Acquisition(object):
             context = self.context
         return ParentalAcquire(context)[name]
 
+    def layoutAcquire(self,name):
+        layout = self.getLayout()
+        return ParentalAcquire (layout)[name]
+
     def possibleWebClassAcquire(self,name):
         context = self.context
         if not hasattr(context,'webClass'):

@@ -44,6 +44,7 @@ def getProducts(item):
     root = getZodbRoot(item)
     return root["Products"]
 
+
 #Here is the old version which was in this file.
 """
 def getRoot(object):
@@ -76,6 +77,21 @@ class Root(object):
            return self.products
         self.products =  getProducts(self.context)
         return self.products
+
+    def getLayout(self):
+        if hasattr(self,"layout"):
+           return self.layout
+        products = self.getProducts()
+        layouts = products ["Layouts"]
+        domain = self.getDomain()
+        if domain in layouts:
+           layout =  layouts [domain]
+        elif "default" in layouts:
+           layout =  layouts ["default"]
+        else:
+           layout = layouts
+        self.layout = layout   
+        return layout
 
     def getTemplates(self):
         products = self.getProducts()
