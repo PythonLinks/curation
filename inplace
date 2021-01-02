@@ -1,0 +1,6 @@
+cd ../..
+source bin/activate
+cd src/zopache
+python build.py build_ext --inplace
+cd ../..
+#./build
