@@ -1,7 +1,7 @@
 from zope.interface import implementer
 
 from dolmen.container import IBTreeContainer
-from zopache.business.subscribe import Member
+from zopache.business.subscribe import HasMembers
 
 from zopache.pages.location import LocationLeaf
 from zopache.business.ipolitician import (IPolitician,
@@ -12,7 +12,7 @@ from zopache.pages.interfaces import IPage
 from zopache.business.imaginarypage import ImaginaryPage
 from zopache.business.convert import Convert
 @implementer (IPolitician)
-class Politician (ImaginaryPage,LocationLeaf,Member,Convert):
+class Politician (ImaginaryPage,LocationLeaf,HasMembers):
     localOrNational = ""
     webClass = "Politician"
     clientClass = "category"

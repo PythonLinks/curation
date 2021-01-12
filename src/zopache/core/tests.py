@@ -3,7 +3,7 @@ from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
 from pydoc import locate
 from zopache.core.interfaces import IVideo
-
+from zopache.pages.interfaces import IImaginaryBTree
 
 class Tests(object):
     
@@ -82,9 +82,11 @@ class Tests(object):
         item = self.context if len(args)==0 else args [0]        
         if IBTreeContainer.providedBy(item):
             return True
-        if hasattr(item,'isImaginary') and item.isImaginary():
+        if IImaginaryBTree.providedBy(item):
             return True
         return False
+
+
     
         
     

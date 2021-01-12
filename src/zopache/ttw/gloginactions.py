@@ -101,16 +101,8 @@ class GoogleRegisterAction(GoogleLoginAction):
         root.addItem(obj)
         people.loginUser(person)   
         send("You are Registered")
-        person.postAddProcess(view = form)
-        newURL = self.newURL() 
+        form.postAddProcess()
+        newURL = self.form.newURL() 
         raise HTTPFound(newURL)
 
-    def newURL(self):
-        if self.form.new.hirePermission:
-            newURL = '/' + self.form.new.__name__ + "/edit"
-        elif (IPage.providedBy(self.form.context)):    
-            newURL = self.form.absoluteURL()
-        else:
-            newURL = "/"
-        return newURL
     

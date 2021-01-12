@@ -1,26 +1,26 @@
 from zope.interface import Interface, implementer
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IImage
-from zopache.pages.iimaginary import IImaginary, IImaginaryBTree
+from zopache.pages.interfaces import IImaginary, IImaginaryBTree
 from zopache.pages.interfaces import IPage
 
     
 @implementer (IImaginary)
 class Imaginary(object):
-
+    isImaginary = True
     realObject = None
     def __init__(self,parent,realObject):
         self.__parent__ = parent
         self.__name__ = parent.__name__ + '.' + realObject.__name__
         self.realObject = realObject
-
+        
+    def bestMostRecentPage(self):
+        return self.realObject.bestMostRecentPage()
+    
     def html(self):
         return self.realObject.html()
     def childCategories(self):
         return []
-    
-    def isImaginary(self):
-       return True
     
     def getTitle(self):
         return self.realObject.title

@@ -3,8 +3,6 @@ from zopache.pages.page import Page
 from zope.interface import implementer
 from zopache.business.geocoding import GeoCodeObject
 from zopache.remote.video import BasicVideo
-from zopache.business.subscribe import Member
-from zopache.business.subscribe import Member
 from zopache.pages.interfaces import ILocation
 from zopache.core.interfaces import IVideo
 from zope import schema

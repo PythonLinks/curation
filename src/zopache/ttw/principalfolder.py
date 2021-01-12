@@ -57,6 +57,13 @@ class InternalPrincipal(FileBase,Page):
     contentType = "text/plain"
     webClass = 'Person'
     branchSize = 1
+
+
+    def getGroups(self):
+         if not hasattr(self,'groups'):
+            self.groups =  OOBTree()
+         return self.groups        
+         
     
     """
     from persistent.list import PersistentList

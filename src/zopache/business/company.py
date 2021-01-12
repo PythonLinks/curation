@@ -12,28 +12,27 @@ from zopache.business.ipolitician import IPolitician
 
 from zopache.pages.page import Page
 from zopache.pages.interfaces import IPage
-from zopache.business.subscribe import Member
 from zopache.business.geocoding import GeoCodeObject
 from zopache.business.imaginarypage import ImaginaryPage
+from zopache.business.subscribe import HasMembers
 
-class VeryBase (Member):
+class Base(Page):    
     hidden = False
-
-    def getTitle(self):
-         if self.hidden:
-            return "Hidden"
-         return self.title
-
+    eventsPageURL = ""
+    hasScheduledEvents = False  
+    email = ''
+    
+    def __init__(self):
+        Page.__init__(self)
+        Member.__init__(self)
+        self.members = OOBTree()
+        
     def getSpecialization(self):
         if hasattr(self,'specialization') and self.specialization != '':
            return self.specialization
         return self.description [0:20]
 
-class Base(VeryBase,Page):
-    email = ''    
-    def __init__(self):
-        Member.__init__(self)
-        Page.__init__(self)    
+
 
 #GeoBase inherits  Page from Location
 class GeoBase(GeoCodeObject,Base):
@@ -43,7 +42,6 @@ class GeoBase(GeoCodeObject,Base):
     #LocationBase inherits from Page
     def __init__(self):
         LocationContainer.__init__(self)
-        Member.__init__(self)
         GeoCodeObject.__init__(self)
         
     def canView(self,view):
@@ -66,6 +64,7 @@ from zopache.business.region import RegionBase
 @implementer (IOrganization)
 class Organization  (
                      GeoBase,
+                     HasMembers,
                      RegionBase):
     
     interface = IOrganization
@@ -77,14 +76,13 @@ class Organization  (
 #Companies now use getMarketLngLtd
 from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
 from zopache.business.map import Map
-from zopache.business.subscribe import Member        
 from zopache.pages.location import MapBase
 
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
                       GeoBase,
                       MapBase,
-                      Member,
+                      HasMembers,
                       Page,
                       RegionBase):
 

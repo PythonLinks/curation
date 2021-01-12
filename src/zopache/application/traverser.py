@@ -25,7 +25,6 @@ class Traverser(object):
         #A HACK TO FIX AN IURL PROBLEM
         if name == 'root':
             return context, None
-        
         #FIRST, IF YOU HAVE A TEMPLATE, SEE THE VIEW
         if self.zopacheTemplate != None :
            zopacheTemplate = self.zopacheTemplate

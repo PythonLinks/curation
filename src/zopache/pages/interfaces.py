@@ -14,6 +14,14 @@ from zopache.ttw.interfaces import IAceHTML
 from zopache.core.interfaces import ICountable
 from zopache.crud.interfaces import ILeaf
 
+class ILayoutView(Interface):
+    pass
+
+class IImaginary(ILayoutView):
+   pass
+
+class IImaginaryBTree(ILayoutView):
+   pass
 
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
@@ -83,7 +91,7 @@ class IActionNetwork(ILinkTop,
         default = u'',
     )       
 
-class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
+class IPage(ILayoutView,IPageTop,IPageBottom,IContent, IContainer, IOrdered,
             IJSONInclude, IBTreeContainer,IUntrustedHTML,IAceHTML):
     pass
 

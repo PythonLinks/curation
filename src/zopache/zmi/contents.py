@@ -10,7 +10,7 @@ from zopache.zmi.interfaces import IObjectPaster, IObjectDeleter
 from zopache.crud.utilities import title_or_name
 from zopache.zmi.cutcopypaste import Cutter, Paster, Copier, Deleter
 from .adapter import ZMIAdapter as Adapter
-from zopache.pages.iimaginary import IImaginary
+from zopache.pages.interfaces import IImaginary
 
 class Contents(object):
     error = ''

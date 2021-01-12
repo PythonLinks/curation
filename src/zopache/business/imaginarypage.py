@@ -1,6 +1,5 @@
 from zopache.pages.interfaces import IPage
 from dolmen.container import IBTreeContainer
-from zopache.pages.iimaginary import IImaginary
 from zopache.pages.imaginary import Imaginary, ImaginaryBTree
 
 

@@ -1,13 +1,13 @@
 from zopache.core.viewdecorators import *
 from cromlech.webob.response import Response
 from dolmen.view import  make_view_response
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import ILayoutView
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.ttw.htmlviews import Index
 
 @view_component
 @name('index')
-@context(IPage)
+@context(ILayoutView)
 class PageIndex(Index):
     def update(self):
         self.zopacheTemplate = self.getIndex()

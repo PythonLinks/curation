@@ -17,7 +17,7 @@ from zopache.pages.interfaces import IRootPage, IPage
 from zopache.ttw.interfaces import IWebClass, IProducts
 from zopache.ttw.interfaces import IInternalPrincipal
 #from zopache.business.ipolitician import IPolitician
-from zopache.pages.iimaginary import IImaginary
+from zopache.pages.interfaces import IImaginary
 from zopache.ttw.interfaces import  ICanonical
 
 @implementer(IBranch)

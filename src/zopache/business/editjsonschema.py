@@ -32,14 +32,16 @@ class Base(object):
     interface = IClass
     fields = Fields(IClass)
 
+
+
     @property
     def jsonSchemaDict(self):
-            result =  self.template["json-schema"]
+            result =  self.context.webClassAcquire["json-schema"]
             result = result.getAsDict()
             return result
     
     def jsonSchemaString(self):
-        result =  self.template["json-schema"]
+        result =  self.webClassAcquire["json-schema"]
         result = result.getAsString()
         return result
 
@@ -70,10 +72,9 @@ class Base(object):
         return ""
 
 
-class AddPolitician (Base, AddAnonymousPage):
+class AddBase (Base, AddAnonymousPage):
     dataValidators = [JSONSchemaValidator, Duplicate]
 
-    factory = Politician
     def update(self):
         AddAnonymousPage.update(self)
         self.template = self.getTemplates()['json-editor']    
@@ -101,14 +102,11 @@ class AddPolitician (Base, AddAnonymousPage):
               AddByJSON("Add and View", self.factory),
               #AddByJsonAndEdit("Add and CME Edit", self.factory),
               Cancel("Cancel","Cancel"))
-    
-@form_component
-@name ('ckedit')
-@context(IPolitician)
-@implementer(ITreeSecurity)
-class EditPolitician (Base,EditForm):
-    title = 'Edit this Person.'
-    subTitle = 'Using JSON Schema.'
+
+class AddPolitician (AddBase):
+    factory = Politician    
+        
+class EditBase( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
 
     def acquireTitle(self):
@@ -149,6 +147,15 @@ class EditPolitician (Base,EditForm):
         else:
            return json.dumps(self.contextJsonDict())
 
+
+@form_component
+@name ('ckedit')
+@context(IPolitician)
+@implementer(ITreeSecurity)
+class EditPolitician (EditBase):
+    title = 'Edit this Person.'
+    subTitle = 'Using JSON Schema.'
+       
 @form_component
 @name ('aceedit')
 @context(IPolitician)

@@ -201,7 +201,8 @@ class AceObjectIndex(Index,Breadcrumbs):
         layout = zopacheTemplate.layout
         if layout == "":
             return content
-        template = self.parentalAcquire(layout, context = zopacheTemplate)
+        #template = self.parentalAcquire(layout, context = zopacheTemplate)
+        template = self.layoutAcquire(layout)        
         view = self
         return template.__call__(view,content=content)
     

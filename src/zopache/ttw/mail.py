@@ -96,11 +96,10 @@ class Notify (object):
         self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()
 
-    def notifyAdminsNewVolunteer(self):
+    def notifyAdminsMemberEvent(self,subject):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
         if mailer == None:
            return ''                
-        subject = "New Volunteer "
         subject += self.context.title
         url = self.secureShortURL (context = self.context)        
         content = F"{self.request.principal.title}"
