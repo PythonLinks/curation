@@ -7,6 +7,7 @@ from zopache.ttw.htmlviews import Index
 
 @view_component
 @name('index')
+
 @context(ILayoutView)
 class PageIndex(Index):
     def update(self):
