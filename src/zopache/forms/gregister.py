@@ -57,10 +57,6 @@ class BaseRegister(AddForm, Notify):
             Cancel("Cancel","Cancel"),            
             GoogleRegisterAction("Please Register Me", self))
 
-    def newURL(self,new):
-        newURL = '..'        
-        return newURL
-
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         
@@ -71,6 +67,10 @@ class GRegister(BaseRegister):
     title='Site Registration'
     subTitle='Please enter your user id and GDPR permissions.'
 
+    def newURL(self):
+        newURL = "/" + self.context.__name__        
+        return newURL
+
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text = "Thank you for registering."
@@ -78,7 +78,7 @@ class GRegister(BaseRegister):
         
 #SUBSCRIBE    
 @form_component
-@name (u'subscribe')
+@name (u'gsubscribe')
 @context(IPage)
 class GSubscribe(BaseRegister):
     title='Register To Subscribe'
@@ -91,14 +91,18 @@ class GSubscribe(BaseRegister):
         text += "We do not yet publish regularly. "
         send (text)
         
+    def newURL(self):
+        newURL = "/" + self.context.__name__ + "/subscribe"        
+        return newURL
+    
 #DONATE
 @form_component
-@name (u'donate')
+@name (u'gdonate')
 @context(IPage)
 class GDonate(BaseRegister):
-    title='Site Registration'
+    title='Register To Donate'
     subTitle='Please enter your user id and GDPR permissions.'
-    def newURL(self,new):
+    def newURL(self):
         newURL = '..'        
         return newURL
 
@@ -109,9 +113,15 @@ class GDonate(BaseRegister):
         text += ".  You will be contacted shortly."
         send (text)
 
+    def newURL(self):
+        newURL = self.acquireAttribute('donationsPageURL')
+        if newURL == "": 
+           "/" + self.context.__name__ 
+        return newURL
+    
 #Volunteer
 @form_component
-@name (u'volunteer')
+@name (u'gvolunteer')
 @context(IPage)
 class GVolunteer(BaseRegister):
     title='Register To Volunteer'
@@ -122,11 +132,14 @@ class GVolunteer(BaseRegister):
         text += self.context.title
         text += ".  You will be contacted shortly."
         send (text)
-        
+
+    def newURL(self):
+        newURL = "/" + self.context.__name__ + "/volunteer"        
+        return newURL                
 
 #ENDORSE
 @form_component
-@name (u'endorse')
+@name (u'gendorse')
 @context(IPage)
 class GEndorse(BaseRegister):
     title='Register to Endorse This Candidate'
@@ -137,5 +150,8 @@ class GEndorse(BaseRegister):
         text += "self.context.title"
         text += "."
         send(text)
-
+        
+    def newURL(self):
+        newURL = "/" + self.context.__name__ + "/endorse"        
+        return newURL        
         

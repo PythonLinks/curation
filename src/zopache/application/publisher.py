@@ -6,7 +6,7 @@ from cromlech.browser import IPublisher, IView, IResponseFactory
 from zope.interface.interfaces import ComponentLookupError
 from zopache.ttw.historyitem import HistoryTraverser
 from zopache.pages.interfaces import IPage,IProxyPage
-
+from cromlech.security import unauthenticated_principal as anonymous
 from cromlech.dawnlight.publish import shortcuts, PublicationError
 
 class Publisher (DawnlightPublisher):
@@ -94,9 +94,14 @@ class Publisher (DawnlightPublisher):
         #IF A VIEW WAS FOUND, RETURN IT
 
         if (view is  not None):
-                    view.publisher = publisher
-                    factory = IResponseFactory(view)
-                    response = factory()
-                    return response
+            view.publisher = publisher
+            factory = IResponseFactory(view)
+            response = factory()
+            if request.principal != anonymous:
+                if not 'image' in response.headers['content-type']:
+                      response.headers['cache-control'] = "no-store"
+            else:
+                response.headers['cache-control'] = "no-store"                
+            return response
 
         raise PublicationError('%r can not be rendered.' % context)                

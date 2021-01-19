@@ -8,12 +8,54 @@ from dolmen.view import name, context, view_component
 from cromlech.security import unauthenticated_principal as anonymous
 from cromlech.browser.exceptions import HTTPFound
 
+from zopache.core.baseform import Form
 from zopache.core.page  import  Page
 from zopache.business.interfaces import IFollow
 from zopache.ttw.mail import Notify
 from zopache.business.ifollow import IFollow
+from zopache.business.member import Member
 
 class HasMembers(object):
+    hasMembers = True
+
+    def getMembers(self):
+         if not hasattr(self,'_members'):
+            self._members =  OOBTree()
+         return self._members
+     
+    members = property(getMembers) 
+    
+    def hasSubscribed (self,view):
+        return self.isMemberA(view,'subscriber')
+    
+    def hasVolunteered (self,view):
+        return self.isMemberA(view,'volunteer')
+    
+    def hasEndorsed (self,view):
+        return self.isMemberA(view,'endorser')
+
+    def mayDonate (self,view):
+        return self.isMemberA(view,'donor')    
+
+    def isMemberA(self,view,attribute):
+         principal = view.request.principal
+         if principal == anonymous:
+            return False
+         principalId = principal.__name__
+         theMember = self.getOneMember(principalId)
+         return getattr(theMember,attribute,False)
+     
+    def getOneMember(self,name):
+        members = self.members
+        if name in members:
+           theMember = members[name] 
+           if theMember.__class__ == Member:
+               return theMember
+        else:
+              theMember = Member (name)   
+              members [name] = theMember
+              return theMember
+    
     def isMember(self,view):
         if not view.isAuthenticated():
            return False
@@ -44,28 +86,21 @@ class HasMembers(object):
          return self.title
 
     
-class MemberForms(Notify):
-
-    def getAllMembers(self):
-         context = self.context
-         if not hasattr(contect,'members'):
-            context.Members =  OOBTree()
-         return context.members
-     
+class MemberForms(Form,Notify):
+    
     def getOneMember(self,name):
         members = self.members
         if name in members:
-           theMember = member[name] 
-           if theMember.__class__ == Member:
-               return theMember
-           else:
-              theMember = Member [name]   
+           theMember = members[name] 
+           if not theMember.__class__ == Member:
+              theMember = Member (name)   
               members [name] = theMember
-              return TheMember
+           return theMember
 
     def setMember(self,theMember):
-        self.members[theMember.__name__] = theMember
+        self.context.members[theMember.__name__] = theMember
         
+         
 class Connect(MemberForms):
     def update(self):
          principal = self.request.principal
@@ -73,10 +108,10 @@ class Connect(MemberForms):
             return
         
          principalId = principal.__name__
-         theMember = self.getOneMember(principalId)
+         theMember = self.context.getOneMember(principalId)
          self.updateMember(theMember)
          self.setMember(theMember)         
-         principal.groups.add (self.context.__name__)
+         principal.addGroup (self.context.__name__)
          principal._p_changed = True
          self.notifyAdminsMembershipEvent(self.subject)
          raise HTTPFound(location=".")
@@ -88,14 +123,14 @@ class Disconnect(MemberForms):
             return 
          principalId = principal.__name__
          members = self.context.members
-         theMember = self.getOneMember(principalId)
+         theMember = self.context.getOneMember(principalId)
          self.updateMember(theMember)
          if not theMember.isActive():
             del self.context.members [principalId] 
-            principal.groups.remove (self.context.__name__)
+            principal.removeGroup (self.context.__name__)
          principal._p_changed = True
          self.setMember(theMember)
-         self.notifyAdminsMemberEvent(self.subject)
+         self.notifyAdminsMembershipEvent(self.subject)
          raise HTTPFound(location=".")                  
 
 #Volunteer     
@@ -105,7 +140,7 @@ class Disconnect(MemberForms):
 class volunteer(Connect):
     subject = "New Volunteer "
     
-    def updateMember(member):
+    def updateMember(self,member):
        member.volunteer = True
     
 @view_component
@@ -114,7 +149,7 @@ class volunteer(Connect):
 class UnVolunteer(Disconnect):
     subject = "Volunteer Resigned "         
     
-    def updateMember(member):
+    def updateMember(self,member):
        member.volunteer = False
 
 #SUBSCRIBE
@@ -123,7 +158,7 @@ class UnVolunteer(Disconnect):
 @context(IFollow)
 class Subscribe(Connect):
     subject = "New Subscriber "    
-    def updateMember(member):
+    def updateMember(self,member):
        member.subscriber = True
     
 @view_component
@@ -131,7 +166,7 @@ class Subscribe(Connect):
 @context(IFollow)
 class Unsubscribe(Disconnect):
     subject = "Subscriber Resigned "
-    def updateMember(member):
+    def updateMember(self,member):
        member.subscriber = False    
 
 #Donate
@@ -140,7 +175,7 @@ class Unsubscribe(Disconnect):
 @context(IFollow)
 class Donate(Connect):
     subject = "New Donor "    
-    def updateMember(member):
+    def updateMember(self,member):
        member.donor = True
     
 @view_component
@@ -148,7 +183,7 @@ class Donate(Connect):
 @context(IFollow)
 class Undonate(Disconnect):
     subject = "Donor Resigned "
-    def updateMember(member):
+    def updateMember(self,member):
        member.donor = False
      
 #ENDORSE    
@@ -157,16 +192,16 @@ class Undonate(Disconnect):
 @context(IFollow)
 class Endorse(Connect):
     subject = "New Endorsement "    
-    def updateMember(member):
-       member.endorse = True
+    def updateMember(self,member):
+       member.endorser = True
     
 @view_component
 @name('unendorse')
 @context(IFollow)
 class Unendorse(Disconnect):
     subject = "Endorser Resigned "
-    def updateMember(member):
-        member.endorse = False
+    def updateMember(self,member):
+        member.endorser = False
       
 
 """        

@@ -19,7 +19,7 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
     def __init__(self):
         ImaginaryPage.__init__(self)
         LocationLeaf.__init__(self)
-        Member.__init__(self)
+        HasMembers.__init__(self)
 
     """    
     def getTitle(self):
@@ -56,10 +56,14 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
 
     def getTwitterId(self):
         return self.getConnect("twitterId")
+    
+    def getDonationsPageURL(self):
+        return self.getCandidateInfo("donationsPageURL")    
 
     def getRemoteURL(self):
         return self.getConnect("remoteURL")
-    
+
+    donationsPageURL = property(getDonationsPageURL)
     remoteURL = property(getRemoteURL)
     twitterId = property(getTwitterId)        
     #title = property(getTitle,setTitle)

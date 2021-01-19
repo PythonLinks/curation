@@ -127,7 +127,8 @@ class BTreeImage(ImageBase,BTreeContainer):
         if name in self:
            return self[name]
 
-        if name in ['400W','600W','600W','100W','200W','100H','200H','300H']:
+        if name in ['50W','100W','200W','400W','600W',
+                     '100H','200H','300H',]:
               return self.shrink(name) 
         return default
 
@@ -189,7 +190,7 @@ def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.content_type=view.context.contentType
         response.write(result or u'')
-        response.headers['Cache-Control'] = 'public,max-age=3600'  
+        response.headers['cache-control'] = 'public,max-age=3600'  
         return response
 
     
@@ -244,7 +245,7 @@ class DisplayImage(View,Breadcrumbs):
     
 def make_logo_response(view, result, *args, **kwargs):
         response = view.responseFactory()
-        response.headers['Cache-Control'] = 'public,max-age=3600'  
+        response.headers['cache-control'] = 'public,max-age=3600'  
         logo = ParentalAcquire(view.context)['Logo']
         if logo:
             contentType = logo.contentType

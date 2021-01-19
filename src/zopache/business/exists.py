@@ -9,6 +9,7 @@ class Duplicate(BaseValidator):
     def validate(self, data):
         siteRoot = self.form.getSiteRoot()
         errors = Errors()
+
         theItem = self.slugExists(data)
         if theItem != None:
             title = theItem.title

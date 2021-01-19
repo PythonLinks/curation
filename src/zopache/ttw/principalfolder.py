@@ -58,15 +58,21 @@ class InternalPrincipal(FileBase,Page):
     webClass = 'Person'
     branchSize = 1
 
-
     def getGroups(self):
-         if not hasattr(self,'groups'):
-            self.groups =  OOBTree()
-         return self.groups        
-         
+         if not hasattr(self,'_groups'):
+            self._groups =  set()
+         return self._groups
+     
+    groups = property (getGroups)
+    def addGroup(self,name):
+        self.groups.add(name)
+        self._p_changed
+    def removeGroup(self,name):
+        self.groups.remove(name)
+        self._p_changed
     
     """
-    from persistent.list import PersistentList
+    From persistent.list import PersistentList
     def makeOrdered(self):
         self._order = PersistentList()
         for item in self:

@@ -96,7 +96,7 @@ class Notify (object):
         self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()
 
-    def notifyAdminsMemberEvent(self,subject):
+    def notifyAdminsMembershipEvent(self,subject):
         self.mailer = mailer = self.parentalAcquire ("MailHost")
         if mailer == None:
            return ''                
@@ -117,7 +117,7 @@ class Notify (object):
         subject += self.context.title
         url = self.secureShortURL (context = self.context)        
         content = F"{self.request.principal.title}"
-        content = " is resigning from  {self.contextg.url}.  "
+        content = f" is resigning from  {self.contextg.url}.  "
         content += "Just reply to this email."        
         self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()                

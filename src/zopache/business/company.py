@@ -24,8 +24,7 @@ class Base(Page):
     
     def __init__(self):
         Page.__init__(self)
-        Member.__init__(self)
-        self.members = OOBTree()
+        HasMembers.__init__(self)
         
     def getSpecialization(self):
         if hasattr(self,'specialization') and self.specialization != '':

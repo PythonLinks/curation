@@ -19,6 +19,7 @@ from zopache.business.politician import Politician
 from zopache.crud.actions import AddByJSON, AddByJsonAndEdit,Cancel
 from zopache.business.ipolitician import IPolitician
 from zopache.business.exists import Duplicate
+from zopache.business.interfaces import IMapOrganization
 
 class IClass(Interface):
 
@@ -32,16 +33,14 @@ class Base(object):
     interface = IClass
     fields = Fields(IClass)
 
-
-
     @property
     def jsonSchemaDict(self):
-            result =  self.context.webClassAcquire["json-schema"]
+            result =  self.template[self.schemaName]
             result = result.getAsDict()
             return result
     
     def jsonSchemaString(self):
-        result =  self.webClassAcquire["json-schema"]
+        result =  self.template[self.schemaName]        
         result = result.getAsString()
         return result
 
@@ -51,17 +50,26 @@ class Base(object):
            setattr(target,key,value)
         
     def applyData(self):
-
         target = self.target()
-        children = (self.jsonSchemaDict["properties"]["introduction"]["properties"].keys())
-        requestJsonDict = self.requestJsonDict["introduction"]
-        for key in children:        
-            self.updateFromJsonDict(target,key,requestJsonDict)
+        jsonSchemaDict =self.jsonSchemaDict
+        rootProperties = jsonSchemaDict["properties"]
         
-        children = list(self.jsonSchemaDict["properties"].keys())
-        children.remove("introduction")
-        requestJsonDict = self.requestJsonDict
-        for key  in children:
+        if "introduction" in rootProperties:
+           introductionKeys = (rootProperties
+                                     ["introduction"]
+                                     ["properties"].keys())
+           requestIntroduction = self.requestJsonDict["introduction"]
+           for key in introductionKeys:        
+               self.updateFromJsonDict(target,key,requestIntroduction)
+
+
+        rootkeys = properties.keys()
+        rootKeys = list(rootKeys)
+        if "introduction" in rootProperties:        
+           rootKeys.remove("introduction")
+           
+        requestJsonDict = self.requestJsonDict                
+        for key  in rootKeys:
             if hasattr(target,key):
                 delattr(target,key)
             self.updateFromJsonDict(target,key,requestJsonDict)
@@ -104,7 +112,8 @@ class AddBase (Base, AddAnonymousPage):
               Cancel("Cancel","Cancel"))
 
 class AddPolitician (AddBase):
-    factory = Politician    
+    factory = Politician
+    schemaName = "PoliticianSchema"
         
 class EditBase( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
@@ -122,19 +131,23 @@ class EditBase( Base,EditForm):
 
     def contextJsonDict(self):
         contextJsonDict = dict()
-        introduction = dict()
-        contextJsonDict["introduction"] = introduction
         context = self.context
         
         #FIRST FOR THE ROOT FIELDS
-        children = self.jsonSchemaDict["properties"]["introduction"]["properties"].keys()
-        for child in children:
-            if hasattr(context,child):
-               value = getattr(context,child) 
-               introduction [child] = value
+        rootProperties = self.jsonSchemaDict["properties"]
+        if 'introduction' in rootProperties:
+            introduction = dict()
+            contextJsonDict["introduction"] = introduction
+            children = rootProperties["introduction"]["properties"].keys()
+        
+            for child in children:
+                if hasattr(context,child):
+                   value = getattr(context,child) 
+                   introduction [child] = value
                
         children = list(self.jsonSchemaDict["properties"].keys())
-        children.remove('introduction')
+        if 'introduction' in children: 
+            children.remove('introduction')
         for child in children:
             if hasattr(context,child):
                value = getattr(context,child) 
@@ -155,15 +168,24 @@ class EditBase( Base,EditForm):
 class EditPolitician (EditBase):
     title = 'Edit this Person.'
     subTitle = 'Using JSON Schema.'
-       
+    schemaName = "PoliticianSchema"
+
+@form_component
+@name ('edit')
+@context(IMapOrganization)
+@permissions('NRCV')
+class EditVotingSchema(EditBase):
+    title = 'Edit the NRCV Data.'
+    subTitle = 'Using JSON Schema.'
+    schemaName = "VotingSchema"    
+    
 @form_component
 @name ('aceedit')
 @context(IPolitician)
 @implementer(ITreeSecurity)
 class AceEditPolitician (EditPolitician):
       pass
-  
-       
+         
 @view_component
 @name('addCandidate')
 @target(IView)
