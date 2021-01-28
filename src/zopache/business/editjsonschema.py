@@ -63,7 +63,7 @@ class Base(object):
                self.updateFromJsonDict(target,key,requestIntroduction)
 
 
-        rootkeys = properties.keys()
+        rootKeys = rootProperties.keys()
         rootKeys = list(rootKeys)
         if "introduction" in rootProperties:        
            rootKeys.remove("introduction")

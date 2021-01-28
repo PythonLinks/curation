@@ -22,6 +22,7 @@ from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
 from zopache.pages.htmlvalidator import HTMLValidator
 from zopache.pages.proxypage import ProxyPage
+from zopache.core.getimage import getImage
 
 class AddPageBase(
                   AddCkHTMLBase,
@@ -105,7 +106,11 @@ class AddAction(AddAuthorizedPage):
 class AddLink(AddAuthorizedPage):
     interface = IAddLink
     title = "Add a Link"
-    factory = Link    
+    factory = Link
+    def postProcess(self):
+        Link.postProcess(self.new, view = self)
+        if 'form.field.imageURL' in self.request.response:
+            getImage(self.new, self.request ['form.field.imageURL'])
   
 #LOCAION
 @view_component

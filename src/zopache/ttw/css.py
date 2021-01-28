@@ -176,4 +176,4 @@ class ICSSFolderAdaptor(object):
         self.context=context   
 
     def getSegment(self):
-        return 'search'
+        return 'manage'

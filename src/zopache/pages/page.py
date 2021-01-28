@@ -36,6 +36,13 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     basePath = "/"
     createdBy = None
     editedBy = None
+
+    def getTitleForDomain(self,domain):
+        return self.title
+
+    def getDescriptionForDomain(self,domain):
+        return self.description
+
     
     def className(self):
         return self.__class__.__name__
@@ -161,7 +168,8 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def preProcess(self,view=None):
         siteRoot = view.getSiteRoot()
-        siteRoot.unIndexItem(self)
+        if self.webApproved:
+            siteRoot.unIndexItem(self)
         
     def postProcess(self,view=None):
         siteRoot = view.getSiteRoot()

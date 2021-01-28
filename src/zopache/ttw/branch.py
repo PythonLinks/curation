@@ -119,7 +119,8 @@ class Branch(SimpleBranch):
            
     def deleteRemoteURL(self,link):
         if link == "":
-           return 
+           return
+
         link = self.urlOnly(link)
         del self.remoteURLs[link]
        
@@ -151,10 +152,12 @@ class Branch(SimpleBranch):
         self.indexBranch(self,self)
         
     def indexBranch(self,tree,branch,itemType=ICanonical):
+        
         if IImaginary.providedBy(branch):
             return
 
         for item in branch.values():
+            
             if itemType.providedBy(item):
                 self.indexItem(item, itemType = itemType)           
                 if IBTreeContainer.providedBy(item):    
@@ -166,9 +169,6 @@ class Branch(SimpleBranch):
                    not item.webApproved ):
                    return
                
-        if item.__class__.__name__ == "PhoneTree":
-            return
-        
         if hasattr(item,'remoteURL'):
             self.addRemoteURL(item)
             

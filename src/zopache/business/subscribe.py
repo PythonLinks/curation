@@ -85,6 +85,10 @@ class HasMembers(object):
             return "Hidden"
          return self.title
 
+    def setTitle(self,title):
+         self.title = title
+         return self.title
+     
     
 class MemberForms(Form,Notify):
     
