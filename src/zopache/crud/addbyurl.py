@@ -36,12 +36,11 @@ class AddByURLAction(Action):
         response ['form.field.title']= result[0]
         response['form.field.description']= result[1]
         response ['form.field.imageURL'] = result[2]
-
         baseURL = '/' + form.context.__name__
         postingURL = (self.form.newURL(baseURL) +
                       "?" +
                       urlencode(response))
-        
+         
         return SuccessMarker('Updated', True, url=postingURL)
 
 class AddByURLForm(AddFormBase,Breadcrumbs,Notify):

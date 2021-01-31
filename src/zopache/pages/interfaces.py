@@ -113,7 +113,7 @@ class ILink(IPage,ILinkTop,ICountable):
     pass
 
 class IAddLink(ILink):
-    imagegURL= schema.URI(
+    imageURL= schema.URI(
         title = 'Image URL',
         description = """A URL That this highlights this link. 
              Please include 'https://

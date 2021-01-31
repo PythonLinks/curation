@@ -95,7 +95,7 @@ class IImageBase(Interface):
         required = False,
     )    
     data = FileField(title=u'Upload an Image',
-                     required = True,)         
+                     required = False,)         
 
 class IFile(IFileBase,ILeaf):
     pass
@@ -105,6 +105,10 @@ class IImage(IImageBase,ILeaf):
 
 class IBTreeImage(IImage,IBTreeContainer):
     pass
+
+class IAddBTreeImage(IImage,IBTreeContainer):
+    data = FileField(title=u'Upload an Image',
+                     required = True,)         
     
 #I THINK ALL OD MY ZODB OBJECTS GET THIS ONE    
 class ICanonical (Interface):

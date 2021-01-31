@@ -8,7 +8,7 @@ from zopache.ttw.fileaction  import(
     AddBannerAction)    
 
 from dolmen.container import IBTreeContainer
-from zopache.ttw.interfaces import IFile, IImage
+from zopache.ttw.interfaces import IFile, IAddBTreeImage
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import AddForm
 from zopache.core.uniquename import UniqueName
@@ -34,11 +34,10 @@ class AddFile(AddForm,UniqueName):
 @form_component
 @name('addImage')
 @context(IBTreeContainer)
-@title("Add File")
 @implementer(ITreeSecurity)
 class AddImage(AddFile):
     subTitle='Add an Image'
-    interface = IImage
+    interface = IAddBTreeImage
     ignoreContent = True
     @property
     def actions(self):
@@ -54,8 +53,6 @@ class AddImage(AddFile):
 class AddBanner(AddImage):
     dataValidators = [BannerValidator]     
     subTitle='Add a Banner'
-    ignoreContent = True
-    interface = IImage    
     @property
     def fields(self):
         return  Fields(self.interface)
@@ -75,8 +72,6 @@ class AddBanner(AddImage):
 class AddLogo(AddImage):
     dataValidators = [LogoValidator] 
     subTitle="Add a Logo or politician's photo."
-    ignoreContent = True
-    interface = IImage    
     @property
     def fields(self):
         return  Fields(self.interface)
@@ -96,8 +91,6 @@ class AddLogo(AddImage):
 class AddSocialMediaImage(AddImage):
     dataValidators = [LogoValidator] 
     subTitle="Add a Social Media Image."
-    ignoreContent = True
-    interface = IImage    
     @property
     def fields(self):
         return  Fields(self.interface)
