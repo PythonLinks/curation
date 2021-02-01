@@ -163,7 +163,8 @@ class UnVolunteer(Disconnect):
 class Subscribe(Connect):
     subject = "New Subscriber "    
     def updateMember(self,member):
-       member.subscriber = True
+        breakpoint()
+        member.subscriber = True
     
 @view_component
 @name('unsubscribe')
@@ -171,6 +172,7 @@ class Subscribe(Connect):
 class Unsubscribe(Disconnect):
     subject = "Subscriber Resigned "
     def updateMember(self,member):
+
        member.subscriber = False    
 
 #Donate

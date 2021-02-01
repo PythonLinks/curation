@@ -40,7 +40,7 @@ class AddByURLAction(Action):
         postingURL = (self.form.newURL(baseURL) +
                       "?" +
                       urlencode(response))
-         
+
         return SuccessMarker('Updated', True, url=postingURL)
 
 class AddByURLForm(AddFormBase,Breadcrumbs,Notify):

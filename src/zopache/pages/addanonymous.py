@@ -26,7 +26,6 @@ class AddAnonymousPage(AddPageBase):
         else:
             self.new.webApproved = False        
         self.new.postAddProcess (view = self)
-        self.notifyAdminsNewPage()
 
 class AddToTree(object):
 

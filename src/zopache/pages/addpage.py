@@ -50,11 +50,7 @@ class AddPageBase(
               AddAndAceEdit("Add and aceEdit", self.factory),
               AddAndCkEdit("Add and ckEdit", self.factory),
               Cancel("Cancel","Cancel"))
-        
-    def postAddProcess(self,view = None):
-        self.new.postAddProcess (view = self)
-        self.notifyAdminsNewPage()
-            
+                    
 class AddAuthorizedPage(AddPageBase):
 
     actions = Actions()
