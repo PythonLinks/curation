@@ -57,7 +57,8 @@ class InternalPrincipal(FileBase,Page):
     contentType = "text/plain"
     webClass = 'Person'
     branchSize = 1
-
+    lastNotificationTime = 0
+    
     def getGroups(self):
          if not hasattr(self,'_groups'):
             self._groups =  set()
