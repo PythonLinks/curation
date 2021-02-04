@@ -10,7 +10,7 @@ from zopache.business.ipolitician import (IPolitician,
 from zopache.pages.page import SiteRoot
 from zopache.pages.interfaces import IPage
 from zopache.business.imaginarypage import ImaginaryPage
-from zopache.business.convert import Convert
+
 @implementer (IPolitician)
 class Politician (ImaginaryPage,LocationLeaf,HasMembers):
     localOrNational = ""
