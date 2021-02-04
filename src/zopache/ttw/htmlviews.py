@@ -99,7 +99,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 @form_component
 @name ('addHTML')
 @context(IBTreeContainer)
-@permissions('Manage')
+@permissions('Developer')
 class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 
@@ -124,7 +124,7 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 @form_component
 @name (u'addAceHTML')
 @context(IBTreeContainer)
-@permissions('Manage')
+@permissions('Developer')
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
@@ -132,14 +132,14 @@ class AddAceHTML (AddAceHTMLBase,AddForm):
 @form_component
 @name (u'addAceIFrame')
 @context(IBTreeContainer)
-@permissions('Manage')
+@permissions('Developer')
 class AddAceIFrame (AddAceHTMLBase,AddForm):
     factory = AceIFrameHTML
 
 @form_component
 @name (u'addAceCMS')
 @context(IBTreeContainer)
-@permissions('Manage')
+@permissions('Developer')
 class AddAceCMS (AddAceHTMLBase,AddForm):
     factory = AceCMSHTML
 
