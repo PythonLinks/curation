@@ -18,14 +18,7 @@ from zopache.pages.interfaces import IPage
 from zopache.crud.forms import AddNamedForm, EditForm
 from zopache.core.interfaces import ITreeSecurity
 from zopache.ttw.interfaces import IMailHost
-<<<<<<< HEAD
- 
-import os
-
-from dolmen.message.utils import send
-=======
 from zopache.core.transactionnote import TransactionNote
->>>>>>> 7431dac58154ab414728aa43714ad28460c8bcd0
 
 from here import HERE
 dataDir = os.path.join(HERE, 'data')
@@ -262,50 +255,7 @@ class Notify (TransactionNote):
         content = self.request.url
         self.notify (mailer.noReply,mailer.postMaster, subject, content)       
         self.sendTheMail()
-<<<<<<< HEAD
-
-
-class SendMail(Notify):
-    #def __init__(self, title):
-    #    Action.__init__(self,title)
-    
-    def notifyEditors(self,data):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
-        if mailer == None:
-           return ''                        
-        subject = self.form.request['subject']
-        content = self.form.request['text']
-        to = self.geteditors()
-        afrom = form.request.principal.email
-        self.notify (afrom,to, subject, content)       
-        self.sendTheMail()
-
-    def getEditors(self):
-        parents = self.form.parents()
-        people = form.getPrincipalFolder()
-        recipients = []
-        for item in parents:
-            if hasattr(item,'editors'):
-               for person in item.editors:
-                   if person in people:
-                      email = people[person].email
-                      recipients = recipients.append(email)
-        result = ",".join(recipients)
-        print (result)
-        return result
-    
-    def __call__(self, form):
-        self.form=form
-        data, errors = self.form.extractData()
-        if errors:
-            form.submissionError = errors
-            return FAILURE                
-        self.notifyEditors(data)
-        send ("Mail was sent")
-
-=======
         
->>>>>>> 7431dac58154ab414728aa43714ad28460c8bcd0
 @implementer (IMailHost)
 class MailHost(Leaf):
     debug = False
