@@ -18,11 +18,12 @@ from zopache.core.relatives import parentsUpTo
 from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
-from zopache.pages.allblogobjects import ProcessTree, AllBlogObjects
+from zopache.application.allblogobjects import ProcessTree, AllBlogObjects
 from collections import defaultdict
 from zopache.core.interfaces import ICountable
 from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink,IActionNetwork
+
 
 class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
     title = ''
@@ -35,6 +36,16 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     basePath = "/"
     createdBy = None
     editedBy = None
+
+    def getTitleForDomain(self,domain):
+        return self.title
+
+    def getDescriptionForDomain(self,domain):
+        return self.description
+
+    
+    def className(self):
+        return self.__class__.__name__
     
     def countMe (self):
         if not self.webApproved:
@@ -48,7 +59,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         total=0
         if self.countMe():   
             total += 1        
-        for item in self.childCategories():
+        for item in self.realChildCategories():
             if IPage.providedBy(item):
                     total+=item.countLeaves()
         self.branchSize=total
@@ -94,6 +105,7 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
             if (IPage.providedBy (item) and item.webApproved):
                result.append (item)
         return result
+
     
     def canView(self,view):
         return True
@@ -153,8 +165,16 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.partialPostProcess(view=view)
         self.recalculateRootJSON()
         cache.resetCache(self)
+
+    def preProcess(self,view=None):
+        siteRoot = view.getSiteRoot()
+        if self.webApproved:
+            siteRoot.unIndexItem(self)
         
     def postProcess(self,view=None):
+        siteRoot = view.getSiteRoot()
+        siteRoot.indexItem(self)        
+
         self.modificationTime=time.time()        
         self.postProcessCore(view = view)
         principal = view.request.principal
@@ -179,6 +199,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.title=self.title.replace ('\n' , " ")
         self.title=self.title.replace ('\r' , " ")                
 
+    def preDeleteProcess(self,view = None):
+        siteRoot = view.getSiteRoot()
+        siteRoot.unIndexItem(self)
         
     def postAddProcess(self,view=None):
         self.postProcessCore(view=view)        
@@ -197,17 +220,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
             
         if not view.treeSecurity():
            view.notifyAdminsNewPage()
-
-        siteRoot = self.getSiteRoot()
-           
-        if hasattr(self,'remoteURL'):
-            siteRoot.addRemoteURL(self)
-           
-        if self.__class__.__name__=='Politician':
-           siteRoot.politicians[self.__name__] = self
-           
-        #The Following is not needed.
-        #PageMixIn.postAddProcess(self, view=view)
         
     def recalculateRootJSON(self):
          jsonRoot = self.getSiteRoot()
@@ -245,28 +257,16 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
 
     def __delitem__(self,key):
         item = self[key]
-        OrderedBTreeContainer.__delitem__(self,key)
-        siteRoot = self.getSiteRoot()
         if IPage.providedBy(item):
-            del siteRoot.valuesByToken[key]
-        if item.__class__.__name__ == 'Politician':
-           del siteRoot.politicians[item.name]  
-        if hasattr(item,'remoteURL'):
-            siteRoot.deleteRemoteURL(item.remoteURL)
-           
+           siteRoot = self.getSiteRoot()     
+           siteRoot.deleteItem(item)        
+        OrderedBTreeContainer.__delitem__(self,key)
 
     def __setitem__(self,  key,item):
         OrderedBTreeContainer.__setitem__(self,key,item)
-        siteRoot = self.getSiteRoot()
         if IPage.providedBy(item):
-           siteRoot.valuesByToken[key]=item
-           
-        if item.__class__.__name__ == 'Politician':
-           siteRoot.politicians[item.name]  = item
-           
-        if hasattr(item,'remoteURL'):
-            siteRoot.addRemoteURL(item)
-            
+           siteRoot = self.getSiteRoot()     
+           siteRoot.addItem(item)
                   
     def hasContent(self):
          if len(self.source)<2:
@@ -309,6 +309,9 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def getName(self):
          return self.__name__
      
+    def allValues(self):
+        return self.values()
+    
 @implementer (IActionNetwork)
 class ActionNetwork(PageBase, PageMixIn):
     webClass='Action'
@@ -337,6 +340,9 @@ class SiteRoot(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     homePage = ''
     
+    def preProcess(self,view=None):
+        pass
+        
     def __init__(self):
        Branch.__init__(self)
        PageBase.__init__(self)

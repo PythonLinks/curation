@@ -16,13 +16,14 @@ from dolmen.forms.base.interfaces import ActionError
 
 from zopache.crud.actions import Cancel
 from zopache.ttw import actions  as ttwactions
-from zopache.crud.actions import Edit
+from zopache.crud.update import Edit
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from dolmen.view import name, context, view_component
 from dolmen.view import View
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
 from zopache.crud import actions as formactions, i18n as _
+from zopache.crud import update  as editactions
 
 import RestrictedPython
 from RestrictedPython import _compat

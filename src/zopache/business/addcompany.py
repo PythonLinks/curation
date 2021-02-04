@@ -60,6 +60,18 @@ class AddCompany(AddAll):
     factory = Company
     title = "Add a Company"
 
+from zopache.business.interfaces import IRegion
+from zopache.business.region import Region
+@view_component
+@name('addRegion')
+@target(IView)
+@context(IPage)    
+class AddRegion(AddAll):
+    interface = IRegion
+    factory = Region
+    title = "Add a Region"
+
+    
 @view_component
 @name('addOrganization')
 @title("Add Organization")
@@ -69,6 +81,18 @@ class AddOrganization(AddAll):
     interface = IAddOrganization
     factory = Organization
     title = "Add an Organization"
+
+
+from zopache.business.socialnode import SocialNode
+from zopache.business.iphonetree import ISocialNode
+@view_component
+@name('addSocialNode')
+@target(IView)
+@context(IPage)    
+class AddPhoneTree(AddAll):
+    interface = ISocialNode
+    factory = SocialNode
+    title = "Add a Social Node"    
 
 #CITY    
 @view_component
@@ -127,25 +151,7 @@ class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
         
 
 
-@view_component
-@name('addPolitician')
-@target(IView)
-@context(IPage)    
-class AddPolitician(AddAnonymousPage,GeoCodeForm):
-    interface = IAddPolitician
-    factory = Politician
-    title = "Add a Politician"
-    def update(self):
-        AddAnonymousPage.update(self)
-        GeoCodeForm.update(self)
 
-    """
-    def updateWidgets(self):
-        ddBase.update(self)
-        #item =self.fields['endorsedBy']
-        it =object.__setattr__(item,'mode','multiselect')
-        super().updateWidgets()
-     """
 
 from zopache.pages.addpage import AddPageBase    
 from zopache.application.interfaces import IRootContainer

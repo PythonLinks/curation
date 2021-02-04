@@ -4,7 +4,8 @@ from dolmen.forms.base import Actions
 from zopache.crud   import i18n as _
 from zopache.crud.actions import Cancel
 from zopache.ttw import actions  as ttwactions
-from zopache.crud.actions import Add,Edit
+from zopache.crud.actions import Add
+from zopache.crud.update  import Edit
 from zope import interface
 from zope import schema
 from zope.schema.interfaces import IField

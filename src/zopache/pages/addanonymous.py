@@ -1,6 +1,5 @@
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions
-from zopache.crud import actions as formactions
 from zopache.crud.actions import AddByTitle
 from zopache.pages.pageactions import AddAndView
 from zopache.crud.actions import AddByTitleToTreeAndView
@@ -27,7 +26,6 @@ class AddAnonymousPage(AddPageBase):
         else:
             self.new.webApproved = False        
         self.new.postAddProcess (view = self)
-        self.notifyAdminsNewPage()
 
 class AddToTree(object):
 

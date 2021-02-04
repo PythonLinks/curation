@@ -1,8 +1,9 @@
 from zopache.core.viewdecorators import *
-from zopache.ttw.interfaces import IBranch
 from zopache.core.baseform import Form
 from zopache.ttw.interfaces import IBranch
 from zopache.core.getroot import getSiteRoot, getProducts
+from zopache.ttw.interfaces import IWebClass
+
 @form_component
 @context(IBranch)
 @crom.target(IView)
@@ -17,6 +18,6 @@ class ReIndex(Form):
               root.indexTree()
            products = getProducts (self.context)
            products.indexTree()
-           self.status='Branch was indexed'
+           self.status='The tree of pages was indexed'
            Form.update(self)
 

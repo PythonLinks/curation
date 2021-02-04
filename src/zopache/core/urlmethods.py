@@ -10,7 +10,7 @@ from cromlech.browser import IPublicationRoot
 from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IURLSegment
 from zopache.crud.interfaces import IZodbRoot
-
+from cromlech.browser.exceptions import HTTPTemporaryRedirect
 
 """
 The problem is that there is a site root, and a zodb root.  They may or may 
@@ -29,6 +29,15 @@ I wonder if this will all work?
 """
 
 class URLMethods(object):
+    def possiblyRedirect(self):
+        domain = self.acquireAttribute("domain")
+        if domain == "":
+            return
+        currentDomain = self.getDomain()
+        if domain != currentDomain:
+           newURL = "https://" + domain + "/" + self.context.__name__
+           raise HTTPTemporaryRedirect(newURL)
+       
     #THIS IS THE GOOD ONE
     #HTTPS://Domain.Name/CanonicalName
     def secureShortURL(self,context = None):
@@ -37,14 +46,28 @@ class URLMethods(object):
         result = 'https://'
         result += self.getDomain()
         result += self.getSiteRoot().basePath
-        result += context.__name__
+        result += self.getShortPath()
         return result
+    
+    def getShortPath(self):
+        return self.context.__name__
+        #all = []
+        #for item in self.publisher.shortPath:
+        #    all.append(item.__name__)
+        #return "/".join(all)
+
+    def getLongPath(self):    
+        all = []
+        for item in self.publisher.longPath:
+            all.append(item.__name__)
+        return "/".join(all)    
+
     
     #Another Good One
     # /CanonicalName
     def shortURL(self,viewName=""):
         result = ''
-        result += self.context.__name__
+        result += self.getShortPath()
         if viewName:
            result += '/' + viewName
         return result
@@ -131,6 +154,9 @@ class URLMethods(object):
     #Only good for this zodb application. 
     def simpleUrl(self,item):
         return self.relativeURL(item)
+
+    def urllibParseURLEncode(self,aDict):
+        return urllib.parse.urlencode(aDict)
         
     def urlEncode(self,str):
         return urllib.parse.quote(str)

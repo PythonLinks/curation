@@ -11,6 +11,7 @@ from zopache.core.baseform import Form
 from zope.interface import Interface
 from zopache.core import Container
 from zopache.crud import actions as formactions, i18n as _
+from zopache.crud import update  as updateactions
 from zopache.ttw import actions as ttwactions
 
 from zopache.ttw.html import HTML
@@ -40,7 +41,7 @@ class AceContainer(TrustedHTML,Container):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class ContainerAddForm(AddForm):
-    subTitle = 'Add a Container'
+    subTitle = 'Add a WYSIWYG HTML Folder'
     interface = Interface
     ignoreContent = True
     factory=HTMLContainer
@@ -55,11 +56,11 @@ class ContainerAddForm(AddForm):
 
 from zopache.ttw.htmlviews import AddAceHTML
 @form_component
-@name (u'addAceContainer')
+@name (u'addAceFolder')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AceContainerAddForm(AddAceHTML):
-    subTitle = 'Add an Ace Container'
+    subTitle = 'Add an Ace HTML Folder'
     interface = IAceContainer
     ignoreContent = True
     factory=AceContainer

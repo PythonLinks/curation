@@ -3,6 +3,7 @@ from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
 from pydoc import locate
 from zopache.core.interfaces import IVideo
+from zopache.pages.interfaces import IImaginaryBTree
 
 class Tests(object):
     
@@ -45,15 +46,18 @@ class Tests(object):
     def isDeveloper(self):
         return self.hasPermission('Develop')    
 
-    def hasValue(self,attribute):
-        return self.hasTrueAttribute(attribute)
-    
-    def hasTrueAttribute(self,attribute):
-        if (hasattr(self.context, attribute) and
-            getattr(self.context,attribute)):
-            return True
+    def hasValue(self,attribute,*args):
+        item = self.context if len(args)==0 else args [0]
+        if hasattr(item, attribute):
+            value = getattr(self.context,attribute,None)
+            if value:
+               return True
         return False
 
+    #I DO NOT THINK THIS IS USED ANYWHERE
+    #def hasTrueAttribute(self,attribute):
+    #    return self.hasValue(attribute)
+    
     def implements (self,dottedName):
         return self.itemImplements(self.context,dottedName)
     
@@ -68,7 +72,21 @@ class Tests(object):
        return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
 
     def isBTreeContainer(self,*args):
-        if (len (args)==0):
-           return  IBTreeContainer.providedBy(self.context)    
-        return  IBTreeContainer.providedBy(args[0])    
+        item = self.context if len(args)==0 else args [0]        
+        return  IBTreeContainer.providedBy(item)
+
+    #SHOULD BE USING
+    #from zopache.pages.iimaginary import IImaginaryBTree
+    #BUT THAT BREAKS THE BUILD
+    def isContainer(self,*args):
+        item = self.context if len(args)==0 else args [0]        
+        if IBTreeContainer.providedBy(item):
+            return True
+        if IImaginaryBTree.providedBy(item):
+            return True
+        return False
+
+
+    
+        
     

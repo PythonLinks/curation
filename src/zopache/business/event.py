@@ -5,9 +5,9 @@ from zopache.business.interfaces import IEvent,IOnlineEvent
 from zope.interface import implementer
 from zopache.business.geocoding import GeoCodeObject
 from zopache.pages.page import Page
-from zopache.business.subscribe import Member
+from zopache.business.subscribe import HasMembers
 
-class EventBase(Page,Member):
+class EventBase(Page,HasMembers):
     count = 0
     webClass = "Event"
     clientClass = "Category"
@@ -15,7 +15,7 @@ class EventBase(Page,Member):
     
     def __init__(self):
         Page.__init__(self)
-        Member.__init__(self)
+        HasMembers.__init__(self)
 
     def postAddProcess(self,view=None):
         if view.treeSecurity():
@@ -35,4 +35,4 @@ class Event(EventBase,GeoCodeObject,LocationLeaf):
     def __init__(self):
         Page.__init__(self)
         GeoCodeObject.__init__(self)
-        Member.__init__(self)
+        HasMembers.__init__(self)

@@ -1,62 +1,70 @@
+from zope import schema
 
 from zopache.core.viewdecorators import *
-from zopache.remote.rss import IRSS
+from zopache.remote.rssarticle import IRSSArticle
 from cromlech.browser.exceptions import HTTPFound
 from zopache.forms.interfaces import IApprove
 from zope.schema import Text
 from zopache.crud.forms import EditForm
 from zopache.core.viewdecorators import *
+from zopache.ttw.treewidget import TreeField
 
-from zope import schema
 
 class IApprove(Interface):
     webApproved = schema.Bool(
-        title = "Approved for publication on the web.",
+        title = "Visible or not?",
+        description = "Use this option to hide this article.",
         required = False,
         default = False)
 
+    publicationApproved = schema.Bool(
+        title =  "Published or not?",
+        description = "Move to its category, or back to its RSS feed.",
+        required = False,
+        default = False)    
+
+    category=TreeField(
+           title="Category Search",
+           description= """Choose where to move the articcle. """,
+           required = False,
+            )
+    
 from zopache.core.breadcrumbs import Breadcrumbs    
 @form_component
 @name ('approve')
-@context(IRSS)
+@context(IRSSArticle)
 @permissions('Manage')
 class Approve (EditForm,Breadcrumbs):
-    title = 'Approve this feed?'
-    subTitle = "RSS Links will be moved to the main directory. "
+    title = 'Approve this Article?'
+    subTitle = "The article will be moved to its new location. "
     interface = IApprove
     fields = Fields(IApprove)
     def newURL (self,baseURL):
-        #if self.context.webApproved:
-           return baseURL + "/manage"
+           return baseURL 
        
     def postProcess(self, view = None):
-        context = self.context    
-        self.root = self.getSiteRoot()
-        items =self.getremoteURLs().values()
+        self.siteRoot = self.getSiteRoot()
+        context = self.context
 
-        if context.webApproved == True:
-            for item in items:
-                self.publish(item)
-                
-        if context.webApproved == False:
-            for item in items:
-                self.retract(item)
+        if context.publicationApproved == True:
+           if context.category !="": 
+                self.publish()
+                context.addImage()
+        else:
+           self.retract()
+        
+    def publish(self):
+        context = self.context
+        if hasattr(context,'category'):
+           if context.category != "":
+              category = self.siteRoot[context.category]
+              if category!= context.__parent__:
+                self.context.moveTo(category)
 
-    def publish(self,item):
-        item.webApproved = True
-        if hasattr(item,'category'):
-           category = self.root[item.category]
-           if category!= item.__parent__:
-              self.moveTo(item,category)
-
-    def retract(self,item):
-        item.webApproved = False        
-        rss = item.rss
-        if rss != item.__parent__:
-           self.moveTo(item,self.context)
+    def retract(self):
+        rssFeed = self.context.rssFeed
+        if rssFeed != self.__parent__:
+           self.context.moveTo(rssFeed)
            
-    def moveTo(self,item,category):
-              name = item.__name__
-              del item.__parent__[name]
-              category [name] = item
-              item.__name__ = name          
+
+

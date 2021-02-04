@@ -7,6 +7,7 @@ from zopache.core import View
 from zopache.core.breadcrumbs import Breadcrumbs
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions, i18n as _
+from zopache.crud import update as updateactions
 from . import actions  as ttwactions
 from zopache.core.interfaces import ITreeSecurity
 from chameleon import PageTemplate
@@ -128,6 +129,15 @@ class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):
 class AddAceHTML (AddAceHTMLBase,AddForm):
     pass
 
+from zopache.ttw.html import Jinja2
+@form_component
+@name (u'addJinja2')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddJinja2(AddAceHTMLBase,AddForm):
+    title = "And a Jinja2 Object"
+    subtitle = "Great for html prototyping."
+    factory = Jinja2
 
 @form_component
 @name (u'addAceIFrame')
@@ -166,8 +176,7 @@ class Index(View,Breadcrumbs):
 
     def page(self,name):
         url =  name 
-        return url
-        
+        return url        
         
     def render(self):
         #In the case of /index/index
@@ -180,7 +189,23 @@ class Index(View,Breadcrumbs):
                return ('Your templates recursion exceeded 50 calls'+
                       self.zopacheTemplate.source)               
 
+@view_component
+@name('index')
+@context(IAceHTMLClass)
+class AceObjectIndex(Index,Breadcrumbs):           
+    def render(self):
+        content = Index.render(self)
+        zopacheTemplate = self.zopacheTemplate
+        if not hasattr(zopacheTemplate,'layout'):
+            return content
+        layout = zopacheTemplate.layout
+        if layout == "":
+            return content
 
+        template = self.layoutAcquire(layout)        
+        view = self
+        return template.__call__(view,content=content)
+    
 @view_component
 @name('index')
 @context(IAceCMSClass)
@@ -230,7 +255,7 @@ class BaseHTMLEditForm(BaseEditForm):
 
     def setActions(self):        
         action1=ttwactions.SaveAndAceEdit("Save","Save")
-        action2=formactions.SaveAndView("Save  and View","Save -> View")
+        action2=updateactions.SaveAndView("Save  and View","Save -> View")
 
         action3=ttwactions.SaveAndCkEdit(
                 "Save and CkEdit","Save -> ckEdit")
@@ -246,8 +271,7 @@ class BaseHTMLEditForm(BaseEditForm):
         
 class BaseAceEdit(AceScripts,BaseHTMLEditForm):
     __name__ = "aceedit"
-    subTitle="Ace Edit this object"
-            
+    subTitle="Ace Edit this object" 
 
     def footerScripts(self):
         return AceScripts.footerScripts(self)
@@ -259,7 +283,7 @@ class BaseAceEdit(AceScripts,BaseHTMLEditForm):
 class AceEdit(BaseAceEdit):
     pass            
         
-#HERE IS THE DEVELOPER ACE EDIT FORM
+#REGULAR ACE HTML FORM
 @form_component
 @context(IAceHTML)
 @name("aceedit")
@@ -267,6 +291,13 @@ class AceEdit(BaseAceEdit):
 class AceEditForm(AceEdit):
           pass
 
+#ACE HTML FOR FOR THE ACE HTML CLASS. 
+@form_component
+@context(IAceHTML)
+@name("aceedit")
+@implementer (ITreeSecurity)
+class AceEditForm(AceEdit):
+    interface = IAceHTMLClass
 
 #AND HERE IS THE DEMO ACE EDIT FORM
 @form_component
@@ -293,10 +324,11 @@ class BaseCkEdit(CkScripts,BaseHTMLEditForm):
 class CkEdit(BaseCkEdit):
     def setActions(self):
         self.actions = Actions(
-              formactions.SaveAndView(_("Save  and View","Save -> View")),
+              updateactions.SaveAndView(_("Save  and View","Save -> View")),
               ttwactions.SaveAndCkEdit(_("Save","Save")),
               ttwactions.SaveAndAceEdit(_("Save  and AceEdit","Save -> AceEdit")),
-              formactions.SaveAndTest(_("Save  and Test","Save -> Test")),                   formactions.Cancel(_("Cancel","Cancel")))
+              #ttwactions.SaveAndTest(_("Save  and Test","Save -> Test")),
+              formactions.Cancel(_("Cancel","Cancel")))
 
 
                 

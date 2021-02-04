@@ -55,7 +55,7 @@ class IGReg(Interface):
 class IHandle(Interface):
 
     handle = schema.DottedName(
-        title="User Name",
+        title="User Name (handle)",
         description= "Legal characters are (a-Z), (0-9), '.' and '_'.",
         required = True)
 
@@ -72,6 +72,26 @@ class IEmail(Interface):
         required = True)
     
 class IPermissions(Interface):            
+
+    chatPermission = schema.Bool(
+        title = """To register me, manage logins using cookies, and to send me email notifications(not news) as required.""",
+        required = True,
+        default = False)
+    
+    chatPermission.text = """ <p> I give permission 
+to process my professional information for the following  
+purposes:</p>"""
+    
+class IGRegister (IGReg,IHandle,IPermissions):        
+    newsPermission = schema.Bool(
+        title = """ To email me the news. """,
+        required = False,
+        default = False)
+
+    
+   
+
+class IGSubscribe (IGRegister):
     frequencyPermission = schema.Choice(
         vocabulary=SimpleVocabulary.fromValues(
                   ['Daily','Weekly','Monthly','Seldom','Never',''],
@@ -79,19 +99,7 @@ class IPermissions(Interface):
         title = "To send me the news:",
         required = False,
         default = '',
-    )    
-    frequencyPermission.text = """ <p> I give permission 
-to process my professional information for the following  
-purposes:</p>"""
-
-    chatPermission = schema.Bool(
-        title = """To register me, manage logins using cookies, and to send me email notifications(not news) as required.""",
-        required = True,
-        default = False)
-    chatPermission.text = """ <br>  """        
-
-class IGRegister (IGReg,IHandle,IPermissions):        
-   pass
+    )  
 
 class IRegister(IHandle, IEmail, IPermissions):
    pass

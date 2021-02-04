@@ -84,7 +84,7 @@ class IFileBase(Interface):
 
 class IImageBase(Interface):    
     title = TextLine(
-        title = u'Image Desciption',
+        title = u'Image Description',
         description = u'Describe this Image, so that the user has some idea what they are looking at. ',
         required = True,
     )
@@ -95,7 +95,7 @@ class IImageBase(Interface):
         required = False,
     )    
     data = FileField(title=u'Upload an Image',
-                     required = True,)         
+                     required = False,)         
 
 class IFile(IFileBase,ILeaf):
     pass
@@ -105,6 +105,10 @@ class IImage(IImageBase,ILeaf):
 
 class IBTreeImage(IImage,IBTreeContainer):
     pass
+
+class IAddBTreeImage(IImage,IBTreeContainer):
+    data = FileField(title=u'Upload an Image',
+                     required = True,)         
     
 #I THINK ALL OD MY ZODB OBJECTS GET THIS ONE    
 class ICanonical (Interface):
@@ -151,7 +155,7 @@ class ISearchSchema(Interface):
 class IBranch (IBTreeContainer):
     pass
 
-class IPrincipalFolder(ICopyable,IImutable):
+class IPrincipalFolder(ICopyable,IImutable,ICanonical):
     pass
 
 #    def getIdByEmail(self,email):
@@ -247,8 +251,10 @@ class IJSON(IJavascript):
         title = u'JSON Source',
         description = u'The JSON  goes here.',
         required = False,
-        default = u'',
+        default = '{}',
     )
+
+
     
 class ITestSource (ISource, ITestURL):
    pass
@@ -300,7 +306,13 @@ class IHTMLClass(ICkHTML, IAceHTML, IIndexHTML,ILeaf):
     pass
 
 class IAceHTMLClass(IAceHTML, IIndexHTML,ILeaf):
-    pass
+    layout = schema.DottedName(
+        title = u'Layout',
+        max_dots=1,
+         missing_value=u'',
+        description = u'Renders the layout, with this html as the content.',
+        required = False,
+    )
 
 class IAceCMSClass(IAceHTMLClass):
     pass
@@ -326,17 +338,25 @@ class ISourceContainer(ISource,
                ): 
      pass
 
-class IAceContainer(IAceHTML,IIndexHTML,ISourceContainer):
+class IAceContainer(IAceHTMLClass,IIndexHTML,ISourceContainer):
     pass
  
 class IHTMLContainer(ISourceContainer,IHTML):
    pass
 
-class IJavascriptFolder(IJavascript,IBTreeContainer,ISourceContainer,ISearchable):
+class IJavascriptFolder(IJavascript,ISourceContainer):
         "Basic Javascript Folder Form"
         pass
 
-
+class IJSONContainer(IJSON, ISourceContainer):
+        description= schema.Text(
+        title = 'Description',
+        description = """A brief introduction of this page.  
+                        This is used by the search functions.""",
+        required = False,
+        default = u'',
+    )
+        
 class IUntrustedHTML(IHTML):
    pass
 

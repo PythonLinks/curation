@@ -18,6 +18,8 @@ from zopache.core.baseform import Form
 from zopache.core.viewdecorators import *
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.crud import actions as formactions, i18n as _
+from zopache.crud import update as editactions
+from zopache.crud.delete import DeleteAction
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.pages.page import Page
 
@@ -86,9 +88,9 @@ class BaseEditForm(Form,Breadcrumbs):
     
     def update(self):
         if self.treeSecurity():
-             self.actions = Actions(formactions.Edit(_("Save","Save")),
-                    formactions.SaveAndView(_("SaveAndView","Save And View")),
-                    formactions.Cancel(_("Cancel","Cancel")))
+             self.actions = Actions(editactions.Edit(_("Save","Save")),
+                    editactions.SaveAndView(_("SaveAndView","Save And View")),
+                    editactions.Cancel(_("Cancel","Cancel")))
 
     @property
     def label(self):
@@ -153,7 +155,7 @@ children, and reindex the tree.<br><br>
  If there are video objects (advanced version)
  in this branch of the tree, the links from the conference will not be 
 deleted, and there will be trouble.  """
-    actions = Actions(formactions.Delete(_("Delete","Delete")),
+    actions = Actions(DeleteAction(_("Delete","Delete")),
                       formactions.Cancel(_("Cancel","Cancel")))
 
     @property

@@ -25,7 +25,7 @@ class ICSSBase(IAceDiff):
     """ For CSS Leaves and Folders."""
     pass
 
-class ICSSFolder(ISearchable, ICSSBase, IBTreeContainer):
+class ICSSFolder(ICSSBase, ISearchable,  IBTreeContainer):
     """ For CSS Leaves and Folders."""
     pass
 
@@ -176,4 +176,4 @@ class ICSSFolderAdaptor(object):
         self.context=context   
 
     def getSegment(self):
-        return 'search'
+        return 'manage'

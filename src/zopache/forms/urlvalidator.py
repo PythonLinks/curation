@@ -2,7 +2,7 @@ from dolmen.forms.base.errors import Error,Errors
 from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 from slugify import slugify
-
+from json import loads
 #NEEDED FOR SOME STRANGENESS IN DOLMEN.FORMS.BASE.VALIDATE
 class ArgsError(Error):
      @property
@@ -17,7 +17,15 @@ class BaseValidator(object):
     def slugExists(self, data):
         form = self.form
         siteRoot = self.form.context.getSiteRoot()
-        title = data ['title']
+        if "title" in data:
+           title = data ['title']
+        else:
+           try:
+              json = loads(data["json"])  
+              title = json["introduction"]["title"]
+           except:
+                return None
+             
         slug = slugify(title,lower=True)
         return siteRoot.get(slug,None)
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
-import requests
 from slugify import slugify, SLUG_OK
 
 from webpreview import web_preview
@@ -25,28 +24,8 @@ from zopache.core.getroot import getSiteRoot
 from zopache.crud import i18n as _
 from zopache.core.uniquename import UniqueName
 from zopache.core.transactionnote import TransactionNote
-from zopache.ttw.file import Image
+from zopache.crud.getimage import getImage
 
-class Cancel(Action):
-    """Cancel the current form and return on the default content view.
-    """
-
-    def __call__(self, form):
-        content = form.getContentData().getContent()
-        url = str(IURL(content, form.request))
-        return SuccessMarker('Aborted', True, url=url)
-
-class View(Action):
-    """ View the object.
-    """
-
-    def __call__(self, form):
-        content = form.getContentData().getContent()
-        url = str(IURL(content, form.request))
-        return SuccessMarker('Aborted', True, url=url)    
-
-from PIL import Image as PilImage
-from io import BytesIO
 class Add(Action, UniqueName, TransactionNote):
     """Add action for an IAdding context.
     """
@@ -57,11 +36,11 @@ class Add(Action, UniqueName, TransactionNote):
         Action.__init__(self,title)
         self.factory = factory
 
-
     def __call__(self, form):
         self.form=form
         obj= form.factory()
         self.new=form.new=obj
+
         data, errors = self.form.extractData()
         if errors:
             form.submissionError = errors
@@ -81,7 +60,6 @@ class Add(Action, UniqueName, TransactionNote):
         self.actuallyAdd(obj,data)
         form.message("Content created")
         baseURL = self.baseURL()
-        print ("IN ADD", baseURL)
         self.describeWithView(obj,form)
 
         #NOW DO Form Specific newURLs. 
@@ -89,14 +67,15 @@ class Add(Action, UniqueName, TransactionNote):
            url=self.form.newURL(baseURL)
         else:
            url=self.newURL(baseURL)
+           
         #Form Specific postAddProcessing
+
         if hasattr(form,'postAddProcess'):
                form.postAddProcess()
         elif hasattr(form.new,'postAddProcess'):
                form.new.postAddProcess(view=form)
 
         #Now do form specific returns
-        
         #DISCORD USES THIS, DOES NOT REDIRECT
         if hasattr(form,'getReturn'):
             return form.getReturn(url)
@@ -130,21 +109,6 @@ class Add(Action, UniqueName, TransactionNote):
         name =  data['__name__']        
         return self.uniqueContainerName(self.form.context,name)
 
-    def setImage(self,imageURL):
-        try:
-            response = requests.get(imageURL)            
-            zodbImage =Image()
-            zodbImage.contentType=response.headers['content-type']            
-            content = response.content
-            zodbImage.data = content
-            pilImage = PilImage.open(BytesIO(content))
-            zodbImage.width = pilImage.width
-            zodbImage.height = pilImage.height
-            new = self.form.new
-            new['Logo']= zodbImage
-            zodbImage.__parent__ = new
-        except:
-            pass 
                      
 class AddNamed(Add):
     pass
@@ -156,12 +120,12 @@ class AddByTitle (Add):
         context[newName]=item
         item.__parent__ = context
         item.__name__ = newName
-        root = getSiteRoot(self.form.context)
-        if hasattr(root,'addItem'):
-            root.addItem(self.new)
+        #root = getSiteRoot(self.form.context)
+        #if hasattr(root,'addItem'):
+        #    root.addItem(self.new)
 
         if hasattr(self.new,'imageURL'):
-            self.setImage (self.new.imageURL)
+            getImage (self.new,self.new.imageURL)
             del self.new.imageURL
             
     def baseURL(self):
@@ -175,6 +139,19 @@ class AddByTitle (Add):
         newName =  data['title']
         return self.uniqueBothName(self.form.context,newName)
 
+class AddByJSON(AddByTitle):
+    def newName(self,data):
+        newName =  self.form.requestJsonDict["introduction"]['title']
+        return self.uniqueBothName(self.form.context,newName)
+
+    def setFields(self):
+        errors = self.form.applyData()
+        return errors
+
+class AddByJsonAndEdit(AddByJSON):
+    def newURL(self,baseURL):
+        return baseURL + '/editPolitician'
+    
 class AddByTitleAndCkEdit(AddByTitle):    
     def newURL(self,baseURL):
         return baseURL + '/ckedit'
@@ -183,57 +160,6 @@ class AddByTitleAndAceEdit(AddByTitle):
     def newURL(self,baseURL):
         return baseURL + '/aceedit'    
 
-class NotUsed():
-    def extractSocialMediaLinks(self,response):
-         tree = parse_html_bytes(response.content,
-                    response.headers.get('content-type'))
-         links = set(find_links_tree(tree))
-         remainingLinks = []
-         
-         for url in links:
-             if 'facebook.com/group/' in url:
-                 self.processURL(self,url,'facebookGroup',
-                                 'acebook.com/group/')
-                 continue
-             if 'facebook.com/' in url:
-                  self.processURL(self,url,'facebookId',
-                                 'acebook.com/')
-                  continue
-             if 'twitter.com/' in url:  
-                  self.processURL(self,url,'twitterId',
-                                 'witter.com/')
-                  continue              
-             if 'twitter.com/intent/follow?screen_name=' in url:  
-                  self.processURL(self,url,'twitterId',
-                    'witter.com/intent/follow?screen_name=')
-                  continue
-             if 'twitter.com/' in url:  
-                  self.processURL(self,url,'twitterId',
-                                 'witter.com/')
-                  continue              
-             if 'youtube.com/channel' in url:  
-                  self.processURL(self,url,'youtubeId',
-                                 'youtube.com/channel/')
-                  continue
-             if 'youtube.com/user' in url:  
-                  self.processURL(self,url,'youtubeId',
-                                 'youtube.com/user/')
-                  continue
-             if 'youtube.com/' in url:  
-                  self.processURL(self,url,'youtubeId',
-                                 'youtube.com/')
-                  continue                            
-             if 'instagram.com/' in url:  
-                  self.processURL(self,url,'instagramId',
-                                 'stagram.com/')
-                  continue
-             remainingLinks.append(url)
-                 
-         allLinks = []       
-         for item in remainingLinks:                                
-              oneLink = self.href(item,item)
-              allLinks.append(oneLink)                    
-              self.new.source = '<br>'.join(allLinks)
 
 class AddByTitleToTreeAndView(AddByTitle):
 
@@ -253,49 +179,6 @@ class AddAndView(AddNamed):
     def newURL(self,baseURL):
         return baseURL + '/index'        
     
-class Update(Action,TransactionNote):
-    """Update action for any locatable object.
-    """
-
-    def __call__(self, form):
-        self.form=form
-        data, errors = form.extractData()
-        if errors:
-            form.submissionError = errors
-            return FAILURE
-        apply_data_event(form.fields, form.getContentData(), data)
-        form.message(_(u"URL updated"))
-        
-        if hasattr(form,'postProcess'):        
-               form.postProcess(view = form)
-        elif hasattr(form.context,'postProcess'):
-               form.context.postProcess(view=form)
-        baseURL = self.form.absoluteURL()
-        url=self.newURL(baseURL)
-        self.describeWithView(form.context,form)
-        if url == form.request.url:
-           return SuccessMarker('Updated', True)
-        else:
-           return SuccessMarker('Updated', True, url=url)
-
-    def appendName(self,baseURL,name):
-        if baseURL == "":
-           baseURL = "/"
-        elif baseURL [-1] != "/":
-            baseURL += "/"
-        baseURL += name
-        return baseURL
-
-    def newURL(self,baseURL):
-        if hasattr(self.form, 'newURL'):
-            return self.form.newURL(baseURL)
-        else:
-           result = self.appendName(baseURL,getattr(self.form,"crom.name"))
-           return result
-
-    def postProcess(self):
-            pass
-
 from zopache.business.interfaces import IOrganization
 from bs4 import BeautifulSoup
 class AddByCrawl(Add):
@@ -332,78 +215,23 @@ class AddByCrawl(Add):
             error = Error("Failed to Fetch and Parse URL")
             errors.append(error)
         if hasattr(new,'imageURL'):
-           self.setimage(new.imageURL) 
+           getImage(new,new.imageURL) 
         return errors
 
-        
-#JUST TO MAKE IT EASIER TO UNDERSTAND        
-class Edit(Update):
-    pass
-    
-class SaveAndView(Update):
-        def newURL(self,baseURL):
-               return baseURL
-           
-class SaveAndViewHTML(Update):
-        def newURL(self,baseURL):
-               return baseURL + '/html'
-
-class SaveAndViewJS(Update):
-        def newURL(self,baseURL):
-               return baseURL + '/javascript'
-
-class SaveAndRoot(Update):
-    def newURL(self,baseURL):
-        return "/"
-
-class SaveAndParent(Update):
-    def newURL(self,baseURL):
-        return ".."    
-
-class SaveAndTest(Update):
-        def newURL(self,baseURL):
-               return self.form.context.testURL
-
-class SaveAndViewURL(Update):
-      def newURL(self,baseURL):
-          return self.form.newURL(baseURL)
-      
-class Delete(Action):
-    """Delete action for any locatable context.
+class Cancel(Action):
+    """Cancel the current form and return on the default content view.
     """
-    successMessage = _(u"The object has been deleted.")
-    failureMessage = _(u"This object could not be deleted.")
-
-    def available(self, form):
-        content = form.getContentData().getContent()
-        if ILocation.providedBy(content):
-            container = content.__parent__
-            return (hasattr(container, '__delitem__') and
-                    hasattr(container, '__contains__'))
-        return False
 
     def __call__(self, form):
         content = form.getContentData().getContent()
+        url = str(IURL(content, form.request))
+        return SuccessMarker('Aborted', True, url=url)
 
-        if ILocation.providedBy(content):
-            container = content.__parent__
-            name = content.__name__
-            if name in container:
-                try:
-                    item = container[name]
-                    root = getSiteRoot(item)
-                    products = form.getProducts()
-                    del container[name]
-                    root.indexTree()
-                    products.indexTree()
-                    form.status = self.successMessage
-                    form.message(form.status)
-                    url = str(IURL(container, form.request))
-                    url = url + '/manage'
-                    return SuccessMarker('Deleted', True, url=url)
-                except ValueError:
-                    pass
+class View(Action):
+    """ View the object.
+    """
 
-        form.status = self.failureMessage
-        form.message(form.status)
-        return FAILURE
+    def __call__(self, form):
+        content = form.getContentData().getContent()
+        url = str(IURL(content, form.request))
+        return SuccessMarker('Aborted', True, url=url)    

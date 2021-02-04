@@ -2,6 +2,7 @@ import random
 import sys
 from zope import schema
 from zope import interface
+from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
 from BTrees.OOBTree import OOBTree
@@ -12,23 +13,94 @@ from zopache.ttw.interfaces import ICanonical
 from dolmen.container import BTreeContainer
 
 from .interfaces import IBranch
-from zopache.pages.interfaces import IRootPage
+from zopache.pages.interfaces import IRootPage, IPage
 from zopache.ttw.interfaces import IWebClass, IProducts
 from zopache.ttw.interfaces import IInternalPrincipal
 #from zopache.business.ipolitician import IPolitician
+from zopache.pages.interfaces import IImaginary
+from zopache.ttw.interfaces import  ICanonical
 
-@implementer (IBranch)
-class Branch(object):
+@implementer(IBranch)
+class SimpleBranch(object):
     branchSize = 0
     def __init__(self):
        self.valuesByToken = OOBTree()
-       self.remoteURLs = OOBTree
 
+    def addItem(self,item):
+        self.indexItem(item,itemType = ICanonical)
+        
+    def deleteItem(self,item):
+       self.unIndexItem(item)
+
+    def indexTree(self):
+        self.valuesByToken=OOBTree()
+        """
+        if hasattr(self,"phoneTreeByTwitterId"):
+            del self.phoneTreeByTwitterId
+        if hasattr(self,"remoteURLS"):            
+            del self.remoteURLs
+        if hasattr(self,"politicians"):                    
+            del self.politicians
+        if hasattr(self,"pagesByTwitterId"):                    
+            del self.pagesByTwitterId
+        if hasattr(self,"socialNodeByTwitterId"):                    
+            del self.socialNodeByTwitterId
+        """
+        
+        self.indexBranch(self,self)
+        
+    def __contains__(self, key):
+        return (key in self._data  or 
+                key in self.valuesByToken)
+
+    def __getitem__(self, name):
+        if BTreeContainer.__contains__(self,name):
+           return  BTreeContainer.__getitem__(self,name)
+        else:
+           return self.valuesByToken[name]
+    
+    def get(self,name,default=None):
+      if name in self:
+         return self[name]
+
+      if name in self.valuesByToken:
+          return self.valuesByToken[name]
+
+      if "." in name:
+          words = name.split(".")
+          if words[0] in self.valuesByToken:
+             context = self
+             length = len(words)
+             context = self.get(words[0],default = object)
+             for index in range(1,length):
+
+                 shortName = words[index]
+                 context = context.getImaginary(shortName,default = default)
+                 if context == default:
+                     return default
+             return context
+      
+      # IF ALL ELSE FAILS
+      return default
+
+@implementer (IBranch)
+class Branch(SimpleBranch):
+
+    def __init__(self):
+       self.valuesByToken = OOBTree()
+       self.remoteURLs = OOBTree
+       self.politicians = OOBTree()
+       self.pagesByTwitterId = OOBTree()
+       self.socialNodeByTwitterId = OOBTree()
+       self.remoteArticles = OOBTree()
+       
     def urlOnly(self,link):
        if link.startswith('http'):
           link = link.split('://')[1:]
+          #Just to be cautious.
           link =''.join(link)
        return link
+   
 
     def existsRemoteURL(self,link):
        if link == "":
@@ -41,16 +113,14 @@ class Branch(object):
        if link == "":
            return
        if link in self.remoteURLs:
-          print (link) 
-          print (anObject.__name__)
-          print (self.remoteURLs[link].__name__)
           raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
        else:
           self.remoteURLs[link] = anObject 
            
     def deleteRemoteURL(self,link):
         if link == "":
-           return 
+           return
+
         link = self.urlOnly(link)
         del self.remoteURLs[link]
        
@@ -64,49 +134,96 @@ class Branch(object):
             if not newName in self:
                 return newName
             
-    def addItem(self,item):
-        self.valuesByToken[item.__name__]= item
        
-    def deleteItem(self,item):       
-       del self.valuesByToken[item.__name__]       
-
     def test(self,item):
         if IBTreeContainer.providedBy(item):
            return True
         return False
 
     def indexTree(self):
+        if hasattr(self,"phoneTreeByTwitterId"):
+            del self.phoneTreeByTwitterId
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
         self.politicians = OOBTree()
+        self.pagesByTwitterId = OOBTree()
+        self.socialNodeByTwitterId = OOBTree()
+        self.globalArticles = OOBTree()
         self.indexBranch(self,self)
-
-
+        
     def indexBranch(self,tree,branch,itemType=ICanonical):
+        
+        if IImaginary.providedBy(branch):
+            return
+
         for item in branch.values():
+            
             if itemType.providedBy(item):
-                self.valuesByToken[item.__name__]=item
-            if item.__class__.__name__=='Politician':
+                self.indexItem(item, itemType = itemType)           
+                if IBTreeContainer.providedBy(item):    
+                   self.indexBranch(tree,item)
+
+    def indexItem(self,item, itemType=ICanonical):
+        self.valuesByToken[item.__name__] = item       
+        if (hasattr(item,'webApproved') and
+                   not item.webApproved ):
+                   return
+               
+        if hasattr(item,'remoteURL'):
+            self.addRemoteURL(item)
+            
+        if hasattr(item,'twitterId'):
+            twitterId = item.twitterId
+            if twitterId != "":
+                self.pagesByTwitterId[twitterId] = item
+                
+        if item.__class__.__name__ in [ "SocialNode"]:
+            for node in item.allNodes():
+                twitterId= node.twitterId
+                if twitterId:
+                    self.socialNodeByTwitterId[twitterId] = item
+                    
+        if item.__class__.__name__  == "RSSArticle":
+            self.globalArticles [item.permaLink] = item
+            
+        if item.__class__.__name__=='Politician':
+            if (hasattr(item, 'candidateInfo') or
+                    hasattr(item, 'electedOfficial') or                    
+                    hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
-            if hasattr(item,'remoteURL'):
-                self.addRemoteURL(item)
-            if IBTreeContainer.providedBy(item):    
-                self.indexBranch(tree,item)
 
-    def __contains__(self, key):
-        return (key in self._data  or 
-                key in self.valuesByToken)
+    def unIndexItem(self,item, itemType=IPage):
+        if not item.__name__ in self.valuesByToken: 
+           return
 
-    def get(self,name,default=None):
-      if name in self:
-         return self[name]
+        del self.valuesByToken[item.__name__]
+       
+        if hasattr(item,'remoteURL'):
+            remoteURL = item.remoteURL
+            if remoteURL:
+                self.deleteRemoteURL(remoteURL)
+                
+        if item.className() == "RSSArticle":
+            del self.globalArticles [item.permaLink]
+            
+        if hasattr(item,'twitterId'):
+            twitterId = item.twitterId            
+            if twitterId:
+                del self.pagesByTwitterId [twitterId]
 
-      if name in self.valuesByToken:
-          return self.valuesByToken[name]
-
-      # IF ALL ELSE FAILS
-      return default
-    
+        if item.__class__.__name__ in [ "SocialNode"]:
+            for node in item.allNodes():
+                twitterId = node.twitterId
+                if twitterId:
+                   if twitterId in self.socialNodeByTwitterId:  
+                       del self.socialNodeByTwitterId[node.twitterId] 
+                                                     
+        if item.__class__.__name__=='Politician':
+            if (hasattr(item, 'candidateInfo') or
+                    hasattr(item, 'electedOfficial') or                    
+                    hasattr(item, 'partyOfficer')):
+                    del self.politicians[item.__name__]
+                    
 
     def checkName(self, name, object):
         """See zope.container.interfaces.INameChooser
@@ -163,15 +280,6 @@ class Branch(object):
 
         return nm
 
-
-    def __getitem__(self, name):
-        """Return the named object, or raise ``KeyError`` if the object
-           is not found.
-        """
-        try:
-           return BTreeContainer.__getitem__(self,name)
-        except(KeyError):
-           return self.valuesByToken[name]
 
 
 @implementer(IPublicationRoot)       

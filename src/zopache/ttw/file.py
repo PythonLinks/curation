@@ -15,6 +15,9 @@ from zopache.ttw.interfaces import (IFile,
 
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.breadcrumbs import Breadcrumbs          
+from zope.interface import implementer
+
+from dolmen.forms.base import  name, context
 
 class FileBase(object):    
         
@@ -52,6 +55,12 @@ class File(Leaf,FileBase):
 
 class ImageBase(FileBase): 
     icon="ttwicons/Image.svg"
+    
+    #JUST A QUICK BUG FIX AVOIDANCE
+    def get(self,arg):
+        print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
+        return self
+    
     def getHTML(self, view=None, style = ''):
         url = view.absoluteURL(self)
 
@@ -118,7 +127,8 @@ class BTreeImage(ImageBase,BTreeContainer):
         if name in self:
            return self[name]
 
-        if name in ['600W','601W','100W','100H','200H','300H']:
+        if name in ['50W','100W','200W','400W','600W',
+                     '100H','200H','300H',]:
               return self.shrink(name) 
         return default
 
@@ -145,7 +155,7 @@ class BTreeImage(ImageBase,BTreeContainer):
          pilImage = PilImage.open(byteImgIO)
          pilImage = pilImage.resize(size)
          pilImage = pilImage.crop((0,0,newWidth,newHeight))
-         pilImage = self.crop(pilImage,intName)
+         #pilImage = self.cropSquare(pilImage,intName)
          byteImgIO = io.BytesIO()         
          pilImage.save(byteImgIO,'PNG')
          byteImgIO.seek(0)
@@ -164,7 +174,9 @@ class BTreeImage(ImageBase,BTreeContainer):
          new.__parent__ = self
          return new
 
-    def crop(self,image, height):
+    #THE FOLLOWING METHOD I THINK CUTS A PORTRAIT MODE PICTURE SQUARE
+    #I THINK IT BREAKS ON LANDSCAPE MODE
+    def cropSquare(self,image, height):
         if image.width <  image.height:
             return image
         maxWidth= height
@@ -178,13 +190,13 @@ def make_file_response(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.content_type=view.context.contentType
         response.write(result or u'')
-        response.headers['Cache-Control'] = 'public,max-age=3600'  
+        response.headers['cache-control'] = 'public,max-age=3600'  
         return response
 
     
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
-from zopache.core.viewdecorators import *
+from dolmen.view import view_component
 
 @view_component
 @name('index')
@@ -233,7 +245,7 @@ class DisplayImage(View,Breadcrumbs):
     
 def make_logo_response(view, result, *args, **kwargs):
         response = view.responseFactory()
-        response.headers['Cache-Control'] = 'public,max-age=3600'  
+        response.headers['cache-control'] = 'public,max-age=3600'  
         logo = ParentalAcquire(view.context)['Logo']
         if logo:
             contentType = logo.contentType
@@ -262,7 +274,6 @@ from zopache.ttw.interfaces import IInternalPrincipal
 @view_component
 @name('index')
 @context(IInternalPrincipal)
-@title("View CV")
 @implementer(ITreeSecurity)
 class IndexCV(View):
     responseFactory = Response

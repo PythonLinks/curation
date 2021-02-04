@@ -121,11 +121,44 @@ class Manage (ManageBase):
 @context(IBTreeContainer)
 @permissions('Manage')
 class Fix(Manage):
+    def make(self):
+        from slugify import slugify
+        from bs4 import BeautifulSoup
+        from zopache.remote.rss import RSS
+        data = self.context['rssFeeds'].source
+        soup = BeautifulSoup(data, 'html.parser')
+        publications = soup.findAll("a", {"class": "publication"})
+        siteRoot = self.context.getSiteRoot()
+        for rss in publications:
+            new = RSS()
+            url = rss["href"]
+            new.remoteURL = url.split("?")[0]
+            if siteRoot.existsRemoteURL(new.remoteURL):
+                continue
+            new.title = rss.find("div", {"class": "publication-title"}).text
+            new.name = slugify(new.title)
+            if new.name in siteRoot:
+                continue
+            
+            new.rssURL = new.remoteURL  + "/feed"
+            image = rss.find("img")
+            new.iconURL = image["src"]
+            new.description = rss.find("div",
+                        {"class": "publication-description"}).text
+
+            self.context[new.name] = new
+            #siteRoot.indexItem(new)
+    
     def update(self):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        pass
+
+        #item.leaderNodes()
+        #for it in item.politicians.values():
+        #    print (it.title)
+        #    it.convert()
+        #pass
     
     def moveTo(self,childName):
         self.moveItem('personCopy1',childName,'person')

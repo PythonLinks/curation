@@ -5,7 +5,8 @@ from cromlech.dawnlight.utils import safeguard
 from cromlech.browser import IPublisher, IView, IResponseFactory
 from zope.interface.interfaces import ComponentLookupError
 from zopache.ttw.historyitem import HistoryTraverser
-
+from zopache.pages.interfaces import IPage,IProxyPage
+from cromlech.security import unauthenticated_principal as anonymous
 from cromlech.dawnlight.publish import shortcuts, PublicationError
 
 class Publisher (DawnlightPublisher):
@@ -13,10 +14,25 @@ class Publisher (DawnlightPublisher):
     """
     def __init__(self,view_locator):
          self.view_locator=view_locator
-   
+         self.longPath = []
+         self.shortPath = []
+         self.shortPathOkay = True
+
+    def newContext(self,newContext):
+        self.longPath.append(newContext)
+        
+        if not IPage.providedBy (newContext):
+            self.shortPathOkay = False
+        if IProxyPage.providedBy (newContext):
+            self.shortPathOkay = False
+        if not self.shortPathOkay:
+            self.shortPath.append(newContext)
+            
+            
     @safeguard
     def publish(self, request, root,handle_errors):
         view=None
+        publisher  = self
         path = self.base_path(request)
         context=root
         hostName = request.domain
@@ -39,13 +55,19 @@ class Publisher (DawnlightPublisher):
                 context = context.getSiteRootFor(hostName)
         else:
                 context = context.getSiteRootFor(hostName)
+                domain = hostName
+                splitDomain= domain.lower().split(".")
+                if len(splitDomain) == 3:
+                   siteRootName = splitDomain[0]
+                   if siteRootName in context:
+                      context = context[siteRootName]
+                
                  
         traverser=Traverser(self.view_locator)
         
         crumbs = dawnlight.parse_path(path, shortcuts)
-
         while crumbs:
-
+          
            aType, name=crumbs.popleft()
            if (aType =='history'):
               # CALL THE HISTORY TRAVERSER
@@ -54,26 +76,34 @@ class Publisher (DawnlightPublisher):
               continue
           
            #NOW FOR THE REGULAR TRAVERSER
-           context, view =traverser(context,request,name)
+           context, view =traverser(context,request,name,publisher)
            if view != None:
                  break
 
         #If that did not work  check for a template or view
         if view is  None:
            name = 'index' 
-           context, view=traverser(context,request,name)
+           context, view=traverser(context,request,name,publisher)
 
         #If still no view, check for a view on the template
         if view is  None:
            name = 'index' 
-           context, view=traverser(context,request,name)
+           context, view=traverser(context,request,name,publisher)
 
 
         #IF A VIEW WAS FOUND, RETURN IT
 
         if (view is  not None):
-                    factory = IResponseFactory(view)
-                    response = factory()
-                    return response
+            view.publisher = publisher
+            factory = IResponseFactory(view)
+            response = factory()
+            if request.principal == anonymous:
+                response.headers['cache-control'] = "public"
+            else:
+                if  'image' in response.headers['content-type']:
+                    response.headers['cache-control'] = "public"
+                else:
+                    response.headers['cache-control'] = "no-store"
+            return response
 
         raise PublicationError('%r can not be rendered.' % context)                

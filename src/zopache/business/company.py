@@ -6,30 +6,32 @@ from zopache.pages.location import LocationContainer
 from zopache.business.interfaces import (ICompany, IMap,
                                          IOrganization,
                                          IOnlineOrganization,
-                                         ICompanyBase)
+                                         ICompanyBase,
+                                         IMapOrganization)
+from zopache.business.ipolitician import IPolitician
+
 from zopache.pages.page import Page
+from zopache.pages.interfaces import IPage
 from zopache.business.geocoding import GeoCodeObject
-from zopache.business.subscribe import Member
-from zopache.business.geocoding import GeoCodeObject
+from zopache.business.imaginarypage import ImaginaryPage
+from zopache.business.subscribe import HasMembers
 
-class VeryBase (Member):
+class Base(Page):    
     hidden = False
-
-    def getTitle(self):
-         if self.hidden:
-            return "Hidden"
-         return self.title
-
+    eventsPageURL = ""
+    hasScheduledEvents = False  
+    email = ''
+    
+    def __init__(self):
+        Page.__init__(self)
+        HasMembers.__init__(self)
+        
     def getSpecialization(self):
         if hasattr(self,'specialization') and self.specialization != '':
            return self.specialization
         return self.description [0:20]
 
-class Base(VeryBase,Page):
-    email = ''    
-    def __init__(self):
-        Member.__init__(self)
-        Page.__init__(self)    
+
 
 #GeoBase inherits  Page from Location
 class GeoBase(GeoCodeObject,Base):
@@ -39,7 +41,6 @@ class GeoBase(GeoCodeObject,Base):
     #LocationBase inherits from Page
     def __init__(self):
         LocationContainer.__init__(self)
-        Member.__init__(self)
         GeoCodeObject.__init__(self)
         
     def canView(self,view):
@@ -58,31 +59,31 @@ class OnlineOrganization  (Base):
     clientClass = "Category"
     webApproved = False
 
-from zopache.business.region import Region    
+from zopache.business.region import RegionBase
 @implementer (IOrganization)
-class Organization  (GeoBase,LocationContainer,Region):
+class Organization  (
+                     GeoBase,
+                     HasMembers,
+                     RegionBase):
+    
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
-    webApproved = False    
-
-
-
-
+    webApproved = False
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
 from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
 from zopache.business.map import Map
-from zopache.business.subscribe import Member        
 from zopache.pages.location import MapBase
 
 @implementer (IMapOrganization)
-class MapOrganization(GeoBase,
+class MapOrganization(ImaginaryPage,
+                      GeoBase,
                       MapBase,
-                      Member,
+                      HasMembers,
                       Page,
-                      Region):
+                      RegionBase):
 
     interface = IMapOrganization
     webClass = 'SmallParty'
@@ -90,7 +91,40 @@ class MapOrganization(GeoBase,
     def __init__(self):
         Map.__init__(self)
         Organization.__init__(self)
+        
+    def getTitleForDomain(self,view):
+        domain = view.getDomain()        
+        if domain in self:
+            return self[domain].title
+        else:
+            return self.title
 
+    def getDescriptionForDomain(self,view):
+        domain = view.getDomain()
+        #HTML objects do not have a description, only a title and source
+        if domain in self:
+            item = self [domain]
+            if hasattr(item,'description'):
+                return item.description
+            else:
+                return item.source        
+        else:
+            return self.description
+        
+    def childCategories(self):
+        result =[]
+        for item in self.values():
+            if IPolitician.providedBy(item):
+                continue
+            
+            if IOrganization.providedBy(item):
+                continue
+            
+            if (IPage.providedBy (item) and item.webApproved):
+               result.append (item)
+               
+        return result
+    
 from zopache.core.getroot import getSiteRoot
 from zopache.business.interfaces import IEndorsingOrganization
 @implementer(IEndorsingOrganization)    

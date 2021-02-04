@@ -1,12 +1,15 @@
-
 #CURRENTLY JUST TO A SINGLE PERSON
 #CURRENTLY ONLY USES MAIL QUEUE
+from time import time
 from email.message import Message
 from subprocess import Popen
+import random
+import os
 
 from zope import schema
 from repoze.sendmail.delivery import QueuedMailDelivery
 from z3c.schema.email  import RFC822MailAddress as Email
+
 
 from zopache.core.viewdecorators import *
 from zopache.core import Leaf
@@ -15,16 +18,145 @@ from zopache.pages.interfaces import IPage
 from zopache.crud.forms import AddNamedForm, EditForm
 from zopache.core.interfaces import ITreeSecurity
 from zopache.ttw.interfaces import IMailHost
+<<<<<<< HEAD
  
 import os
 
 from dolmen.message.utils import send
+=======
+from zopache.core.transactionnote import TransactionNote
+>>>>>>> 7431dac58154ab414728aa43714ad28460c8bcd0
 
 from here import HERE
 dataDir = os.path.join(HERE, 'data')
-class Notify (object):
 
-    def notify (self,aFrom,to, subject, content):
+
+class Notify (TransactionNote):
+    sender ='"Green Maps Newsletter" <lozinski@PythonLinks.info>'
+    
+    def setMailer(self):
+       self.mailer = mailer = self.parentalAcquire ("MailHost")
+    
+    def getRecentArticles(self,principal):
+        articles = self.context.bestMostRecentPage()
+        recentArticles = []
+        lastNotificationTime = principal.lastNotificationTime
+        for item in articles:
+            if item.creationTime > lastNotificationTime:
+                recentArticles.append(item)
+        return recentArticles
+
+    def canSend(self,principal):
+        currentTime = time()
+        lastNotificationTime = principal.lastNotificationTime
+        frequency =getattr(principal,'frequencyPermission','')
+            
+        newsPermission = getattr(principal,'newsPermission','')
+        
+        if (frequency =='Never'): 
+            return False
+        
+        elif (frequency == 'Weekly'):
+            if (currentTime - lastNotificationTime) > (3600*24 *7):
+                return True
+            
+        elif (frequency == 'Seldom'):
+            if (currentTime - lastNotificationTime) > (3600*24 * 31 * 3):
+                return True            
+            
+        elif (frequency == 'Monthly'):
+            if (currentTime - lastNotificationTime) > (3600*24 * 31):
+                return True
+
+        elif (frequency == 'Weekly'):
+            if (currentTime - lastNotificationTime) > (3600*24 * 1):
+                return True
+            
+        if hasattr(principal,'newsPermission'):
+            if principal.newsPermission == True:
+                return True
+            
+        return False
+    
+    def broadcastNews(self):
+        self.setMailer()
+        people = self.parentalAcquire('person')
+        for item in people.values():
+            self.sendToPrincipal(item)
+        self.sendTheMail()
+        
+    def sendMeANewsletter(self):
+        self.setMailer()        
+        principal = self.request.principal
+        self.sendToPrincipal(principal)
+        self.sendTheMail()
+        
+    def sendToPrincipal(self,principal): 
+        text = "NewsLetter:"
+        text += self.context.newsTitle
+        to = principal.email
+        articles = self.getRecentArticles(principal)
+        
+        if len(articles) == 0:
+            return
+        
+        if not self.canSend(principal):
+            return
+        
+        principal.lastNotificationTime = time()        
+        self.describeTransactionWithText(text)
+        self.createOneNewsletter(to, self.sender, articles)
+
+    
+    def createOneNewsletter(self, to, sender, articles):
+        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        if mailer == None:
+           return ''
+
+        subject = self.context.newsTitle
+
+
+        self.notify (sender,
+                     to,
+                     subject,
+                     self.context.preAmble,
+                     articles = articles)
+        
+
+        
+    def articlesAsText(self,articles):
+        random.shuffle(articles)
+        result = ""
+        count = 0
+        theTime = time()
+        for article in articles:
+            count += 1
+            result += str(count)
+            result += ". "
+            result += article.title
+            result += " "            
+            result += str((time() - article.creationTime)/(3600*24))[0:3]
+            result +=" days \n"
+        result +="\n\n"
+
+        count = 0    
+        for article in articles: 
+            count +=1
+            result += str(count)
+            result += ". "            
+            result += article.title
+            result +="\n"            
+            result += article.description
+            result +="\n"            
+            if getattr(article,'remoteURL',False):
+               result += article.remoteURL
+            else:
+                result += self.secureShortURL (context = article)
+            result +="\n\n"
+        return result
+    
+    def notify (self,aFrom,to, subject, content, articles = []):
+        self.setMailer()        
         mailer = self.mailer
         if mailer == None:
            return         
@@ -36,9 +168,8 @@ class Notify (object):
            if replyTo != to:
               message['Reply-To'] = replyTo
         message['Subject'] = subject
-        #text = 'To: ' + to + ' \n'
-        #text +='From: ' + from + ' \n'
-        message.set_payload(content)
+        articlesAsText = self.articlesAsText(articles)
+        message.set_payload(content + "\n\n" + articlesAsText)
         delivery = QueuedMailDelivery(self.spoolFile())
         to = [to]
         delivery.send(aFrom,to, message)
@@ -65,13 +196,12 @@ class Notify (object):
         if (mailer.debug):
            command.append('--debug-smtp')            
         command.append(self.spoolFile())
-        print (' '.join (command))
-        Popen(command)
-     
-    
+        #print (' '.join (command))
+        Popen(command)    
         
     def notifyUserNewUser(self):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        self.setMailer()        
+
         if mailer == None:
            return None                
         
@@ -87,7 +217,7 @@ class Notify (object):
         #self.sendTheMail()
         
     def notifyAdminsNewUser(self):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        self.setMailer()        
         if mailer == None:
            return ''                
         subject = "New User" 
@@ -96,65 +226,43 @@ class Notify (object):
         self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()
 
-    def notifyAdminsNewVolunteer(self):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
+    def notifyAdminsMembershipEvent(self,subject):
+        self.setMailer()
         if mailer == None:
            return ''                
-        subject = "New Volunteer "
         subject += self.context.title
-        url = self.secureShortURL (context = self.context)        
-        content = F"{self.request.principal.title}"
-        content += " is volunteering to help  {self.contextg.url}.  "
+        url = self.secureShortURL (context = self.context)
+
+        content = F"{subject} \n {self.request.principal.title} \n"
+        content += f" {self.secureShortURL(self.context)}.  \n"
         content += "Just reply to this email."
 
         self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()
 
     def notifyAdminsVolunteerResigned(self):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        self.setMailer()                
         if mailer == None:
            return ''                
         subject = "Volunteer Resigned From:"
         subject += self.context.title
         url = self.secureShortURL (context = self.context)        
         content = F"{self.request.principal.title}"
-        content = " is resigning from  {self.contextg.url}.  "
+        content = f" is resigning from  {self.context.url}.  "
         content += "Just reply to this email."        
         self.notify (mailer.noReply, mailer.postMaster, subject, content)
         self.sendTheMail()                
 
         
-    def notifyAdminsNewPage(self):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
-        if mailer == None:
-           return ''
-
-        subject = "New " + self.new.__class__.__name__
-        
-        if self.treeSecurity():
-           return
-            
-        elif self.isAuthenticated():
-            subject += " By " + self.request.principal.title + " "
-            subject += "Needs Approval" 
-            
-        else:
-            subject += " By Anonymous Needs Approval "
-            
-
-        content = self.secureShortURL (context = self.new)
-        self.notify (mailer.noReply,mailer.postMaster, subject, content)
-        self.sendTheMail()
-
-        
     def notifyAdminsPageDeleted(self):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        self.setMailer()                        
         if mailer == None:
            return ''                        
         subject = "Page Deleted"
         content = self.request.url
         self.notify (mailer.noReply,mailer.postMaster, subject, content)       
         self.sendTheMail()
+<<<<<<< HEAD
 
 
 class SendMail(Notify):
@@ -195,6 +303,9 @@ class SendMail(Notify):
         self.notifyEditors(data)
         send ("Mail was sent")
 
+=======
+        
+>>>>>>> 7431dac58154ab414728aa43714ad28460c8bcd0
 @implementer (IMailHost)
 class MailHost(Leaf):
     debug = False
@@ -221,3 +332,11 @@ class AddMailHost(AddNamedForm):
 @implementer(ITreeSecurity)
 class EditMailHost(EditForm):
     subTitle='Edit the MailHost Object'    
+ 
+    """    
+    def sendOneNewsletter(self):
+        to = mailer.postMaster
+        articles = self.context.bestMostRecentPage()
+        self.createOneNewsLetter(to, self.sender, articles)
+        self.sendTheMail()
+    """

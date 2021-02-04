@@ -28,7 +28,8 @@ class ICity (ILocationContainer):
     )
     
 
-
+class IRegion(ILocationContainer):
+    pass
 
 class IOrganizationOrPolitician(Interface):
     
@@ -39,6 +40,14 @@ class IOrganizationOrPolitician(Interface):
         required = False,
         missing_value ='',
     )
+
+    donationsPageURL = schema.URI(
+        title = u'Where can one donate money??',
+        description = """ Link to where they can donate money. Please
+   Include  'https://'""",
+        required = False,
+        missing_value ='',
+    )    
     
 class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
@@ -243,19 +252,25 @@ class ISocialMedia(Interface):
     )
     
     facebookId = schema.URI(
-        title = u'FaceBook Id (Optional)',
-        description = """Copy and paste the Facebook URL (Not the Group). """,
+        title = u'FaceBook Page URL (Optional)',
+        description = """Copy and paste the Facebook page URL. """,
         missing_value="",
         required = False,
     )
 
     facebookGroup = schema.URI(
         title = u'FaceBook Group (Optional)',
-        description = """Copy and paste the Facebook GROUP url. """,
+        description = """Copy and paste the Facebook GROUP URL. """,
         missing_value="",
         required = False,
     )
-    
+
+    youTubeChannelURL = schema.URI(
+        title = u'YouTube Channel URL  (Optional)',
+        description = """Copy and paste the YouTube Chanel  URL. """,
+        missing_value="",
+        required = False,
+    )    
 
     email= Email(
         title = u'Email Address (Optional)',
@@ -281,13 +296,8 @@ class IOnlineOrganization(IOrganizationBase,
 
 class IOrganization(IOrganizationBase,
                     ICompanyOrOrganization,
-                    ISocialMedia,ILocationContainer):
-    isGlobal = schema.Bool(
-	    title = "Is this a global organization?",
-	    description = """Global Organizations are 
-                              listed in the table below the map. """,
-	    required = False,
-	    default = False)
+                    ISocialMedia,ILocationContainer,
+                    IOrganizationOrPolitician):
     
     address= Address(
         title = u'Organization Address',

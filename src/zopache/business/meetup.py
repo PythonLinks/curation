@@ -4,18 +4,18 @@ from cromlech.security import Unauthorized
 
 from zopache.business.interfaces import IMeetup
 from zopache.pages.page import Page
-from zopache.business.subscribe import Member
+from zopache.business.subscribe import HasMembers
 
 
 @implementer (IMeetup)
-class Meetup (Page,Member):
+class Meetup (HasMembers,Page):
     webClass = "Meetup"
     clientClass = "category"
     hidden = False
     webApproved = False
     
     def __init__(self):
-        Member.__init__(self)
+        HasMembers.__init__(self)
         Page.__init__(self)
         
     def getTitle(self):

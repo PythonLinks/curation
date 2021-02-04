@@ -5,10 +5,12 @@ from dolmen.container import IBTreeContainer
 #FROM http://codeaffectionate.blogspot.com/2013/05/tree-iterator-in-python.html
 from zope.interface import Interface
 class AllChildObjects:
-
-    def __init__(self, node, interface = Interface):
+    interface = IBTreeContainer
+    
+    def __init__(self, node, interface = None):
         self.stack = [node]
-        self.interface = interface
+        if interface != None:
+           self.interface = interface
         
     def __iter__(self):
         return self
@@ -19,15 +21,29 @@ class AllChildObjects:
     def __next__(self):
         if not self.stack: raise StopIteration
         node = self.stack.pop()
-        if IBTreeContainer.providedBy(node):
+        if self.interface.providedBy(node):
            for item in  node.values():
               if (self.interface.providedBy(item)):                   
                   self.stack.append(item)
         return node
 
+class EveryObject(AllChildObjects):
+    def __next__(self):
+        if not self.stack: raise StopIteration
+        node = self.stack.pop()
+        if hasattr(node, '__dict__'):
+            for item in node.__dict__.values():
+               self.stack.append(item)
+        if self.interface.providedBy(node):
+           for item in  node.values():
+              if (self.interface.providedBy(item)):                   
+                  self.stack.append(item)
+                  
+        return node
 
+    
 class AllBlogObjects(AllChildObjects):
-      pass
+      interface = IPage
 
 #DELETES ALL BUT CATEGORY OBJECTS
 #    def __next__(self):
@@ -71,4 +87,9 @@ class ProcessTree(object):
 
     def allVideoObjects(self):
         return AllVideoObjects(self)
-              
+
+    def allChildObjects(self):
+        return AllChildObjects(self)
+
+    def everyObject(self):
+        return EveryObject(self)    

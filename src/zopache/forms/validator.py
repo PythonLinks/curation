@@ -20,7 +20,10 @@ class Validator(object):
         # MAKE SURE THE EMAIL DOES NOT EXIST
         email = self.getEmail()
         if email in people.idByEmail:
-           error = Error(title="That email address is already registered "                   + email, identifier = "Email.Exists.Error")           
+           msg = title="That email address is already registered " + email
+           identifier = "Email.Exists.Error" 
+           error = Error(msg,identifier)
+           error.args = [msg]           
            errors.append(error)
 
         #MAKE SURE THE HANDLE DOES NOT EXIST   

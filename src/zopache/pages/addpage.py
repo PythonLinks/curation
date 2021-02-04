@@ -11,6 +11,7 @@ from zopache.crud.forms import AddByTitleForm
 from zopache.pages.interfaces import (IMap,
                                       ILocation,
                                       IPage,
+                                      IProxyPage,
                                       IAddLink,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, ActionNetwork
@@ -20,6 +21,8 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
 from zopache.pages.htmlvalidator import HTMLValidator
+from zopache.pages.proxypage import ProxyPage
+from zopache.crud.getimage import getImage
 
 class AddPageBase(
                   AddCkHTMLBase,
@@ -32,6 +35,7 @@ class AddPageBase(
         AddByTitleForm.updateWidgets(self)
         
     def update(self):
+
         if self.treeSecurity():
            self.addAuthorizedActions()
         else:
@@ -46,11 +50,7 @@ class AddPageBase(
               AddAndAceEdit("Add and aceEdit", self.factory),
               AddAndCkEdit("Add and ckEdit", self.factory),
               Cancel("Cancel","Cancel"))
-        
-    def postAddProcess(self,view = None):
-        self.new.postAddProcess (view = self)
-        self.notifyAdminsNewPage()
-            
+                    
 class AddAuthorizedPage(AddPageBase):
 
     actions = Actions()
@@ -72,6 +72,16 @@ class AddPage(AddAuthorizedPage):
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
+
+@view_component
+@name('addProxyPage')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddProxyPage(AddAuthorizedPage):
+    interface = IProxyPage
+    label="Add a ProxyPage"
+    factory = ProxyPage    
     
 
 @view_component
@@ -93,7 +103,7 @@ class AddAction(AddAuthorizedPage):
 class AddLink(AddAuthorizedPage):
     interface = IAddLink
     title = "Add a Link"
-    factory = Link    
+    factory = Link
   
 #LOCAION
 @view_component

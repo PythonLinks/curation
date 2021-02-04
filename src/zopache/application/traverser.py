@@ -21,11 +21,11 @@ class Traverser(object):
         self.view_lookup=view_lookup
         self.zopacheTemplate = None
 
-    def __call__(self,context,request,name):
+    def __call__(self,context,request,name,publisher):
+
         #A HACK TO FIX AN IURL PROBLEM
         if name == 'root':
             return context, None
-        
         #FIRST, IF YOU HAVE A TEMPLATE, SEE THE VIEW
         if self.zopacheTemplate != None :
            zopacheTemplate = self.zopacheTemplate
@@ -48,11 +48,14 @@ class Traverser(object):
                  raise Exception (
                      "%s does not support method setZopacheTempalte",
                                    zopacheTemplate.__name__)
+
         #TRAVERSE THE CONTAINER
         if (IBTreeContainer.providedBy(context) or
            IDirectory.providedBy(context)):
+
             item = context.get(name,object)
             if item != object:
+                publisher.newContext(item)
                 return item, None
             
         #NOW GET IT FROM THE WEBCLASS
@@ -64,6 +67,7 @@ class Traverser(object):
                      self.zopacheTemplate = item
                      return context,None
                   else:
+                     publisher.newContext(item)                      
                      return item, None
                  
         #CHECK FOR A VIEW ON THE CONTEXT

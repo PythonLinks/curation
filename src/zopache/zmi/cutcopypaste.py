@@ -92,6 +92,9 @@ class Cutter(BaseClass):
                 self.view.error += self.context.__name__  + """" 
                      IS NOT ALLOWED TO BE CUT <br>"""
                 return
+        if hasattr(obj,'preDeleteProcess'):
+            obj.preDeleteProcess(view=view)
+            
         oldName=obj.__name__
         toFolder=cutFolder(view)
 

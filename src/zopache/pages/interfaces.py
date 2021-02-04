@@ -14,6 +14,15 @@ from zopache.ttw.interfaces import IAceHTML
 from zopache.core.interfaces import ICountable
 from zopache.crud.interfaces import ILeaf
 
+class ILayoutView(Interface):
+    pass
+
+class IImaginary(ILayoutView):
+   pass
+
+class IImaginaryBTree(ILayoutView):
+   pass
+
 # A MARKER TO SHOW THAT THIS IS NEWS
 class IRecent(Interface):
     pass
@@ -81,10 +90,15 @@ class IActionNetwork(ILinkTop,
         required = True,
         default = u'',
     )       
-    
-class IPage(IPageTop,IPageBottom,IContent, IContainer, IOrdered,
-            IJSONInclude, IBTreeContainer,IUntrustedHTML):
+
+class IPage(ILayoutView,IPageTop,IPageBottom,IContent, IContainer, IOrdered,
+            IJSONInclude, IBTreeContainer,IUntrustedHTML,IAceHTML):
     pass
+
+class IProxyPage(IPage):
+    pass
+
+
 
 class IAddPage(IPage):
     imagegURL= schema.URI(
@@ -99,7 +113,7 @@ class ILink(IPage,ILinkTop,ICountable):
     pass
 
 class IAddLink(ILink):
-    imagegURL= schema.URI(
+    imageURL= schema.URI(
         title = 'Image URL',
         description = """A URL That this highlights this link. 
              Please include 'https://

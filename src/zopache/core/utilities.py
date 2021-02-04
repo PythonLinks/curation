@@ -4,8 +4,19 @@ import hashlib
 from cromlech.security import Unauthorized
 from dolmen.message.utils import send
 from zopache.core.getroot import getSiteRoot
+from zopache.application.everyobject import EveryObject
+
+def sortFunction(item):
+  return item.__name__
 
 class Utilities (object):
+    def everyObject(self):
+        return EveryObject(self.context)
+      
+    def sortByName(self,aList):
+        return aList.sort(key=sortFunction)
+    
+
     def createdBy(self,*args):
         item = self.context if len(args)==0 else args [0]        
         siteRoot = self.getSiteRoot()
@@ -48,8 +59,12 @@ class Utilities (object):
         item.__parent__ = parent
         item.__name__ = newName
 
-    def className(self):
-        return self.__class__.__name__
+
+    def className(self,*args):
+        item = self.context if len(args)==0 else args [0]
+        return item.__class__.__name__
+
+
     def contextClassName(self):
         return self.context.__class__.__name__    
     
@@ -60,21 +75,29 @@ class Utilities (object):
         raise Unauthorized
     
     def getNavBar(self):
-         return self.webClassAcquire('navbar.py')(self)
+         navbar = self.webClassAcquire('navbar.py')
+         if navbar != object:
+           return navbar(self)
+         else:
+           return ""
   
     def getDefaultImage(self):
         context = self.context
-        
+        socialMediaImage = context.get('SocialMediaImage',None)
+        if socialMediaImage != None:
+            return socialMediaImage
+          
         banner = context.get('Banner',None)
-        if banner:
+        if banner != None:
             return banner
         
         logo = context.get('Logo',None)
-        if logo:
+        if logo != None:
             return logo
 
         image = self.parentalAcquire('SocialMediaImage')
-        if image:
+        if image != None:
+
            return image
        
         return  self.parentalAcquire('Logo')
@@ -134,7 +157,6 @@ class Utilities (object):
 
     def debug(self,*args):
         import pdb;pdb.set_trace()
-        fred = 1
         if args:
           fred = args
           item = args [0]
