@@ -106,7 +106,7 @@ class AddJSONDict(AceScripts,AceAddForm):
     
 def makeResponse(view, result, *args, **kwargs):
         response = view.responseFactory()
-        response.write(result or u'')
+        response.write(result or '')
         response.content_type=u'application/json'
         return response    
 
@@ -120,6 +120,22 @@ class Index(View):
     def render(self):
         return self.context.source
 
+
+from zopache.business.interfaces import IMapOrganization
+from zopache.business.getjson import getStateJson
+
+@view_component
+@name('geojson')
+@context(IMapOrganization)
+class GEOIndex(View):
+    responseFactory = Response
+    make_response = makeResponse
+        
+    def render(self):
+        return getStateJson(self.context)
+
+
+    
 @view_component
 @name('index')
 @context(IJSONContainer)
