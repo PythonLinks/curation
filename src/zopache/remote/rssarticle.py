@@ -56,10 +56,6 @@ class RSSArticle(Page,Voteable):
     def setCategory(self,value):       
       self._category = value
        
-    def preDeleteProcess(self,view):
-        Page.preDeleteProcess(self,view)
-        del self.rssFeed.localArticles [self.permaLink]
-        
     def getSrcSet(self):
         pass
     

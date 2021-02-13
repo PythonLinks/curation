@@ -1,4 +1,5 @@
 from zopache.core.scripts import Scripts
+from zopache.core.getroot import getProducts
 
 class  AceScripts(object):
     def  headerScripts(self):
@@ -34,4 +35,41 @@ $("form").submit(function(){
 </script>
 
 """
+
+class  AceScriptJavascript(AceScripts):
+    def  footerScripts(self):
+        return self.aceEditorFooter + """ 
+        <script >editor.getSession().setMode("ace/mode/javascript");
+        </script>
+        """
+    
+class  AceScriptJSON(AceScripts):
+    def  footerScripts(self):
+        return self.aceEditorFooter + """ 
+        <script >editor.getSession().setMode("ace/mode/json");
+        </script>
+        """
+class  AceScriptPug(AceScripts):
+        
+    def  headerScripts(self):
+        result = AceScripts.headerScripts(self)
+        return result        
+    
+    def  footerScripts(self):
+        result =  self.aceEditorFooter + """
+        <script >editor.getSession().setMode("ace/mode/jade");</script>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify-html.min.js"></script>
+        """     
+        result += """
+<script  src="https://pythonlinks.info/static/pug/pug.js"></script>
+<script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
+        """
+        result += "<script>"
+        products = getProducts(self.context)
+        script = products['Templates']['PugScripts']
+        result += script.getJavascript()
+        result += "</script>"
+        return result
 

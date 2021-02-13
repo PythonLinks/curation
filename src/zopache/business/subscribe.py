@@ -163,7 +163,6 @@ class UnVolunteer(Disconnect):
 class Subscribe(Connect):
     subject = "New Subscriber "    
     def updateMember(self,member):
-        breakpoint()
         member.subscriber = True
     
 @view_component

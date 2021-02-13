@@ -150,7 +150,6 @@ Node  <span class="caret"></span></a>
 
 </li>
 
-
         <li class="dropdown nav-item"  tal:condition="view.isDeveloper() and view.isBTreeContainer()">
 
 	<a class="dropdown-toggle nav-link " data-toggle="dropdown" href="# ">
@@ -158,18 +157,30 @@ Node  <span class="caret"></span></a>
 + Advanced <span class="caret "></span></a>
 
 <ul class="dropdown-menu ">
-
 <li class="dropdown-item "><a href="${relativeURL}//addJSON ">JSON</a></li>
 <li class="dropdown-item "><a href="${relativeURL}/addCoffeeScript ">CoffeeScript</a></li>
-<li class="dropdown-item "><a href="${relativeURL}//addJinja2 ">Jinja2</a></li>
 <li class="dropdown-item "><a href="${relativeURL}//addPug ">Pug</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addJinjaJS ">JinjaJS</a></li>
+<li class="dropdown-item "><a href="${relativeURL}//addJinjaJSON ">JinjaJSON</a></li>
+
+<li class="dropdown-item ">   <a href="${relativeURL}//addPythonScript ">PythonScript</a></li>
+
+
+
+</ul>
+</li>
+
+        <li class="dropdown nav-item"  tal:condition="view.isDeveloper() and view.isBTreeContainer()">
+
+	<a class="dropdown-toggle nav-link " data-toggle="dropdown" href="# ">
+
+++ Advanced <span class="caret "></span></a>
+
+<ul class="dropdown-menu ">
 
 <li tal:condition="view.isManager() " class="dropdown-item
         "><a href="${relativeURL}/addSecureHTML ">Secure HTML</a></li>
 
-
-
-<li class="dropdown-item ">   <a href="${relativeURL}//addPythonScript ">PythonScript</a></li>
 
 <li class="dropdown-item "><a href="${relativeURL}//addAceFolder ">HTML Folder</a></li>
 
@@ -181,11 +192,14 @@ Node  <span class="caret"></span></a>
    <a href="${relativeURL}//addJSONFolder ">JSON Folder</a>
    </li>
 <li class="dropdown-item ">   
-<a href="${relativeURL}//addPythonFolder ">Transcyprt Folder</a></li>
+<a href="${relativeURL}//addPythonFolder ">Transcrypt Folder</a></li>
+
 <li class="dropdown-item ">
   <a href="${relativeURL}//addPython ">Python</a>
 </li>
+
 </ul>
 </li>
+
 
 </nav>

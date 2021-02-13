@@ -130,7 +130,8 @@ class TrustedHTML(HTMLBase):
                            request=view.request,
                            view=view,
                            **args)
-
+#class Jinja2(TrustedHTML):
+#        pass
 
 @implementer (IUntrustedHTML)
 class UntrustedHTMLBase(HTMLBase):
@@ -165,29 +166,6 @@ class HTML(TrustedHTML,Leaf):
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
 
-from jinja2 import Template as JinjaTemplate
-    
-@implementer(IAceHTMLClass)
-class Jinja2(TrustedHTML,Leaf):
-    icon="ttwicons/HTML.svg"    
-    def compileTemplate(self):
-                 if self.trusted == False:
-                    return     
-                 source=self.getHTML()
-                 self._v_compiledTemplate = JinjaTemplate(source)
-
-    def callWithContext(self,view,context,**args):
-            
-            if self.trusted == False:
-               return self.getHTML()
-       
-            self.setTemplate()
-            result = self._v_compiledTemplate.render(
-                           context=context,
-                           request=view.request,
-                           view=view,
-                           **args)
-            return result
 @implementer(IAceCMSClass)
 class AceCMSHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"

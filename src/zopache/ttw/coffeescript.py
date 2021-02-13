@@ -102,7 +102,7 @@ class AddCoffeeScript(AceScripts,AceAddForm):
     factory=CoffeeScript
 
             
-from .javascript import make_javascript_response, JavascriptBase
+from .javascript import makeJavascriptResponse, JavascriptBase
 
 @view_component
 @name('index')
@@ -110,7 +110,7 @@ from .javascript import make_javascript_response, JavascriptBase
 @title("View CoffeeScript")
 class CoffeeScriptIndex(Page):
     responseFactory = Response
-    make_response = make_javascript_response
+    make_response = makeJavascriptResponse
         
     def render(self ):
         return self.context.javascript

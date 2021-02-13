@@ -199,10 +199,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
         self.title=self.title.replace ('\n' , " ")
         self.title=self.title.replace ('\r' , " ")                
 
-    def preDeleteProcess(self,view = None):
-        siteRoot = view.getSiteRoot()
-        siteRoot.unIndexItem(self)
-        
     def postAddProcess(self,view=None):
         self.postProcessCore(view=view)        
         principal = view.request.principal
@@ -256,12 +252,11 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
                 yield item                   
 
     def __delitem__(self,key):
+        siteRoot = self.getSiteRoot()
         item = self[key]
-        if IPage.providedBy(item):
-           siteRoot = self.getSiteRoot()     
-           siteRoot.deleteItem(item)        
+        siteRoot.unIndexItem(item)
         OrderedBTreeContainer.__delitem__(self,key)
-
+        
     def __setitem__(self,  key,item):
         OrderedBTreeContainer.__setitem__(self,key,item)
         if IPage.providedBy(item):

@@ -70,6 +70,14 @@ class Organization  (
     webClass = "Organization"
     clientClass = "Category"
     webApproved = False
+    donationsPageURL = ""
+    youTubeChanneURL = ""
+    ballotStatus = ""
+    focus = ""
+    twitterId = ""
+    facebookId = ""
+    facebookGroup = ""
+    remoteURL = ""
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd

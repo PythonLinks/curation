@@ -46,7 +46,7 @@ class MapOrLocation (PageBase):
                           "Organization","MapOrganization"]:
                       focus = getattr(self,'focus',"")
                       focus = focus [:4]
-                      result += ",'" + focus + "'"
+                      result += ',"' + focus + '"'
                       
                   if self.__class__.__name__ == "Politician":
                      result += self.getArg(str(hasattr(
@@ -60,7 +60,9 @@ class MapOrLocation (PageBase):
                      outcome = self.getCandidateInfo("result")
                      if len(outcome) > 0:
                          outcome = outcome [0]
-                     result += ",'" + outcome + "'"    
+                     result += ',"' + outcome +' "'
+                     
+                  result += ',"' + self.remoteURL  + '"'                  
                   result += "]"
                   return result, firstItem
               
@@ -75,9 +77,9 @@ class MapOrLocation (PageBase):
           result = ""
           if comma:
               result += ","
-          result += "'"
+          result += '"'
           result += aString
-          result += "'"
+          result += '"'
           return result
       
     def getColor(self):
@@ -197,8 +199,8 @@ class MapBase(LocationContainer):
     def getLocationsJSON(self, view = None):
         firstItem=True
         result=""   
-        begin= "var locations =["
-        end="\n];"
+        begin= "["
+        end="\n]"
         result, firstItem= self.getLocationsJSONCore(
                                 firstItem,result,view)
         return begin + result + end

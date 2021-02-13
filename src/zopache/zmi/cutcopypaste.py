@@ -44,6 +44,7 @@ class BaseClass(TransactionNote,UniqueName):
 
 
     def moveFrom(self,firstFolder,firstName, secondFolder, secondName):
+
         obj=firstFolder[firstName]
         del firstFolder [firstName]
         secondFolder[secondName] = obj

@@ -1,8 +1,11 @@
 from slugify import slugify
 import json
-from zopache.business.usdata import  inner
+import os
 
-
+here =  os.path.dirname(os.path.abspath(__file__))
+source = os.path.join(here,"usdata.json")
+source = open(source)
+inner = json.load(source)
 states = {}
 
 for item in inner:
