@@ -5,7 +5,7 @@ from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions, i18n as _
 from zopache.crud import update as editactions
 from zopache.ttw import actions as ttwactions
-
+from zopache.ttw.acescripts import AceScripts
 
 class AceAddForm (AddForm):
     @property
@@ -55,7 +55,8 @@ class AceEditForm(EditForm):
               formactions.Cancel(_("Cancel","Cancel")))
 
 
-class PugEditForm(EditForm):
+class PugEditForm(AceScripts,EditForm):
+    aceMode = "jade"
     def update(self):
          if self.treeSecurity():
               self.setActions()

@@ -45,6 +45,7 @@ class AddByURLAction(Action):
 
 class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
     datavalidators = [DuplicateURLValidator]
+    
     preamble = """This form may take a few moments  to process. 
     The software will download that webpage, capture the title, 
     description and the image url, amd you will then be redirected to the 
@@ -54,7 +55,7 @@ class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
     be edited """
     actions = Actions()
 
-    title = "Add a Link Object from a URL"
+    title = "Add an object starting with its URL."
     @property 
     def subTitle(self):
         return f"""To a {self.contextClassName()} called 
@@ -64,7 +65,6 @@ class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
     def update(self):
         if self.isPerson() and not self.treeSecurity():
             self.raiseUnauthorized()
-        #if self.treeSecurity():
         self.addUnauthorizedActions()
             
     interface = IURLForm
@@ -77,9 +77,3 @@ class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
         self.actions= actions
               
 
-#So This one can be called multiple times.               
-#class AddMultipleByURL(AddByURLForm):
-#    def __call__(self, form,remoteURL):
-#        self.remoteURL = remoteURL
-#        return AddByURL.__call__(self,form)
-# MAYBE ADDBYURL NO LONGER EXISTS        

@@ -21,12 +21,7 @@ from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
 
 class  AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/markdown");
-        </script>
-        """
-
+    aceMode = 'markdown'
 
 class AddAndEdit(Add):
     parentClass=Add

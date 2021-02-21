@@ -25,6 +25,7 @@ from zopache.core.baseform import Form
 from zopache.python.interfaces import IDirectory
 from zopache.application.root import RootContainer
 from zopache.ttw.interfaces import IPrincipalFolder,IInternalPrincipal
+from zopache.core.scripts import Scripts
 
 #Breadcrumbs is included in Form
 class ManageBase(Form,Contents):

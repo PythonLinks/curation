@@ -14,12 +14,16 @@ from dolmen.container import  BTreeContainer
 
 from zopache.core import Leaf
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
-from zopache.ttw.acescripts import AceScriptJSON
+from zopache.ttw.acescripts import AceScripts
 
 from zopache.ttw.interfaces import IJSON, IJSONContainer
 from zopache.ttw.javascript import JavascriptBase
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
+
+class AceScripts(AceScripts):
+    aceMode = 'json'
+
 @implementer(IJSON)
 class JSON(JavascriptBase,Leaf):
     # NEEDS AN ICON
@@ -80,7 +84,7 @@ class JSONFolder(JSONDict):
 @name('addJSON')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddJSON(AceScriptJSON,AceAddForm):
+class AddJSON(AceScripts,AceAddForm):
     subTitle='Add a JSON Object'
     interface = IJSON
     ignoreContent = True
@@ -90,7 +94,7 @@ class AddJSON(AceScriptJSON,AceAddForm):
 @name('addJSONFolder')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddJSONDict(AceScriptJSON,AceAddForm):
+class AddJSONDict(AceScripts,AceAddForm):
     subTitle='Add a JSON Object'
     interface = IJSONContainer
     ignoreContent = True
@@ -142,7 +146,7 @@ class Index(View):
 @context(IJSON)
 @name("aceedit")
 @implementer(ITreeSecurity)
-class AceEditJSON(AceScriptJSON,AceEditForm):
+class AceEditJSON(AceScripts,AceEditForm):
     subTitle='Edit a JSON Object'
 
 

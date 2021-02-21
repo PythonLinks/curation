@@ -65,18 +65,12 @@ class CoffeeScript(JavascriptBase,Leaf):
         return self.source
 
 class  AceScripts(AceScriptsBase):
+    aceMod = 'coffeescript'
     def update(self):
         self.template = getProducts(self)['Templates']['TranspilerTemplate']
         
-    def  headerScripts(self):
-        result = AceScriptsBase.headerScripts(self)
-        return result        
-    
     def  footerScripts(self):
-        result =  self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/coffee");
-        </script>
-        """     
+        result =  AceScriptsBase,footerScripts() 
         result += """
 <script  src="/fanstatic/ttwicons/coffeescript.js"></script>
     """

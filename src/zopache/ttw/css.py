@@ -14,12 +14,12 @@ from zopache.ttw.interfaces import ISourceLeaf, ISearchable
 from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.crud.forms import EditDemoForm
-from zopache.ttw.acescripts import AceScripts
 from zope.interface import Interface
 from zopache.ttw.javascript import JavascriptBase, JavascriptFolderBase
 from zopache.core.interfaces import ITreeSecurity
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IAceDiff
+from zopache.ttw.acescripts import AceScripts
 
 class ICSSBase(IAceDiff):
     """ For CSS Leaves and Folders."""
@@ -51,19 +51,14 @@ class CSS(JavascriptBase,Leaf):
     icon="ttwicons/CSS.svg"
     aceMode = 'css'
     englishType = 'CSS'
-    
+
 class  AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/css");
-        </script>
-        """
+     aceMode = 'css'
     
 
 @form_component
 @name('addCSS')
 @context(IBTreeContainer)
-@title("Add CSS")
 @implementer(ITreeSecurity)
 class AddCSS(AceScripts,AceAddForm):
     subTitle='Add a CSS Object'

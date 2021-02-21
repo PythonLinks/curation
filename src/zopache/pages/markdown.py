@@ -11,7 +11,7 @@ class Markdown (Page):
 
     def postProcess(self, view = None):        
         self._html = mistune.markdown(self.source)
-        Page.postProcess(self)
+        Page.postProcess(self, view  = view)
 
     def postAddProcess(self, view = None):                
         self.postProcess(view = view)

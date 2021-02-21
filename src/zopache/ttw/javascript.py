@@ -12,7 +12,7 @@ from zopache.crud.forms import EditDemoForm
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
-from zopache.ttw.acescripts import AceScriptJavascript
+from zopache.ttw.acescripts import AceScripts
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
 from cromlech.webob.response import Response
@@ -140,14 +140,16 @@ class JavascriptFolder(JavascriptFolderBase,Javascript):
 @title("Add Javascript")
 #@permissions('Manage')
 @implementer(ITreeSecurity)
-class AddJavascript(AceScriptJavascript,AceAddForm):
+class AddJavascript(AceScripts,AceAddForm):
+    aceMode = "javascript"
     subTitle='Add a Javascript Object'
     interface = IJavascript
     ignoreContent = True
     factory=Javascript
-
-    def postProcess(self,view=None):
-        self.new.postProcess(view=view)
+    acemode = 'javascript'
+    
+#    def postProcess(self,view=None):
+#        self.new.postProcess(view=view)
 
 
     
@@ -158,7 +160,7 @@ class AddJavascript(AceScriptJavascript,AceAddForm):
 @title("Add JavascriptFolder")
 #@permissions('Manage')
 @implementer(ITreeSecurity)
-class AddJavascriptFolder(AceScriptJavascript,AceAddForm):
+class AddJavascriptFolder(AceScripts,AceAddForm):
     subTitle= 'Add a Javascript Folder'
     interface = IJavascriptFolder
     ignoreContent = True
@@ -198,17 +200,18 @@ class GrapeIndex(Page):
     def render(self ):
         return self.context.javascript
 
-class BaseJavascript(AceScriptJavascript):
+class BaseJavascript(AceScripts):
+    aceMode = "javascript"    
     subTitle='Ace Edit this  Javascript'
     label=''
     def breadcrumbs(self):
         return self.breadcrumbsManage()
     
     def footerScripts(self):
-        return AceScriptJavascript.footerScripts(self)
+        return AceScripts.footerScripts(self)
 
     def headerScripts(self):
-          return AceScriptJavascript.headerScripts(self)    
+          return AceScripts.headerScripts(self)    
                
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component

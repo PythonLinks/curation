@@ -19,7 +19,7 @@ class Update(Action,TransactionNote):
         if hasattr(context, "preProcess"):
            context.preProcess(form)        
         if hasattr(form,'applyData'):
-           form.applyData()
+           form.applyData(data)
         else:   
            apply_data_event(form.fields, form.getContentData(), data)
         form.message(_(u"URL updated"))

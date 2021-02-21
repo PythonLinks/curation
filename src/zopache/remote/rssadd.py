@@ -14,7 +14,7 @@ from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core import View
 from zopache.core.page import Page
    
-from zopache.crud.forms import AddNamedForm
+from zopache.crud.forms import AddByNameForm
 from zopache.ttw.mail import Notify
 from zopache.crud.forms import BaseEditForm
 import zopache

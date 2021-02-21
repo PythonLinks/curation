@@ -1,19 +1,22 @@
 from zopache.crud.actions import AddByTitle
 
-__all__ = ['AddAndAceEdit','AddAndCkEdit','AddAndView','AddAndManage']
+__all__ = ['AddByTitleAndAceEdit',
+           'AddByTitleAndCkEdit',
+           'AddByTitleAndView',
+           'AddByTitleAndManage']
 
-class AddAndView(AddByTitle):
+class AddByTitleAndView(AddByTitle):
     def newURL(self,baseURL):
         return baseURL 
 
-class AddAndCkEdit(AddByTitle):
+class AddByTitleAndCkEdit(AddByTitle):
     def newURL(self,baseURL):
         return baseURL + '/ckedit'    
 
-class AddAndAceEdit(AddByTitle):
+class AddByTitleAndAceEdit(AddByTitle):
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
 
-class AddAndManage(AddByTitle):
+class AddByTitleAndManage(AddByTitle):
     def newURL(self,baseURL):
         return baseURL + '/manage'

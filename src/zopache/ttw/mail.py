@@ -15,7 +15,7 @@ from zopache.core.viewdecorators import *
 from zopache.core import Leaf
 from zopache.crud.interfaces import ILeaf
 from zopache.pages.interfaces import IPage
-from zopache.crud.forms import AddNamedForm, EditForm
+from zopache.crud.forms import AddByNameForm, EditForm
 from zopache.core.interfaces import ITreeSecurity
 from zopache.ttw.interfaces import IMailHost
 from zopache.core.transactionnote import TransactionNote
@@ -265,7 +265,7 @@ class MailHost(Leaf):
 @name('addMailHost')
 @context(IPage)
 @implementer(ITreeSecurity)
-class AddMailHost(AddNamedForm):
+class AddMailHost(AddByNameForm):
     subTitle='Add a MailHost'
     interface = IMailHost
     ignoreContent = True

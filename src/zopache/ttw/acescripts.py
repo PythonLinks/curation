@@ -1,69 +1,97 @@
-from zopache.core.scripts import Scripts
 from zopache.core.getroot import getProducts
+from zopache.core.scripts import Scripts
 
-class  AceScripts(object):
-    def  headerScripts(self):
+
+
+def createEditorDiv():
         return """
-<script src="https://cdn.jsdelivr.net/ace/1.2.4/min/ace.js"></script>
-    """+Scripts.headerScripts(self)
-    
-
-    aceEditorFooter="""
 <script>
-     //var textarea = $('textarea[name= "#form-field-source" ]')[0];
-     var textarea= $("#form-field-source")[0];
-     //CREATE THE EDITOR
-     editorDiv=$ ("#editorDiv")[0];
-     var editor = ace.edit(editorDiv);
-     editorDiv.style.height= " 100px ";
-     editor.setOptions({maxLines: 40});
-     editor.setOptions({  minLines: 3});
+function createEditorDiv(fieldName){
+  var textarea= document.getElementById(fieldName);
+  var editorDiv = document.createElement('div');
+  editorDiv.id = fieldName+ '-editor'; 
+  editorDiv.style.height= " 100px ";
+  textarea.after(editorDiv);
+  return editorDiv;
+}
+</script>
+       """
+    
+class  AceScripts(object):    
+    def  headerScripts(self):
+        result =  Scripts.headerScripts(self) 
+        result += createEditorDiv() +   f"""
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-{self.aceMode}.js" type="text/javascript" charset="utf-8"></script>"""
+        result += """
+<script >
+var aceEditors = {};
+ace.config.set('basePath','https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/' ); 
+
+
+function createAce(fieldName,mode){
+  var textarea= document.getElementById(fieldName);
+  var editorDiv = createEditorDiv(fieldName);
+  var Mode = ace.require("ace/mode/" + mode).Mode;
+  var editor = ace.edit(editorDiv);
+  aceEditors[fieldName] = editor;
+  editor.setOptions({maxLines: 40});
+  editor.setOptions({minLines: 3});
 
       //SET THE MODE AND THEME
-     editor.setTheme("ace/theme/chrome");   //
+     //editor.setTheme("ace/theme/chrome");   
+    editor.session.setMode(new Mode());
 
-      editor.getSession().setMode("ace/mode/javascript");
+      //editor.getSession().setMode("ace/mode" + mode);
 
       //GET THE VALUE FROM THE TEXT AREA
       editor.getSession().setValue(textarea.value);
+      
+      //HIDE THE TEXT AREA IF ALL ELSE WORKS
+      textarea.style.display = "none";
+  return editor;
+ }
 
-$("form").submit(function(){
-          textarea.value=editor.getSession().getValue();
-})
-   //HIDE THE TEXT AREA IF ALL ELSE WORKS
-       textarea.style.display = "none";
+  function saveThenSubmit(event){
+  
+    for (const [key, editor] of Object.entries(aceEditors)) {
+    var textarea= document.getElementById(key);
+    textarea.value=editor.getSession().getValue();
+     
+    }
+     
+  }  
+ 
+ function createAndSave(fieldName,mode){
+     editor = createAce(fieldName,mode);
+     const form = document.getElementById('form');
+     form.addEventListener('submit', saveThenSubmit);
+ }
 </script>
 
-"""
+    """ 
+        return result
 
-class  AceScriptJavascript(AceScripts):
     def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/javascript");
-        </script>
-        """
-    
-class  AceScriptJSON(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/json");
-        </script>
-        """
+      return f"""
+<script > createAndSave('form-field-source',"{self.aceMode}");
+                </script> """
+
 class  AceScriptPug(AceScripts):
-        
-    def  headerScripts(self):
-        result = AceScripts.headerScripts(self)
-        return result        
+    aceMode = 'jade'        
     
     def  footerScripts(self):
-        result =  self.aceEditorFooter + """
-        <script >editor.getSession().setMode("ace/mode/jade");</script>
- 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify.min.js"></script>
+        result = """
+<script >
+     var  editor = createAce("form-field-source","jade");
+</script> """
+        
+        result += """
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify-html.min.js"></script>
         """     
         result += """
-<script  src="https://pythonlinks.info/static/pug/pug.js"></script>
+<script  src="https://pythonlinks.info/static/pug/pug.js" ></script>
 <script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
         """
         result += "<script>"

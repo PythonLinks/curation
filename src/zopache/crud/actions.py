@@ -57,6 +57,7 @@ class Add(Action, UniqueName, TransactionNote):
         
     def callInner(self,obj,data,form):     
         notify(ObjectCreatedEvent(obj))
+
         self.actuallyAdd(obj,data)
         form.message("Content created")
         baseURL = self.baseURL()
@@ -110,7 +111,7 @@ class Add(Action, UniqueName, TransactionNote):
         return self.uniqueContainerName(self.form.context,name)
 
                      
-class AddNamed(Add):
+class AddByName(Add):
     pass
 
 class AddByTitle (Add):
@@ -120,9 +121,6 @@ class AddByTitle (Add):
         context[newName]=item
         item.__parent__ = context
         item.__name__ = newName
-        #root = getSiteRoot(self.form.context)
-        #if hasattr(root,'addItem'):
-        #    root.addItem(self.new)
 
         if hasattr(self.new,'imageURL'):
             getImage (self.new,self.new.imageURL)
@@ -156,10 +154,6 @@ class AddByTitleAndCkEdit(AddByTitle):
     def newURL(self,baseURL):
         return baseURL + '/ckedit'
     
-class AddByTitleAndAceEdit(AddByTitle):    
-    def newURL(self,baseURL):
-        return baseURL + '/aceedit'    
-
 
 class AddByTitleToTreeAndView(AddByTitle):
 
@@ -175,7 +169,7 @@ class AddByTitleToTreeAndView(AddByTitle):
             set_fields_data(self.form.fields, self.new, self.data)
             return Errors()
     
-class AddAndView(AddNamed):
+class AddAndView(AddByName):
     def newURL(self,baseURL):
         return baseURL + '/index'        
     

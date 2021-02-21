@@ -4,13 +4,13 @@ from zopache.business.meetup import Meetup
 from zopache.business.event import Event, OnlineEvent
 from zopache.pages.interfaces import IPage
 from zopache.business.geocoding import GeoCodeForm
-from zopache.pages.addanonymous import AddAnonymousPage
+from zopache.pages.addanonymous import AddAnonymousPageByName
 
 @view_component
 @name('addMeetup')
 @target(IView)
 @context(IPage)
-class AddMeetup(AddAnonymousPage):
+class AddMeetup(AddAnonymousPageByName):
     interface = IMeetup
     title="Add a Meetup Group"
     factory = Meetup
@@ -19,7 +19,7 @@ class AddMeetup(AddAnonymousPage):
 @name('addOnlineEvent')
 @target(IView)
 @context(IPage)
-class AddOnlineEvent(AddAnonymousPage):
+class AddOnlineEvent(AddAnonymousPageByName):
     interface = IOnlineEvent
     title="Add an Online Event"
     factory = OnlineEvent
@@ -29,7 +29,7 @@ class AddOnlineEvent(AddAnonymousPage):
 @name('addEvent')
 @target(IView)
 @context(IPage)
-class AddEvent(AddAnonymousPage):
+class AddEvent(AddAnonymousPageByName):
     interface = IEvent
     factory = Event
     title = "Add a Real World Event"
