@@ -5,30 +5,6 @@
 <a href="${relativeURL}" class="nav-link">View</a>
         </li>
 	
-        <li class="dropdown nav-item" tal:condition = "view.isManager() ">
-<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-
-Tree  <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-                <li class="dropdown-item"><a href="${relativeSiteURL}/manage">Root</a>
-                </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/configure">Configure</a>
-                </li>
-                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="${relativeSiteURL}/ProductsRoot/manage">Root</a>
-                </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/Products/manage">Products</a>
-                </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/pack">Pack</a>
-                </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/undo">Transactions</a>
-                </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/reIndex">ReIndex</a>
-                </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/person/manage">People</a>
-                </li>
-            </ul>
-        </li>
-
 
 <!--  NODE MENU  -->
 
@@ -89,8 +65,32 @@ Node  <span class="caret"></span></a>
             </ul>
         </li>
 
+<li class="dropdown nav-item" tal:condition = "view.isManager() ">
+<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
 
-<!--  HTML MENU  -->
+Tree  <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item"><a href="${relativeSiteURL}/manage">Root</a>
+                </li>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/configure">Configure</a>
+                </li>
+                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="${relativeSiteURL}/ProductsRoot/manage">Root</a>
+                </li>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/Products/manage">Products</a>
+                </li>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/pack">Pack</a>
+                </li>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/undo">Transactions</a>
+                </li>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/reIndex">ReIndex</a>
+                </li>
+                <li class="dropdown-item"><a href="${relativeSiteURL}/person/manage">People</a>
+                </li>
+            </ul>
+        </li>
+
+
+<!--  Beginner MENU  -->
 
         <li class="dropdown nav-item" tal:condition="view.isDeveloper() and view.safeMethod('isBTreeContainer')">
         <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
