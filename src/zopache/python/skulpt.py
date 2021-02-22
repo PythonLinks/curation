@@ -162,7 +162,9 @@ class SkupltAssignment(Page):
     title = ""
     description = ""
     problemText = ""
-    problemCode = ""
+    problemCode ="""#Please complete this program to solve the problem.
+def run():
+"""
     solutionText = ""
     solutionCode = ""
     showSolution = False
