@@ -189,20 +189,6 @@ class AceEditPug(BasePugForm,PugEditForm):
         self.template = self.getTemplates()['TranspilerTemplate']        
         PugEditForm.update(self)
 
-#AND HERE WE HAVE THE ACE DEMO FORM               
-@form_component
-@context(IPug)
-@target(IView)
-@title("Ace Demo")
-@name("acedemo")
-class AceDemoPug(BasePugForm,EditDemoForm):
-    def update(self):
-        self.template = self.getTemplates()['TranspilerTemplate']    
-
-    def breadcrumbs(self):
-        return self.breadcrumbsIndex(self.context)
-    
-        
 
 #RENDER HTML
 @view_component

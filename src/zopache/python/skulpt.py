@@ -1,8 +1,10 @@
 from zope import schema
 from zope.interface import implementer
+from zope.interface import Interface
 from dolmen.view import View
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
+from dolmen.forms.base import Actions
 
 from dolmen.container import IBTreeContainer ,OrderedBTreeContainer
 
@@ -47,22 +49,14 @@ class ISolution(ISourceLeaf,IZMI,IDeletable):
         default = u'',
     )    
 class ISkulptBase(Interface):
-    
 
     title = schema.TextLine(
         title = u'Title',
         description = 'The Name of this assignment.',
         default='',            
-        required = False,
+        required = True,
     )
 
-    description = schema.Text(
-        title = u'Description',
-        description = u'A short optional introductory description.',
-        default='',            
-        required = False,
-    )    
-    
     problemText= schema.Text(
         title = 'The problem statement.',
         description = 'Please explain the problem.',
@@ -99,13 +93,13 @@ class ISkulptBase(Interface):
         '',
     )        
 
-    correctAnswer= schema.Text(
-        title = 'Correct Result',
-        description = 'What the program should return, if left empty, not checked.',
-        required = False,
-        default =
-        '',
-    )    
+#    correctAnswer= schema.Text(
+#        title = 'Correct Result',
+#        description = 'What the program should return, if left empty, not checked.',
+#        required = False,
+#        default =
+#        '',
+#    )    
     
     showSolution = schema.Bool(
         title = 'Show Solution?',
@@ -113,6 +107,13 @@ class ISkulptBase(Interface):
         required = False,
         default = False,
     )
+
+    timeIsUp = schema.Bool(
+        title = 'Time is up?',
+        description = "Prevent further answers when the time has run out.",
+        required = False,
+        default = False,
+    )    
 from zopache.ttw.interfaces import ICanonical
 
 class ISkulptAssignment(ISkulptBase,ICanonical):
@@ -158,6 +159,7 @@ class Solution(Leaf):
     
 @implementer(ISkulptAssignment)
 class SkupltAssignment(Page):
+    webClass = "Skulpt"
     icon="ttwicons/Python.svg"
     title = ""
     description = ""
@@ -192,8 +194,38 @@ from zopache.crud.forms import AddByTitleForm
 from dolmen.forms.base import Fields
 from zopache.ttw.htmlviews import CkScripts
 
-class AllScripts(AceScripts, CkScripts):
+
+def skulptScripts():
+         return """
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script> 
+<script src="/root/Products/Templates/Skulpt/skulpt.min.js" type="text/javascript"></script> 
+<script src="/root/Products/Templates/Skulpt/skulpt-stdlib.js" type="text/javascript"></script> 
+<script src="/root/Products/Templates/Skulpt/fiddle.js" type="text/javascript"></script> 
+
+<script src="/root/Products/Templates/Skulpt/addButtons" type="text/javascript"></script> 
+
+"""
+
+class AllScripts(TransactionNote,AceScripts, CkScripts):
     fields =  Fields(ISkulptAssignment)    
+    interface = ISkulptAssignment
+    aceMode = "python"
+    actions = Actions()
+    
+    @property
+    def title(self):
+        if self.isTeacher():
+           return "Edit a Python (Skulpt) Assignment"
+        else:
+           return self.context.title
+
+    @property
+    def subTitle(self):
+        if self.isTeacher():
+           return ""
+        else:
+           return self.context.description
+       
     def isStudent(self):
         if self.isAuthenticated() and not self.isManager():
            return True
@@ -201,16 +233,41 @@ class AllScripts(AceScripts, CkScripts):
     
     def isTeacher(self):
         return self.isManager()
-    
-    def isAnonymousVisitor(self):
-        return not self.isAuthenticated()
-    
+
+
     def headerScripts(self):
-        return CkScripts.headerScripts(self) + AceScripts.headerScripts(self)
-    
+
+        result =  CkScripts.headerScripts(self) + AceScripts.headerScripts(
+                   self) + skulptScripts()
+
+        return result
+
+    def isAnonymousVisitor(self):
+        return not self.isAuthenticated()    
+
+    def update(self):
+        isAnonymous = self.isAnonymousVisitor()
+        isTeacher = self.isTeacher()
+        isStudent = self.isStudent()
+
+        if not isTeacher:
+            self.fields = self.fields.omit("title")
+            self.fields = self.fields.omit("description")
+           
+        if not isTeacher:
+            self.fields["problemText"].mode = DISPLAY
+
+        if isTeacher or isAnonymous:
+            self.fields = self.fields.omit('comments')
+            
     def footerScripts(self):
-         result = """ <script>
+         result = """
+<div id = "output"> </div>
+<script>
+           addButtons("form-field-problemCode");
            createAce("form-field-problemCode","python");
+           init("form.field.problemCode", "output");
+
            """
 
          if self.isTeacher():
@@ -228,39 +285,9 @@ class AllScripts(AceScripts, CkScripts):
          result += """    
          const form = document.getElementById('form');
          form.addEventListener('submit', saveThenSubmit);    
-         </script>"""
+         """
+         result += """</script>"""
          return result
-    interface = ISkulptAssignment
-    aceMode = "python"
-    @property
-    def title(self):
-        if self.isTeacher():
-           return "Edit a Python (Skulpt) Assignment"
-        else:
-           return self.context.title
-
-    @property
-    def subTitle(self):
-        if self.isTeacher():
-           return ""
-        else:
-           return self.context.description
-    
-    def update(self):
-        isAnonymous = self.isAnonymousVisitor()
-        isTeacher = self.isTeacher()
-        isStudent = self.isStudent()
-
-        if not isTeacher:
-            self.fields = self.fields.omit("title")
-            self.fields = self.fields.omit("description")
-           
-        if not isTeacher:
-            self.fields["problemText"].mode = DISPLAY
-
-        if isTeacher or isAnonymous:
-            self.fields = self.fields.omit('comments')
-            
          
 @form_component
 @name('addSkulpt')
@@ -274,25 +301,35 @@ class AddSkulptProblem(AllScripts,AddByTitleForm):
     ignoreContent = True
     factory=SkupltAssignment
     def update(self):
-        AllScripts.update(self)        
+        AllScripts.update(self)
+        AddByTitleForm.update(self)
         #AddByTitleForm.updateWidgets(self)
 
+from dolmen.forms.base.errors import Error
 @form_component
 @context(ISkulptAssignment)
 @name("index")
-class AceEditSkulpt(AceScripts,AceEditForm):
+class AceEditSkulpt(AllScripts,AceEditForm):
+    def extractData(self):
+        data, errors = AceEditForm.extractData(self)
+        if self.context.timeIsUp and not self.isTeacher():
+            errors += Error("Time is up, no more submissions.")
+        return data, errors
+    
     def update(self):
+
         AllScripts.update(self)
+        AceEditForm.update(self)
         isAnonymous = self.isAnonymousVisitor()
         isTeacher = self.isTeacher()
         isStudent = self.isStudent()        
-        if not self.context.showAnswer and not isTeacher:
+        if not self.context.showSolution and not isTeacher:
              self.fields = self.fields.omit('answer')
    
         if not isTeacher:
-            self.fields = self.fields.omit('showAnswer')
+            self.fields = self.fields.omit('showSolution')
            
-        if self.context.showAnswer:
+        if self.context.showSolution:
            if not isTeacher:
                self.fields['solutionText'].mode = DISPLAY
                self.fields['solutionCode'].mode = DISPLAY                      
@@ -303,25 +340,28 @@ class AceEditSkulpt(AceScripts,AceEditForm):
         #AceEditForm.updateWidgets(self)            
 
     def addUnauthorizedActions(self):
-        self.actions = DoNothing()
+        self.actions = Actions()
         
     def addAuthorizedActions(self):
         if self.isTeacher() or self.isStudent():
            self.actions = Actions(
-               Edit("Save","Save")),
-        #Do nothing if anonymous visitor.
+               Edit("Save","Save"))
            
     def applyData(self,data):
         context = self.context
         if self.isTeacher():
            context.title = data['title'] 
-           context.description = data['description']
-           context.source = data['source']
-           context.solution = data['solution']
+           #context.description = data['description']
+           context.problemCode = data['problemCode']
+           context.problemText = data['problemText']           
+           context.solutionCode = data['solutionCode']
+           context.solutionText = data['solutionText']           
            context.showSoltion= True if 'showSolution' in data else False
+           breakpoint()
+           context.showSoltion= True if ('showSolution' in data) else False
+           context.timeIsUp = True if ('timeIsUp' in data) else False
            msg = "Teacher edited: " + self.title
-           TransactionNote.describeTransactionWithText(msg)
-           
+           self.describeTransactionWithText(msg)
         else:
            answer = self.solution() 
            answer.comments = data['comments']

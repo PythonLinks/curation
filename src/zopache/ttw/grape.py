@@ -168,7 +168,8 @@ class EditGrapePage(EditBase):
     def update(self):
        templates = self.getTemplates()
        self.template = templates["Grape-html"]
-
+       super().update(self)
+       
 @form_component
 @context(IGrapeBase)
 @name('edit')
@@ -178,7 +179,8 @@ class EditGrapeLayout(EditBase):
     def update(self):
        templates = self.getTemplates()
        self.template = templates["Grape-html"]       
-
+       super.update(self)
+       
 
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response

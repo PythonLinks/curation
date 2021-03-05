@@ -41,7 +41,6 @@ class AddFormBase(Form):
 class TreeSecurityAddForm(AddFormBase):
     actions = Actions()    
     def update(self):
-
         if self.treeSecurity():
            self.addAuthorizedActions()
         else:
@@ -85,7 +84,6 @@ class BaseEditForm(Form,Breadcrumbs):
     ignoreRequest = False
     count = 0
     @property
-
     def fields(self):
         return  Fields(self.interface)
     
@@ -94,7 +92,8 @@ class BaseEditForm(Form,Breadcrumbs):
             self.addAuthorizedActions()
             
     def addAuthorizedActions(self):
-                 self.actions = Actions(editactions.Edit(_("Save","Save")),
+
+        self.actions = Actions(editactions.Edit(_("Save","Save")),
                     editactions.SaveAndView(_("SaveAndView","Save And View")),
                     editactions.Cancel(_("Cancel","Cancel")))
 

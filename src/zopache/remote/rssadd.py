@@ -55,7 +55,8 @@ class UpdateRSS(Form):
      layoutName = "UserMenu"
      def update(self):
         self.status='RSS Was updated'
-                    
+        Form.update(self)
+        
 @form_component
 @name ('edit')
 @context(IRSS)

@@ -45,7 +45,7 @@ class HTMLBase(object):
     trusted = False    
     title=u'HTML Object'
     source=''
-
+    icon="ttwicons/HTML.svg"
     #THIS SHOULD BE RETIRED
     #AND ONLY HTML USED. 
     def html(self):

@@ -1,6 +1,5 @@
 import json
 
-
 from zope import schema
 from zope.interface import implementer
 from dolmen.view import View
@@ -37,7 +36,7 @@ class JSON(JavascriptBase,Leaf):
         return json.loads(self.source)
     
     def fromPythonObjects(self,data):
-        self.source = json.dumps(data)
+        self.source = json.dumps(data,indent=4)
         
     def getJavascript (self):
         return self.source
@@ -47,14 +46,17 @@ class JSON(JavascriptBase,Leaf):
         jsonDict = json.loads (source)
         return jsonDict
     
-@implementer(IJSON)
+@implementer(IJSONContainer)
 class JSONDict(JSON,OrderedBTreeContainer):
     title = ""
     description = ""
     source = "{}"
-    
+    def __init__(self):
+        JSON.__init__(self)
+        OrderedBTreeContainer.__init__(self)
+        
     def getAsString(self):
-        return json.dumps(self.getAsDict())
+        return json.dumps(self.getAsDict(),indent = 2)
     
     def getAsDict(self):
         source2 = self.source           
@@ -70,13 +72,12 @@ class JSONDict(JSON,OrderedBTreeContainer):
         for key,value  in self.items():
             if IJSON.providedBy(value):
                properties[key] = value.getAsDict()
-        print (properties.keys())       
         if properties:
             json2["properties"] = properties
 
         return json2
     
-@implementer(IJSON)
+@implementer(IJSONContainer)
 class JSONFolder(JSONDict):
     pass
 
@@ -139,7 +140,7 @@ class Index(View):
         
     def render(self):
         context = self.context.getAsString()
-
+        return context
         
 
 @form_component

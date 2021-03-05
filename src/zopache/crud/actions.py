@@ -13,7 +13,7 @@ import requests
 from html_to_etree import parse_html_bytes
 #https://github.com/fluquid/extract-social-media
 from extract_social_media import matches_string, find_links_tree
-
+from dolmen.forms.base import Actions
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE

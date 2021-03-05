@@ -20,6 +20,7 @@ from zopache.core.interfaces import ITreeSecurity
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IAceDiff
 from zopache.ttw.acescripts import AceScripts
+from zopache.core.page import Page
 
 class ICSSBase(IAceDiff):
     """ For CSS Leaves and Folders."""
@@ -67,18 +68,30 @@ class AddCSS(AceScripts,AceAddForm):
     factory=CSS
     
 
-def make_css_response(view, result, *args, **kwargs):
+def makeCSSResponse(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.write(result or u'')
         response.content_type=u'text/css'
-        return response    
+        return response
+
+def makeSassResponse(view, result, *args, **kwargs):
+        response = view.responseFactory()
+        response.write(result or u'')
+        response.content_type=u'text/x-sass'
+        return response
+
+def makeScSSResponse(view, result, *args, **kwargs):
+        response = view.responseFactory()
+        response.write(result or u'')
+        response.content_type=u'text/x-scss,'
+        return response        
 
 @view_component
 @name('index')
 @context(ICSSBase)
 class Index(View):
     responseFactory = Response
-    make_response = make_css_response
+    make_response = makeCSSResponse
         
     def render(self):
                return self.context.getJavascript()
@@ -89,7 +102,7 @@ class Index(View):
 @context(IGrapeBase)
 class ShowGrapeCSS(View):
     responseFactory = Response
-    make_response = make_css_response
+    make_response = makeCSSResponse
         
     def render(self):
                return self.context.css    
@@ -126,7 +139,7 @@ class AceDiff(EditForm,Breadcrumbs):
         self.title=F'<center>Diff two {self.context.englishType} Objects</center>'    
         templates = self.getTemplates()
         self.template = templates['AceDiff']
-
+        super().update(self)
 
 
 @implementer(ICSSFolder)
@@ -160,6 +173,17 @@ class AddCSSFolder(AceScripts,AddAndSearchForm):
     ignoreContent = True
     factory=CSSFolder    
 
+@view_component
+@name('.scss')
+@context(ICSS)
+class SCSSIndex(Page):
+    responseFactory = Response
+    make_response = makeScSSResponse
+        
+    def render(self ):
+        return self.context.source
+
+    
         
 import crom
 from zopache.zmi.interfaces import IURLSegment

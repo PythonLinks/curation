@@ -38,11 +38,6 @@ Node  <span class="caret"></span></a>
 <a href="${relativeURL}//permissions">Permissions</a>
 </li>
 
-
-		
-                <li tal:condition="view.implements('zopache.pages.interfaces.IPage')"
-                class="dropdown-item"><a href="${relativeURL}//json">JSON</a>
-                </li>
 		
                 <li tal:condition="hasattr(context,'webClass')" class="dropdown-item"><a href="${relativeURL}//editWebClass">Edit Web Class</a>
                 </li>
@@ -114,8 +109,7 @@ Tree  <span class="caret"></span></a>
                 </li>
                 <li class="dropdown-item"><a href="${relativeURL}//addFile">File</a>
                 </li>
-<li class="dropdown-item "><a href="${relativeURL}//addJSON ">JSON</a></li>
-<li class="dropdown-item "><a href="${relativeURL}/addCoffeeScript ">CoffeeScript</a></li>
+
 		
                 <li class="dropdown-item"><a href="${relativeURL}//addContainer">Folder</a>
                 </li>
@@ -159,7 +153,8 @@ Tree  <span class="caret"></span></a>
 <ul class="dropdown-menu ">
 <li tal:condition="view.safeMethod('isPage')" class="dropdown-item"><a href="${relativeURL}/addMarkdown">Markdown Page</a>
                 </li>
-
+<li class="dropdown-item "><a href="${relativeURL}//addJSON ">JSON</a></li>
+<li class="dropdown-item "><a href="${relativeURL}/addCoffeeScript ">CoffeeScript</a></li>
 <li class="dropdown-item ">
   <a href="${relativeURL}//addPython ">Python</a>
 </li>

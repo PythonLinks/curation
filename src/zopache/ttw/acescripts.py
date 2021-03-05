@@ -28,10 +28,11 @@ class  AceScripts(object):
 var aceEditors = {};
 ace.config.set('basePath','https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/' ); 
 
-
+//USED BY Coffeescript and SaSS Key Up events. 
+var editorDiv;
 function createAce(fieldName,mode){
   var textarea= document.getElementById(fieldName);
-  var editorDiv = createEditorDiv(fieldName);
+  editorDiv = createEditorDiv(fieldName);
   var Mode = ace.require("ace/mode/" + mode).Mode;
   var editor = ace.edit(editorDiv);
   aceEditors[fieldName] = editor;
