@@ -36,6 +36,11 @@ class AddRSS(AddByTitleForm,Notify):
      factory = RSS
      layoutName = "UserMenu"
      dataValidators = [Duplicate]
+     
+     def __init__(self):
+        Notify.__init__(self)
+        AddByTitleForm.__init__(self)
+        
      def newURL(self,baseURL):
         return baseURL + '/manage'
             

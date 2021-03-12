@@ -27,6 +27,11 @@ class BaseAdd(AddCkHTMLBase,Notify):
     layoutName = "UserMenu"
     actions = Actions()
     dataValidators = [Duplicate, DuplicateURLValidator, HTMLValidator]
+    
+    def __init__(self):
+        Notify.__init__(self)
+        AddCkHTMLBase.__init__(self)
+        
     def addAuthorizedActions(self):           
         self.actions = Actions(
               AddByTitleAndView("Add and View", self.factory),
@@ -35,13 +40,12 @@ class BaseAdd(AddCkHTMLBase,Notify):
               AddByTitleAndManage("Add and Manage", self.factory),            
               Cancel("Cancel","Cancel"))
 
-
-
         
 #THIS ONE SHOULD BE RETIRED 
 class AddPageBase(BaseAdd, AddByTitleForm):
-     pass
- 
+    def __init__(self):
+        BaseAdd.__init__(self)
+        AddByTitleForm.__init__(self)
  
 class AddAuthorizedPage(AddPageBase):
 

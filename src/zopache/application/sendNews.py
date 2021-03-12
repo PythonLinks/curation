@@ -34,6 +34,10 @@ class SendNews (Notify,EditForm):
     title = 'Send one Newsletter.'
     interface = IClass
     fields = Fields(IClass)
+    
+    def __init__(self):
+        Notify.__init__(self)
+        EditForm.__init__(self)
         
     def acquireTitle(self):
         return 'Edit' + self.context.title + "'s Web Class "
@@ -52,6 +56,10 @@ class Broadcast (Notify,EditForm):
     title = 'Broadcast the News.'
     interface = IClass
     fields = Fields(IClass)
+    
+    def __init__(self):
+        Notify.__init__(self)
+        EditForm.__init__(self)
         
     def acquireTitle(self):
         return 'Edit' + self.context.title + "'s Web Class "

@@ -25,10 +25,10 @@ dataDir = os.path.join(HERE, 'data')
 
 
 class Notify (TransactionNote):
-    sender ='"Green Maps Newsletter" <lozinski@PythonLinks.info>'
-    
-    def setMailer(self):
-       self.mailer = mailer = self.parentalAcquire ("MailHost")
+    def __init__(self):
+        self.mailer = self.parentalAcquire ("MailHost")
+        
+    sender ='"Green New Deal  Newsletter" <lozinski@PythonLinks.info>'
     
     def getRecentArticles(self,principal):
         articles = self.context.bestMostRecentPage()
@@ -72,14 +72,13 @@ class Notify (TransactionNote):
         return False
     
     def broadcastNews(self):
-        self.setMailer()
+
         people = self.parentalAcquire('person')
         for item in people.values():
             self.sendToPrincipal(item)
         self.sendTheMail()
         
     def sendMeANewsletter(self):
-        self.setMailer()        
         principal = self.request.principal
         self.sendToPrincipal(principal)
         self.sendTheMail()
@@ -102,8 +101,7 @@ class Notify (TransactionNote):
 
     
     def createOneNewsletter(self, to, sender, articles):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
-        if mailer == None:
+        if self.mailer == None:
            return ''
 
         subject = self.context.newsTitle
@@ -149,9 +147,7 @@ class Notify (TransactionNote):
         return result
     
     def notify (self,aFrom,to, subject, content, articles = []):
-        self.setMailer()        
-        mailer = self.mailer
-        if mailer == None:
+        if self.mailer == None:
            return         
         message = Message()
         message['From'] = aFrom
@@ -168,34 +164,30 @@ class Notify (TransactionNote):
         delivery.send(aFrom,to, message)
         
     def spoolFile(self):
-        mailer = self.mailer
-        if mailer == None:
+        if self.mailer == None:
            return
-        parentName = mailer.__parent__.__name__
+        parentName = self.mailer.__parent__.__name__
         spoolFolder = os.path.join(dataDir, 'spool')
         spoolFile = os.path.join(spoolFolder, parentName)        
         return spoolFile
     
     def sendTheMail(self):
-        mailer = self.mailer
-        if mailer == None:
+        if self.mailer == None:
            return 
         command = ['qp',
                    '--force-tls',
-                   '--hostname', mailer.smtpServer,
-                   '--port',     str(mailer.port), 
-                   '--username', mailer.userName, 
-                   '--password', mailer.password]
-        if (mailer.debug):
+                   '--hostname', self.mailer.smtpServer,
+                   '--port',     str(self.mailer.port), 
+                   '--username', self.mailer.userName, 
+                   '--password', self.mailer.password]
+        if (self.mailer.debug):
            command.append('--debug-smtp')            
         command.append(self.spoolFile())
         #print (' '.join (command))
         Popen(command)    
         
     def notifyUserNewUser(self):
-        self.setMailer()        
-
-        if mailer == None:
+        if self.mailer == None:
            return None                
         
         subject = "Welcome " + self.new.title
@@ -203,25 +195,23 @@ class Notify (TransactionNote):
         content = F"""Thank you for signing up. 
                       Here is your user url: {url}"""
         email = '"' + self.new.handle + '" <' + self.new.email + '>'
-        self.notify (mailer.noReply,email, subject, content)
+        self.notify (self.mailer.noReply,email, subject, content)
         #DO NOT SEND THE MAIL
         #IT Deletes the email.
         #Wait unti notify admin new user. 
         #self.sendTheMail()
         
     def notifyAdminsNewUser(self):
-        self.setMailer()        
-        if mailer == None:
+        if self.mailer == None:
            return ''                
         subject = "New User" 
         url = self.secureShortURL (context = self.new)        
         content = F"Here is the new user url {url}"
-        self.notify (mailer.noReply, mailer.postMaster, subject, content)
+        self.notify (self.mailer.noReply, self.mailer.postMaster, subject, content)
         self.sendTheMail()
 
     def notifyAdminsMembershipEvent(self,subject):
-        self.setMailer()
-        if mailer == None:
+        if self.mailer == None:
            return ''                
         subject += self.context.title
         url = self.secureShortURL (context = self.context)
@@ -230,12 +220,11 @@ class Notify (TransactionNote):
         content += f" {self.secureShortURL(self.context)}.  \n"
         content += "Just reply to this email."
 
-        self.notify (mailer.noReply, mailer.postMaster, subject, content)
+        self.notify (self.mailer.noReply, self.mailer.postMaster, subject, content)
         self.sendTheMail()
 
     def notifyAdminsVolunteerResigned(self):
-        self.setMailer()                
-        if mailer == None:
+        if self.mailer == None:
            return ''                
         subject = "Volunteer Resigned From:"
         subject += self.context.title
@@ -243,17 +232,15 @@ class Notify (TransactionNote):
         content = F"{self.request.principal.title}"
         content = f" is resigning from  {self.context.url}.  "
         content += "Just reply to this email."        
-        self.notify (mailer.noReply, mailer.postMaster, subject, content)
+        self.notify (self.mailer.noReply, self.mailer.postMaster, subject, content)
         self.sendTheMail()                
-
         
     def notifyAdminsPageDeleted(self):
-        self.setMailer()                        
-        if mailer == None:
+        if self.mailer == None:
            return ''                        
         subject = "Page Deleted"
         content = self.request.url
-        self.notify (mailer.noReply,mailer.postMaster, subject, content)       
+        self.notify (self.mailer.noReply,self.mailer.postMaster, subject, content)       
         self.sendTheMail()
         
 @implementer (IMailHost)
@@ -285,7 +272,7 @@ class EditMailHost(EditForm):
  
     """    
     def sendOneNewsletter(self):
-        to = mailer.postMaster
+        to = self.mailer.postMaster
         articles = self.context.bestMostRecentPage()
         self.createOneNewsLetter(to, self.sender, articles)
         self.sendTheMail()

@@ -44,6 +44,11 @@ class AddByURLAction(Action):
         return SuccessMarker('Updated', True, url=postingURL)
 
 class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
+    def __init__(self):
+        Notify.__init__(self)
+        AddFormBase.__init__(self)
+        Breadcrumbs.__init__(self)
+    
     datavalidators = [DuplicateURLValidator]
     
     preamble = """This form may take a few moments  to process. 

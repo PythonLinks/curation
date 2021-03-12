@@ -38,6 +38,18 @@ class AddFormBase(Form):
     def fields(self):
         return  Fields(self.interface)
 
+#USING TRADITIONAL PERMISSIONS    
+class AddForm(AddFormBase):
+    @property
+    def fields(self):
+        return  Fields(IName,self.interface)
+    
+    @property
+    def actions(self):
+        return  Actions(
+            formactions.Add(_("Add","Add"), self.factory),
+            formactions.Cancel(_("Cancel","Cancel")))
+    
 class TreeSecurityAddForm(AddFormBase):
     actions = Actions()    
     def update(self):
@@ -52,17 +64,6 @@ class TreeSecurityAddForm(AddFormBase):
     def addUnAuthorizedActions():
         self.actions = Actions()        
    
-class AddForm(AddFormBase):
-    @property
-    def fields(self):
-        return  Fields(IName,self.interface)
-    
-    @property
-    def actions(self):
-        return  Actions(
-            formactions.Add(_("Add","Add"), self.factory),
-            formactions.Cancel(_("Cancel","Cancel")))
-
     
 #THIS ONE IS LIKE ADD FORM, BUT BASED ON TREE SECURITY    
 class AddByNameForm(TreeSecurityAddForm,UniqueName):

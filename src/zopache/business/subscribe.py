@@ -91,6 +91,9 @@ class HasMembers(object):
      
     
 class MemberForms(Form,Notify):
+    def __init__(self):
+        Notify.__init__(self)
+        AddByTitleForm.__init__(self)
     
     def getOneMember(self,name):
         members = self.members

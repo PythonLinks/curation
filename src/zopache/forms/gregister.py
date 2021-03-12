@@ -39,6 +39,10 @@ class BaseRegister(AddForm, Notify):
     submissionError = ""
     allowAnonymous = True
     
+    def __init__(self):
+        AddForm.__init__(self)
+        Notify.__init__(self)
+    
     def updateWidgets(self):
         self.fields["idtoken"].mode = HIDDEN        
         AddForm.updateWidgets(self)
@@ -67,6 +71,9 @@ class GRegister(BaseRegister):
     title='Site Registration'
     subTitle='Please enter your user id and GDPR permissions.'
 
+    def __init__(self):
+        BaseRegister.__init(self)
+        
     def newURL(self):
         newURL = "/" + self.context.__name__        
         return newURL
@@ -84,6 +91,7 @@ class GSubscribe(BaseRegister):
     title='Register To Subscribe'
     subTitle='Please enter your user id and GDPR permissions.'    
     fields = Fields(IGSubscribe)
+        
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text = "Thank you for subscribing. "
@@ -102,6 +110,7 @@ class GSubscribe(BaseRegister):
 class GDonate(BaseRegister):
     title='Register To Donate'
     subTitle='Please enter your user id and GDPR permissions.'
+    
     def newURL(self):
         newURL = '..'        
         return newURL
@@ -126,6 +135,7 @@ class GDonate(BaseRegister):
 class GVolunteer(BaseRegister):
     title='Register To Volunteer'
     subTitle='Please enter your user id and GDPR permissions.'
+    
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text = "Thank you for volunteerng with "
@@ -144,6 +154,7 @@ class GVolunteer(BaseRegister):
 class GEndorse(BaseRegister):
     title='Register to Endorse This Candidate'
     subTitle='Please enter your user id and GDPR permissions.'
+    
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text =  "Thank you for endorsing "

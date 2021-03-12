@@ -146,7 +146,6 @@ class AddJavascript(AceScripts,AceAddForm):
     interface = IJavascript
     ignoreContent = True
     factory=Javascript
-    acemode = 'javascript'
     
 #    def postProcess(self,view=None):
 #        self.new.postProcess(view=view)
@@ -161,6 +160,7 @@ class AddJavascript(AceScripts,AceAddForm):
 #@permissions('Manage')
 @implementer(ITreeSecurity)
 class AddJavascriptFolder(AceScripts,AceAddForm):
+    aceMode = "javascript"
     subTitle= 'Add a Javascript Folder'
     interface = IJavascriptFolder
     ignoreContent = True

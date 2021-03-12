@@ -52,6 +52,10 @@ class AddMarkdown(AceScripts,AceAddForm, Notify):
     interface = IMarkdown
     ignoreContent = True
     factory=Markdown
+    def __init__(self):
+        Notify.__init__(self)
+        AceScripts.__init__(self)
+        AceAddForm.__init__(self)
     
     def footerScripts(self):
         return AceScripts.footerScripts(self)
