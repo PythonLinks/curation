@@ -62,7 +62,7 @@ class JinjaJS(JinjaBase):
 @name('addJinjaJSON')
 @context(IBTreeContainer)
 @permissions('Manage')
-class AddJinjaJSON(AceScripts,AceAddForm):
+class AddJinjaJSON(AceAddForm):
     acemode = 'json'    
     title='Add a Jinja2 JSON Object'
     interface = IJSON
@@ -75,7 +75,7 @@ class AddJinjaJSON(AceScripts,AceAddForm):
 @name('addJinjaJS')
 @context(IBTreeContainer)
 @permissions('Manage')
-class AddJinjaJS(AceScripts,AceAddForm):
+class AddJinjaJS(AceAddForm):
     acemode = 'javascript'
     title='Add a Jinja2 Javascript Object'
     interface = IJavascript
@@ -89,7 +89,7 @@ class AddJinjaJS(AceScripts,AceAddForm):
 @context(IJinjaJS)
 @name("aceedit")
 @permissions('Manage')
-class AceEditJinjaJS(AceScripts,AceEditForm):
+class AceEditJinjaJS(AceEditForm):
     acemode = 'javascript'            
     title='Edit a JINJA Javascript Object'
     subtitle = "Jinja2 will be used to add in values"
@@ -98,7 +98,7 @@ class AceEditJinjaJS(AceScripts,AceEditForm):
 @context(IJinjaJSON)
 @name("aceedit")
 @permissions('Manage')
-class AceEditJinjaJSON(AceScripts,AceEditForm):
+class AceEditJinjaJSON(AceEditForm):
     title='Edit a JINJA JSON Object'
     subtitle = "Jinja2 will be used to add in values"
     acemode = 'json'

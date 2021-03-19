@@ -2,10 +2,10 @@ import arrow
 import time
 import sys
 import urllib
+from pprint import pprint as pp
 
 import transaction
 from zope.interface import Interface
-from pprint import pprint as pp 
 from .css import ICSS
 from .javascript import IJavascript
 from .interfaces import ISource, IHTML

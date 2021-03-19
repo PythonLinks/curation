@@ -1,4 +1,6 @@
 import json
+import transaction
+
 from dolmen.view import View
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
@@ -20,15 +22,18 @@ from zopache.core import Container
 from zopache.pages.interfaces import IPage
 from zopache.crud.update import Edit
 from zopache.crud.forms import AddByTitle, EditForm
-from zopache.python.iskulpt import ISolution, ISkulptAssignment
+from zopache.python.iskulpt import ISkulptSolution, ISkulptAssignment
+from zopache.crud import update as editactions                    
 
-@implementer(ISolution)
+@implementer(ISkulptSolution)
 class Solution(Leaf):
     icon="ttwicons/Python.svg"
     _solutionCode = ""
     comments = ""
     result = ""
-
+    def className(self):
+        return self.__class__.__name__
+    
     @property
     def title (self):
         return  self.parent.title
@@ -49,6 +54,10 @@ class Solution(Leaf):
     def solutionText(self):
         return self.parent.solutionText
 
+    @property
+    def timeIsUp(self):
+        return self.parent.timeIsUp
+    
     @property
     def showSolution(self):
         return self.parent.showSolution
@@ -77,30 +86,24 @@ def run():
     solutionCode = ""
     showSolution = False
     answer = ""
-    
-    def getContentData(self):
-        if self.isStudent():
-            return self.studentsWork()
-        else:
-            return self.context
-        
+
     def studentsWork(self,view):
         principal = view.request.principal
         handle = principal.title
-        context = self.context
-        if not handle in context:
-            context[handle]= new = Skupt()
-            new._code = context.problemCode
+        if not handle in self:
+            self[handle]= new = Solution()
+            new._code = self.problemCode
             msg = handle +" Answered: " + self.title
-            TransactionNote.describeTransactionWithText(msg)
+            TransactionNote().describeTransactionWithText(msg)
             transaction.commit()
-        return context[handle]
+        return self[handle]
 
 from zopache.crud.forms import AddByTitleForm
 from dolmen.forms.base import Fields
 from zopache.ttw.htmlviews import CkScripts
 
-def skulptScripts():
+
+def skulptScripts():    
          return """
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script> 
 <script src="/root/Products/Templates/Skulpt/skulpt.min.js" type="text/javascript"></script> 
@@ -111,11 +114,60 @@ def skulptScripts():
 
 """
 
-class AssignmentForm(TransactionNote,AceScripts,CkScripts):
+     
+class SharedForm(TransactionNote,AceScripts,CkScripts):
+    aceMode = "python"
     actions = Actions()
-    fields = Fields(ISkulptAssignment)
+    layoutName = "UserMenu"
 
-    @property
+    def update(self):
+        self.template = self.getTemplates()['Skulpt']
+
+    def isTeacher(self):
+        return self.isManager()
+
+    def isAnonymousVisitor(self):
+        return not self.isAuthenticated()    
+        
+    def headerScripts(self):
+        return CkScripts.headerScripts(self) + AceScripts.headerScripts(self)
+
+    def isTeacherOrShowSolution(self):
+        return self.isTeacher() or self.context.showSolution
+
+class AssignmentForm(SharedForm):
+    fields = Fields(ISkulptAssignment)
+    def footerScripts(self):
+
+         result = """ <script>
+         createAce("form-field-problemCode","python");
+           """
+
+         if self.isTeacher():
+            result +=""" 
+        CKEDITOR.replace('form-field-problemText',
+       {disableNativeSpellChecker : false}); 
+        CKEDITOR.replace('form-field-solutionText',
+       {disableNativeSpellChecker : false}); 
+         """
+
+         if self.isTeacherOrShowSolution():
+             result += """ 
+           createAce("form-field-solutionCode","python");
+           """
+         result += """    
+         const form = document.getElementById('form');
+         form.addEventListener('submit', saveThenSubmit);    
+         </script>"""
+         return result
+
+    def getContent(self):
+        if self.isStudent():
+            return self.context.studentsWork(self)
+        else:
+            return self.context
+        
+    @property        
     def title(self):
         if self.isTeacher():
            return "Edit a Python (Skulpt) Assignment"
@@ -127,17 +179,7 @@ class AssignmentForm(TransactionNote,AceScripts,CkScripts):
            return True
         return False
     
-    def isTeacherOrShowSolution(self):
-        return self.isTeacher() or self.showSolution
-    
-    def isTeacher(self):
-        return self.isManager()
-
-    def isAnonymousVisitor(self):
-        return not self.isAuthenticated()    
-
     def update(self):
-        self.template = self.getTemplates()['Skulpt']
         isAnonymous = self.isAnonymousVisitor()
         isTeacher = self.isTeacher()
         isStudent = self.isStudent()
@@ -147,39 +189,43 @@ class AssignmentForm(TransactionNote,AceScripts,CkScripts):
            
         if not isTeacher:
             self.fields["problemText"].mode = DISPLAY
+            self.fields["solutionText"].mode = DISPLAY            
 
         if isTeacher or isAnonymous:
             self.fields = self.fields.omit('comments')
-
-    def headerScripts(self):
-        return CkScripts.headerScripts(self) + AceScripts.headerScripts(self)
+        sharedForm.update()
+    
+class SolutionForm(SharedForm):
+    fields = Fields(ISkulptSolution)
     
     def footerScripts(self):
-
          result = """ <script>
          createAce("form-field-problemCode","python");
-           """
-
-         if self.isTeacher():
-            result +="""  
-
-
-        CKEDITOR.replace('form-field-problemText',
+        CKEDITOR.replace('form-field-comments',
        {disableNativeSpellChecker : false}); 
-        CKEDITOR.replace('form-field-solutionText',
-       {disableNativeSpellChecker : false}); 
-         """
-
-         if self.isTeacher() or self.context.showSolution == True:
-             result += """ 
-           createAce("form-field-solutionCode","python");
-           """
-         result += """    
          const form = document.getElementById('form');
          form.addEventListener('submit', saveThenSubmit);    
          </script>"""
          return result
+    
+    def update(self):
+        isTeacher = self.isTeacher()
+        isTheStudent = self.request.principal == self.context.name
+        if not (isTeacher or isTheStudent):
+            self.raiseUnauthorized()
+            
 
+        #We are overriding the Edit form actions
+        #So call it before hte override
+        EditForm.update(self)        
+        if isTeacher or isTheStudent:
+            self.actions = Actions(editactions.Edit("Save","Save"),
+                    editactions.SaveAndView("SaveAndView","Save And View"),
+                    editactions.Cancel("Cancel","Cancel"))
+            
+        #Must be after Edit Form    
+        SharedForm.update(self)          
+     
 @view_component
 @name('addAssignment')
 @target(IView)
@@ -194,26 +240,36 @@ class AddAssignment(AssignmentForm,AddByTitle):
     interface = ISkulptAssignment
     aceMode = "python"
     def update(self):
-        AssignmentForm.update(self)        
         AddByTitleForm.updateWidgets(self)    
+        AssignmentForm.update(self)        
 
 @form_component
 @context(ISkulptAssignment)
 @name("index")
-class AceEditSkulpt(AssignmentForm,EditForm):
-    aceMode = "python"
+class AceEditSkulptAssignment(AssignmentForm,EditForm):
     schemaName = "AssignmentSchema"
-    title = "class assignment"
-    subTitle = "class assignment2"
+    title = "Class Assignment"
+    subTitle = "Work on a class ssignment2"
+    title = ""
+    subTitle = ""
     interface = ISkulptAssignment
     
     def update(self):
-        AssignmentForm.update(self)          
-        EditForm.update(self)
         isAnonymous = self.isAnonymousVisitor()
         isTeacher = self.isTeacher()
         isStudent = self.isStudent()
 
+        #We are overriding the Edit form actions
+        #So call it before hte override
+        EditForm.update(self)        
+        if isTeacher or isStudent:
+            self.actions = Actions(editactions.Edit("Save","Save"),
+                    editactions.SaveAndView("SaveAndView","Save And View"),
+                    editactions.Cancel("Cancel","Cancel"))
+        #Must be after EditForm.update()
+        SharedForm.update(self)          
+
+        
         if not self.context.showSolution and not isTeacher:
              self.fields = self.fields.omit('solutionText')
              self.fields = self.fields.omit('solutionCode')             
@@ -230,7 +286,7 @@ class AceEditSkulpt(AssignmentForm,EditForm):
                self.fields = self.fields.omit('solutionText')
                self.fields = self.fields.omit('solutionCode')           
         #AceEditForm.updateWidgets(self)              
-        
+
     def addUnauthorizedActions(self):
         self.actions = Actions()
         
@@ -252,22 +308,48 @@ class AceEditSkulpt(AssignmentForm,EditForm):
            context.problemText = data['problemText']
            context.problemCode = data['problemCode']           
            context.solutionText = data['solutionText']
-           context.showSoltion=data['showSolution']
+           context.solutionCode = data['solutionCode']           
+           context.showSolution = data['showSolution']
            context.timeIsUp=data['timeIsUp']           
            msg = "Teacher edited: " + self.title
            self.describeTransactionWithText(msg)
            
         else:
-           answer = self.solution() 
+           answer = self.context.studentsWork(self) 
            answer.comments = data['comments']
            answer.problemCode = data['problemCode']
 
+#NOW FOR EDITING STUDENT SOLUTIN
+@form_component
+@context(ISkulptSolution)
+@name("index")
+class AceEditSkulptSolution(SolutionForm, EditForm):
+    title = "Students's Work"
+    subTitle = ""
+    interface = ISkulptSolution
+    
+
+    def addAuthorizedActions(self):
+        if self.isTeacher() or self.isStudent():
+           self.actions = Actions(
+               Edit("Save","Save"))
            
+    def applyData(self,data):
+        context = self.context
+        context.comments = data['comments'] 
+        context.problemCode = data['problemCode']           
+        if self.isTeacher():
+           msg = "Teacher edited: " + self.title
+        else:
+           msg = "Student  edited: " + self.title            
+        self.describeTransactionWithText(msg)
+
+
 @form_component
 @context(ISkulptAssignment)
 @name("asStudent")
 @implementer(ITreeSecurity)
-class AsStudent(AceEditSkulpt):           
+class AsStudent(AceEditSkulptAssignment):           
     def isTeacher(self):
        return False
     def isStudent(self):
@@ -277,7 +359,7 @@ class AsStudent(AceEditSkulpt):
 @context(ISkulptAssignment)
 @name("asAnonymous")
 @implementer(ITreeSecurity)
-class AsAnonymous(AceEditSkulpt):           
+class AsAnonymous(AceEditSkulptAssignment):           
     def isTeacher(self):
        return False
     def isAnonymousVisitor(self):

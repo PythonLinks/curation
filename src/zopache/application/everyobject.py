@@ -18,12 +18,7 @@ class EveryObject:
         if not self.stack:
             raise StopIteration
         node = self.stack.pop()
-        if node in all:
-               if hasattr(node, '__name__'):
-                   print (node.__name__)
         all.add (node)    
-        if hasattr(node, '__name__'):
-            print (node.__name__)
         if hasattr(node, '__dict__'):
             for key, value  in node.__dict__.items():
                if key in ["self", "__parent__", "len"]:

@@ -221,7 +221,7 @@ from zopache.ttw import actions as ttwactions
 @context(IBTreeContainer)
 @target(IView)
 @implementer(ITreeSecurity)
-class AddPythonFolder(AceScripts,AceAddForm):
+class AddPythonFolder(AceAddForm):
     subTitle= 'Add a Python Folder'
     interface = IPythonFolder
     ignoreContent = True

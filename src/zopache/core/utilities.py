@@ -77,7 +77,7 @@ class Utilities (object):
         raise Unauthorized
     
     def getNavBar(self):
-         navbar = self.webClassAcquire('navbar.py')
+         navbar = self.getLayout()['navbar.py']
          if navbar != object:
            return navbar(self)
          else:

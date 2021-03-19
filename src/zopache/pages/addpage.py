@@ -14,7 +14,6 @@ from zopache.pages.interfaces import (IMap,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, ActionNetwork
 from zopache.pages import Map, Location
-from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
@@ -22,15 +21,12 @@ from zopache.pages.htmlvalidator import HTMLValidator
 from zopache.pages.proxypage import ProxyPage
 from zopache.crud.getimage import getImage
 
-class BaseAdd(AddCkHTMLBase,Notify):
+class BaseAdd(AddCkHTMLBase):
     count = 0 
     layoutName = "UserMenu"
     actions = Actions()
     dataValidators = [Duplicate, DuplicateURLValidator, HTMLValidator]
     
-    def __init__(self):
-        Notify.__init__(self)
-        AddCkHTMLBase.__init__(self)
         
     def addAuthorizedActions(self):           
         self.actions = Actions(
@@ -43,9 +39,9 @@ class BaseAdd(AddCkHTMLBase,Notify):
         
 #THIS ONE SHOULD BE RETIRED 
 class AddPageBase(BaseAdd, AddByTitleForm):
-    def __init__(self):
+    def __init__(self,context,request):
         BaseAdd.__init__(self)
-        AddByTitleForm.__init__(self)
+        AddByTitleForm.__init__(self,context,request)
  
 class AddAuthorizedPage(AddPageBase):
 

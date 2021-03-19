@@ -34,6 +34,7 @@ from zopache.ttw.interfaces import (ISource,
                                     IAceCMSClass,
                                     IAceIFrameClass,
                                     IAceHTMLPage)
+from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 
 from zopache.ttw.html import (HTML,
                               HTMLRecursionError,
@@ -100,28 +101,16 @@ class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 
 
-class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):        
+class AddAceHTMLBase(AddHTMLBase,AceAddForm):        
     subTitle="Add an Ace HTML Object"
     factory=AceHTML
-
-    def footerScripts(self):
-        return AceScripts.footerScripts(self)
-
-    def headerScripts(self):
-          return AceScripts.headerScripts(self)      
-
-    def addAuthorizedActions(self):
-        self.actions = Actions(
-              formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
-              ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),
-              formactions.Cancel(_("Cancel","Cancel")))
-
+    aceMode = "html"
 
 @form_component
 @name (u'addAceHTML')
 @context(IBTreeContainer)
 @permissions('Manage')
-class AddAceHTML (AddAceHTMLBase,AddForm):
+class AddAceHTML (AddAceHTMLBase):
     pass
 
 
@@ -129,14 +118,14 @@ class AddAceHTML (AddAceHTMLBase,AddForm):
 @name (u'addAceIFrame')
 @context(IBTreeContainer)
 @permissions('Manage')
-class AddAceIFrame (AddAceHTMLBase,AddForm):
+class AddAceIFrame (AddAceHTMLBase):
     factory = AceIFrameHTML
 
 @form_component
 @name (u'addAceCMS')
 @context(IBTreeContainer)
 @permissions('Manage')
-class AddAceCMS (AddAceHTMLBase,AddForm):
+class AddAceCMS (AddAceHTMLBase):
     factory = AceCMSHTML
 
 
@@ -255,7 +244,8 @@ class BaseHTMLEditForm(BaseEditForm):
 class BaseAceEdit(AceScripts,BaseHTMLEditForm):
     __name__ = "aceedit"
     subTitle="Ace Edit this object" 
-
+    aceMode = "html"
+    
     def footerScripts(self):
         return AceScripts.footerScripts(self)
 

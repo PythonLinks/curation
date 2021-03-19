@@ -7,7 +7,7 @@ from zopache.crud import update as editactions
 from zopache.ttw import actions as ttwactions
 from zopache.ttw.acescripts import AceScripts
 
-class AceAddForm (AddForm):
+class AceAddForm (AceScripts,AddForm):
 
     def addAuthorizedActions(self):    
          self.actions = Actions(
@@ -20,7 +20,7 @@ class AceAddForm (AddForm):
               formactions.Cancel("Cancel","Cancel"))
 
 
-class AddAndSearchForm (AddForm):
+class AddAndSearchForm (AceScripts,AddForm):
     def addAuthorizedActions(self):    
          self.actions = Actions(
               ttwactions.AddAndSearch("Add and Search",
@@ -30,7 +30,7 @@ class AddAndSearchForm (AddForm):
 
 
 
-class AceEditForm(EditForm):
+class AceEditForm(AceScripts,EditForm):
      @property
      def title(self):
          return	"Ace Edit this " + self.className()

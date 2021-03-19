@@ -49,7 +49,7 @@ class Base(object):
            value =  requestJsonDict[key]
            setattr(target,key,value)
         
-    def applyData(self):
+    def applyData(self,data):
         target = self.target()
         jsonSchemaDict =self.jsonSchemaDict
         rootProperties = jsonSchemaDict["properties"]

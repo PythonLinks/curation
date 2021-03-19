@@ -140,7 +140,7 @@ class JavascriptFolder(JavascriptFolderBase,Javascript):
 @title("Add Javascript")
 #@permissions('Manage')
 @implementer(ITreeSecurity)
-class AddJavascript(AceScripts,AceAddForm):
+class AddJavascript(AceAddForm):
     aceMode = "javascript"
     subTitle='Add a Javascript Object'
     interface = IJavascript
@@ -159,7 +159,7 @@ class AddJavascript(AceScripts,AceAddForm):
 @title("Add JavascriptFolder")
 #@permissions('Manage')
 @implementer(ITreeSecurity)
-class AddJavascriptFolder(AceScripts,AceAddForm):
+class AddJavascriptFolder(AceAddForm):
     aceMode = "javascript"
     subTitle= 'Add a Javascript Folder'
     interface = IJavascriptFolder
@@ -204,15 +204,7 @@ class BaseJavascript(AceScripts):
     aceMode = "javascript"    
     subTitle='Ace Edit this  Javascript'
     label=''
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
     
-    def footerScripts(self):
-        return AceScripts.footerScripts(self)
-
-    def headerScripts(self):
-          return AceScripts.headerScripts(self)    
-               
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
 @context(IJavascript)

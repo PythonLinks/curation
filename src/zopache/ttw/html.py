@@ -19,8 +19,6 @@ from zopache.ttw.interfaces import (ISource,
                                     IAceHTMLPage)
 
 
-
-
 """
 HTML is a very important base class.  It has a field called source.  It 
 can be edited witht the WYSIWYG ckEditor or the more technical Ace Editor.

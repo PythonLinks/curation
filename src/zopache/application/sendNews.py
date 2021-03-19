@@ -35,9 +35,9 @@ class SendNews (Notify,EditForm):
     interface = IClass
     fields = Fields(IClass)
     
-    def __init__(self):
+    def __init__(self,context,request):
         Notify.__init__(self)
-        EditForm.__init__(self)
+        EditForm.__init__(self,context,request)
         
     def acquireTitle(self):
         return 'Edit' + self.context.title + "'s Web Class "

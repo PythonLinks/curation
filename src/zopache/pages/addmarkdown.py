@@ -18,6 +18,7 @@ from zopache.pages.markdown import Markdown
 from zopache.pages.interfaces import IMarkdown, IPage
 from zopache.core import View
 from zopache.ttw.mail import Notify
+
 from zopache.core.interfaces import ITreeSecurity
 
 class  AceScripts(AceScripts):
@@ -52,11 +53,12 @@ class AddMarkdown(AceScripts,AceAddForm, Notify):
     interface = IMarkdown
     ignoreContent = True
     factory=Markdown
-    def __init__(self):
-        Notify.__init__(self)
+     
+    def __init__(self,context,request):
         AceScripts.__init__(self)
-        AceAddForm.__init__(self)
-    
+        Notify.__init__(self)        
+        AceAddForm.__init__(self,context,request)
+   
     def footerScripts(self):
         return AceScripts.footerScripts(self)
 

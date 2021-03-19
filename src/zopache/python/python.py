@@ -168,7 +168,7 @@ class AceDemo(AceScripts,EditDemoForm):
 @context(IPython)
 @name("aceedit")
 @permissions('Manage')
-class AceEditPython(AceScripts,AceEditForm):
+class AceEditPython(AceEditForm):
     subTitle= "Edit a Python Object"
 
     @property

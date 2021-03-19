@@ -1,7 +1,7 @@
 from zopache.core.getroot import getProducts
 from zopache.core.scripts import Scripts
-
-
+from dolmen.forms.base import Actions
+from zopache.crud import actions as formactions, i18n as _
 
 def createEditorDiv():
         return """
@@ -17,7 +17,10 @@ function createEditorDiv(fieldName){
 </script>
        """
     
-class  AceScripts(object):    
+class  AceScripts(object):
+    def breadcrumbs(self):
+        return self.breadcrumbsManage()
+        
     def  headerScripts(self):
         result =  Scripts.headerScripts(self) 
         result += createEditorDiv() +   f"""
@@ -36,8 +39,8 @@ function createAce(fieldName,mode){
   var Mode = ace.require("ace/mode/" + mode).Mode;
   var editor = ace.edit(editorDiv);
   aceEditors[fieldName] = editor;
-  editor.setOptions({maxLines: 40});
-  editor.setOptions({minLines: 3});
+  editor.setOptions({maxLines: 40,
+                     minLines: 3});
 
       //SET THE MODE AND THEME
      //editor.setTheme("ace/theme/chrome");   
@@ -53,14 +56,11 @@ function createAce(fieldName,mode){
   return editor;
  }
 
-  function saveThenSubmit(event){
-  
+ function saveThenSubmit(event){
     for (const [key, editor] of Object.entries(aceEditors)) {
     var textarea= document.getElementById(key);
     textarea.value=editor.getSession().getValue();
-     
-    }
-     
+    }    
   }  
  
  function createAndSave(fieldName,mode){
@@ -75,18 +75,15 @@ function createAce(fieldName,mode){
 
     def  footerScripts(self):
       return f"""
-<script > createAndSave('form-field-source',"{self.aceMode}");
-                </script> """
+<script > 
+createAndSave('form-field-source',"{self.aceMode}");
+</script> """
 
 class  AceScriptPug(AceScripts):
     aceMode = 'jade'        
     
     def  footerScripts(self):
-        result = """
-<script >
-     var  editor = createAce("form-field-source","jade");
-</script> """
-        
+        result = AceScripts.footerScripts(self)
         result += """
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify-html.min.js"></script>
@@ -94,11 +91,6 @@ class  AceScriptPug(AceScripts):
         result += """
 <script  src="https://pythonlinks.info/static/pug/pug.js" ></script>
 <script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
-        """
-        result += "<script>"
-        products = getProducts(self.context)
-        script = products['Templates']['PugScripts']
-        result += script.getJavascript()
-        result += "</script>"
+<script src="/Products/Templates/PugScripts"> </script>"""
         return result
 

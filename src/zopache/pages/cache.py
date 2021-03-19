@@ -147,7 +147,9 @@ class MixIn(object):
            if not IPage.providedBy (item):
                continue
            if whichInterface.providedBy(item):
-              item.addToHeapQ2(aHeap,sortKey)
+               if item.webApproved:
+               #if not item.__class__.__name__ != 'Page':               
+                  item.addToHeapQ2(aHeap,sortKey)
            if IPage.providedBy (item):
               item.bestCategoryObjects(sortKey,root,aHeap,whichInterface)
     """
@@ -180,8 +182,6 @@ class MixIn(object):
         if (self.__parent__.__name__ ==
             "europython-2019-lightning-talks"):
             listLength = 27
-
-
             
         if (len(aHeap)> listLength ):
             heapq.heappushpop(aHeap,(getattr(self,sortKey),self.__name__,self))

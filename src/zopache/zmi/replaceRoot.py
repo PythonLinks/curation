@@ -10,7 +10,6 @@ def replace (context,childName,aClass):
         items = child.allValuesAsList()
         for item in items:                
             itemName = item.name
-            print (itemName)
             if itemName == 'person':
                del new ['person']
             del child[itemName]

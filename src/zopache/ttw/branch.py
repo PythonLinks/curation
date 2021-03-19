@@ -27,7 +27,6 @@ class SimpleBranch(object):
        self.valuesByToken = OOBTree()
 
     def addItem(self,item):
-        print ("HERE",item.name)
         self.indexItem(item,itemType = ICanonical)
         
     def deleteItem(self,item):

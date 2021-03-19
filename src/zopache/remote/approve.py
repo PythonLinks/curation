@@ -11,6 +11,19 @@ from zopache.ttw.treewidget import TreeField
 
 
 class IApprove(Interface):
+    title = schema.TextLine(
+        title = u'Page Name',
+        description = u'Describe this page.',
+        required = True,
+    )
+
+    description= schema.Text(
+        title = 'Description',
+        description = """A brief introduction of this page.  
+                        This is used by the search functions.""",
+        required = False,
+        default = u'',
+    )        
     webApproved = schema.Bool(
         title = "Visible or not?",
         description = "Use this option to hide this article.",

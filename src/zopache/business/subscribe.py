@@ -11,9 +11,10 @@ from cromlech.browser.exceptions import HTTPFound
 from zopache.core.baseform import Form
 from zopache.core.page  import  Page
 from zopache.business.interfaces import IFollow
-from zopache.ttw.mail import Notify
 from zopache.business.ifollow import IFollow
 from zopache.business.member import Member
+from zopache.ttw.mail import Notify    
+
 
 class HasMembers(object):
     hasMembers = True
@@ -89,11 +90,10 @@ class HasMembers(object):
          self.title = title
          return self.title
      
-    
-class MemberForms(Form,Notify):
-    def __init__(self):
+class MemberForms(Form, Notify):
+    def __init__(self,context,request):
+        Form.__init__(self,context,request)
         Notify.__init__(self)
-        AddByTitleForm.__init__(self)
     
     def getOneMember(self,name):
         members = self.members

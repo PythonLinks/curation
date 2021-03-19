@@ -40,9 +40,9 @@ class LoginAction(Action):
                 identifier=self.prefix,
             ))
             return FAILURE
-        raise HTTPFound("..")
-##
-        #return SuccessMarker('Added', True, url="..",code=307)
+        url = "/" + form.context.name
+        print ("URL = ", url)
+        return SuccessMarker('Added', True, url=".",code=307)
 
         #raise HTTPFound(url)
 
@@ -65,7 +65,10 @@ class LoginForm(Form):
     submissionError = []
     count = 0
     allowAnonymous = True
-    
+    def update(self):
+        if 'greenmaps.us' in self.getDomain():
+            self.raiseUnauthorized()
+            
     @property
     def actions(self):
         return Actions(

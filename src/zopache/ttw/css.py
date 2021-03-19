@@ -53,15 +53,14 @@ class CSS(JavascriptBase,Leaf):
     aceMode = 'css'
     englishType = 'CSS'
 
-class  AceScripts(AceScripts):
-     aceMode = 'css'
     
 
 @form_component
 @name('addCSS')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddCSS(AceScripts,AceAddForm):
+class AddCSS(AceAddForm):
+    aceMode = 'css'
     subTitle='Add a CSS Object'
     interface = ICSS
     ignoreContent = True
@@ -124,9 +123,11 @@ class AceDemoCSS(AceScripts,EditDemoForm):
 @form_component
 @context(ICSS)
 @name('aceedit')
-class AceEditCSS(AceScripts,AceEditForm):
+class AceEditCSS(AceEditForm):
+    aceMode = 'css'
     subTitle='Edit a CSS Object'
-
+    aceMode = 'css'
+    
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.crud.forms import EditForm
 @form_component
@@ -166,7 +167,8 @@ from zopache.ttw.interfaces import IName, IContainer, ILeaf
 @context(IBTreeContainer)
 @target(IView)
 @implementer(ITreeSecurity)
-class AddCSSFolder(AceScripts,AddAndSearchForm):
+class AddCSSFolder(AddAndSearchForm):
+    aceMode = 'css'
     title= 'Add a CSS Folder'
     subTitle = 'To organize multiple CSS objects'
     interface = IContainer

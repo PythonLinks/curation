@@ -20,8 +20,9 @@ from zopache.crud.delete import DeleteAction
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.core.uniquename import UniqueName
 from zopache.crud.actions import AddByName, AddByTitle
+from zopache.ttw.mail import Notify
 
-class AddFormBase(Form):    
+class AddFormBase(Form, Breadcrumbs):    
     """The add form itself is not protected. The security is checked on
     'update'. It checks if the 'require' directive of the factored item
     is respected on the context.
@@ -72,7 +73,11 @@ class AddByNameForm(TreeSecurityAddForm,UniqueName):
             formactions.AddByName(_("Add","Add"), self.factory),
             formactions.Cancel(_("Cancel","Cancel")))
     
-class AddByTitleForm(TreeSecurityAddForm):
+class AddByTitleForm(TreeSecurityAddForm,Notify):
+    def __init__(self,context,request):
+        TreeSecurityAddForm.__init__(self,context,request) 
+        Notify.__init__(self)       
+    
     def addAuthorizedActions(self):   
               self.actions = Actions(
               formactions.AddByTitle("Add", self.factory),

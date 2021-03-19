@@ -97,11 +97,6 @@ class CoffeeScriptIndex(Page):
     def render(self ):
         return self.context.javascript
 
-class AceScripts2(AceScripts):
-    aceMode = "coffee"
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
-    
 
 @form_component
 @name('addCoffeeScript')
@@ -109,7 +104,7 @@ class AceScripts2(AceScripts):
 @target(IView)
 @title("Add CoffeeScript")
 @implementer(ITreeSecurity)
-class AddCoffeeScript(AceScripts2,AceAddForm):
+class AddCoffeeScript(AceScripts,AceAddForm):
     subTitle='Add a Coffeecript Object'
     interface = ICoffeeScript
     ignoreContent = True
@@ -123,7 +118,6 @@ class AddCoffeeScript(AceScripts2,AceAddForm):
 @title("AceEdit")
 @name("aceedit")
 @implementer(ITreeSecurity)
-class AceEditCoffeeScript(AceScripts2,AceEditForm):
+class AceEditCoffeeScript(AceScripts,AceEditForm):
     subTitle = "Ace Edit a Coffescript Object."
     title = "CoffeeScript Editor"
-

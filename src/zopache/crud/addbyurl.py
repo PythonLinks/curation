@@ -8,9 +8,7 @@ from dolmen.forms.base import Action, Actions,SuccessMarker
 
 from zopache.crud.actions import Cancel
 from zopache.crud.forms import AddFormBase
-from zopache.core.breadcrumbs import Breadcrumbs
 from .interfaces import IURLForm
-from zopache.ttw.mail import Notify
 from zopache.forms.urlvalidator import DuplicateURLValidator
 
 class AddByURLAction(Action):
@@ -43,11 +41,7 @@ class AddByURLAction(Action):
 
         return SuccessMarker('Updated', True, url=postingURL)
 
-class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
-    def __init__(self):
-        Notify.__init__(self)
-        AddFormBase.__init__(self)
-        Breadcrumbs.__init__(self)
+class AddByURLForm(AddFormBase):
     
     datavalidators = [DuplicateURLValidator]
     
