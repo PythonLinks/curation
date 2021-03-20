@@ -25,11 +25,8 @@ dataDir = os.path.join(HERE, 'data')
 
 
 class Notify (TransactionNote):
-    sender ='"Green Maps Newsletter" <lozinski@PythonLinks.info>'
-    
-    def setMailer(self):
-       self.mailer = mailer = self.parentalAcquire ("MailHost")
-    
+    sender ='"Green Maps Newsletter" <lozinski@PythonLinks.info>'    
+
     def getRecentArticles(self,principal):
         articles = self.context.bestMostRecentPage()
         recentArticles = []
@@ -72,14 +69,14 @@ class Notify (TransactionNote):
         return False
     
     def broadcastNews(self):
-        self.setMailer()
+        self.mailer = mailer = self.parentalAcquire ("MailHost")
         people = self.parentalAcquire('person')
         for item in people.values():
             self.sendToPrincipal(item)
         self.sendTheMail()
         
     def sendMeANewsletter(self):
-        self.setMailer()        
+        self.mailer = mailer = self.parentalAcquire ("MailHost")    
         principal = self.request.principal
         self.sendToPrincipal(principal)
         self.sendTheMail()
@@ -102,8 +99,8 @@ class Notify (TransactionNote):
 
     
     def createOneNewsletter(self, to, sender, articles):
-        self.mailer = mailer = self.parentalAcquire ("MailHost")
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")    
+        if self.mailer == None:
            return ''
 
         subject = self.context.newsTitle
@@ -149,9 +146,8 @@ class Notify (TransactionNote):
         return result
     
     def notify (self,aFrom,to, subject, content, articles = []):
-        self.setMailer()        
-        mailer = self.mailer
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        if self.mailer == None:
            return         
         message = Message()
         message['From'] = aFrom
@@ -168,8 +164,8 @@ class Notify (TransactionNote):
         delivery.send(aFrom,to, message)
         
     def spoolFile(self):
-        mailer = self.mailer
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")            
+        if self.mailer == None:
            return
         parentName = mailer.__parent__.__name__
         spoolFolder = os.path.join(dataDir, 'spool')
@@ -177,8 +173,8 @@ class Notify (TransactionNote):
         return spoolFile
     
     def sendTheMail(self):
-        mailer = self.mailer
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        if self.mailer == None:
            return 
         command = ['qp',
                    '--force-tls',
@@ -193,9 +189,9 @@ class Notify (TransactionNote):
         Popen(command)    
         
     def notifyUserNewUser(self):
-        self.setMailer()        
+        self.mailer = mailer = self.parentalAcquire ("MailHost")    
 
-        if mailer == None:
+        if self.mailer == None:
            return None                
         
         subject = "Welcome " + self.new.title
@@ -210,8 +206,8 @@ class Notify (TransactionNote):
         #self.sendTheMail()
         
     def notifyAdminsNewUser(self):
-        self.setMailer()        
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")    
+        if self.mailer == None:
            return ''                
         subject = "New User" 
         url = self.secureShortURL (context = self.new)        
@@ -220,8 +216,8 @@ class Notify (TransactionNote):
         self.sendTheMail()
 
     def notifyAdminsMembershipEvent(self,subject):
-        self.setMailer()
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")    
+        if self.mailer == None:
            return ''                
         subject += self.context.title
         url = self.secureShortURL (context = self.context)
@@ -234,8 +230,9 @@ class Notify (TransactionNote):
         self.sendTheMail()
 
     def notifyAdminsVolunteerResigned(self):
-        self.setMailer()                
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")    
+
+        if self.mailer == None:
            return ''                
         subject = "Volunteer Resigned From:"
         subject += self.context.title
@@ -248,8 +245,8 @@ class Notify (TransactionNote):
 
         
     def notifyAdminsPageDeleted(self):
-        self.setMailer()                        
-        if mailer == None:
+        self.mailer = mailer = self.parentalAcquire ("MailHost")    
+        if self.mailer == None:
            return ''                        
         subject = "Page Deleted"
         content = self.request.url

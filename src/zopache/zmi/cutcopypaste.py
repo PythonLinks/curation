@@ -162,7 +162,8 @@ class Paster(BaseClass):
                continue 
            self.moveFrom(fromFolder, orig_name, toContainer, new_name)
            if hasattr(item,'postMoveProcess'):
-               item.postMoveProcess(view)                   
+               item.postMoveProcess(view)
+
            self.describeTransaction(" Paste ", toContainer[new_name])
            
     def allowed(self,obj):

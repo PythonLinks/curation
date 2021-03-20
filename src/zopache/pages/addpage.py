@@ -11,10 +11,11 @@ from zopache.crud.forms import AddByTitleForm
 from zopache.pages.interfaces import (IMap,
                                       ILocation,
                                       IPage,
+                                      ISiteRootPage,
                                       IProxyPage,
                                       IAddLink,
                                       IActionNetwork)
-from zopache.pages.page import Page, Link, ActionNetwork
+from zopache.pages.page import Page, Link, SiteRootPage, ActionNetwork
 from zopache.pages import Map, Location
 from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
@@ -73,6 +74,18 @@ class AddPage(AddAuthorizedPage):
     label="Add a Wiki Page"
     factory = Page
 
+from zopache.application.interfaces import IRootContainer
+@view_component
+@name('addRootPage')
+@target(IView)
+@context(IRootContainer)
+@implementer(ITreeSecurity)
+class AddRootPage(AddAuthorizedPage):
+    dataValidators = []
+    interface = ISiteRootPage
+    label="Add a Root Wiki Page"
+    factory = SiteRootPage
+    
 @view_component
 @name('addProxyPage')
 @target(IView)

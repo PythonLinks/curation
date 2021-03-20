@@ -37,6 +37,7 @@ class Add(Action, UniqueName, TransactionNote):
         self.factory = factory
 
     def __call__(self, form):
+
         self.form=form
         obj= form.factory()
         self.new=form.new=obj
@@ -141,7 +142,7 @@ class AddByTitle (Add):
 
 class AddByJSON(AddByTitle):
     def newName(self,data):
-        newName =  self.form.requestJsonDict["introduction"]['title']
+        newName =  self.new.title
         return self.uniqueBothName(self.form.context,newName)
 
     def setFields(self):

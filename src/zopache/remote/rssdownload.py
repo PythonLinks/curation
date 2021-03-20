@@ -6,20 +6,44 @@ import feedparser
 
 count = []
 
-async def fetch(url,allowedTime,startTime,processResponse):
+def processImageResponse(url,response):
+          print (url)
+          return  ('Success' ,url,response)
+
+def processRSSResponse(url,html):
+          print (html[: 10])
+          feed = feedparser.parse(html)
+          entries = feed['entries']
+          print ("LEN",len(entries))
+          print (type(entries))
+          for article in entries:
+               permaLink = article['id']
+               print ("Perma",permaLink)
+          return  ('Success', url, entries)
+
+
+async def fetch(url,allowedTime,startTime,fetchType):
+   print ("URL = ", url)       
    duration =  time.time() - startTime 
    print ("STARTING", duration,url)
    timeout = aiohttp.ClientTimeout(total=allowedTime)
+
    async with aiohttp.ClientSession(timeout = timeout) as session:
      try:  
         async with session.get(url) as response:
           if response.status != 200:
-               return (response.status,url,'')      
-          html  =  await response.text()
+               return (response.status,url,'')
+          if fetchType == "RSS":  
+              html  =  await response.text()
+          elif fetchType == "Images":
+              html = await response.body()
+          else:
+              raise Exception("Please Define a Fetch Type")
+          
           duration =  time.time() - startTime
           print (len(count),"ENDING2", duration, url)
           count.append(1)
-          return processResponse(url,html)
+          return processRSSResponse(url,html)
        
      except (asyncio.TimeoutError):
           duration =  time.time() - startTime 
@@ -52,32 +76,40 @@ async def fetch(url,allowedTime,startTime,processResponse):
         print (result)
         return result
        
-async def fetch_all(urls,processResponse):
+async def fetch_all(urls,fetchType):
     tasks = []
     count = len(urls)
     allowedTime = 2 + count
-    startTime = time.time()    
+    startTime = time.time()
+
     for url in urls:
         task = asyncio.create_task(fetch(url,
                                          allowedTime,
                                          startTime,
-                                         processResponse))
+                                         fetchType))
         tasks.append(task)
     results = await asyncio.gather(*tasks)
     return results
 
 
-async def fetchURLS(urls,processResponse):    
+async def fetchURLS(urls,fetchType):    
         session = None
-        responses = await fetch_all( urls,processResponse)
+        responses = await fetch_all( urls,fetchType)
         results = {}
         for item in responses:
             print  (item [0], item [1])
             results [item[1]]=item [2]
         return results
-               
-def getRSS(urls,processResponse):
-   result = asyncio.run(fetchURLS(urls,processResponse))
+
+       
+def getRSS(urls):
+   fetchType = "RSS"
+   result = asyncio.run(fetchURLS(urls,fetchType))
+   return result
+
+def getImages(urls):
+   urls.fetchType = "Images"
+   result = asyncio.run(fetchURLS(urls))
    return result
 
 

@@ -37,7 +37,10 @@ class AllObjects(object):
         self.__name__ = value
         
     name = property (getName,setName)
-
+    
+    def className(self):
+        return self.__class__.__name__
+    
 class Leaf(Contained, Persistent,AllObjects):
     pass
     

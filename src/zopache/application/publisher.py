@@ -44,6 +44,8 @@ class Publisher (DawnlightPublisher):
              if  name in context:
                  pass
              elif  name in ['manage',
+                            'addRootPage',
+                            'editjson',
                           'fix',
                           'editors',
                           'aceedit',  

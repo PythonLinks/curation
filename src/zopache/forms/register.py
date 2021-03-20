@@ -31,9 +31,8 @@ from zopache.forms.validator import Validator
 from zopache.ttw.mail import Notify
 
 @form_component
-@name (u'signup')
+@name ('signup')
 @context(Interface)
-@title("Register")
 class Register(Form,Notify):
     dataValidators = [Validator]
     layoutName = "UserMenu"

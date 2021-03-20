@@ -41,6 +41,7 @@ def getPrincipalFolder(item):
         return root['python']["person"]
 
 def getProducts(item):
+
     root = getZodbRoot(item)
     return root["Products"]
 

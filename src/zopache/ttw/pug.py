@@ -56,7 +56,7 @@ class IPug(IPugBase,IJavascript):
 
     title = schema.TextLine(
         title = u'Title',
-        description = u'Describe this Pug g Object.',
+        description = u'Describe this Pug Object.',
         required = False,
     )
 

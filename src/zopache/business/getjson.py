@@ -2,7 +2,7 @@ from slugify import slugify
 import json
 from zopache.business.usdata import  inner
 
-
+inner = json.loads("./usdata.json")
 states = {}
 
 for item in inner:
