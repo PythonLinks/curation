@@ -3,9 +3,8 @@ from dolmen.view import  make_view_response
 from zopache.core import View
 
 from dolmen.forms.base import Actions
-from zopache.pages.pageactions import *
+from zopache.crud.addbytitleactions import *
 from zopache.crud import actions as formactions
-from zopache.pages.pageactions import *
 from zopache.core.viewdecorators import *
 from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase

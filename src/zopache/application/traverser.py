@@ -8,7 +8,7 @@
 from zope.interface.interfaces import ComponentLookupError
 from copy import copy 
 from dolmen.container import IBTreeContainer
-from zopache.ttw.interfaces import IAceHTML
+from zopache.ttw.interfaces import ITemplate
 from zopache.ttw.interfaces import IWebClass
 from zopache.ttw.acquisition import webClassAcquire
 from zopache.python.interfaces import IDirectory
@@ -26,13 +26,12 @@ class Traverser(object):
         #A HACK TO FIX AN IURL PROBLEM
         if name == 'root':
             return context, None
-        #FIRST, IF YOU HAVE A TEMPLATE, SEE THE VIEW
+        #FIRST, IF YOU HAVE A TEMPLATE, CHECK FOR A VIEW
         if self.zopacheTemplate != None :
            zopacheTemplate = self.zopacheTemplate
            try:
               view = self.view_lookup(request, zopacheTemplate, name)
            except ComponentLookupError:
-
               #This allows us to pass arguments in the URL after
               # the template name
               view = self.view_lookup(request, zopacheTemplate, 'index')
@@ -46,7 +45,7 @@ class Traverser(object):
                 return context, view
            else:
                  raise Exception (
-                     "%s does not support method setZopacheTempalte",
+                     "%s does not support method setZopacheTemplate",
                                    zopacheTemplate.__name__)
 
         #TRAVERSE THE CONTAINER
@@ -63,7 +62,7 @@ class Traverser(object):
         if hasattr(context, "webClass"):
                item =webClassAcquire(context,name,marker = object)
                if item != object:
-                  if IAceHTML.providedBy(item):
+                  if ITemplate.providedBy(item):
                      self.zopacheTemplate = item
                      return context,None
                   else:

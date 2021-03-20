@@ -21,13 +21,13 @@ from zopache.forms.interfaces import IRegister, IGRegister, IGSubscribe
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 from zopache.forms.validator import GoogleValidator
-from zopache.ttw.mail import Notify
 from zopache.pages.interfaces import IPage
 
 from zopache.crud.actions import Cancel
+from zopache.ttw.mail import Notify
 
-
-class BaseRegister(AddForm, Notify):
+class BaseRegister(AddForm,Notify):
+    
     dataValidators = [GoogleValidator]    
     count = 0
     layoutName = "UserMenu"    
@@ -38,7 +38,11 @@ class BaseRegister(AddForm, Notify):
     successfulRegistration = False
     submissionError = ""
     allowAnonymous = True
-    
+
+    def __init__(self,context,request):
+        AddForm.__init__(self,context,request)
+        Notify.__init__(self)
+
     def updateWidgets(self):
         self.fields["idtoken"].mode = HIDDEN        
         AddForm.updateWidgets(self)
@@ -84,6 +88,7 @@ class GSubscribe(BaseRegister):
     title='Register To Subscribe'
     subTitle='Please enter your user id and GDPR permissions.'    
     fields = Fields(IGSubscribe)
+        
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text = "Thank you for subscribing. "
@@ -102,6 +107,7 @@ class GSubscribe(BaseRegister):
 class GDonate(BaseRegister):
     title='Register To Donate'
     subTitle='Please enter your user id and GDPR permissions.'
+    
     def newURL(self):
         newURL = '..'        
         return newURL
@@ -126,6 +132,7 @@ class GDonate(BaseRegister):
 class GVolunteer(BaseRegister):
     title='Register To Volunteer'
     subTitle='Please enter your user id and GDPR permissions.'
+    
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text = "Thank you for volunteerng with "
@@ -144,6 +151,7 @@ class GVolunteer(BaseRegister):
 class GEndorse(BaseRegister):
     title='Register to Endorse This Candidate'
     subTitle='Please enter your user id and GDPR permissions.'
+    
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text =  "Thank you for endorsing "

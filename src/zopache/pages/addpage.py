@@ -1,13 +1,11 @@
 from dolmen.forms.base import Actions
-from zopache.pages.pageactions import *
 from zopache.crud.actions import Cancel
-from zopache.pages.pageactions import *
 from zopache.core.viewdecorators import *
 from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase
+from zopache.crud.forms import AddByTitleForm, AddByNameForm
+from zopache.crud.addbytitleactions import *
 
-from zopache.core.uniquename import UniqueName
-from zopache.crud.forms import AddByTitleForm
 from zopache.pages.interfaces import (IMap,
                                       ILocation,
                                       IPage,
@@ -17,7 +15,6 @@ from zopache.pages.interfaces import (IMap,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, SiteRootPage, ActionNetwork
 from zopache.pages import Map, Location
-from zopache.ttw.mail import Notify
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
@@ -25,33 +22,28 @@ from zopache.pages.htmlvalidator import HTMLValidator
 from zopache.pages.proxypage import ProxyPage
 from zopache.crud.getimage import getImage
 
-class AddPageBase(
-                  AddCkHTMLBase,
-                  AddByTitleForm,
-                  UniqueName,Notify):
-    dataValidators = [Duplicate, DuplicateURLValidator, HTMLValidator]
+class BaseAdd(AddCkHTMLBase):
+    count = 0 
+    layoutName = "UserMenu"
     actions = Actions()
-
-    def updateWidgets(self):
-        AddByTitleForm.updateWidgets(self)
+    dataValidators = [Duplicate, DuplicateURLValidator, HTMLValidator]
+    
         
-    def update(self):
-
-        if self.treeSecurity():
-           self.addAuthorizedActions()
-        else:
-           self.addUnauthorizedActions()
-
-    def addUnauthorizedActions(self):
-        self.actions = Actions()
-               
-    def addAuthorizedActions(self):       
+    def addAuthorizedActions(self):           
         self.actions = Actions(
-              AddAndView("Add and View", self.factory),
-              AddAndAceEdit("Add and aceEdit", self.factory),
-              AddAndCkEdit("Add and ckEdit", self.factory),
+              AddByTitleAndView("Add and View", self.factory),
+              AddByTitleAndAceEdit("Add and aceEdit", self.factory),
+              AddByTitleAndCkEdit("Add and ckEdit", self.factory),
+              AddByTitleAndManage("Add and Manage", self.factory),            
               Cancel("Cancel","Cancel"))
-                    
+
+        
+#THIS ONE SHOULD BE RETIRED 
+class AddPageBase(BaseAdd, AddByTitleForm):
+    def __init__(self,context,request):
+        BaseAdd.__init__(self)
+        AddByTitleForm.__init__(self,context,request)
+ 
 class AddAuthorizedPage(AddPageBase):
 
     actions = Actions()

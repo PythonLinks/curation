@@ -120,6 +120,7 @@ class Branch(SimpleBranch):
           self.remoteURLs[link] = anObject 
            
     def deleteRemoteURL(self,link):
+
         if link == "":
            return
 
@@ -216,6 +217,10 @@ class Branch(SimpleBranch):
            return
 
         del self.valuesByToken[item.__name__]
+        
+        if (hasattr(item,'webApproved') and
+                   not item.webApproved ):
+                   return
        
         if hasattr(item,'remoteURL'):
             remoteURL = item.remoteURL

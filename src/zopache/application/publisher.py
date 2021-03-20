@@ -68,8 +68,9 @@ class Publisher (DawnlightPublisher):
         traverser=Traverser(self.view_locator)
         
         crumbs = dawnlight.parse_path(path, shortcuts)
+
         while crumbs:
-          
+
            aType, name=crumbs.popleft()
            if (aType =='history'):
               # CALL THE HISTORY TRAVERSER

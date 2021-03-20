@@ -22,7 +22,9 @@ Number of Children  = ${len(list(view.context.values()))}
 
 <table id="sortable" class="table  table-striped table-responsive 
 table-hover table-condensed" summary="Content listing"
-             i18n:attributes="summary">
+             i18n:attributes="summary"
+             tal:define = "ordered view.isOrderedContainer()">
+
 
    <thead  class="thead-inverse">
      <tr>
@@ -36,12 +38,13 @@ table-hover table-condensed" summary="Content listing"
      </tr>
     </thead>
 
-    <tbody>
+    <tbody> 
       <metal:block tal:repeat="item view.contents()">
       <tr tal:define="oddrow repeat.item.odd; url item.url;">
         <td>
-	     <a href = "${view.absoluteURL(item.context)}/moveUp">&#8593; </a>
-	     <a href = "${view.absoluteURL(item.context)}/moveDown">&#8595;</a>	            <input   id = "${repeat.item.number}-checkBox"
+	     <a tal:condition = "ordered" href = "${view.absoluteURL(item.context)}/moveUp">&#8593; </a>
+	     <a tal:condition = "ordered" href = "${view.absoluteURL(item.context)}/moveDown">&#8595;</a>
+	     <input   id = "${repeat.item.number}-checkBox"
 	      type="checkbox"
 	      name="ids_list"
               onclick = "clickBox('${item.id()}')"

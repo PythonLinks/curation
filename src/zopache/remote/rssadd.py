@@ -14,7 +14,7 @@ from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core import View
 from zopache.core.page import Page
    
-from zopache.crud.forms import AddNamedForm
+from zopache.crud.forms import AddByNameForm
 from zopache.ttw.mail import Notify
 from zopache.crud.forms import BaseEditForm
 import zopache
@@ -30,15 +30,17 @@ from zopache.business.editjsonschema import AddBase, EditBase
 @context(IPage)
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddRSS(AddBase):
-    title = 'Add An RSS Feed.'
-    subTitle = 'Using JSON Schema.'
-    schemaName = "rssSchema" 
-    count = 0
-    factory = RSS
-    layoutName = "UserMenu"
-    
-    def newURL(self,baseURL):
+
+class AddRSS(AddByTitleForm,Notify):
+     interface = IRSS
+     title = "Add an RSS Feed"
+     subTitle =""
+     count = 0
+     factory = RSS
+     layoutName = "UserMenu"
+     dataValidators = [Duplicate]
+     
+     def newURL(self,baseURL):
         return baseURL + '/manage'
     
     def dataModel(self):
@@ -62,12 +64,8 @@ class EditRSS(EditBase):
     schemaName = "rssSchema"     
     def update(self):
         self.status='RSS Was updated'
+        Form.update(self)
         
-    def dataModel(self):   
-        contextJsonDict =  self.template['rssSchema'].getAsDict()
-        result = json.dumps(contextJsonDict)
-        return result
-   
 @form_component
 @name ('aceedit')
 @context(IRSS)

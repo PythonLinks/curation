@@ -1,6 +1,6 @@
 import arrow
+from pprint import pprint as pp
 from zope.interface import Interface
-from pprint import pprint as pp 
 from .css import ICSS
 from .javascript import IJavascript
 from .interfaces import ISource, IHTML

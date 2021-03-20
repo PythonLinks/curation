@@ -14,12 +14,13 @@ from zopache.ttw.interfaces import ISourceLeaf, ISearchable
 from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.crud.forms import EditDemoForm
-from zopache.ttw.acescripts import AceScripts
 from zope.interface import Interface
 from zopache.ttw.javascript import JavascriptBase, JavascriptFolderBase
 from zopache.core.interfaces import ITreeSecurity
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import IAceDiff
+from zopache.ttw.acescripts import AceScripts
+from zopache.core.page import Page
 
 class ICSSBase(IAceDiff):
     """ For CSS Leaves and Folders."""
@@ -51,39 +52,45 @@ class CSS(JavascriptBase,Leaf):
     icon="ttwicons/CSS.svg"
     aceMode = 'css'
     englishType = 'CSS'
-    
-class  AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/css");
-        </script>
-        """
+
     
 
 @form_component
 @name('addCSS')
 @context(IBTreeContainer)
-@title("Add CSS")
 @implementer(ITreeSecurity)
-class AddCSS(AceScripts,AceAddForm):
+class AddCSS(AceAddForm):
+    aceMode = 'css'
     subTitle='Add a CSS Object'
     interface = ICSS
     ignoreContent = True
     factory=CSS
     
 
-def make_css_response(view, result, *args, **kwargs):
+def makeCSSResponse(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.write(result or u'')
         response.content_type=u'text/css'
-        return response    
+        return response
+
+def makeSassResponse(view, result, *args, **kwargs):
+        response = view.responseFactory()
+        response.write(result or u'')
+        response.content_type=u'text/x-sass'
+        return response
+
+def makeScSSResponse(view, result, *args, **kwargs):
+        response = view.responseFactory()
+        response.write(result or u'')
+        response.content_type=u'text/x-scss,'
+        return response        
 
 @view_component
 @name('index')
 @context(ICSSBase)
 class Index(View):
     responseFactory = Response
-    make_response = make_css_response
+    make_response = makeCSSResponse
         
     def render(self):
                return self.context.getJavascript()
@@ -94,7 +101,7 @@ class Index(View):
 @context(IGrapeBase)
 class ShowGrapeCSS(View):
     responseFactory = Response
-    make_response = make_css_response
+    make_response = makeCSSResponse
         
     def render(self):
                return self.context.css    
@@ -116,9 +123,11 @@ class AceDemoCSS(AceScripts,EditDemoForm):
 @form_component
 @context(ICSS)
 @name('aceedit')
-class AceEditCSS(AceScripts,AceEditForm):
+class AceEditCSS(AceEditForm):
+    aceMode = 'css'
     subTitle='Edit a CSS Object'
-
+    aceMode = 'css'
+    
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.crud.forms import EditForm
 @form_component
@@ -131,7 +140,7 @@ class AceDiff(EditForm,Breadcrumbs):
         self.title=F'<center>Diff two {self.context.englishType} Objects</center>'    
         templates = self.getTemplates()
         self.template = templates['AceDiff']
-
+        super().update(self)
 
 
 @implementer(ICSSFolder)
@@ -158,13 +167,25 @@ from zopache.ttw.interfaces import IName, IContainer, ILeaf
 @context(IBTreeContainer)
 @target(IView)
 @implementer(ITreeSecurity)
-class AddCSSFolder(AceScripts,AddAndSearchForm):
+class AddCSSFolder(AddAndSearchForm):
+    aceMode = 'css'
     title= 'Add a CSS Folder'
     subTitle = 'To organize multiple CSS objects'
     interface = IContainer
     ignoreContent = True
     factory=CSSFolder    
 
+@view_component
+@name('.scss')
+@context(ICSS)
+class SCSSIndex(Page):
+    responseFactory = Response
+    make_response = makeScSSResponse
+        
+    def render(self ):
+        return self.context.source
+
+    
         
 import crom
 from zopache.zmi.interfaces import IURLSegment

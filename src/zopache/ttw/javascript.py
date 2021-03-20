@@ -132,14 +132,7 @@ class JavascriptFolder(JavascriptFolderBase,Javascript):
     className='Javascript Folder'
     icon="ttwicons/JavascriptFolder.svg"    
 
-     
-class  AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/javascript");
-        </script>
-        """     
-
+    
 @form_component
 @name('addJavascript')
 @context(IBTreeContainer)
@@ -147,14 +140,15 @@ class  AceScripts(AceScripts):
 @title("Add Javascript")
 #@permissions('Manage')
 @implementer(ITreeSecurity)
-class AddJavascript(AceScripts,AceAddForm):
+class AddJavascript(AceAddForm):
+    aceMode = "javascript"
     subTitle='Add a Javascript Object'
     interface = IJavascript
     ignoreContent = True
     factory=Javascript
-
-    def postProcess(self,view=None):
-        self.new.postProcess(view=view)
+    
+#    def postProcess(self,view=None):
+#        self.new.postProcess(view=view)
 
 
     
@@ -165,7 +159,8 @@ class AddJavascript(AceScripts,AceAddForm):
 @title("Add JavascriptFolder")
 #@permissions('Manage')
 @implementer(ITreeSecurity)
-class AddJavascriptFolder(AceScripts,AceAddForm):
+class AddJavascriptFolder(AceAddForm):
+    aceMode = "javascript"
     subTitle= 'Add a Javascript Folder'
     interface = IJavascriptFolder
     ignoreContent = True
@@ -173,7 +168,7 @@ class AddJavascriptFolder(AceScripts,AceAddForm):
 
 
         
-def make_javascript_response(view, result, *args, **kwargs):
+def makeJavascriptResponse(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.write(result or u'')
         response.content_type=u'application/javascript' 
@@ -184,7 +179,7 @@ def make_javascript_response(view, result, *args, **kwargs):
 @context(IJavascriptIndex)
 class JavascriptIndex(Page):
     responseFactory = Response
-    make_response = make_javascript_response
+    make_response = makeJavascriptResponse
         
     def render(self ):
             if IJavascriptFolder.providedBy(self.context):
@@ -200,23 +195,16 @@ from zopache.ttw.interfaces import IGrapeBase
 @context(IGrapeBase)
 class GrapeIndex(Page):
     responseFactory = Response
-    make_response = make_javascript_response
+    make_response = makeJavascriptResponse
         
     def render(self ):
         return self.context.javascript
 
 class BaseJavascript(AceScripts):
+    aceMode = "javascript"    
     subTitle='Ace Edit this  Javascript'
     label=''
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
     
-    def footerScripts(self):
-        return AceScripts.footerScripts(self)
-
-    def headerScripts(self):
-          return AceScripts.headerScripts(self)    
-               
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
 @context(IJavascript)

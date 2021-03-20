@@ -13,7 +13,7 @@ import requests
 from html_to_etree import parse_html_bytes
 #https://github.com/fluquid/extract-social-media
 from extract_social_media import matches_string, find_links_tree
-
+from dolmen.forms.base import Actions
 from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
@@ -58,6 +58,7 @@ class Add(Action, UniqueName, TransactionNote):
         
     def callInner(self,obj,data,form):     
         notify(ObjectCreatedEvent(obj))
+
         self.actuallyAdd(obj,data)
         form.message("Content created")
         baseURL = self.baseURL()
@@ -111,7 +112,7 @@ class Add(Action, UniqueName, TransactionNote):
         return self.uniqueContainerName(self.form.context,name)
 
                      
-class AddNamed(Add):
+class AddByName(Add):
     pass
 
 class AddByTitle (Add):
@@ -121,9 +122,6 @@ class AddByTitle (Add):
         context[newName]=item
         item.__parent__ = context
         item.__name__ = newName
-        #root = getSiteRoot(self.form.context)
-        #if hasattr(root,'addItem'):
-        #    root.addItem(self.new)
 
         if hasattr(self.new,'imageURL'):
             getImage (self.new,self.new.imageURL)
@@ -142,9 +140,9 @@ class AddByTitle (Add):
 
 class AddByJSON(AddByTitle):
     def newName(self,data):
-        newName =  self.new.title
+        newName =  self.form.newName(data)
         return self.uniqueBothName(self.form.context,newName)
-
+    
     def setFields(self):
         errors = self.form.applyData()
         return errors
@@ -157,10 +155,6 @@ class AddByTitleAndCkEdit(AddByTitle):
     def newURL(self,baseURL):
         return baseURL + '/ckedit'
     
-class AddByTitleAndAceEdit(AddByTitle):    
-    def newURL(self,baseURL):
-        return baseURL + '/aceedit'    
-
 
 class AddByTitleToTreeAndView(AddByTitle):
 
@@ -176,7 +170,7 @@ class AddByTitleToTreeAndView(AddByTitle):
             set_fields_data(self.form.fields, self.new, self.data)
             return Errors()
     
-class AddAndView(AddNamed):
+class AddAndView(AddByName):
     def newURL(self,baseURL):
         return baseURL + '/index'        
     

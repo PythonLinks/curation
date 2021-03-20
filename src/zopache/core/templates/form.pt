@@ -48,7 +48,7 @@
 	 tal:define="error widget.error"
 	 tal:condition="error"
 	 tal:content="error.title" />
-      <div tal:condition="widget.htmlId()=='form-field-source' and widget.visible" name="editorDiv" id="editorDiv"></div>
+
       <tal:widget  tal:condition= " not view.isBool(widget)"  tal:content="structure widget.render()" />
     </div>
   </tal:fields>
@@ -76,7 +76,7 @@
   <p style= "max-width:40em" tal:condition="hasattr(view,'postamble')">
   ${view.postamble}</p>
       <script>
-	document.getElementById('form-action-Cancel').addEventListener("click",
+	document.getElementById('form-action-cancel').addEventListener("click",
 	function(){
 	window.location.href = '..';
 	        });

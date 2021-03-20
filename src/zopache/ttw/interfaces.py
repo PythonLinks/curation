@@ -233,6 +233,13 @@ class IJavascript(ISourceLeaf,IJavascriptIndex):
         required = False,
         default = u' ',
     )
+ 
+class ITemplate(Interface):
+    pass
+
+   
+class IJinjaJS(IJavascript,ITemplate):
+    pass
     
 class ISearchable(Interface):
       pass
@@ -254,6 +261,9 @@ class IJSON(IJavascript):
         default = '{}',
     )
 
+    
+class IJinjaJSON(IJSON,ITemplate):
+    pass
 
     
 class ITestSource (ISource, ITestURL):
@@ -265,7 +275,8 @@ class IIndexHTML(Interface):
 class ICkHTML (ISource):
      pass
 
-class IAceHTML(ISource,IAceEdit): 
+
+class IAceHTML(ISource,IAceEdit,ITemplate): 
     pass
 
 

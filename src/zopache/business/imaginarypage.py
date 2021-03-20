@@ -5,8 +5,12 @@ from zopache.pages.imaginary import Imaginary, ImaginaryBTree
 
 class ImaginaryPage(object):
     def getRealObject(self):
-        siteRoot = self.getSiteRoot()    
-        realObject = siteRoot[siteRoot.templateRoot]
+        siteRoot = self.getSiteRoot()
+        templateRoot = siteRoot.templateRoot
+        if templateRoot in siteRoot:
+             realObject = siteRoot[templateRoot]
+        else:
+            realObject = None
         return realObject
     
     realObject = property(getRealObject)
@@ -48,6 +52,8 @@ class ImaginaryPage(object):
             return self
         result = []
         realObject = self.realObject
+        if realObject == None:
+            return []
         for item in realObject.values():
             if IBTreeContainer.providedBy(item):
               new = ImaginaryBTree(self,item)

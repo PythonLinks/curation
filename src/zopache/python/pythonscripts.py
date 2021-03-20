@@ -254,8 +254,6 @@ class Index(View):
 @name("aceedit")
 @permissions('Python')
 class AceEditPython(AceScripts,AceEditForm):
-    def update(self):
-        pass
     subTitle= "Edit a Python Object"
     def footerScripts(self):
         return AceScripts.footerScripts(self)

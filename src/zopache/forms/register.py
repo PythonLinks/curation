@@ -45,7 +45,9 @@ class Register(Form,Notify):
     count = 0
     allowAnonymous = True
 
-
+    def __init__(self,context,request):
+        Form.__init__(self,context,request)
+        Notify.__init__(self)
     
     def acquireTitle(self):
        return 'Sign Up'

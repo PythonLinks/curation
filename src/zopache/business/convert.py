@@ -3,7 +3,7 @@ from zopache.business.interfaces import IOrganization
 
 def convert(item):
     new = MapOrganization()
-
+    parent = item.parent
     for attribute in [
                  'name',
                   'parent',
@@ -14,14 +14,12 @@ def convert(item):
                  'ballotStatus',
                  'remoteURL',
                  'source',
-                 'duesURL',
-                 'registerURL',
-                 'joinURL',
                  'phone',
                  'twitterId',
                  'facebookId',
                  'facebookGroup',
-                 'youTubeChannelURL',
+                 'donationsPageURL',
+                 'youTubeChanneURL',            
                  'email',
                  'eventsPageURL',
                  'donationsPageURL']:
@@ -31,7 +29,8 @@ def convert(item):
         childName = child.name
         del item[childName]
         new[childName] = child
-        
+
+    newName = item.name    
     del item.parent[newName]
     parent[newName] = new
 

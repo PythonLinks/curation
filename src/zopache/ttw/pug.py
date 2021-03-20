@@ -16,7 +16,7 @@ from zopache.core.getroot import getProducts
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
 from zopache.core import Leaf
-from zopache.ttw.acescripts import AceScripts as AceScriptsBase
+from zopache.ttw.acescripts import  AceScriptPug
 from .interfaces import ISourceContainer
 from .interfaces import IJavascript
 from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
@@ -155,33 +155,8 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     def getSource(self):
         return self.source
 
-class  AceScripts(AceScriptsBase):
-        
-    def  headerScripts(self):
-        result = AceScriptsBase.headerScripts(self)
-        return result        
-    
-    def  footerScripts(self):
-        result =  self.aceEditorFooter + """
-        <script >editor.getSession().setMode("ace/mode/jade");</script>
- 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify-html.min.js"></script>
-        """     
-        result += """
-<script  src="https://pythonlinks.info/static/pug/pug.js"></script>
-<script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
-        """
-        result += "<script>"
-        products = getProducts(self.context)
-        script = products['Templates']['PugScripts']
-        result += script.getJavascript()
-        result += "</script>"
-        return result
-
             
-
-class BasePugForm(AceScripts):
+class BasePugForm(AceScriptPug):
     label=''
     def breadcrumbs(self):
         return self.breadcrumbsManage()
@@ -193,7 +168,7 @@ class BasePugForm(AceScripts):
 @target(IView)
 @title("Add Pug")
 @implementer(ITreeSecurity)
-class AddPug(AceScripts,AceAddForm):
+class AddPug(AceScriptPug,AceAddForm):
     subTitle='Add a Pug Object'
     interface = Interface
     ignoreContent = True
@@ -214,20 +189,6 @@ class AceEditPug(BasePugForm,PugEditForm):
         self.template = self.getTemplates()['TranspilerTemplate']        
         PugEditForm.update(self)
 
-#AND HERE WE HAVE THE ACE DEMO FORM               
-@form_component
-@context(IPug)
-@target(IView)
-@title("Ace Demo")
-@name("acedemo")
-class AceDemoPug(BasePugForm,EditDemoForm):
-    def update(self):
-        self.template = self.getTemplates()['TranspilerTemplate']    
-
-    def breadcrumbs(self):
-        return self.breadcrumbsIndex(self.context)
-    
-        
 
 #RENDER HTML
 @view_component
@@ -242,7 +203,7 @@ class PugIndexHTML(View):
     def render(self):
                return self.context(self)
 
-from .javascript import make_javascript_response, JavascriptBase
+from .javascript import makeJavascriptResponse, JavascriptBase
 
 @view_component
 @name('javascript')
@@ -250,7 +211,7 @@ from .javascript import make_javascript_response, JavascriptBase
 @title("View Pug")
 class PugJavascipt(Page):
     responseFactory = Response
-    make_response = make_javascript_response
+    make_response = makeJavascriptResponse
         
     def render(self ):
         return self.context.javascript

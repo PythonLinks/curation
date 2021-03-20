@@ -168,7 +168,8 @@ class EditGrapePage(EditBase):
     def update(self):
        templates = self.getTemplates()
        self.template = templates["Grape-html"]
-
+       super().update(self)
+       
 @form_component
 @context(IGrapeBase)
 @name('edit')
@@ -178,7 +179,8 @@ class EditGrapeLayout(EditBase):
     def update(self):
        templates = self.getTemplates()
        self.template = templates["Grape-html"]       
-
+       super.update(self)
+       
 
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
@@ -189,19 +191,14 @@ def make_jsx_response(view, result, *args, **kwargs):
         return response
 
 from zopache.ttw.addeditforms import AceEditForm
-from zopache.ttw.acescripts import AceScripts
+
 @form_component
 @context(IGrapeBase)
 @name('aceedit')
 @implementer(ITreeSecurity)
-class AceEditGrape(AceScripts,AceEditForm):
+class AceEditGrape(AceEditForm):
     subTitle='Edit a Grape Object'
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/jsx");
-        </script>
-        """
-    
+    aceMode = 'jsx'
        
 import crom
 from zopache.zmi.interfaces import IURLSegment

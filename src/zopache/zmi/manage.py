@@ -3,10 +3,15 @@ from zope.interface import implementer
 from zope.interface import Interface
 from zope import schema
 from zope import interface
+
+#Why does this not work?
+#from cromlech.container import IOrdered
 from dolmen.container import IBTreeContainer
+
 from dolmen.forms.base import Actions
 from cromlech.browser.interfaces import IPublicationRoot
 from cromlech.security import Unauthorized
+from dolmen.container import OrderedBTreeContainer
 
 from .contents import Contents
 from zopache.core.page  import  Page
@@ -25,6 +30,7 @@ from zopache.core.baseform import Form
 from zopache.python.interfaces import IDirectory
 from zopache.application.root import RootContainer
 from zopache.ttw.interfaces import IPrincipalFolder,IInternalPrincipal
+from zopache.core.scripts import Scripts
 
 #Breadcrumbs is included in Form
 class ManageBase(Form,Contents):
@@ -72,8 +78,11 @@ class ManageBase(Form,Contents):
     #USE THIS TO DEFINE MANAGFE TEMPLATES IN THE ZODB
           products = self.getProducts()
           self.template = self.getTemplates()['Manage.pt']
-     """    
- 
+     """
+    
+    def isOrderedContainer(self):
+        return IPage.providedBy(self.context)
+    
     def getManageURL(self,item):
         try:
            url = self.relativeURL(item)
@@ -153,10 +162,8 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-
         #item.leaderNodes()
         #for it in item.politicians.values():
-        #    print (it.title)
         #    it.convert()
         #pass
     

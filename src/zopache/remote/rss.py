@@ -38,7 +38,11 @@ class RSS(Link,UniqueName):
        breakpoint()
        new = RSSArticle()
        new.title = unescape (article.title)
-       new.description = unescape( article.summary)
+       if self.htmlSummary:
+             new.source = unescape( article.summary)
+       else:
+             new.description = article.summary
+       
        #if hasattr(article, 'content'):
        #    if len(article.content):
        #      new.source = article.content[0].value
@@ -46,7 +50,8 @@ class RSS(Link,UniqueName):
        #    new.source = article.summary
        
        new.articleURL = article.link
-       new.updated = article.updated_parsed
+       if hasattr(article, 'updated_parsed'):
+          new.updated = article.updated_parsed
 
        if 'image' in article:      
            new.image = article.image

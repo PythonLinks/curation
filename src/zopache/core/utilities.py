@@ -6,10 +6,15 @@ from dolmen.message.utils import send
 from zopache.core.getroot import getSiteRoot
 from zopache.application.everyobject import EveryObject
 
+from html import escape
+
 def sortFunction(item):
   return item.__name__
 
 class Utilities (object):
+    def htmlEscape(self,text):
+        return escape(text)
+    
     def everyObject(self):
         return EveryObject(self.context)
       
@@ -75,7 +80,7 @@ class Utilities (object):
         raise Unauthorized
     
     def getNavBar(self):
-         navbar = self.webClassAcquire('navbar.py')
+         navbar = self.getLayout()['navbar.py']
          if navbar != object:
            return navbar(self)
          else:

@@ -34,6 +34,7 @@ from zopache.ttw.interfaces import (ISource,
                                     IAceCMSClass,
                                     IAceIFrameClass,
                                     IAceHTMLPage)
+from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 
 from zopache.ttw.html import (HTML,
                               HTMLRecursionError,
@@ -49,21 +50,21 @@ from dolmen.container import IBTreeContainer, BTreeContainer
 from zope.interface import implementer
 
 class AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/html");
-        </script>
-        """
+      aceMode = 'html'
 
+from zopache.ttw.acescripts import createEditorDiv
 class CkScripts(object):
     def  headerScripts(self):
-        return """
+        result = """
 <script src="https://cdn.ckeditor.com/4.4.4/standard/ckeditor.js"></script> 
         """ + AddForm.headerScripts(self)
-    
+        return result
+  
     def  footerScripts(self):
         return """
- <script >CKEDITOR.replace('form-field-source',{disableNativeSpellChecker : false}); 
+ <script > 
+CKEDITOR.replace('form-field-source',
+       {disableNativeSpellChecker : false}); 
 </script>
         """ 
 
@@ -83,13 +84,8 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
     def headerScripts(self):
           return CkScripts.headerScripts(self)
 
-    actions= Actions()
-    
-    def update(self):
-        if self.treeSecurity():
-           self.setActions()
            
-    def setActions(self):           
+    def addAuthorizedActions(self):           
          self.actions = Actions(
               formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
               ttwactions.AddAndCkEdit(_("Add and ckEdit","Add -> ckEdit"), self.factory),
@@ -105,52 +101,31 @@ class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 
 
-class AddAceHTMLBase(AddHTMLBase,AceScripts,AddForm):        
+class AddAceHTMLBase(AddHTMLBase,AceAddForm):        
     subTitle="Add an Ace HTML Object"
     factory=AceHTML
-
-    def footerScripts(self):
-        return AceScripts.footerScripts(self)
-
-    def headerScripts(self):
-          return AceScripts.headerScripts(self)      
-    @property
-    def actions(self):
-        return Actions(
-              formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
-              ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),
-              formactions.Cancel(_("Cancel","Cancel")))
-
+    aceMode = "html"
 
 @form_component
 @name (u'addAceHTML')
 @context(IBTreeContainer)
-@permissions('Developer')
-class AddAceHTML (AddAceHTMLBase,AddForm):
+@permissions('Manage')
+class AddAceHTML (AddAceHTMLBase):
     pass
 
-from zopache.ttw.html import Jinja2
-@form_component
-@name (u'addJinja2')
-@context(IBTreeContainer)
-@permissions('Manage')
-class AddJinja2(AddAceHTMLBase,AddForm):
-    title = "And a Jinja2 Object"
-    subtitle = "Great for html prototyping."
-    factory = Jinja2
 
 @form_component
 @name (u'addAceIFrame')
 @context(IBTreeContainer)
-@permissions('Developer')
-class AddAceIFrame (AddAceHTMLBase,AddForm):
+@permissions('Manage')
+class AddAceIFrame (AddAceHTMLBase):
     factory = AceIFrameHTML
 
 @form_component
 @name (u'addAceCMS')
 @context(IBTreeContainer)
-@permissions('Developer')
-class AddAceCMS (AddAceHTMLBase,AddForm):
+@permissions('Manage')
+class AddAceCMS (AddAceHTMLBase):
     factory = AceCMSHTML
 
 
@@ -249,11 +224,8 @@ class IFrameIndex(Index):
 class BaseHTMLEditForm(BaseEditForm):
     actions = Actions()
     dataValidators = [HTMLValidator]    
-    def update(self):
-        if self.treeSecurity():
-            self.setActions()
 
-    def setActions(self):        
+    def addAuthorizedActions(self):        
         action1=ttwactions.SaveAndAceEdit("Save","Save")
         action2=updateactions.SaveAndView("Save  and View","Save -> View")
 
@@ -272,7 +244,8 @@ class BaseHTMLEditForm(BaseEditForm):
 class BaseAceEdit(AceScripts,BaseHTMLEditForm):
     __name__ = "aceedit"
     subTitle="Ace Edit this object" 
-
+    aceMode = "html"
+    
     def footerScripts(self):
         return AceScripts.footerScripts(self)
 
@@ -322,7 +295,7 @@ class BaseCkEdit(CkScripts,BaseHTMLEditForm):
 
 
 class CkEdit(BaseCkEdit):
-    def setActions(self):
+    def addAuthorizedActions(self):
         self.actions = Actions(
               updateactions.SaveAndView(_("Save  and View","Save -> View")),
               ttwactions.SaveAndCkEdit(_("Save","Save")),

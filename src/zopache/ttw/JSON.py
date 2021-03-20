@@ -1,6 +1,5 @@
 import json
 
-
 from zope import schema
 from zope.interface import implementer
 from dolmen.view import View
@@ -20,6 +19,10 @@ from zopache.ttw.interfaces import IJSON, IJSONContainer
 from zopache.ttw.javascript import JavascriptBase
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
+
+class AceScripts(AceScripts):
+    aceMode = 'json'
+
 @implementer(IJSON)
 class JSON(JavascriptBase,Leaf):
     # NEEDS AN ICON
@@ -33,7 +36,7 @@ class JSON(JavascriptBase,Leaf):
         return json.loads(self.source)
     
     def fromPythonObjects(self,data):
-        self.source = json.dumps(data)
+        self.source = json.dumps(data,indent=4)
         
     def getJavascript (self):
         return self.source
@@ -43,14 +46,17 @@ class JSON(JavascriptBase,Leaf):
         jsonDict = json.loads (source)
         return jsonDict
     
-@implementer(IJSON)
+@implementer(IJSONContainer)
 class JSONDict(JSON,OrderedBTreeContainer):
     title = ""
     description = ""
     source = "{}"
-    
+    def __init__(self):
+        JSON.__init__(self)
+        OrderedBTreeContainer.__init__(self)
+        
     def getAsString(self):
-        return json.dumps(self.getAsDict())
+        return json.dumps(self.getAsDict(),indent = 2)
     
     def getAsDict(self):
         source2 = self.source           
@@ -66,23 +72,14 @@ class JSONDict(JSON,OrderedBTreeContainer):
         for key,value  in self.items():
             if IJSON.providedBy(value):
                properties[key] = value.getAsDict()
-        print (properties.keys())       
         if properties:
             json2["properties"] = properties
 
         return json2
     
-@implementer(IJSON)
+@implementer(IJSONContainer)
 class JSONFolder(JSONDict):
     pass
-
-class  AceScriptsLocal(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/json");
-        </script>
-        """
-    
 
 @form_component
 @name('addJSON')
@@ -104,7 +101,7 @@ class AddJSONDict(AceScripts,AceAddForm):
     ignoreContent = True
     factory=JSONFolder
     
-def makeResponse(view, result, *args, **kwargs):
+def makeJsonResponse(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.write(result or '')
         response.content_type=u'application/json'
@@ -115,7 +112,7 @@ def makeResponse(view, result, *args, **kwargs):
 @context(IJSON)
 class Index(View):
     responseFactory = Response
-    make_response = makeResponse
+    make_response = makeJsonResponse
         
     def render(self):
         return self.context.source
@@ -129,30 +126,28 @@ from zopache.business.getjson import getStateJson
 @context(IMapOrganization)
 class GEOIndex(View):
     responseFactory = Response
-    make_response = makeResponse
+    make_response = makeJsonResponse
         
     def render(self):
         return getStateJson(self.context)
-
-
     
 @view_component
 @name('index')
 @context(IJSONContainer)
 class Index(View):
     responseFactory = Response
-    make_response = makeResponse
+    make_response = makeJsonResponse
         
     def render(self):
         context = self.context.getAsString()
-
+        return context
         
 
 @form_component
 @context(IJSON)
 @name("aceedit")
 @implementer(ITreeSecurity)
-class AceEditJSON(AceScriptsLocal,AceEditForm):
+class AceEditJSON(AceScripts,AceEditForm):
     subTitle='Edit a JSON Object'
     interface = IJSON
 
@@ -170,7 +165,7 @@ from zopache.pages.interfaces import INotebook
 @context(INotebook)
 class Source(View):
     responseFactory = Response
-    make_response = makeResponse
+    make_response = makeJsonResponse
         
     def render(self):
                return self.context.source           

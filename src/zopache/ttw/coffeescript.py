@@ -21,19 +21,17 @@ from zopache.core.viewdecorators import *
 from zopache.core import Leaf
 from zopache.ttw.acescripts import AceScripts as AceScriptsBase
 from .interfaces import ISourceContainer
-from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
-from zopache.ttw.interfaces import IWeb
+from zopache.ttw.interfaces import ILeaf, ISourceContainer
 from zopache.core.page  import  Page
-from .interfaces import ITestURL
 from .javascript import JavascriptBase
 from zopache.core.interfaces import ITreeSecurity
 
-class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
+class ICoffeeScript(ILeaf,IJavascript):
     "Basic CoffeeScript Form"
 
     title = schema.TextLine(
         title = u'Title',
-        description = u'Describe this CoffeeScript g Object.',
+        description = u'Describe this CoffeeScript Object.',
         required = False,
     )
 
@@ -43,6 +41,7 @@ class ICoffeeScript(ISourceLeaf,IJavascript,ITestURL):
         required = False,
         default = u' ',
     )
+    
     javascript= schema.Text(
         title = u'The Generated CoffeeScript',
         description = u'This Javascript is generated from the CoffeeScript',
@@ -65,18 +64,13 @@ class CoffeeScript(JavascriptBase,Leaf):
         return self.source
 
 class  AceScripts(AceScriptsBase):
+    aceMode = 'coffee'
     def update(self):
         self.template = getProducts(self)['Templates']['TranspilerTemplate']
+        super().update()
         
-    def  headerScripts(self):
-        result = AceScriptsBase.headerScripts(self)
-        return result        
-    
     def  footerScripts(self):
-        result =  self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/coffee");
-        </script>
-        """     
+        result =  AceScriptsBase.footerScripts(self) 
         result += """
 <script  src="/fanstatic/ttwicons/coffeescript.js"></script>
     """
@@ -88,6 +82,21 @@ class  AceScripts(AceScriptsBase):
         result += script.source
         result += "</script>"
         return result
+
+            
+from .javascript import makeJavascriptResponse, JavascriptBase
+
+@view_component
+@name('index')
+@context(ICoffeeScript)
+@title("View CoffeeScript")
+class CoffeeScriptIndex(Page):
+    responseFactory = Response
+    make_response = makeJavascriptResponse
+        
+    def render(self ):
+        return self.context.javascript
+
 
 @form_component
 @name('addCoffeeScript')
@@ -101,33 +110,7 @@ class AddCoffeeScript(AceScripts,AceAddForm):
     ignoreContent = True
     factory=CoffeeScript
 
-            
-from .javascript import make_javascript_response, JavascriptBase
-
-@view_component
-@name('index')
-@context(ICoffeeScript)
-@title("View CoffeeScript")
-class CoffeeScriptIndex(Page):
-    responseFactory = Response
-    make_response = make_javascript_response
-        
-    def render(self ):
-        return self.context.javascript
-
-class BaseCoffeeScriptForm(AceScripts):
-    subTitle='Ace Edit this  Coffeecript'
-    label=''
-    def breadcrumbs(self):
-        return self.breadcrumbsManage()
     
-
-    #def footerScripts(self):
-    #    return AceScriptsBase.footerScripts(self)
-
-    #def headerScripts(self):
-    #      return AceScripts.headerScripts(self)    
-               
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
 @context(ICoffeeScript)
@@ -135,15 +118,6 @@ class BaseCoffeeScriptForm(AceScripts):
 @title("AceEdit")
 @name("aceedit")
 @implementer(ITreeSecurity)
-class AceEditCoffeeScript(BaseCoffeeScriptForm,AceEditForm):
+class AceEditCoffeeScript(AceScripts,AceEditForm):
     subTitle = "Ace Edit a Coffescript Object."
     title = "CoffeeScript Editor"
-
-#AND HERE WE HAVE THE ACE DEMO FORM               
-@form_component
-@context(ICoffeeScript)
-@target(IView)
-@title("Ace Demo")
-@name("acedemo")
-class AceDemoCoffeecript(BaseCoffeeScriptForm,EditDemoForm):
-    subTitle = "Ace Edit Coffescript Demo."        

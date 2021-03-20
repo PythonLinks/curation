@@ -1,4 +1,4 @@
-from zopache.pages.pageactions import *
+from zopache.crud.addbytitleactions import *
 from zopache.core.viewdecorators import *
 from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase

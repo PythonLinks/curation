@@ -49,7 +49,7 @@ class Base(object):
            value =  requestJsonDict[key]
            setattr(target,key,value)
         
-    def applyData(self):
+    def applyData(self,data):
         target = self.target()
         jsonSchemaDict =self.jsonSchemaDict
         rootProperties = jsonSchemaDict["properties"]
@@ -79,7 +79,9 @@ class Base(object):
     def footerScripts(self):
         return ""
 
-
+    def options(self):
+        return ""
+    
 class AddBase (Base, AddAnonymousPage):
     dataValidators = [JSONSchemaValidator, Duplicate]
 
@@ -114,6 +116,9 @@ class AddBase (Base, AddAnonymousPage):
 class AddPolitician (AddBase):
     factory = Politician
     schemaName = "PoliticianSchema"
+    
+    def newName(self,data):
+        newName =  self.requestJsonDict["introduction"]['title']
         
 class EditBase( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
@@ -185,7 +190,8 @@ class EditVotingSchema(EditBase):
 @implementer(ITreeSecurity)
 class AceEditPolitician (EditPolitician):
       pass
-         
+
+    
 @view_component
 @name('addCandidate')
 @target(IView)

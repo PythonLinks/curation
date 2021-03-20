@@ -8,9 +8,7 @@ from dolmen.forms.base import Action, Actions,SuccessMarker
 
 from zopache.crud.actions import Cancel
 from zopache.crud.forms import AddFormBase
-from zopache.core.breadcrumbs import Breadcrumbs
 from .interfaces import IURLForm
-from zopache.ttw.mail import Notify
 from zopache.forms.urlvalidator import DuplicateURLValidator
 
 class AddByURLAction(Action):
@@ -43,8 +41,10 @@ class AddByURLAction(Action):
 
         return SuccessMarker('Updated', True, url=postingURL)
 
-class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
+class AddByURLForm(AddFormBase):
+    
     datavalidators = [DuplicateURLValidator]
+    
     preamble = """This form may take a few moments  to process. 
     The software will download that webpage, capture the title, 
     description and the image url, amd you will then be redirected to the 
@@ -54,7 +54,7 @@ class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
     be edited """
     actions = Actions()
 
-    title = "Add a Link Object from a URL"
+    title = "Add an object starting with its URL."
     @property 
     def subTitle(self):
         return f"""To a {self.contextClassName()} called 
@@ -64,7 +64,6 @@ class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
     def update(self):
         if self.isPerson() and not self.treeSecurity():
             self.raiseUnauthorized()
-        #if self.treeSecurity():
         self.addUnauthorizedActions()
             
     interface = IURLForm
@@ -77,9 +76,3 @@ class AddByURLForm(AddFormBase,Breadcrumbs,Notify):
         self.actions= actions
               
 
-#So This one can be called multiple times.               
-#class AddMultipleByURL(AddByURLForm):
-#    def __call__(self, form,remoteURL):
-#        self.remoteURL = remoteURL
-#        return AddByURL.__call__(self,form)
-# MAYBE ADDBYURL NO LONGER EXISTS        

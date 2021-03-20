@@ -21,8 +21,9 @@ class BaseValidator(object):
            title = data ['title']
         else:
            try:
-              json = loads(data["json"])  
-              title = json["introduction"]["title"]
+              json = loads(data["json"])
+              baseTab = self.jsonSchemaDict["baseTab"]
+              title = json[baseTab]["title"]
            except:
                 return None
              
