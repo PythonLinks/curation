@@ -221,13 +221,22 @@ class MixIn(object):
         myScore =  1000*(self.upVotes() - (5 * self.downVotes()))/viewCount
         return myScore
 
+    #THE PROBLEM IS THAT WE HAVE TO
+    #PUT APPROVED ARTICLES FIRST, SO IT HAS TO
+    #SORT BASED ON APPROVAL TIME.
+    #BUT ON THE RAW FEED IT HAS TO SORT BASED ON THE
+    #CREATION TIME.  WE WILL FIX THAT WHEN WE GET TEHRE. 
     def getMostRecent(self):
-        if hasattr(self,'publishedAt'):
-           return self.publishedAt
-        if hasattr(self,'creationTime'):
-           return self.creationTime   
+        if hasattr(self,'modificationTime'):
+           return self.modificationTime        
         else:
            return 0
+        #if hasattr(self,'publishedAt'):
+        #   return self.publishedAt
+        #if hasattr(self,'creationTime'):
+        #   return self.creationTime   
+        #else:
+        #   return 0
        
     mostRecent = property (getMostRecent)
        

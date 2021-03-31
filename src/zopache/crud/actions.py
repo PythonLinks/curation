@@ -143,6 +143,7 @@ class AddByJSON(AddByTitle):
         return self.uniqueBothName(self.form.context,newName)
     
     def setFields(self):
+        breakpoint()
         errors = self.form.applyData()
         return errors
 

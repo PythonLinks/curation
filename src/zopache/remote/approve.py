@@ -58,7 +58,7 @@ class Approve (EditForm,Breadcrumbs):
     def postProcess(self, view = None):
         self.siteRoot = self.getSiteRoot()
         context = self.context
-
+        context.postProcess(view = self)
         if context.publicationApproved == True:
            if context.category !="": 
                 self.publish()
