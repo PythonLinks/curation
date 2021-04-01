@@ -19,8 +19,6 @@ from zopache.ttw.interfaces import (ISource,
                                     IAceHTMLPage)
 
 
-
-
 """
 HTML is a very important base class.  It has a field called source.  It 
 can be edited witht the WYSIWYG ckEditor or the more technical Ace Editor.
@@ -45,7 +43,7 @@ class HTMLBase(object):
     trusted = False    
     title=u'HTML Object'
     source=''
-
+    icon="ttwicons/HTML.svg"
     #THIS SHOULD BE RETIRED
     #AND ONLY HTML USED. 
     def html(self):
@@ -77,7 +75,9 @@ class TrustedHTML(HTMLBase):
                  if self.trusted == False:
                     return     
                  source=self.getHTML()
-                 self._v_compiledTemplate = PageTemplate(source)
+                 template = PageTemplate(source)
+                 template.filename = self.__name__
+                 self._v_compiledTemplate = template
                  #return self._v_compiledTemplate
 
     def postProcess(self,view=None):
@@ -128,7 +128,8 @@ class TrustedHTML(HTMLBase):
                            request=view.request,
                            view=view,
                            **args)
-
+#class Jinja2(TrustedHTML):
+#        pass
 
 @implementer (IUntrustedHTML)
 class UntrustedHTMLBase(HTMLBase):
@@ -162,7 +163,7 @@ class HTML(TrustedHTML,Leaf):
 @implementer(IAceHTMLClass)
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
-    
+
 @implementer(IAceCMSClass)
 class AceCMSHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
