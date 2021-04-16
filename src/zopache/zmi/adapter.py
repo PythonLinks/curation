@@ -9,6 +9,7 @@ from zope.interface import Interface
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.zmi.interfaces import IObjectRetitler
 from zopache.zmi.cutcopypaste import BaseClass
+from dolmen.container import IBTreeContainer
 
 
 #GENERIC RETITLER
@@ -57,6 +58,10 @@ class ZMIAdapter(object):
           self.context = obj
           self.view = view
           self.request = view.request
+          
+      def isBTreeContainer(self):
+          item = self.context 
+          return  IBTreeContainer.providedBy(item)
 
       def getId(self,name):
           return self.context.__name__ + '-' + name
@@ -107,7 +112,7 @@ class ZMIAdapter(object):
       def manageLink(self):
            return self.objectHref(self.url()+'/manage2',self.context.title)
        
-      def contextClass(self):
+      def contextClassName(self):
             return self.context.__class__.__name__
 
       def size (self):

@@ -8,7 +8,7 @@ from zope.schema import Text
 from zopache.crud.forms import EditForm
 from zopache.core.viewdecorators import *
 from zopache.ttw.treewidget import TreeField
-
+from zopache.core.interfaces import ITreeSecurity
 
 class IApprove(Interface):
     title = schema.TextLine(
@@ -46,7 +46,7 @@ from zopache.core.breadcrumbs import Breadcrumbs
 @form_component
 @name ('approve')
 @context(IRSSArticle)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class Approve (EditForm,Breadcrumbs):
     title = 'Approve this Article?'
     subTitle = "The article will be moved to its new location. "

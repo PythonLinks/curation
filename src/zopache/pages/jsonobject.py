@@ -125,7 +125,7 @@ class JsonObject(object):
 
     def jsonTree(self,indent):
         return '[' +  self.getJSON(indent,'treeVariables') + ']'
-
+    
     def jsonCategories(self,indent):
         return '[' +  self.getJSONCategories(indent,'categoryVariables') + ']'    
 #AND HERE FOR JUST THE CATEOGIRES
@@ -232,7 +232,7 @@ class MYJSON(View):
         #if self.context.__name__ in
         #   ['cloud-native','python','climate-change']:
         #return 'JSON is not available for that object.'
-        return self.context.jsonTree(2)
+        return self.context.getCachedJson()
 
        
 

@@ -25,28 +25,25 @@ from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink,IActionNetwork
 
 
-class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,JsonObject,ProcessTree):
-    title = ''
+class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,ProcessTree):
     private = False
-    source = ''
     branchSize=1
-    description = ''
     webApproved = True
     emailApproved = False
     basePath = "/"
     createdBy = None
     editedBy = None
 
-    def getTitleForDomain(self,domain):
-        return self.title
-
-    def getDescriptionForDomain(self,domain):
-        return self.description
-
     
     def className(self):
         return self.__class__.__name__
     
+    def getTitleFor(self,view):
+        return self.title
+    
+    def getDescriptionFor(self,view):
+        return self.description
+
     def countMe (self):
         if not self.webApproved:
             return False
@@ -186,19 +183,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
               pass
            self.editedBy = name
             
-    def partialPostProcess(self, view=None):        
-        self.description=self.description.replace ('"' , "&ldquo;", 1)
-        self.description=self.description.replace ('"' , "&rdquo;", 1)
-        self.description=self.description.replace ('"' , "&ldquo;")
-        self.description=self.description.replace ('\n' , " ")
-        self.description=self.description.replace ('\r' , " ")                
-
-        self.title=self.title.replace ('"' , "&ldquo;", 1)
-        self.title=self.title.replace ('"' , "&rdquo;", 1)
-        self.title=self.title.replace ('"' , "&ldquo;")
-        self.title=self.title.replace ('\n' , " ")
-        self.title=self.title.replace ('\r' , " ")                
-
     def postAddProcess(self,view=None):
         self.postProcessCore(view=view)        
         principal = view.request.principal
@@ -282,17 +266,6 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
     def editDateForHumans(self):
          return self.creationTime
 
-    def sortedByTitle(self):
-           unsortedList=[]
-           for item in self.values():
-               if IPage.providedBy(item):
-                  unsortedList.append(item)
-           aKey=methodcaller('getTitle')
-           return sorted(unsortedList, key=aKey)
-
-    def getTitle(self):
-         return self.title
-     
     def sortedByName(self):
            unsortedList=[]
            for item in self.values():
@@ -306,7 +279,44 @@ class PageBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,Json
      
     def allValues(self):
         return self.values()
+
+class PageBase(PageVeryBase,JsonObject):
+    title = ''
+    description = ''
+    source = ''
+
+    def sortedByTitle(self):
+           unsortedList=[]
+           for item in self.values():
+               if IPage.providedBy(item):
+                  unsortedList.append(item)
+           aKey=methodcaller('getTitle')
+           return sorted(unsortedList, key=aKey)
+
     
+    def partialPostProcess(self, view=None):        
+        self.description=self.description.replace ('"' , "&ldquo;", 1)
+        self.description=self.description.replace ('"' , "&rdquo;", 1)
+        self.description=self.description.replace ('"' , "&ldquo;")
+        self.description=self.description.replace ('\n' , " ")
+        self.description=self.description.replace ('\r' , " ")                
+
+        self.title=self.title.replace ('"' , "&ldquo;", 1)
+        self.title=self.title.replace ('"' , "&rdquo;", 1)
+        self.title=self.title.replace ('"' , "&ldquo;")
+        self.title=self.title.replace ('\n' , " ")
+        self.title=self.title.replace ('\r' , " ")                
+
+    
+    def getTitle(self):
+         return self.title
+
+    def getTitleForDomain(self,domain):
+        return self.title
+
+    def getDescriptionForDomain(self,domain):
+        return self.description
+
 @implementer (IActionNetwork)
 class ActionNetwork(PageBase, PageMixIn):
     webClass='Action'

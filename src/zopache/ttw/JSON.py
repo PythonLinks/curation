@@ -31,6 +31,9 @@ class JSON(JavascriptBase,Leaf):
     
     def getSource(self):
         return self.getJavascript()
+
+    def getAsString(self):
+        return self.getJavascript()
     
     def asPythonObjects(self):
         return json.loads(self.source)

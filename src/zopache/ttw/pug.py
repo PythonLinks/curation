@@ -10,7 +10,7 @@ from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, PugEditForm
 from zopache.crud.forms import EditDemoForm
 from dolmen.container import IBTreeContainer
-
+from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.getroot import getProducts
 from zopache.core.viewdecorators import *
@@ -20,7 +20,7 @@ from zopache.ttw.acescripts import  AceScriptPug
 from .interfaces import ISourceContainer
 from .interfaces import IJavascript
 from zopache.ttw.interfaces import ISourceLeaf, ISourceContainer
-from zopache.ttw.interfaces import IWeb
+from zopache.ttw.interfaces import ITemplate
 from zopache.core.page  import  Page
 from .interfaces import ITestURL
 from cromlech.webob.response import Response
@@ -51,7 +51,7 @@ Hello World
 
 """
 
-class IPug(IPugBase,IJavascript):    
+class IPug(IPugBase,ITemplate):    
     "Basic Pug Form"
 
     title = schema.TextLine(
@@ -195,11 +195,14 @@ class AceEditPug(BasePugForm,PugEditForm):
 @name('index')
 @context(IPug)
 @title("View Pug  HTML")
-class PugIndexHTML(View):
+class PugIndexHTML(View,Breadcrumbs):
     count=0    
     responseFactory = Response
     make_response = make_view_response
-        
+
+    def setDisplayObject(self,item):
+         self.zopacheTemplate=item
+
     def render(self):
                return self.context(self)
 

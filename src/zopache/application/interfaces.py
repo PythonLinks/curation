@@ -24,6 +24,9 @@ class IRootContainer(IPublicationRoot,IImutable,IZMI,IZodbRoot):
 class IEditableRootContainer(IRootContainer, IEditable):
       pass
 
+class IMenuBar(ILeaf):
+     pass
+
 class ILogin(Interface):
     email = TextLine(
         title='Username', required=True)
