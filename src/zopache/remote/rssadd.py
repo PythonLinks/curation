@@ -43,7 +43,7 @@ class AddRSS(AddByTitleForm,Notify):
      def newURL(self,baseURL):
         return baseURL + '/manage'
     
-    def dataModel(self):
+     def dataModel(self):
 
         contextJsonDict =  self.template['rssSchema'].getAsDict()
         result = json.dumps(contextJsonDict)
