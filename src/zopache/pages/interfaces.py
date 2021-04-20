@@ -2,8 +2,9 @@ from zope.interface import Interface
 from zope import schema
 from zopache.crud.interfaces import IContainer , IZodbRoot
 from dolmen.container import IBTreeContainer
-from cromlech.container.interfaces import IOrdered
+from cromlech.container.interfaces import IOrderedContainer
 from cromlech.browser.interfaces import IPublicationRoot
+
 
 from zopache.ttw.interfaces import ISourceLeaf
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
@@ -80,9 +81,8 @@ class IPageBottom(Interface):
 
 class IActionNetwork(ILinkTop,
                      ILeaf,
-                     IOrdered,
                      IJSONInclude,
-                     IBTreeContainer,
+                     IOrderedContainer,
                      ICountable):
     description= schema.Text(
         title = 'Description',
@@ -91,14 +91,18 @@ class IActionNetwork(ILinkTop,
         default = u'',
     )       
 
-class IPage(ILayoutView,IPageTop,IPageBottom,IContent, IContainer, IOrdered,
-            IJSONInclude, IBTreeContainer,IUntrustedHTML,IAceHTML):
+class IPageBase(Interface):
+    pass
+
+class IPage(ILayoutView,IPageTop,IPageBottom,IContent, IOrderedContainer,
+            IJSONInclude, IUntrustedHTML,IAceHTML):
+    pass
+
+class IMultilingual(IPageBase,ILayoutView,IContent,IOrderedContainer):
     pass
 
 class IProxyPage(IPage):
     pass
-
-
 
 class IAddPage(IPage):
     imagegURL= schema.URI(
@@ -172,7 +176,7 @@ class INews (IPage,IRecent):
 class ISiteRoot(IBranch,IPublicationRoot,IPage):
     pass
 
-class IRootPage(ISiteRoot,IZodbRoot):
+class IRootPage(ISiteRoot,IZodbRoot,IPageBase):
     pass
 
 class ISiteRootPage(ISiteRoot):

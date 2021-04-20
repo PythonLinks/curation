@@ -32,16 +32,7 @@ async def fetch(url,allowedTime,startTime,fetchType):
      try:  
         async with session.get(url) as response:
           if response.status != 200:
-               return (response.status,url,'')
-          if fetchType == "RSS":  
-              html  =  await response.text()
-          elif fetchType == "Images":
-              html = await response.body()
-          else:
-              raise Exception("Please Define a Fetch Type")
-          
-          duration =  time.time() - startTime
-          print (len(count),"ENDING2", duration, url)
+               return (response.status,url,'')      
           count.append(1)
           return processRSSResponse(url,html)
        

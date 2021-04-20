@@ -8,7 +8,7 @@ from zope.schema import Text
 from zopache.crud.forms import EditForm
 from zopache.core.viewdecorators import *
 from zopache.ttw.treewidget import TreeField
-
+from zopache.core.interfaces import ITreeSecurity
 
 class IApprove(Interface):
     title = schema.TextLine(
@@ -30,23 +30,24 @@ class IApprove(Interface):
         required = False,
         default = False)
 
-    publicationApproved = schema.Bool(
-        title =  "Published or not?",
-        description = "Move to its category, or back to its RSS feed.",
-        required = False,
-        default = False)    
-
     category=TreeField(
            title="Category Search",
            description= """Choose where to move the articcle. """,
            required = False,
             )
     
+    publicationApproved = schema.Bool(
+        title =  "Published or not?",
+        description = "Move to its category, or back to its RSS feed.",
+        required = False,
+        default = False)    
+
+    
 from zopache.core.breadcrumbs import Breadcrumbs    
 @form_component
 @name ('approve')
 @context(IRSSArticle)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class Approve (EditForm,Breadcrumbs):
     title = 'Approve this Article?'
     subTitle = "The article will be moved to its new location. "
@@ -58,7 +59,7 @@ class Approve (EditForm,Breadcrumbs):
     def postProcess(self, view = None):
         self.siteRoot = self.getSiteRoot()
         context = self.context
-
+        context.postProcess(view = self)
         if context.publicationApproved == True:
            if context.category !="": 
                 self.publish()

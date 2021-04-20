@@ -279,6 +279,8 @@ class ICkHTML (ISource):
 class IAceHTML(ISource,IAceEdit,ITemplate): 
     pass
 
+class IJinjaHTML(IAceHTML):
+    pass
 
 
 class ISecureHTML(IAceHTML):

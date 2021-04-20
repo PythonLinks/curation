@@ -4,6 +4,7 @@ from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from zopache.crud import i18n as _
 from zopache.crud.actions import Cancel
+from zopache.pages.page import Page
 
 class Update(Action,TransactionNote):
     """Update action for any locatable object.

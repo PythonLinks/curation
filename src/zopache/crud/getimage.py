@@ -4,9 +4,8 @@ from io import BytesIO
 import requests
 from zopache.ttw.file import BTreeImage
 
-def getImage(self,imageURL):
-        try:
-            response = requests.get(imageURL)            
+
+def createImageIn(self,response):
             zodbImage =BTreeImage()
             zodbImage.contentType=response.headers['content-type']            
             content = response.content
@@ -16,5 +15,10 @@ def getImage(self,imageURL):
             zodbImage.height = pilImage.height
             self['Logo']= zodbImage
             zodbImage.__parent__ = self
+
+def getImage(self,imageURL):
+        try:
+            response = requests.get(imageURL)
+            createImageIn(self,response)
         except:
             pass 

@@ -6,7 +6,6 @@ from zopache.core.getroot import getProducts
 
 #MAYBE THE WEBCLASS IS A STRING OR A POINTER       
 def webClassAcquire(context,name, marker = object):
-
     if name in context:
           return context[name] 
     if hasattr(context, "webClass"):
