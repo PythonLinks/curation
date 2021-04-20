@@ -30,17 +30,18 @@ class IApprove(Interface):
         required = False,
         default = False)
 
+    category=TreeField(
+           title="Category Search",
+           description= """Choose where to move the articcle. """,
+           required = False,
+            )
+    
     publicationApproved = schema.Bool(
         title =  "Published or not?",
         description = "Move to its category, or back to its RSS feed.",
         required = False,
         default = False)    
 
-    category=TreeField(
-           title="Category Search",
-           description= """Choose where to move the articcle. """,
-           required = False,
-            )
     
 from zopache.core.breadcrumbs import Breadcrumbs    
 @form_component

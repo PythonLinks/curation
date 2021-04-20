@@ -14,19 +14,51 @@ from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import ILink
 from zopache.remote.rssarticle import RSSArticle
 
+class IRSSBase(Interface):
+    pass
 
-class IRSS(ILink):
+class IJustRSS(IRSSBase):
+    rssURL=schema.URI(
+        title = "Primary RSS URI",
+        description ="""This is the source of new articles.  
+              Please include "https://" or "http://".""",
+        required = True,
+        )
+
+    htmlSummary=schema.Bool(
+        title = "Is the Summary HTML?",
+        description ="For those sources where the summary contains html tags",
+        required = False,
+        default = False,
+        )
+
+
+class IRSS(IRSSBase):
     title=schema.TextLine(
         title = "RSS Feed Name",
         description ="What is the web site called?",
         required = True,
         )
 
+    description= schema.Text(
+        title = 'Description',
+        description = """A brief introduction of this RSS Source.  """,
+        required = False,
+        default = '',
+    )    
+
     twitterId=schema.TextLine(
         title = "Twitter Id",
         description ="""Without the "@" sign?""",
         required = False,
-        )    
+        )
+    
+    remoteURL= schema.URI(
+        title = 'URL',
+        description = """A URL That this page refers to. 
+             Please include 'https://'""",
+        required = False,
+    )
     
     rssURL=schema.URI(
         title = "Primary RSS URI",
@@ -116,7 +148,27 @@ class RSS(Link,UniqueName):
         #self.fetchArticles(view)
         Link.postProcess(self, view = view)
         
-              
+@implementer(IJustRSS)
+class JustRSS(RSS):
+    interface = IJustRSS
+    @property
+    def title(self):
+        return self.parent.title + " RSS Feed"
+    
+    @property
+    def description(self):
+        return "This is the RSS feed for " + self.parent.title
+
+
+    @property
+    def remoteURL(self):
+        return self.parent.remoteURL
+    
+    @property
+    def twitterId(self):
+        return self.parent.twitterId
+
+    
 import crom
 from zopache.zmi.interfaces import IURLSegment
 @crom.adapter
@@ -127,5 +179,5 @@ class IRSSAdaptor(object):
         self.context=context   
 
     def getSegment(self):
-        return 'manage'
+        return 'ckedit'
 

@@ -15,9 +15,6 @@ async def fetch(url,allowedTime,startTime,processResponse):
         async with session.get(url) as response:
           if response.status != 200:
                return (response.status,url,'')      
-          html  =  await response.text()
-          duration =  time.time() - startTime
-          print (len(count),"ENDING2", duration, url)
           count.append(1)
           return processResponse(url,html)
        
