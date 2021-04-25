@@ -8,6 +8,7 @@ from zopache.core import Leaf
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IJavascript, IJSON, IJinjaJSON, IJinjaJS
+from zopache.ttw.interfaces import IJinjaHTML, IAceHTML
 from zopache.ttw.acescripts import  AceScripts
 
 class JinjaRecursionError(Exception):
@@ -58,25 +59,43 @@ class JinjaJSON(JinjaBase):
 class JinjaJS(JinjaBase):
     icon="ttwicons/Javascript.svg"        
 
+@implementer(IJinjaHTML)
+class JinjaHTML(JinjaBase):
+    icon="ttwicons/HTML.svg"        
+    
 @form_component
 @name('addJinjaJSON')
 @context(IBTreeContainer)
 @permissions('Manage')
 class AddJinjaJSON(AceAddForm):
-    acemode = 'json'    
+    aceMode = 'json'    
     title='Add a Jinja2 JSON Object'
     interface = IJSON
     ignoreContent = True
     factory=JinjaJSON
     def postAddProcess(self,view = None):
         self.new.compileTemplate()
+
+
+@form_component
+@name('addJinjaHTML')
+@context(IBTreeContainer)
+@permissions('Manage')
+class AddJinjaHTML(AceAddForm):
+    aceMode = 'html'    
+    title='Add a Jinja2 HTML Object'
+    interface = IAceHTML
+    ignoreContent = True
+    factory=JinjaHTML
+    def postAddProcess(self,view = None):
+        self.new.compileTemplate()        
         
 @form_component
 @name('addJinjaJS')
 @context(IBTreeContainer)
 @permissions('Manage')
 class AddJinjaJS(AceAddForm):
-    acemode = 'javascript'
+    aceMode = 'javascript'
     title='Add a Jinja2 Javascript Object'
     interface = IJavascript
     ignoreContent = True
@@ -90,7 +109,7 @@ class AddJinjaJS(AceAddForm):
 @name("aceedit")
 @permissions('Manage')
 class AceEditJinjaJS(AceEditForm):
-    acemode = 'javascript'            
+    aceMode = 'javascript'            
     title='Edit a JINJA Javascript Object'
     subtitle = "Jinja2 will be used to add in values"
     
@@ -101,13 +120,26 @@ class AceEditJinjaJS(AceEditForm):
 class AceEditJinjaJSON(AceEditForm):
     title='Edit a JINJA JSON Object'
     subtitle = "Jinja2 will be used to add in values"
-    acemode = 'json'
+    aceMode = 'json'
     
     def postProcess(self,view = None):
         self.context.compileTemplate()
+
+@form_component
+@context(IJinjaHTML)
+@name("aceedit")
+@permissions('Manage')
+class AceEditJinjaHTML(AceEditForm):
+    title='Edit a JINJA HTML Object'
+    subtitle = "Jinja2 will be used to add in values"
+    aceMode = 'html'
     
+    def postProcess(self,view = None):
+        self.context.compileTemplate()
+        
 from zopache.ttw.javascript import makeJavascriptResponse
 from zopache.core.breadcrumbs import Breadcrumbs
+from dolmen.view import  make_view_response
 
 @view_component
 @name('index')
@@ -118,10 +150,36 @@ class IndexJinjaJS(View,Breadcrumbs):
     make_response = makeJavascriptResponse
     
     def setDisplayObject(self,item):
-        self.zopacheTemplate=item
-        
+        self.zopacheTemplate = item
+        return
+
     def render(self):
-        context = self.context    
+        context = self.context
+        #In the case of /index/index
+        if not hasattr(self,'zopacheTemplate'):
+               self.zopacheTemplate=self.context
+               self.context=self.context.__parent__        
+        return self.zopacheTemplate.callWithContext(self,context)
+
+
+@view_component
+@name('index')
+@context(IJinjaHTML)
+class IndexJinjaHTML(View,Breadcrumbs):
+    count = 0    
+    responseFactory = Response
+    make_response = make_view_response
+    
+    def setDisplayObject(self,item):
+        self.zopacheTemplate = item
+        return
+
+    def render(self):
+        context = self.context
+        #In the case of /index/index
+        if not hasattr(self,'zopacheTemplate'):
+               self.zopacheTemplate=self.context
+               self.context=self.context.__parent__        
         return self.zopacheTemplate.callWithContext(self,context)
 
 from zopache.ttw.JSON import makeJsonResponse    
@@ -136,7 +194,11 @@ class IndexJinjaJSON(View,Breadcrumbs):
         self.zopacheTemplate=item
         
     def render(self):
-        context = self.context    
+        #In the case of /index/index
+        if not hasattr(self,'zopacheTemplate'):
+               self.zopacheTemplate=self.context
+               self.context=self.context.__parent__
+        context = self.context
         return self.zopacheTemplate.callWithContext(self,context)            
 
 

@@ -8,7 +8,7 @@ from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
 from zopache.ttw.interfaces import IContainer
-from zopache.remote.rss import IRSS,  IRSSPage, RSS
+from zopache.remote.rss import IRSS, IJustRSS, IRSSBase, RSS, JustRSS
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core import View
@@ -42,13 +42,25 @@ class AddRSS(AddByTitleForm,Notify):
      
      def newURL(self,baseURL):
         return baseURL + '/manage'
-    
-     def dataModel(self):
 
-        contextJsonDict =  self.template['rssSchema'].getAsDict()
-        result = json.dumps(contextJsonDict)
-        return result
-   
+@view_component
+@name('addJustRSS')
+@target(IView)
+@context(IBTreeContainer)
+@implementer(ITreeSecurity)
+class AddJustRSS(AddByTitleForm,Notify):
+     interface = IJustRSS
+     title = "Just add an RSS Feed"
+     subTitle =""
+     count = 0
+     factory = JustRSS
+     layoutName = "UserMenu"
+     dataValidators = [Duplicate]
+     
+     def newURL(self,baseURL):
+        return baseURL + '/manage'   
+            
+
    
 from zopache.core.baseform import Form
 from zope.interface import Interface
@@ -67,8 +79,8 @@ class EditRSS(EditBase):
         Form.update(self)
         
 @form_component
-@name ('aceedit')
-@context(IRSS)
+@name ('edit')
+@context(IRSSBase)
 @implementer(IUserSecurity)
 class EditRSS2(BaseEditForm):
     pass

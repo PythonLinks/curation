@@ -56,7 +56,7 @@ class IHandle(Interface):
 
     handle = schema.DottedName(
         title="User Name (handle)",
-        description= "Legal characters are (a-Z), (0-9), '.' and '_'.",
+        description= "Legal characters are (a-Z), (0-9), '.' and '_'. Spaces are not allowed.",
         required = True)
 
 class IEmail(Interface):    

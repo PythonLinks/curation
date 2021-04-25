@@ -60,7 +60,6 @@ class ZMIAdapter(object):
           self.request = view.request
           
       def isBTreeContainer(self):
-          breakpoint()
           item = self.context 
           return  IBTreeContainer.providedBy(item)
 

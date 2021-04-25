@@ -49,40 +49,13 @@ class Base(object):
            value =  requestJsonDict[key]
            setattr(target,key,value)
         
-    def applyData(self,data):
-        target = self.target()
-        jsonSchemaDict =self.jsonSchemaDict
-        rootProperties = jsonSchemaDict["properties"]
-        
-        if "introduction" in rootProperties:
-           introductionKeys = (rootProperties
-                                     ["introduction"]
-                                     ["properties"].keys())
-           requestIntroduction = self.requestJsonDict["introduction"]
-           for key in introductionKeys:        
-               self.updateFromJsonDict(target,key,requestIntroduction)
-
-
-        rootKeys = rootProperties.keys()
-        rootKeys = list(rootKeys)
-        if "introduction" in rootProperties:        
-           rootKeys.remove("introduction")
-           
-        requestJsonDict = self.requestJsonDict                
-        for key  in rootKeys:
-            if hasattr(target,key):
-                delattr(target,key)
-            self.updateFromJsonDict(target,key,requestJsonDict)
-        self.context._p_changed = True
-        return Errors()
-
     def footerScripts(self):
         return ""
 
     def options(self):
         return ""
     
-class AddBase (Base, AddAnonymousPage):
+class AddJson (Base, AddAnonymousPage):
     dataValidators = [JSONSchemaValidator, Duplicate]
 
     def update(self):
@@ -112,28 +85,8 @@ class AddBase (Base, AddAnonymousPage):
               AddByJSON("Add and View", self.factory),
               #AddByJsonAndEdit("Add and CME Edit", self.factory),
               Cancel("Cancel","Cancel"))
-
-class AddPolitician (AddBase):
-    factory = Politician
-    schemaName = "PoliticianSchema"
-    
-    def newName(self,data):
-        newName =  self.requestJsonDict["introduction"]['title']
         
-class EditBase( Base,EditForm):
-    dataValidators = [JSONSchemaValidator]
-
-    def acquireTitle(self):
-        return 'Edit ' + self.context.title
-
-    def target(self):
-        return self.context
-    
-    def update(self):
-        products = self.getProducts()
-        self.template = self.getTemplates()['json-editor']    
-        EditForm.update(self)
-
+class PoliticianBase(object):
     def contextJsonDict(self):
         contextJsonDict = dict()
         context = self.context
@@ -158,6 +111,56 @@ class EditBase( Base,EditForm):
                value = getattr(context,child) 
                contextJsonDict [child] = value
         return contextJsonDict
+    
+    def applyData(self,data):
+        target = self.target()
+        jsonSchemaDict =self.jsonSchemaDict
+        rootProperties = jsonSchemaDict["properties"]
+        
+        if "introduction" in rootProperties:
+           introductionKeys = (rootProperties
+                                     ["introduction"]
+                                     ["properties"].keys())
+           requestIntroduction = self.requestJsonDict["introduction"]
+           for key in introductionKeys:        
+               self.updateFromJsonDict(target,key,requestIntroduction)
+
+
+        rootKeys = rootProperties.keys()
+        rootKeys = list(rootKeys)
+        if "introduction" in rootProperties:        
+           rootKeys.remove("introduction")
+           
+        requestJsonDict = self.requestJsonDict                
+        for key  in rootKeys:
+            if hasattr(target,key):
+                delattr(target,key)
+            self.updateFromJsonDict(target,key,requestJsonDict)
+        self.context._p_changed = True
+        return Errors()
+
+    
+class AddPolitician (PoliticianBase,AddJson):
+    factory = Politician
+    schemaName = "PoliticianSchema"
+    
+    def newName(self,data):
+        newName =  self.requestJsonDict["introduction"]['title']
+        
+class EditJson( Base,EditForm):
+    dataValidators = [JSONSchemaValidator]
+
+    def acquireTitle(self):
+        return 'Edit ' + self.context.title
+
+    def target(self):
+        return self.context
+    
+    def update(self):
+        products = self.getProducts()
+        self.template = self.getTemplates()['json-editor']    
+        EditForm.update(self)
+
 
     def contextJsonString(self):
         if hasattr(self,'submissionError') and len(self.submissionError):
@@ -170,7 +173,7 @@ class EditBase( Base,EditForm):
 @name ('ckedit')
 @context(IPolitician)
 @implementer(ITreeSecurity)
-class EditPolitician (EditBase):
+class EditPolitician (PoliticianBase,EditJson):
     title = 'Edit this Person.'
     subTitle = 'Using JSON Schema.'
     schemaName = "PoliticianSchema"
@@ -179,7 +182,7 @@ class EditPolitician (EditBase):
 @name ('edit')
 @context(IMapOrganization)
 @permissions('NRCV')
-class EditVotingSchema(EditBase):
+class EditVotingSchema(EditJson):
     title = 'Edit the NRCV Data.'
     subTitle = 'Using JSON Schema.'
     schemaName = "VotingSchema"    
@@ -231,4 +234,6 @@ class AddPartyOfficer(AddPolitician):
         del contextJsonDict["candidateInfo"]           
         result = json.dumps(contextJsonDict)
         return result
-        
+
+
+

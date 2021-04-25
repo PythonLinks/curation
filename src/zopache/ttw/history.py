@@ -89,8 +89,10 @@ class Restore(Page):
               contextParent.title=item.title
            if hasattr(item,'source'):
               contextParent.source=item.source
-           if hasattr(contextParent,'postProcess'):
-                     contextParent.postProcess(view=self)
+           #Edit unindexes item, then indexes them.
+           #Simpler o just not do either. 
+           #if hasattr(contextParent,'postProcess'):
+           #          contextParent.postProcess(view=self)
            newURL=self.absoluteURL(self.context.__parent__)+'/history'
            raise HTTPFound(newURL)
 
