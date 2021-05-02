@@ -22,7 +22,7 @@ from zopache.crud.forms import BaseEditForm
 from BTrees.OOBTree import OOBTree
 from dolmen.container import IBTreeContainer
 from zopache.business.exists import Duplicate
-from zopache.business.editjsonschema import AddBase, EditBase
+from zopache.business.editjsonschema import  EditJson, AddJson
 
 @view_component
 @name('addRSS')
@@ -69,7 +69,7 @@ from zope.interface import Interface
 @target(IView)
 @context(IRSS)
 @implementer(ITreeSecurity)
-class EditRSS(EditBase):
+class EditRSS(EditJson):
     title = "Update an RSS Feed"
     subtitle = "All feeds will be fetched  again. "
     count = 0
