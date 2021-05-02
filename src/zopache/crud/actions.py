@@ -41,7 +41,6 @@ class Add(Action, UniqueName, TransactionNote):
         self.form=form
         obj= form.factory()
         self.new=form.new=obj
-
         data, errors = self.form.extractData()
         if errors:
             form.submissionError = errors

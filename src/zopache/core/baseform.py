@@ -26,7 +26,7 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     make_response = make_layout_response
     template = tal_template('form.pt')
     allowAnonymous = False
-    
+    submissionError = ""    
     #Just copied from dolmen.forms.base.BaseForm
     #Setting the parent makes life easier. 
     def __init__(self, context, request, **kwargs):
