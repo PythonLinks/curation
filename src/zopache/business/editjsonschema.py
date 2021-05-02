@@ -146,7 +146,8 @@ class AddPolitician (PoliticianBase,AddJson):
     
     def newName(self,data):
         newName =  self.requestJsonDict["introduction"]['title']
-        
+        return newName
+    
 class EditJson( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
 

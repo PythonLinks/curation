@@ -9,7 +9,7 @@ from zopache.ttw.interfaces import IAceEdit
 @target(IView)
 @name ('diff')
 @context(Interface)
-class Diff (LayoutView):
+class Diff (LayoutView,Breadcrumbs):
 
     title = "Compare two different branches."
     subTitle = "Basically a graphical diff."
@@ -27,15 +27,12 @@ from zopache.ttw.htmlviews import Index
 @target(IView)
 @name ('acediff')
 @context(IAceEdit)
-class AceDiff (Index):
-
+class AceDiff (LayoutView,Breadcrumbs):
     title = "Merge Two Different Ace Objects."
     subTitle = "Basically a graphical merge."
     
     def update(self):
         self.template = self.getTemplates()['AceDiff']['form']
-        breakpoint()
-        pass
     
     def breadcrumbs(self,item = None):
         if item == None:

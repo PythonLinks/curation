@@ -159,8 +159,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
            return self.webClass
        
     def postProcessCore(self,view=None):
-        siteRoot = view.getSiteRoot()
-        siteRoot.indexItem(self)        
         self.partialPostProcess(view=view)
         self.recalculateRootJSON()
         cache.resetCache(self)
@@ -171,6 +169,8 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
             siteRoot.unIndexItem(self)
         
     def postProcess(self,view=None):
+        siteRoot = view.getSiteRoot()
+        siteRoot.indexItem(self)        
         self.modificationTime=time.time()        
         self.postProcessCore(view = view)
         principal = view.request.principal
