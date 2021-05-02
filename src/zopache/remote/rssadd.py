@@ -91,11 +91,11 @@ from zopache.ttw.htmlviews import CkEdit
 class EditRSSLink(CkEdit):
     pass
 
-#@view_component
-#@name('addNewsSite')
-#@target(IView)
-#@context(IContainer)
-#@implementer(ITreeSecurity)
-#class AddRSSByURL(AddByURLForm,Notify,Base):
-#     factory = RSS
+@view_component
+@name('addRSSByURL')
+@target(IView)
+@context(IContainer)
+@implementer(ITreeSecurity)
+class AddRSSByURL(AddByURLForm,Notify,Base):
+     factory = RSS
               

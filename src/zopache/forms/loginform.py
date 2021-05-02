@@ -66,6 +66,8 @@ class LoginForm(Form):
     count = 0
     allowAnonymous = True
     def update(self):
+        if 'staging.greenmaps.us' == self.getDomain():
+           return
         if 'greenmaps.us' in self.getDomain():
             self.raiseUnauthorized()
             

@@ -20,7 +20,7 @@ class AnonymousBase(BaseAdd):
         if self.treeSecurity():
             self.new.webApproved = True
         else:
-            self.new.webApproved = False        
+            self.new.webApproved = False
         self.new.postAddProcess (view = self)
 
 class AddAnonymousPageByTitle(AnonymousBase, AddByTitleForm):

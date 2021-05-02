@@ -71,6 +71,8 @@ class Traverser(object):
                      return item, None
                  
         #CHECK FOR A VIEW ON THE CONTEXT
+        print ("NAME = ",name)
+        
         view = self.view_lookup(request, context, name)
         if view is not None:
               return context, view

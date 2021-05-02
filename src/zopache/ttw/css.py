@@ -128,20 +128,6 @@ class AceEditCSS(AceEditForm):
     subTitle='Edit a CSS Object'
     aceMode = 'css'
     
-from zopache.core.breadcrumbs import Breadcrumbs
-from zopache.crud.forms import EditForm
-@form_component
-@context(IAceDiff)
-@name('acediff')
-class AceDiff(EditForm,Breadcrumbs):
-    layoutName = "NoMenu"
-    subTitle = '<center>If you have permission, you can save them.</center>'
-    def update(self):
-        self.title=F'<center>Diff two {self.context.englishType} Objects</center>'    
-        templates = self.getTemplates()
-        self.template = templates['AceDiff']
-        super().update(self)
-
 
 @implementer(ICSSFolder)
 class CSSFolder(JavascriptFolderBase,CSS):
