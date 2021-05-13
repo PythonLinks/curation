@@ -1,5 +1,6 @@
-from zope import schema
+
 from zope.interface import Interface
+from zope import schema
 from slugify import slugify
 import feedparser
 from html import unescape
@@ -13,10 +14,6 @@ from zopache.core.uniquename import UniqueName
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import ILink
 from zopache.remote.rssarticle import RSSArticle
-
-#from zopache.crud.getimage import getImage
-#from zopache.remote.rssdownload import getRSS
-
 
 class IRSSBase(Interface):
     pass
@@ -77,6 +74,7 @@ class IRSS(IRSSBase):
         required = False,
         default = False,
         )        
+
     
 class IRSSPage (IRSS):
       pass
@@ -157,7 +155,7 @@ class RSS(Link,UniqueName):
         
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)
-        
+
     def getRemoteURL(self):
         return self.rss["remoteURL"]
 
@@ -209,6 +207,7 @@ class RSS(Link,UniqueName):
     source = property(getSource,setSource)        
 
     
+
 @implementer(IJustRSS)
 class JustRSS(RSS):
     interface = IJustRSS

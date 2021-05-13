@@ -172,7 +172,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def postProcess(self,view=None):
         siteRoot = view.getSiteRoot()
         siteRoot.indexItem(self)        
-
         self.modificationTime=time.time()        
         self.postProcessCore(view = view)
         principal = view.request.principal

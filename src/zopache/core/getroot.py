@@ -38,7 +38,7 @@ def getPrincipalFolder(item):
        ("person" in root)):
         return root["person"]
     else:
-        return root['python']["person"]
+        return root['wiki']["person"]
 
 def getProducts(item):
 

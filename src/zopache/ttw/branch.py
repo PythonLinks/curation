@@ -19,6 +19,7 @@ from zopache.ttw.interfaces import IInternalPrincipal
 #from zopache.business.ipolitician import IPolitician
 from zopache.pages.interfaces import IImaginary
 from zopache.ttw.interfaces import  ICanonical
+from BTrees.LOBTree import  LOTreeSet
 
 @implementer(IBranch)
 class SimpleBranch(object):
@@ -95,6 +96,7 @@ class Branch(SimpleBranch):
        self.globalArticles = OOBTree()
        self.newestArticles = OOBTree()       
        self.remoteArticles = OOBTree()
+       self.uniqueTime = LOTreeSet()
        
     def urlOnly(self,link):
        if link.startswith('http'):
