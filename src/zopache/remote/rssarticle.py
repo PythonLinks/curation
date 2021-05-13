@@ -1,3 +1,4 @@
+import time
 from zope.interface import Interface
 from zope import schema
 from zopache.pages.interfaces import IPage
@@ -44,6 +45,8 @@ class RSSArticle(Page,Voteable):
     webClass = "RSSLink"
     emailApproved = True
     publicationApproved = False
+
+    
     def getCategory(self):
       return self._category
 
@@ -74,6 +77,18 @@ class RSSArticle(Page,Voteable):
         Page.postAddProcess(self,view = view)
         if "exclusive for subscribers" in self.title.lower():
            self.webApproved = False
+
+        #AND NOW CREATE UNIQUE CREATION TIMES FOR ALL RSS ARTICLES  
+        sortTime=time.time()
+        sortTime = long(sortTime)
+        siteRoot = self.getsiteRoot()
+        uniqueTime = siteRoot.uniqueTime
+        while sortTime in uniqueTime:
+             sortTime += 1
+        self.sortTime = sortTime    
+        categories = parentsWhichImplement(self,IRSSCategory)
+        for item in categories:
+             item.articlesByTime[- sortTime] = self
            
     def addImage(self):
            if  'Logo' in self:

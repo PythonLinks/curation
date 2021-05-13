@@ -38,7 +38,6 @@ class Publisher (DawnlightPublisher):
         hostName = request.domain
         #Maybe traverse to a lower level SiteRoot
         crumbs = dawnlight.parse_path(path, shortcuts)
-
         if crumbs:
              aType, name=crumbs.popleft()
              if  name in context:

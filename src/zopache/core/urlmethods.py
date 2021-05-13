@@ -116,7 +116,6 @@ class URLMethods(object):
         elif isSiteRoot:
            return "/" + item.__name__
         else:
-           breakpoint()
            if not hasattr(item, '__parent__'):
                return 'BROKEN-NO-PARENT'
            container = item.__parent__
