@@ -81,8 +81,6 @@ table-hover table-condensed" summary="Content listing"
 	>&nbsp;&nbsp;&nbsp;&nbsp;</a>
 	  </td>
 	  <td>
-<<<<<<< HEAD
-
          <span tal:switch="item.isBTreeContainer()">
 	 <a href = " ${view.url(item.object())}/manage"
          tal:case= "True">${item.contextClassName()}</a>
