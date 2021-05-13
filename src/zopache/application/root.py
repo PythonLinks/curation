@@ -22,24 +22,6 @@ class RootContainer(Container,ProcessTree):
     #CAN SPECIFY THE ROOT
     #NO NEED TO DO IN NGINX
     virtualHosts = {
-                'berniesupporters.org': 'bernie-sanders',
-                'climateactivists.info': 'climate-change',
-                'dev.pythonlinks.info':'python',
-                'desktop.rights.men':'mens-rights',
-                'desktop.climatevideos.info':'climate-change',
-                'desktop.forestwiki.com':'forestwiki',
-                'ents.climateactivists.info': 'ents',
-                'golangvideos.com':'golang',                
-                'forestwiki.com':'forestwiki',
-                'js.pythonlinks.info':'python',
-                'mensgroups.info': 'mens-groups',
-                'mqttchat.info':'mqtt',
-                'rights.men':'mens-rights',
-                'stopsmog.info': 'smog',                                
-                'superwifi.pl':'superwifi',
-                'pythonlinks.info':'python',
-                'usgreens.info':'us-greens',            
-                'desktop.pythonlinks.info':'python'
                 }
     
     def __init__(self):

@@ -21,7 +21,6 @@ async def processRssResponse(url,response):
 async def processImageResponse(url,response):
           response.content  =  await response.read()          
           return  ('Success' ,url,response)
->>>>>>> c1998c8761f6e661fd36cf86df20bb8048126159
 
 @form_component
 @context(IPage)
