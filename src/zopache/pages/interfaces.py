@@ -179,6 +179,11 @@ class ISiteRoot(IBranch,IPublicationRoot,IPage):
 class IRootPage(ISiteRoot,IZodbRoot,IPageBase):
     pass
 
+class ISiteRootPage(ISiteRoot):
+    pass
+
+
+
 class INotPage (Interface):
      pass
 

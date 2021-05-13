@@ -92,6 +92,8 @@ class Branch(SimpleBranch):
        self.politicians = OOBTree()
        self.pagesByTwitterId = OOBTree()
        self.socialNodeByTwitterId = OOBTree()
+       self.globalArticles = OOBTree()
+       self.newestArticles = OOBTree()       
        self.remoteArticles = OOBTree()
        
     def urlOnly(self,link):
@@ -150,8 +152,11 @@ class Branch(SimpleBranch):
         self.pagesByTwitterId = OOBTree()
         self.socialNodeByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
+        self.newestArticles = OOBTree()
+        self.remoteArticles = OOBTree()                
         self.indexBranch(self,self)
-        
+ 
+
     def indexBranch(self,tree,branch,itemType=ICanonical):
         
         if IImaginary.providedBy(branch):
@@ -178,21 +183,35 @@ class Branch(SimpleBranch):
             if twitterId != "":
                 self.pagesByTwitterId[twitterId] = item
                 
-        if item.__class__.__name__ in [ "SocialNode"]:
+        if item.className() in [ "SocialNode"]:
             for node in item.allNodes():
                 twitterId= node.twitterId
                 if twitterId:
                     self.socialNodeByTwitterId[twitterId] = item
                     
-        if item.__class__.__name__  == "RSSArticle":
+        if item.className()  == "RSSArticle":
             self.globalArticles [item.permaLink] = item
+            self.addNews(item)                
             
-        if item.__class__.__name__=='Politician':
+        if item.className() =='Politician':
             if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
-
+        if item.className() == 'Link':
+            self.addNews(item)
+        
+    def addNews(self,item):            
+            time = item.creationTime
+            newestArticles = self.newestArticles
+            while True:
+                if time in newestArticles:
+                   time = time + 1
+                   continue
+                newestArticles[-time] = item
+                item.creationTime = time
+                break
+            
     def unIndexItem(self,item, itemType=IPage):
         if not item.__name__ in self.valuesByToken: 
            return
@@ -210,6 +229,10 @@ class Branch(SimpleBranch):
                 
         if item.className() == "RSSArticle":
             del self.globalArticles [item.permaLink]
+            del self.newestArticles [item.creationTime]
+            
+        if item.className() == "Link":
+            del self.newestArticles [item.creationTime]            
             
         if hasattr(item,'twitterId'):
             twitterId = item.twitterId            

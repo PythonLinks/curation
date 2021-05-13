@@ -14,6 +14,10 @@ from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import ILink
 from zopache.remote.rssarticle import RSSArticle
 
+#from zopache.crud.getimage import getImage
+#from zopache.remote.rssdownload import getRSS
+
+
 class IRSSBase(Interface):
     pass
 
@@ -73,22 +77,23 @@ class IRSS(IRSSBase):
         required = False,
         default = False,
         )        
-
+    
 class IRSSPage (IRSS):
       pass
     
 from zopache.core.getroot import getSiteRoot    
 @implementer (IRSS)     
 class RSS(Link,UniqueName):
-     webClass = "RSS"
-     htmlSummary = False
-     title = ""
-     def __init__(self):
+    webClass = "RSS"
+    htmlSummary = False
+    title = ""
+    def __init__(self):
          self.localArticles = OOBTree()
          Link.__init__(self)
           
-     # FOR A NEW RSS FEED       
-     def createOneArticle(self,article,view):
+    # FOR A NEW RSS FEED       
+    def createOneArticle(self,article,view):
+       breakpoint()
        new = RSSArticle()
        new.title = unescape (article.title)
        if self.htmlSummary:
@@ -128,26 +133,82 @@ class RSS(Link,UniqueName):
        new.rssFeed = self          
        new.postAddProcess(view )
 
-     def fetchArticles (self,view = None):               
-       feed = feedparser.parse(self.rssURL)
-       entries = feed['entries']
-       self.createArticles(entries,view)
-       
-     def createArticles(self,entries,view):
+    def createArticles(self,entries,view):
        globalArticles= self.getSiteRoot().globalArticles
        for article in entries:
            theId = article['id']
            if not theId in globalArticles:
               self.createOneArticle(article,view )
 
-     def postAddProcess(self,view = None):
-        self.fetchArticles(view)
+    def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)
+        self.fetchURLS(view = view)
+        if self.logoURL:
+            getImage(self,self.logoURL)
         
-     def postProcess(self,view = None):
-        #self.fetchArticles(view)
+    def fetchURLS(self, view = None):    
+        urls = [self.rssURL]
+
+        urls += self.otherFeeds
+        result = getRSS(urls)
+        for key, value in result.items():
+               self.createArticles(value,view)
+        view.status='RSS Feeds were downloaded.'
+        
+    def postProcess(self,view = None):
         Link.postProcess(self, view = view)
         
+    def getRemoteURL(self):
+        return self.rss["remoteURL"]
+
+    def setRemoteURL(self):
+        self.rss["remoteURL"] = value
+    
+    def getRssURL(self):
+        return self.rss["rssURL"]
+    
+    def setRssURL(self):
+        self.rss["rssURL"] = value
+   
+    def getLogoURL(self):
+        return self.rss["logoURL"]
+    
+    def setLogoURL(self):
+        self.rss["logoURL"] = value                
+
+    def getTitle(self):
+        return self.rss["title"]
+
+    def setTitle(self,value):
+        self.rss["title"] = value
+
+    def getTwitterId(self):
+        return self.rss["twitterId"]
+
+    def setTwitterId(self,value):
+        self.rss["twitterId"] = value        
+        
+    def getDescription(self):
+        return self.rss["description"]
+
+    def setDescription(self,value):
+        self.rss["description"] = value
+
+    def getSource(self):
+        self.rss["english"]["source"]
+
+    def setSource(self,value):
+        self.rss["source"] = value                
+
+    remoteURL = property(getRemoteURL,setRemoteURL)
+    rssURL = property(getRssURL,setRssURL)
+    logoURL = property(getLogoURL, setLogoURL)    
+    twitterId = property(getTwitterId,setTwitterId)        
+    title = property(getTitle,setTitle)
+    description = property(getDescription,setDescription)
+    source = property(getSource,setSource)        
+
+    
 @implementer(IJustRSS)
 class JustRSS(RSS):
     interface = IJustRSS
@@ -169,6 +230,7 @@ class JustRSS(RSS):
         return self.parent.twitterId
 
     
+
 import crom
 from zopache.zmi.interfaces import IURLSegment
 @crom.adapter

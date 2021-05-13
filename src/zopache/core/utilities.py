@@ -21,6 +21,7 @@ class Utilities (object):
     def sortByName(self,aList):
         return aList.sort(key=sortFunction)
     
+
     def createdBy(self,*args):
         item = self.context if len(args)==0 else args [0]        
         siteRoot = self.getSiteRoot()
@@ -63,9 +64,11 @@ class Utilities (object):
         item.__parent__ = parent
         item.__name__ = newName
 
+
     def className(self,*args):
         item = self.context if len(args)==0 else args [0]
         return item.__class__.__name__
+
 
     def contextClassName(self):
         return self.context.__class__.__name__    
@@ -99,6 +102,7 @@ class Utilities (object):
 
         image = self.parentalAcquire('SocialMediaImage')
         if image != None:
+
            return image
        
         return  self.parentalAcquire('Logo')

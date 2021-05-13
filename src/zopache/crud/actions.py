@@ -37,6 +37,7 @@ class Add(Action, UniqueName, TransactionNote):
         self.factory = factory
 
     def __call__(self, form):
+
         self.form=form
         obj= form.factory()
         self.new=form.new=obj

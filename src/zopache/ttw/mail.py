@@ -71,13 +71,13 @@ class Notify (TransactionNote):
         return False
     
     def broadcastNews(self):
-
         people = self.parentalAcquire('person')
         for item in people.values():
             self.sendToPrincipal(item)
         self.sendTheMail()
         
     def sendMeANewsletter(self):
+
         principal = self.request.principal
         self.sendToPrincipal(principal)
         self.sendTheMail()
@@ -146,6 +146,7 @@ class Notify (TransactionNote):
         return result
     
     def notify (self,aFrom,to, subject, content, articles = []):
+
         if self.mailer == None:
            return         
         message = Message()
@@ -163,6 +164,7 @@ class Notify (TransactionNote):
         delivery.send(aFrom,to, message)
         
     def spoolFile(self):
+
         if self.mailer == None:
            return
         parentName = self.mailer.__parent__.__name__
@@ -209,6 +211,7 @@ class Notify (TransactionNote):
 
 
     def notifyUserNewUser(self):
+
         if self.mailer == None:
            return None                
         

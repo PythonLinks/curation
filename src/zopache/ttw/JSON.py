@@ -152,7 +152,7 @@ class Index(View):
 @implementer(ITreeSecurity)
 class AceEditJSON(AceScripts,AceEditForm):
     subTitle='Edit a JSON Object'
-
+    interface = IJSON
 
 """
 @form_component

@@ -1,5 +1,6 @@
 from slugify import slugify
 import json
+
 import os
 
 inner = None
@@ -15,6 +16,7 @@ def loadSource():
         stateName = item['properties']['name']
         stateName = slugify (stateName)
         states[stateName] = item
+
 
 def getStateJson(state):    
    stateName = state.name

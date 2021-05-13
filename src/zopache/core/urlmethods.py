@@ -1,4 +1,3 @@
-
 import urllib.parse
 from urllib.parse import quote
 from urllib.parse import quote_plus
@@ -117,7 +116,11 @@ class URLMethods(object):
         elif isSiteRoot:
            return "/" + item.__name__
         else:
+           breakpoint()
+           if not hasattr(item, '__parent__'):
+               return 'BROKEN-NO-PARENT'
            container = item.__parent__
+             
            base_url= self.absoluteURL(container)
            if not base_url or base_url[-1] != "/":
                base_url += "/"
@@ -164,7 +167,7 @@ class URLMethods(object):
     #And here is a much simpler implementation of URL.
     #Only good for this zodb application. 
     def simpleUrl(self,item):
-        return self.relativeURL(item)
+        return self.absoluteURL(item)
 
     def urllibParseURLEncode(self,aDict):
         return urllib.parse.urlencode(aDict)
@@ -203,7 +206,7 @@ class URLMethods(object):
         
     #AND YET ANOTHER LONG SIMPLE URL    
     def contextURL(self, name=''):
-        itemURL = self.simpleUrl(self.context)
+        itemURL = self.absoluteURL(self.context)
         if name:
             itemURL += '/' + name
         return itemURL

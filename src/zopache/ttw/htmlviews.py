@@ -96,7 +96,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 @form_component
 @name ('addHTML')
 @context(IBTreeContainer)
-@permissions('Manage')
+@permissions('Developer')
 class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 

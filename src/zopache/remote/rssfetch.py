@@ -9,6 +9,7 @@ from zopache.remote.rss import IRSSBase
 from zopache.crud.getimage import createImageIn
 from zopache.core.interfaces import ITreeSecurity
 
+
 async def processRssResponse(url,response):
           html  =  await response.text()
           feed = feedparser.parse(html)
@@ -20,6 +21,7 @@ async def processRssResponse(url,response):
 async def processImageResponse(url,response):
           response.content  =  await response.read()          
           return  ('Success' ,url,response)
+>>>>>>> c1998c8761f6e661fd36cf86df20bb8048126159
 
 @form_component
 @context(IPage)
@@ -39,7 +41,7 @@ class GetRSS(Form):
                    urls.append (rssURL)
                    feedsByURL [rssURL] = item
 
-           result = getRSS(urls, processRssResponse)
+           result = getRSS(urls)
            for key, value in result.items():
                feed = feedsByURL [key]
                feed.createArticles(value,self)

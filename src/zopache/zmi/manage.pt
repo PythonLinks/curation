@@ -81,6 +81,17 @@ table-hover table-condensed" summary="Content listing"
 	>&nbsp;&nbsp;&nbsp;&nbsp;</a>
 	  </td>
 	  <td>
+<<<<<<< HEAD
+	  HELLO
+	  ${item.isBTreeContainer()}
+         <span tal:switch="item.isBTreeContainer()">
+	 <a href = " ${view.url(item.object())}"
+         tal:case= "True">${item.contextClassName()}</a>
+	 <span tal:case= "False">
+	 ${item.contextClassName()}
+	 <span>
+	 <span>
+=======
 
          <span tal:switch="item.isBTreeContainer()">
 	 <a href = " ${view.url(item.object())}/manage"
@@ -89,6 +100,7 @@ table-hover table-condensed" summary="Content listing"
 	 ${item.contextClassName()}
 	 </span>
 	 </span>
+>>>>>>> c1998c8761f6e661fd36cf86df20bb8048126159
 	 </td>
 
             <td><span tal:content="item.size()">

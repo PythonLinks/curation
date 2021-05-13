@@ -31,7 +31,10 @@ class DeleteAction(Action):
                     root = getSiteRoot(item)
                     products = form.getProducts()
                     del container[name]
-                    root.indexTree()
+                    try:
+                        root.indexTree()
+                    except:
+                        pass
                     products.indexTree()
                     form.status = self.successMessage
                     form.message(form.status)

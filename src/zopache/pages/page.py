@@ -5,7 +5,8 @@ from pydoc import locate
 from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from zopache.pages.interfaces import ITime,IContent,IPage , IRootPage, INews
+from zopache.pages.interfaces import (ITime,IContent,IPage ,
+                                      IRootPage, ISiteRootPage, INews)
 from zopache.core.getroot import getSiteRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
@@ -23,7 +24,7 @@ from collections import defaultdict
 from zopache.core.interfaces import ICountable
 from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink,IActionNetwork
-
+from zopache.ttw.branch import Branch
 
 class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,ProcessTree):
     private = False
@@ -354,8 +355,22 @@ class SiteRoot(Branch,PageBase,PageMixIn):
 
     def setJson(self):
          self.json=self.jsonTree(0)
+
          
 @implementer(IRootPage)         
 class RootPage(SiteRoot):
     def getSiteRootFor(self,hostName):
         return self
+
+@implementer(ISiteRootPage)         
+class SiteRootPage(SiteRoot):
+    def __init__(self):
+       Branch.__init__(self)
+       Page.__init__(self)
+       
+       #NOT SURE WHY THIS COULD NOT BE AT THE TOP OF THE PAGE
+       from zopache.ttw.principalfolder import PrincipalFolder
+       self ["person"] = PrincipalFolder()
+        
+    def getSiteRootFor(self,hostName):
+        return self    

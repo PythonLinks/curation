@@ -1,5 +1,5 @@
 from slugify import slugify
-
+import json
 
 from cromlech.security import Unauthorized
 from zopache.crud.addbyurl import  AddByURLForm
@@ -22,12 +22,15 @@ from zopache.crud.forms import BaseEditForm
 from BTrees.OOBTree import OOBTree
 from dolmen.container import IBTreeContainer
 from zopache.business.exists import Duplicate
+from zopache.business.editjsonschema import AddBase, EditBase
 
 @view_component
 @name('addRSS')
 @target(IView)
+@context(IPage)
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
+
 class AddRSS(AddByTitleForm,Notify):
      interface = IRSS
      title = "Add an RSS Feed"
@@ -39,6 +42,13 @@ class AddRSS(AddByTitleForm,Notify):
      
      def newURL(self,baseURL):
         return baseURL + '/manage'
+
+     def dataModel(self):
+
+        contextJsonDict =  self.template['rssSchema'].getAsDict()
+        result = json.dumps(contextJsonDict)
+        return result
+   
 
 
 @view_component
@@ -62,25 +72,25 @@ class AddJustRSS(AddByTitleForm,Notify):
 from zopache.core.baseform import Form
 from zope.interface import Interface
 @view_component
-@name('updateRSS')
+@name('ckedit')
 @target(IView)
 @context(IRSS)
 @implementer(ITreeSecurity)
-class UpdateRSS(Form):
-     interface = Interface
-     title = "Update an RSS Feed"
-     subTitle ="Download new Articles Category"
-     count = 0
-     layoutName = "UserMenu"
-     def update(self):
+class EditRSS(EditBase):
+    title = "Update an RSS Feed"
+    subtitle = "All feeds will be fetched  again. "
+    count = 0
+    schemaName = "rssSchema"     
+    def update(self):
         self.status='RSS Was updated'
         Form.update(self)
         
 @form_component
-@name ('edit')
+@name ('aceedit')
+
 @context(IRSSBase)
 @implementer(IUserSecurity)
-class EditRSS(BaseEditForm):
+class EditRSS2(BaseEditForm):
     pass
 
 from zopache.ttw.htmlviews import CkEdit
