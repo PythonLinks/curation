@@ -92,7 +92,7 @@ Tree  <span class="caret"></span></a>
 
 + Beginner  <span class="caret"></span></a>
      <ul class="dropdown-menu">
-                <li tal:condition="view.safeMethod('isPage')" class="dropdown-item"><a href="${relativeURL}/addPage">Wiki Page</a>
+                <li tal:condition="view.safeMethod('isPage')" class="dropdown-item"><a href="${relativeURL}/addPage">Mono-Lingual</a>
                 </li>
 
                 <li tal:condition="view.treeSecurity()" class="dropdown-item">
@@ -153,6 +153,8 @@ Tree  <span class="caret"></span></a>
 <ul class="dropdown-menu ">
 <li tal:condition="view.safeMethod('isPage')" class="dropdown-item"><a href="${relativeURL}/addMarkdown">Markdown Page</a>
                 </li>
+                <li tal:condition="view.safeMethod('isPage')" class="dropdown-item"><a href="${relativeURL}/addMultilingual">Multi-Lingual</a>
+                </li>		
 <li class="dropdown-item "><a href="${relativeURL}//addJSON ">JSON</a></li>
 <li class="dropdown-item "><a href="${relativeURL}/addCoffeeScript ">CoffeeScript</a></li>
 <li class="dropdown-item ">

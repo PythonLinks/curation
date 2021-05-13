@@ -17,6 +17,12 @@ class EventBase(Page,HasMembers):
         Page.__init__(self)
         HasMembers.__init__(self)
 
+    def hasFutureEvents(self):
+        return True
+    
+    def listFutureEvents(self):
+        return [self]
+    
     def postAddProcess(self,view=None):
         if view.treeSecurity():
            self.webApproved = True
@@ -31,7 +37,8 @@ class OnlineEvent (EventBase):
 
 from zopache.pages.location import LocationLeaf
 @implementer(IEvent)
-class Event(EventBase,GeoCodeObject,LocationLeaf):
+class Event(GeoCodeObject,EventBase,LocationLeaf):
+    remoteURL = ""
     def __init__(self):
         Page.__init__(self)
         GeoCodeObject.__init__(self)

@@ -1,6 +1,5 @@
 
 from zope.interface import implements
-from cromlech.security import unauthenticated_principal as anonymous
 from dolmen.container import IBTreeContainer, BTreeContainer
 from chameleon import PageTemplate
 from zopache.core import Leaf
@@ -34,10 +33,7 @@ with a trusted variable.
 """ 
 class HTMLRecursionError(Exception):
         pass
-from zopache.zmi.interfaces import IURLSegment
 from zopache.ttw.interfaces import ICkHTML
-
-
 
 class HTMLBase(object):
     trusted = False    
@@ -58,10 +54,14 @@ class HTMLBase(object):
         else: 
            return 'Please edit the  Title'
 
-
-class TrustedHTML(HTMLBase):
+class TrustedHTML(Trusted,HTMLBase):
     trusted = True    
     icon="ttwicons/CkHTML.svg"
+    def postProcess(self,view=None):
+            self.setTrusted(view = view)
+            
+    def postAddProcess(self,view=None):
+            self.postProcess(view=view)
 
     def setTemplate(self):
             if self.trusted == False:
@@ -80,20 +80,6 @@ class TrustedHTML(HTMLBase):
                  self._v_compiledTemplate = template
                  #return self._v_compiledTemplate
 
-    def postProcess(self,view=None):
-            principal = view.request.principal
-            if principal == anonymous:
-               self.trusted = False
-               return
-       
-            if 'Python' in view.request.principal.permissions:
-               self.trusted = True
-               self.compileTemplate()
-            else:
-               self.trusted = False
-
-    def postAddProcess(self,view=None):
-            self.postProcess(view=view)
             
     #So here we pass the context into the template    
     def __call__(self,view,**args):

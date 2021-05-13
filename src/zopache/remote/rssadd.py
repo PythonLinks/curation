@@ -96,6 +96,6 @@ class EditRSSLink(CkEdit):
 @target(IView)
 @context(IContainer)
 @implementer(ITreeSecurity)
-class AddRSSByURL(AddByURLForm,Notify,Base):
+class AddRSSByURL(AddByURLForm,Notify):
      factory = RSS
               

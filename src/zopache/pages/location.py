@@ -150,6 +150,7 @@ class LocationContainer (MarkerLocation):
     def getCompaniesRecursively(self,result, showChildren = None):
         values = self.values()
         for item in values:
+
             #FOR APPROVED ORGANIZATIONS
             #FOR POLITICIANS, DO IT FIRST
             if not ILocationOrMap.providedBy(item):
@@ -158,7 +159,7 @@ class LocationContainer (MarkerLocation):
             if not item.webApproved:
                 continue
 
-            if item.__class__.__name__ in ['Event','OnlineEvent']:
+            if item.__class__.__name__ in ['OnlineEvent']:
                 continue
 
             if ILocationLeaf.providedBy(item):

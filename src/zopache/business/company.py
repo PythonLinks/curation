@@ -100,13 +100,6 @@ class MapOrganization(ImaginaryPage,
         Map.__init__(self)
         Organization.__init__(self)
         
-    def getTitleForDomain(self,view):
-        domain = view.getDomain()        
-        if domain in self:
-            return self[domain].title
-        else:
-            return self.title
-
     def getDescriptionForDomain(self,view):
         domain = view.getDomain()
         #HTML objects do not have a description, only a title and source
