@@ -4,6 +4,7 @@ from dolmen.container import IBTreeContainer, BTreeContainer
 from chameleon import PageTemplate
 from zopache.core import Leaf
 from zope.interface import implementer
+from zopache.ttw.trusted import Trusted
 from zopache.ttw.interfaces import (ISource,
                                     IHTML,
                                     IAceHTML,

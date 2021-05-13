@@ -109,5 +109,7 @@ class EditRSS2(BaseEditForm):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddRSSByURL(AddByURLForm,Notify):
+
      factory = RSS
               
+

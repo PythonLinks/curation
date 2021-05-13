@@ -140,7 +140,7 @@ class AceEditJinjaJSON(AceEditForm):
 @form_component
 @context(IJinjaHTML)
 @name("aceedit")
-@implementer(ITreeSecurity))
+@implementer(ITreeSecurity)
 class AceEditJinjaHTML(AceEditForm):
     title='Edit a JINJA HTML Object'
     subtitle = "Jinja2 will be used to add in values"
