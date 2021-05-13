@@ -1,28 +1,15 @@
-from zopache.business.company import MapOrganization
+from zopache.pages.page import Page
 from zopache.business.interfaces import IOrganization
 
 def convert(item):
-    new = MapOrganization()
+    new = Page()
     parent = item.parent
     for attribute in [
-                 'name',
+                  'name',
                   'parent',
-                 'address',
-                 'title',
-                 'description',
-                 'focus',
-                 'ballotStatus',
-                 'remoteURL',
-                 'source',
-                 'phone',
-                 'twitterId',
-                 'facebookId',
-                 'facebookGroup',
-                 'donationsPageURL',
-                 'youTubeChanneURL',            
-                 'email',
-                 'eventsPageURL',
-                 'donationsPageURL']:
+                  'title',
+                  'description',
+                  'source']:
         setattr(new,attribute,getattr(item,attribute))
 
     for child in item.valuesAsList():
@@ -34,4 +21,3 @@ def convert(item):
     del item.parent[newName]
     parent[newName] = new
 
-       

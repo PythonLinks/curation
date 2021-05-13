@@ -64,7 +64,7 @@ class EditMultilingual (MultilingualBase,EditJson):
 
 from zopache.pages.interfaces import IPageBase
 @view_component
-@name('addPolyglot')
+@name('addMultilingual')
 @target(IView)
 @context(IPageBase)
 class AddMultilingual(MultilingualBase,AddJson):

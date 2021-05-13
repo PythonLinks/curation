@@ -18,6 +18,14 @@ from zopache.ttw.mail import Notify
 
 class HasMembers(object):
     hasMembers = True
+    
+    def getTitleForDomain(self,view):
+        domain = view.getDomain()        
+        if domain in self:
+            return self[domain].title
+        else:
+            return self.title
+
 
     def getMembers(self):
          if not hasattr(self,'_members'):

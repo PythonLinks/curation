@@ -185,7 +185,31 @@ class Notify (TransactionNote):
            command.append('--debug-smtp')            
         command.append(self.spoolFile())
         Popen(command)    
+
         
+    def notifyAdminsNewPage(self):
+        self.mailer = mailer = self.parentalAcquire ("MailHost")
+        if mailer == None:
+           return ''
+
+        subject = "New " + self.new.__class__.__name__
+        
+        if self.treeSecurity():
+           return
+            
+        elif self.isAuthenticated():
+            subject += " By " + self.request.principal.title + " "
+            subject += "Needs Approval" 
+            
+        else:
+            subject += " By Anonymous Needs Approval "
+            
+
+        content = self.secureShortURL (context = self.new)
+        self.notify (mailer.noReply,mailer.postMaster, subject, content)
+        self.sendTheMail()
+
+
     def notifyUserNewUser(self):
 
         if self.mailer == None:

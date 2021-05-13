@@ -163,6 +163,14 @@ class ITreeBase (ILocationLeaf,IPage, IFollow):
         default = '',
     )
 
+    remoteURL = schema.URI(
+        title = u'The Meetup URL',
+        description = """How to join this meetup.  Maybe include a link to the 
+discord server invite.   Include  'https://'""",
+        required = False,
+        missing_value ='',
+    )    
+    
 class ITree(ITreeBase,ILatLng):
     pass
     

@@ -21,8 +21,9 @@ from zopache.forms.urlvalidator import DuplicateURLValidator
 from zopache.pages.htmlvalidator import HTMLValidator
 from zopache.pages.proxypage import ProxyPage
 from zopache.crud.getimage import getImage
+from zopache.ttw.mail import Notify
 
-class BaseAdd(AddCkHTMLBase):
+class BaseAdd(AddCkHTMLBase,Notify):
     count = 0 
     layoutName = "UserMenu"
     actions = Actions()
@@ -41,8 +42,9 @@ class BaseAdd(AddCkHTMLBase):
 #THIS ONE SHOULD BE RETIRED 
 class AddPageBase(BaseAdd, AddByTitleForm):
     def __init__(self,context,request):
-        BaseAdd.__init__(self)
+        #First give it a context, then baseAdd can initialize Notify.
         AddByTitleForm.__init__(self,context,request)
+        BaseAdd.__init__(self)
  
 class AddAuthorizedPage(AddPageBase):
 

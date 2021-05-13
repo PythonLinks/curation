@@ -12,18 +12,13 @@ from zopache.core.interfaces import ITreeSecurity
 
 async def processRssResponse(url,response):
           html  =  await response.text()
-          print (html[: 10])
           feed = feedparser.parse(html)
           entries = feed['entries']
-          print ("LEN",len(entries))
-          print (type(entries))
           for article in entries:
                permaLink = article['id']
-               print ("Perma",permaLink)
           return  ('Success', url, entries)
 
 async def processImageResponse(url,response):
-          print (url)
           response.content  =  await response.read()          
           return  ('Success' ,url,response)
 
@@ -49,6 +44,7 @@ class GetRSS(Form):
            for key, value in result.items():
                feed = feedsByURL [key]
                feed.createArticles(value,self)
+
            self.status='RSS Feeds were downloaded.'
            Form.update(self)
 

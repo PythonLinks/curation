@@ -25,16 +25,16 @@ def processRSSResponse(url,html):
 async def fetch(url,allowedTime,startTime,fetchType):
    print ("URL = ", url)       
    duration =  time.time() - startTime 
-   print ("STARTING", duration,url)
    timeout = aiohttp.ClientTimeout(total=allowedTime)
 
    async with aiohttp.ClientSession(timeout = timeout) as session:
-     try:  
+     try:
         async with session.get(url) as response:
           if response.status != 200:
                return (response.status,url,'')      
           count.append(1)
-          return processRSSResponse(url,html)
+
+          return await processResponse(url,response)
        
      except (asyncio.TimeoutError):
           duration =  time.time() - startTime 
@@ -88,7 +88,6 @@ async def fetchURLS(urls,fetchType):
         responses = await fetch_all( urls,fetchType)
         results = {}
         for item in responses:
-            print  (item [0], item [1])
             results [item[1]]=item [2]
         return results
 

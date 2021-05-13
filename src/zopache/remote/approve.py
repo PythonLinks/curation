@@ -40,7 +40,7 @@ class IApprove(Interface):
         title =  "Published or not?",
         description = "Move to its category, or back to its RSS feed.",
         required = False,
-        default = False)    
+        default = True)    
 
     
 from zopache.core.breadcrumbs import Breadcrumbs    

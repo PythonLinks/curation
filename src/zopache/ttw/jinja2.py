@@ -10,6 +10,8 @@ from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IJavascript, IJSON, IJinjaJSON, IJinjaJS
 from zopache.ttw.interfaces import IJinjaHTML, IAceHTML
 from zopache.ttw.acescripts import  AceScripts
+from zopache.copy import copy
+from zopache.core.interfaces import ITreeSecurity
 
 class JinjaRecursionError(Exception):
         pass
@@ -41,14 +43,25 @@ class JinjaBase(Leaf):
     def setTemplate(self):
             if not hasattr(self,'_v_compiledTemplate'):
                self.compileTemplate()
-            
     def callWithContext(self,view,context,**args):
             self.setTemplate()
+            breakpoint()
+            contextParent = context.__parent__
+            del context.__parent__
+            secureContext = copy(context)
+            request = view.request
+            principal = request.principal
+            del request.principal
+            securePrincipal = copy (principal)
+            request.principal = securePrincipal
             result = self._v_compiledTemplate.render(
-                           context=context,
-                           request=view.request,
+                           context=secureContext,
+                           request=request,
                            view=view,
                            **args)
+            request.principal = principal
+            context.__parent__ = contextParent
+            context._p_changed = false
             return result
 
 @implementer(IJinjaJSON)
@@ -57,7 +70,8 @@ class JinjaJSON(JinjaBase):
 
 @implementer(IJinjaJS)
 class JinjaJS(JinjaBase):
-    icon="ttwicons/Javascript.svg"        
+    icon="ttwicons/Javascript.svg"
+    
 
 @implementer(IJinjaHTML)
 class JinjaHTML(JinjaBase):
@@ -66,7 +80,7 @@ class JinjaHTML(JinjaBase):
 @form_component
 @name('addJinjaJSON')
 @context(IBTreeContainer)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddJinjaJSON(AceAddForm):
     aceMode = 'json'    
     title='Add a Jinja2 JSON Object'
@@ -76,11 +90,10 @@ class AddJinjaJSON(AceAddForm):
     def postAddProcess(self,view = None):
         self.new.compileTemplate()
 
-
 @form_component
 @name('addJinjaHTML')
 @context(IBTreeContainer)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddJinjaHTML(AceAddForm):
     aceMode = 'html'    
     title='Add a Jinja2 HTML Object'
@@ -103,11 +116,10 @@ class AddJinjaJS(AceAddForm):
     def postAddProcess(self,view = None):
         self.new.compileTemplate()
 
-
 @form_component
 @context(IJinjaJS)
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditJinjaJS(AceEditForm):
     aceMode = 'javascript'            
     title='Edit a JINJA Javascript Object'
@@ -116,7 +128,7 @@ class AceEditJinjaJS(AceEditForm):
 @form_component
 @context(IJinjaJSON)
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditJinjaJSON(AceEditForm):
     title='Edit a JINJA JSON Object'
     subtitle = "Jinja2 will be used to add in values"
@@ -128,7 +140,7 @@ class AceEditJinjaJSON(AceEditForm):
 @form_component
 @context(IJinjaHTML)
 @name("aceedit")
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AceEditJinjaHTML(AceEditForm):
     title='Edit a JINJA HTML Object'
     subtitle = "Jinja2 will be used to add in values"

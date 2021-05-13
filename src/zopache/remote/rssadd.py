@@ -109,7 +109,5 @@ class EditRSS2(BaseEditForm):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddRSSByURL(AddByURLForm,Notify):
+
     factory = RSS
-    def newURL(self,baseuRL):
-        breakpoint()
-        return baseURL + "/addRSS" 

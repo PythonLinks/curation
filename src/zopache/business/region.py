@@ -6,6 +6,7 @@ from zopache.business.interfaces import IOrganization
 from zopache.business.ipolitician import IPolitician
 from zopache.pages.location import LocationContainer
 from zopache.business.interfaces import IRegion
+from zopache.business.interfaces import IEvent
 
 class RegionBase(LocationContainer):
 
@@ -53,12 +54,7 @@ class RegionBase(LocationContainer):
                  )
     
     def isNationalMap (self):        
-        return self.parentLength() == 1
-
-    def parentLength(self):        
-        parents = self.parentsWhichImplement(IOrganization)
-        parentLength = len(parents)
-        return parentLength    
+        return self.webClass == 'NationalMap'
 
     def searchAllPoliticians(self,
                              all = False, 
@@ -90,10 +86,9 @@ class RegionBase(LocationContainer):
     ):
         politicians = [] 
         parents = self.parentsWhichImplement(IOrganization)
-        parentLength = len(parents)
         
         #THE STATE PAGES
-        if parentLength == 2:
+        if self.webClass == 'SmallParty':
             children = []
             children = self.getCompaniesRecursively(children)
             for item in children:
@@ -103,7 +98,7 @@ class RegionBase(LocationContainer):
             return politicians
         
         #FOR LOCAL PAGES 
-        if parentLength > 2:
+        if self.webClass not in ['NationalMap', 'SmallParty']:
             politicians = []
             for parent in parents:
                 for item in parent.values():
@@ -153,6 +148,9 @@ class RegionBase(LocationContainer):
         result = []
         showChildren = self.showChildren
         for item in self.values():
+            if IEvent.providedBy(item) and item.webApproved:
+                result.append(item)
+                continue
             if not IOrganization.providedBy(item):
                 continue
 
