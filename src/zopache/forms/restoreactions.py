@@ -10,11 +10,11 @@ from ZODB.ExportImport import ExportImport
 from zopache.core.uniquename import UniqueName
 from cromlech.browser.interfaces import IPublicationRoot
 
-def restoreFile(context,fileName):
-   theFile = open (fileName,rb)
-   branch = context._p_jar.importFile(theFile)
-   name = new.__name__
-   context[name] = branch
+#def restoreFile(context,fileName):
+#   theFile = open (fileName,rb)
+#   branch = context._p_jar.importFile(theFile)
+#   name = new.__name__
+#   context[name] = branch
 
 class BaseAction(Action):
     def __init__(self, title):

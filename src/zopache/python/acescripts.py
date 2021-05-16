@@ -1,15 +1,16 @@
 from zopache.ttw.acescripts import AceScripts
 from zopache.core.getroot import getProducts
 
+#JUST FOR Transcrypt
 class AceScripts (AceScripts):
     def update(self):
         products = getProducts(self.context)
         self.template = products['Templates']['TranspilerTemplate']
-	
+        if self.isPython():
+           self.addAuthorizedActions()
+           
     def  footerScripts(self):
-        result = self.aceEditorFooter
-        result += """   <script type="text/javascript" src="https://pyodide.cdn.iodide.io/pyodide.js"></script>"""
-
+        result = super().footerScripts()
         result += "<script> //BEGIN"
         products = getProducts(self.context)        
         scripts = products['Templates']['PythonScripts']

@@ -44,12 +44,12 @@ class AddForm(AddFormBase):
     @property
     def fields(self):
         return  Fields(IName,self.interface)
-    
-    @property
-    def actions(self):
-        return  Actions(
-            formactions.Add(_("Add","Add"), self.factory),
-            formactions.Cancel(_("Cancel","Cancel")))
+
+    actions = Actions()
+    #def actions(self):
+    #    return  Actions(
+    #        formactions.Add(_("Add","Add"), self.factory),
+    #        formactions.Cancel(_("Cancel","Cancel")))
     
 class TreeSecurityAddForm(AddFormBase):
     actions = Actions()    

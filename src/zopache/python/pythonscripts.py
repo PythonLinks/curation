@@ -27,7 +27,7 @@ from dolmen.view import View, make_view_response
 from zope.cachedescriptors.property import CachedProperty
 from RestrictedPython import compile_restricted_function
 from RestrictedPython import compile_restricted
-from zopache.python.acescripts import AceScripts
+from zopache.ttw.acescripts import AceScripts
 from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 from RestrictedPython import RestrictingNodeTransformer
 from zopache.ttw.interfaces import ITestURL
@@ -101,7 +101,7 @@ class  DotAccess(object):
 @implementer(IPythonScript)
 class PythonScript(Leaf):
     icon="ttwicons/Python.svg"
-    
+    actions = Actions()
     def dotAccessParents(self):
         theParents = parents (self)
         #result =  dict((node.__name__,DotAccess(node) ) for node in theParents)
@@ -146,12 +146,11 @@ class PythonScript(Leaf):
 
 
 class  AceScripts(AceScripts):
-    def  footerScripts(self):
-        return self.aceEditorFooter + """ 
-        <script >editor.getSession().setMode("ace/mode/python");
-        </script>
-        """
-
+     aceMode = "python"
+     def update(self):
+         if self.isPython():
+             self.addAuthorizedActions()
+           
 class ValidatePython(object):    
      def validateCore(self,form,name):
              self.parentClass.validate(self,form)
@@ -203,7 +202,6 @@ class EditPythonAndTest(EditPython):
 @name('addPythonScript')
 @context(IBTreeContainer)
 @permissions('Python')
-@implementer(IPythonScript)
 class AddPythonFunction(AceScripts,AceAddForm):
     subTitle = "Add  a Python  Script (Beta)"
     interface = IPythonScript
@@ -213,15 +211,8 @@ class AddPythonFunction(AceScripts,AceAddForm):
     def postProcess(self, view = None):
         self.new.postProcess(view)
 
-    def footerScripts(self):
-        return AceScripts.footerScripts(self)
-
-    def headerScripts(self):
-          return AceScripts.headerScripts(self)    
-    
-    @property 
-    def actions(self):
-        return Actions(
+    def addAuthorizedActions(self):
+        self.actions = Actions(
               AddPythonAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
               AddPythonAndTest(_("Add and Test","Add -> Test"), self.factory),
               Cancel(_("Cancel","Cancel")))
@@ -264,12 +255,10 @@ class AceEditPython(AceScripts,AceEditForm):
     def postProcess(self, view = None):
         self.context.postProcess(view)
         
-    @CachedProperty
-    def actions(self):
-
+    def addAuthorizedActions(self):
         action1=EditPython("Save","Save")
         action2=EditPythonAndTest("Save  and View","Save -> View")
         action3=Cancel("Cancel","Cancel")
-        return Actions(action1,action2,action3)
+        self.actions =  Actions(action1,action2,action3)
 
 

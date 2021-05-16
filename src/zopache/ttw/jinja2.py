@@ -45,7 +45,6 @@ class JinjaBase(Leaf):
                self.compileTemplate()
     def callWithContext(self,view,context,**args):
             self.setTemplate()
-            breakpoint()
             contextParent = context.__parent__
             del context.__parent__
             secureContext = copy(context)
