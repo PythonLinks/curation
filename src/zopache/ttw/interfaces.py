@@ -376,7 +376,7 @@ class IUntrustedHTML(IHTML):
 class IUntrustedAceHTML(IAceHTML):
    pass
 
-class IInternalPrincipal(IFile,IBTreeContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
+class IInternalPrincipal(IBTreeContainer, ICanonical,ICromlechPrincipal,IUntrustedHTML):
     """Principal information"""
     pass
 
