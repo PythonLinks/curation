@@ -34,7 +34,7 @@ from zopache.ttw.interfaces import (ISource,
                                     IAceCMSClass,
                                     IAceIFrameClass,
                                     IAceHTMLPage)
-from zopache.ttw.addeditforms import AceAddForm, AceEditForm
+from zopache.ttw.addeditforms import TreeSecurityAddForm, AceEditForm
 
 from zopache.ttw.html import (HTML,
                               HTMLRecursionError,
@@ -101,11 +101,18 @@ class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 
 
-class AddAceHTMLBase(AddHTMLBase,AceAddForm):        
+class AddAceHTMLBase(AceScripts,AddHTMLBase,TreeSecurityAddForm):        
     subTitle="Add an Ace HTML Object"
     factory=AceHTML
     aceMode = "html"
+    def addAuthorizedActions(self):           
+         self.actions = Actions(
+              formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
+              ttwactions.AddAndAceEdit(_("Add and AceEdit","Add -> AceEdit"), self.factory),
+              formactions.Cancel(_("Cancel","Cancel")))
 
+
+    
 @form_component
 @name (u'addAceHTML')
 @context(IBTreeContainer)

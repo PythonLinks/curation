@@ -59,6 +59,12 @@ class InternalPrincipal(FileBase,Page):
     branchSize = 1
     lastNotificationTime = 0
     
+    def secureParent(self):
+        breakpoint()
+        return None
+    
+    secureParent = property(secureParent)
+    
     def getGroups(self):
          if not hasattr(self,'_groups'):
             self._groups =  set()
@@ -211,8 +217,8 @@ def key(item):
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
-    title = ""
-    description = ""
+    title = "Principal Folder"
+    description = "The user objects are stored here. "
     branchSize = 1
     def html (self) :
         return ""
@@ -223,6 +229,18 @@ class PrincipalFolder(Container):
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()
 
+    def getTitleForDomain(self,view):
+        return self.title
+    
+    def getTitleFor(self,view):
+        return self.title    
+
+    def getDescriptionForDomain(self,view):
+        return self.description
+
+    def getDescriptionFor(self,view):
+        return self.description
+    
     def convert (self):
         del self.idByEmail
         del self.idBySlugifiedHandle

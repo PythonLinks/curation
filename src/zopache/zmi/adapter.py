@@ -84,7 +84,6 @@ class ZMIAdapter(object):
       def showNameId(self):
           return  self.getId('showName')          
 
-
       def titleName(self):
           return self.context.__name__+ '-Title'
 
@@ -120,8 +119,9 @@ class ZMIAdapter(object):
               return len(list(self.context.valuesAsList()))
             return 1
 
-    
       def modified (self):
-            return arrow.get(self.context._p_mtime).humanize()[:-3]
-                         
+          if self.context._p_mtime != None:
+              return arrow.get(self.context._p_mtime).humanize()[:-3]
+          else:
+              return ""
 

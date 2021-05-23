@@ -6,7 +6,6 @@ from dolmen.forms.base import DISPLAY
 
 from zopache.core.viewdecorators import *
 
-
 from dolmen.container import BTreeContainer, IBTreeContainer
 from dolmen.forms.base import Actions
 
@@ -52,14 +51,18 @@ class AddForm(AddFormBase):
     #        formactions.Cancel(_("Cancel","Cancel")))
     
 class TreeSecurityAddForm(AddFormBase):
-    actions = Actions()    
+    @property
+    def fields(self):
+        return  Fields(IName,self.interface)
+    actions = Actions()
+    
     def update(self):
         if self.treeSecurity():
            self.addAuthorizedActions()
         else:
            self.addUnauthorizedActions()
            
-    def addAuthorizedActions():
+    def addAuthorizedActions(self):
         self.actions = Actions()
         
     def addUnAuthorizedActions():

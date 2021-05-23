@@ -58,7 +58,9 @@ class OnlineOrganization  (Base):
     webClass = "Organization"
     clientClass = "Category"
     webApproved = False
-
+    def getCompaniesRecursively(self,result,showChildren = False):
+        return [self]
+    
 from zopache.business.region import RegionBase
 @implementer (IOrganization)
 class Organization  (

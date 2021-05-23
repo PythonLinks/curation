@@ -45,7 +45,10 @@ class RSSArticle(Page,Voteable):
     webClass = "RSSLink"
     emailApproved = True
     publicationApproved = False
-
+    
+    def preDeleteProcess(self,view):
+        #Page.preDeleteProcess(self,view)
+        del self.rssFeed.localArticles [self.permaLink]
     
     def getCategory(self):
       return self._category
@@ -78,18 +81,20 @@ class RSSArticle(Page,Voteable):
         if "exclusive for subscribers" in self.title.lower():
            self.webApproved = False
 
-        #AND NOW CREATE UNIQUE CREATION TIMES FOR ALL RSS ARTICLES  
+        #AND NOW CREATE UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
+        """
         sortTime=time.time()
-        sortTime = long(sortTime)
-        siteRoot = self.getsiteRoot()
+        sortTime = int(sortTime)
+        siteRoot = self.getSiteRoot()
         uniqueTime = siteRoot.uniqueTime
         while sortTime in uniqueTime:
              sortTime += 1
         self.sortTime = sortTime    
-        categories = parentsWhichImplement(self,IRSSCategory)
-        for item in categories:
-             item.articlesByTime[- sortTime] = self
-           
+        #categories = parentsWhichImplement(self,IRSSCategory)
+        #for item in categories:
+        #     item.articlesByTime[- sortTime] = self
+        """
+        
     def addImage(self):
            if  'Logo' in self:
                return

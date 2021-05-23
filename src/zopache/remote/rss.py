@@ -91,7 +91,6 @@ class RSS(Link,UniqueName):
           
     # FOR A NEW RSS FEED       
     def createOneArticle(self,article,view):
-       breakpoint()
        new = RSSArticle()
        new.title = unescape (article.title)
        if self.htmlSummary:
@@ -156,55 +155,6 @@ class RSS(Link,UniqueName):
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)
 
-    def getRemoteURL(self):
-        return self.rss["remoteURL"]
-
-    def setRemoteURL(self):
-        self.rss["remoteURL"] = value
-    
-    def getRssURL(self):
-        return self.rss["rssURL"]
-    
-    def setRssURL(self):
-        self.rss["rssURL"] = value
-   
-    def getLogoURL(self):
-        return self.rss["logoURL"]
-    
-    def setLogoURL(self):
-        self.rss["logoURL"] = value                
-
-    def getTitle(self):
-        return self.rss["title"]
-
-    def setTitle(self,value):
-        self.rss["title"] = value
-
-    def getTwitterId(self):
-        return self.rss["twitterId"]
-
-    def setTwitterId(self,value):
-        self.rss["twitterId"] = value        
-        
-    def getDescription(self):
-        return self.rss["description"]
-
-    def setDescription(self,value):
-        self.rss["description"] = value
-
-    def getSource(self):
-        self.rss["english"]["source"]
-
-    def setSource(self,value):
-        self.rss["source"] = value                
-
-    remoteURL = property(getRemoteURL,setRemoteURL)
-    rssURL = property(getRssURL,setRssURL)
-    logoURL = property(getLogoURL, setLogoURL)    
-    twitterId = property(getTwitterId,setTwitterId)        
-    title = property(getTitle,setTitle)
-    description = property(getDescription,setDescription)
-    source = property(getSource,setSource)        
 
     
 

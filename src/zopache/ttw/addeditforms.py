@@ -6,15 +6,15 @@ from zopache.crud import actions as formactions, i18n as _
 from zopache.crud import update as editactions
 from zopache.ttw import actions as ttwactions
 from zopache.ttw.acescripts import AceScripts
+from zopache.crud.forms import TreeSecurityAddForm
 
-class AceAddForm (AceScripts,AddForm):
+class AceAddForm (TreeSecurityAddForm,AceScripts):
 
     def addAuthorizedActions(self):    
          self.actions = Actions(
-              ttwactions.AddAndAceEdit("Add and Ace Edit",
-                                          "Add -> Ace Edit",
+              ttwactions.AddAndAceEdit(   "Add -> Ace Edit",
                                         self.factory),
-              formactions.AddAndView("Add and View",
+              formactions.AddAndView(
                                        "Add -> View",
                                         self.factory),
               formactions.Cancel("Cancel","Cancel"))

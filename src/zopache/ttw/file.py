@@ -245,14 +245,15 @@ class DisplayImage(View,Breadcrumbs):
     
 def make_logo_response(view, result, *args, **kwargs):
         response = view.responseFactory()
-        response.headers['cache-control'] = 'public,max-age=3600'  
+        response.headers['cache-control'] = 'public,max-age=3600'
         logo = ParentalAcquire(view.context)['Logo']
-        if logo:
+        if logo != None:
             contentType = logo.contentType
         else:
             contentType = ''
         response.content_type=contentType
-        response.write(result or '')
+        if result:
+            response.write(result)
         return response
 
 
@@ -265,7 +266,7 @@ class LogoAcquire(View):
         
     def render(self):
                logo = ParentalAcquire(self.context)['Logo']
-               if not logo:
+               if logo == None:
                    return ''
                return logo.data                      
 

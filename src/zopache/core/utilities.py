@@ -165,8 +165,8 @@ class Utilities (object):
         if args:
           fred = args
           item = args [0]
-          
-
+          pass
+        
     def hash(self,value):
          h = hashlib.sha256() 
          h.update(value.encode('utf-8')) # Update the hash using a bytes object

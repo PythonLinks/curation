@@ -64,6 +64,8 @@ class AddAuthorizedPage(AddPageBase):
 @context(IPage)
 @implementer(ITreeSecurity)
 class AddPage(AddAuthorizedPage):
+    title = "Add a Web Page"
+    subTitle = "It can have child pages."
     interface = IPage
     label="Add a Wiki Page"
     factory = Page
@@ -75,6 +77,8 @@ from zopache.application.interfaces import IRootContainer
 @context(IRootContainer)
 @implementer(ITreeSecurity)
 class AddRootPage(AddAuthorizedPage):
+    title = "Add a Root Page"
+    subTitle = "This can be a whole new website.  Only at the top of the tree."
     dataValidators = []
     interface = ISiteRootPage
     label="Add a Root Wiki Page"
@@ -87,7 +91,8 @@ class AddRootPage(AddAuthorizedPage):
 @implementer(ITreeSecurity)
 class AddProxyPage(AddAuthorizedPage):
     interface = IProxyPage
-    label="Add a ProxyPage"
+    title="Add a ProxyPage"
+    subTitle = "This displays content from another page."
     factory = ProxyPage    
     
 
@@ -98,7 +103,7 @@ class AddProxyPage(AddAuthorizedPage):
 @implementer(ITreeSecurity)
 class AddAction(AddAuthorizedPage):
     interface = IActionNetwork
-    label="Add a Remote Action"
+    title = "Add a Remote Action"
     factory = ActionNetwork
 
 
@@ -110,6 +115,7 @@ class AddAction(AddAuthorizedPage):
 class AddLink(AddAuthorizedPage):
     interface = IAddLink
     title = "Add a Link"
+    subTitle = "Refering to a remote page."
     factory = Link
   
 #LOCAION
@@ -121,7 +127,7 @@ class AddLink(AddAuthorizedPage):
 class AddLocation(AddAuthorizedPage):
     interface = ILocation
     label="Add a Location"
-    subTitle = 'Add a point on a map'
+    subTitle = 'These points show up on parent maps. '
     factory = Location
 
     
@@ -133,6 +139,7 @@ class AddLocation(AddAuthorizedPage):
 @implementer(ITreeSecurity)
 class AddMap(AddAuthorizedPage):
     subTitle = 'Add a map'
+    subTitile = 'Remember to enable map tokens.'
     interface = IMap
     label="Add a Map"
     factory = Map

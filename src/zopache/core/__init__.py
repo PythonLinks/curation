@@ -40,6 +40,11 @@ class AllObjects(object):
     
     def className(self):
         return self.__class__.__name__
+
+    def secureParent(self):
+        return self.__parent__
+    
+    secureParent = property(secureParent)
     
 class Leaf(Contained, Persistent,AllObjects):
     pass

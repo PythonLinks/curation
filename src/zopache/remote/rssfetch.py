@@ -40,7 +40,7 @@ class GetRSS(Form):
                    urls.append (rssURL)
                    feedsByURL [rssURL] = item
 
-           result = getRSS(urls)
+           result = getRSS(urls,processRssResponse)
            for key, value in result.items():
                feed = feedsByURL [key]
                feed.createArticles(value,self)

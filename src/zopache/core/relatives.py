@@ -101,7 +101,7 @@ class Parents(object):
                        result.append(item)
              item=item.__parent__
            return result
-
+   
     def parentWhichImplements(self,interface):
            item=self.context
            while (item!=None):

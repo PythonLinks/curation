@@ -1,4 +1,7 @@
-from jinja2 import Template as JinjaTemplate
+import sys
+import jinja2
+from jinja2 import Environment
+from jinja2.sandbox import SecurityError
 from zope import schema
 from dolmen.container import IBTreeContainer
 from cromlech.webob.response import Response
@@ -12,16 +15,30 @@ from zopache.ttw.interfaces import IJinjaHTML, IAceHTML
 from zopache.ttw.acescripts import  AceScripts
 from zopache.copy import copy
 from zopache.core.interfaces import ITreeSecurity
+from zopache.core.relatives import Parents
+from zopache.application.sandbox import MyEnvironment, loadTemplate
+from zopache.core.relatives import parentWhichImplements
+from zopache.ttw.interfaces import IInternalPrincipal
 
 class JinjaRecursionError(Exception):
         pass
 
 class JinjaBase(Leaf):
     source = ''
-    
+    trusted = False    
     def postProcess(self,view = None):
-        self.compileTemplate()
+        self.compileTemplate(view)
+	
+    def postAddProcess(self,view = None):
+        self.postProcess(view = view)
 
+    def postProcess(self,view = None):
+        self.trusted = view.isPython()
+        if hasattr(self, '_v_compiledTemplate'):
+           del self._v_compiledTemplate
+        self.compileTemplate(view)
+
+	
     #So here we pass the context into the template    
     def __call__(self,view,**args):
         try:
@@ -36,32 +53,61 @@ class JinjaBase(Leaf):
             result += str(error)
             return result
     
-    def compileTemplate(self):
-                 source=self.source
-                 self._v_compiledTemplate = JinjaTemplate(source)
+    def compileTemplate(self,view):
+         base = self.parentalPrincipal() or view.getLayout()
+         if hasattr(base,"_v_environment"):         
+           if hasattr(self,"_v_compiledTemplate"):
+             return self._v_compiledTemplate
+         loader = jinja2.FunctionLoader(loadTemplate)                 
+         if self.trusted:
+            environment = Environment(loader = loader)
+         else:
+            environment = MyEnvironment(loader = loader)
+         loader.parent = environment
+         environment.parent = base
+         base._v_environment = environment
+         source=self.source
+         self._v_compiledTemplate = environment.from_string(source)
 
-    def setTemplate(self):
+    def setTemplate(self,view):
             if not hasattr(self,'_v_compiledTemplate'):
-               self.compileTemplate()
+               self.compileTemplate(view)
+	       
     def callWithContext(self,view,context,**args):
-            self.setTemplate()
-            contextParent = context.__parent__
-            del context.__parent__
-            secureContext = copy(context)
+            self.setTemplate(view)
             request = view.request
-            principal = request.principal
-            del request.principal
-            securePrincipal = copy (principal)
-            request.principal = securePrincipal
-            result = self._v_compiledTemplate.render(
-                           context=secureContext,
-                           request=request,
-                           view=view,
-                           **args)
-            request.principal = principal
-            context.__parent__ = contextParent
-            context._p_changed = false
-            return result
+            try:
+               breakpoint()
+               if self.trusted:
+                  return self._v_compiledTemplate.render(
+                               view2= view,
+                               context = context,
+                               request = request
+                           )
+               else:
+                   ctx = {
+                               "view": view,
+                               "context" : context,
+                               "request" : request}
+
+                   return self._v_compiledTemplate.render(context = ctx)
+
+            except SecurityError as error:
+                result =  """JINJA REPORTED THIS SECURITY ERROR: \n<br>"""
+                result += str(error)
+                return result
+        
+            #except:
+            #    error  = sys.exc_info()[0]
+            #    breakpoint()
+            #    result =  """COULD NOT DISPLAY THAT PAGE.
+            #          HERE IS THE ERROR MESSAGE:\n<br>"""
+            #    result += str(error)
+            #    return result
+    
+    def parentalPrincipal(self):
+        return parentWhichImplements (self,IInternalPrincipal)               
+
 
 @implementer(IJinjaJSON)
 class JinjaJSON(JinjaBase):
@@ -86,8 +132,7 @@ class AddJinjaJSON(AceAddForm):
     interface = IJSON
     ignoreContent = True
     factory=JinjaJSON
-    def postAddProcess(self,view = None):
-        self.new.compileTemplate()
+
 
 @form_component
 @name('addJinjaHTML')
@@ -99,21 +144,17 @@ class AddJinjaHTML(AceAddForm):
     interface = IAceHTML
     ignoreContent = True
     factory=JinjaHTML
-    def postAddProcess(self,view = None):
-        self.new.compileTemplate()        
         
 @form_component
 @name('addJinjaJS')
 @context(IBTreeContainer)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddJinjaJS(AceAddForm):
     aceMode = 'javascript'
     title='Add a Jinja2 Javascript Object'
     interface = IJavascript
     ignoreContent = True
     factory=JinjaJS
-    def postAddProcess(self,view = None):
-        self.new.compileTemplate()
 
 @form_component
 @context(IJinjaJS)
@@ -133,9 +174,6 @@ class AceEditJinjaJSON(AceEditForm):
     subtitle = "Jinja2 will be used to add in values"
     aceMode = 'json'
     
-    def postProcess(self,view = None):
-        self.context.compileTemplate()
-
 @form_component
 @context(IJinjaHTML)
 @name("aceedit")
@@ -145,9 +183,6 @@ class AceEditJinjaHTML(AceEditForm):
     subtitle = "Jinja2 will be used to add in values"
     aceMode = 'html'
     
-    def postProcess(self,view = None):
-        self.context.compileTemplate()
-        
 from zopache.ttw.javascript import makeJavascriptResponse
 from zopache.core.breadcrumbs import Breadcrumbs
 from dolmen.view import  make_view_response

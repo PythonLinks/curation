@@ -5,6 +5,8 @@ from zope import interface
 from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
+from BTrees.LOBTree import  LOTreeSet
+
 from BTrees.OOBTree import OOBTree
 from cromlech.browser.interfaces import IPublicationRoot
 from zopache.pages.interfaces import IPage
@@ -156,8 +158,9 @@ class Branch(SimpleBranch):
         self.globalArticles = OOBTree()
         self.newestArticles = OOBTree()
         self.remoteArticles = OOBTree()                
+        self.uniqueTime = LOTreeSet()
         self.indexBranch(self,self)
- 
+
 
     def indexBranch(self,tree,branch,itemType=ICanonical):
         
@@ -231,11 +234,12 @@ class Branch(SimpleBranch):
                 
         if item.className() == "RSSArticle":
             del self.globalArticles [item.permaLink]
-            del self.newestArticles [item.creationTime]
+            #del self.newestArticles [item.creationTime]
             
         if item.className() == "Link":
-            del self.newestArticles [item.creationTime]            
-            
+            #del self.newestArticles [item.creationTime]            
+            pass
+        
         if hasattr(item,'twitterId'):
             twitterId = item.twitterId            
             if twitterId:
