@@ -16,7 +16,7 @@ from zopache.ttw.acescripts import  AceScripts
 from zopache.copy import copy
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.relatives import Parents
-from zopache.application.sandbox import MyEnvironment, loadTemplate
+from zopache.application.sandbox import MyEnvironment, LoadTemplate
 from zopache.core.relatives import parentWhichImplements
 from zopache.ttw.interfaces import IInternalPrincipal
 
@@ -41,29 +41,24 @@ class JinjaBase(Leaf):
 	
     #So here we pass the context into the template    
     def __call__(self,view,**args):
-        try:
             view.count+= 1
             if view.count>500:
                 raise JinjaRecursionError()
             context=view.context
             return self.callWithContext(view,context,**args)
-        except AttributeError as error:
-            result =  """COULD NOT DISPLAY THAT PAGE.
-                      HERE IS THE ERROR MESSAGE:\n<br>"""
-            result += str(error)
-            return result
     
     def compileTemplate(self,view):
          base = self.parentalPrincipal() or view.getLayout()
-         if hasattr(base,"_v_environment"):         
-           if hasattr(self,"_v_compiledTemplate"):
-             return self._v_compiledTemplate
+         #if hasattr(base,"_v_environment"):         
+         #  if hasattr(self,"_v_compiledTemplate"):
+         #    return self._v_compiledTemplate
+         loadTemplate = LoadTemplate()
          loader = jinja2.FunctionLoader(loadTemplate)                 
          if self.trusted:
             environment = Environment(loader = loader)
          else:
             environment = MyEnvironment(loader = loader)
-         loader.parent = environment
+         loadTemplate.parent = environment
          environment.parent = base
          base._v_environment = environment
          source=self.source
@@ -74,10 +69,10 @@ class JinjaBase(Leaf):
                self.compileTemplate(view)
 	       
     def callWithContext(self,view,context,**args):
+
             self.setTemplate(view)
             request = view.request
             try:
-               breakpoint()
                if self.trusted:
                   return self._v_compiledTemplate.render(
                                view2= view,
@@ -87,23 +82,32 @@ class JinjaBase(Leaf):
                else:
                    ctx = {
                                "view": view,
-                               "context" : context,
+                               "node" : context,
                                "request" : request}
 
-                   return self._v_compiledTemplate.render(context = ctx)
+                   return self._v_compiledTemplate.render(context = ctx,
+                                                          node = context,
+                                                          view= view,
+                                                          request = request)
 
+            except AttributeError as error:
+               result =  """COULD NOT DISPLAY THAT PAGE.
+                      HERE IS THE ERROR MESSAGE:\n<br>"""
+               result += str(error)
+               return result
+
+                                                          
             except SecurityError as error:
                 result =  """JINJA REPORTED THIS SECURITY ERROR: \n<br>"""
                 result += str(error)
                 return result
         
-            #except:
-            #    error  = sys.exc_info()[0]
-            #    breakpoint()
-            #    result =  """COULD NOT DISPLAY THAT PAGE.
-            #          HERE IS THE ERROR MESSAGE:\n<br>"""
-            #    result += str(error)
-            #    return result
+            except:
+                error  = sys.exc_info()[0]
+                result =  """COULD NOT DISPLAY THAT PAGE.
+                      HERE IS THE ERROR MESSAGE:\n<br>"""
+                strError = str(error).replace("<"," ").replace(">"," ")
+                return result + strError
     
     def parentalPrincipal(self):
         return parentWhichImplements (self,IInternalPrincipal)               
@@ -128,7 +132,7 @@ class JinjaHTML(JinjaBase):
 @implementer(ITreeSecurity)
 class AddJinjaJSON(AceAddForm):
     aceMode = 'json'    
-    title='Add a Jinja2 JSON Object'
+    title='Add a Jinja JSON Object'
     interface = IJSON
     ignoreContent = True
     factory=JinjaJSON
@@ -140,7 +144,7 @@ class AddJinjaJSON(AceAddForm):
 @implementer(ITreeSecurity)
 class AddJinjaHTML(AceAddForm):
     aceMode = 'html'    
-    title='Add a Jinja2 HTML Object'
+    title='Add a Jinja HTML Object'
     interface = IAceHTML
     ignoreContent = True
     factory=JinjaHTML
@@ -151,7 +155,7 @@ class AddJinjaHTML(AceAddForm):
 @implementer(ITreeSecurity)
 class AddJinjaJS(AceAddForm):
     aceMode = 'javascript'
-    title='Add a Jinja2 Javascript Object'
+    title='Add a Jinja Javascript Object'
     interface = IJavascript
     ignoreContent = True
     factory=JinjaJS
@@ -163,7 +167,7 @@ class AddJinjaJS(AceAddForm):
 class AceEditJinjaJS(AceEditForm):
     aceMode = 'javascript'            
     title='Edit a JINJA Javascript Object'
-    subtitle = "Jinja2 will be used to add in values"
+    subtitle = "Jinja will be used to add in values"
     
 @form_component
 @context(IJinjaJSON)
@@ -171,7 +175,7 @@ class AceEditJinjaJS(AceEditForm):
 @implementer(ITreeSecurity)
 class AceEditJinjaJSON(AceEditForm):
     title='Edit a JINJA JSON Object'
-    subtitle = "Jinja2 will be used to add in values"
+    subtitle = "Jinja will be used to add in values"
     aceMode = 'json'
     
 @form_component
@@ -180,7 +184,7 @@ class AceEditJinjaJSON(AceEditForm):
 @implementer(ITreeSecurity)
 class AceEditJinjaHTML(AceEditForm):
     title='Edit a JINJA HTML Object'
-    subtitle = "Jinja2 will be used to add in values"
+    subtitle = "Jinja will be used to add in values"
     aceMode = 'html'
     
 from zopache.ttw.javascript import makeJavascriptResponse

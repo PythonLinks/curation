@@ -19,7 +19,7 @@ from zopache.business.company import MapOrganization
 from zopache.business.interfaces import  IOnlineEvent, IEvent
 from zopache.business.company import Company, Organization, OnlineOrganization
 from zopache.business.map import Map
-from zopache.pages.addpage import AddAuthorizedPage
+from zopache.pages.addpage import AddAuthorizedPage, AddPage
 from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
@@ -47,7 +47,7 @@ class AddNews(AddAuthorizedPage):
 
 class AddAll(AddAnonymousPage,GeoCodeForm):
     def update(self):
-        AddPageBase.update(self)
+        AddPage.update(self)
         GeoCodeForm.update(self) 
 
 @view_component
@@ -153,19 +153,19 @@ class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
 
 
 
-from zopache.pages.addpage import AddPageBase    
+
 from zopache.application.interfaces import IRootContainer
 @view_component
 @name('addPoliticiansSite')
 @target(IView)
 @context(IRootContainer)    
-class AddPoliticiansSite(AddPageBase,GeoCodeForm):
+class AddPoliticiansSite(AddPage,GeoCodeForm):
     interface = IPoliticiansSite
     dataValidators = []
     factory = PoliticiansSite
     title = "Create a Website for a Politician"
     def update(self):
-        AddPageBase.update(self)
+        AddPage.update(self)
         GeoCodeForm.update(self)
         
 @view_component

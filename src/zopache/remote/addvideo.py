@@ -1,5 +1,5 @@
 from cromlech.security import Unauthorized
-from zopache.pages.addpage import AddPageBase
+from zopache.pages.addpage import AddPage
 from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IInternalPrincipal
@@ -9,7 +9,7 @@ from zopache.remote.video import BasicVideo, PrincipalVideo
 from zopache.pages.interfaces import IPage
 from zopache.pages.page import Page
 
-class Base(AddPageBase):
+class Base(AddPage):
      interface = IPrincipalVideo
      title = "Add a  Video"
      webClass='Video'

@@ -12,7 +12,7 @@ class Meetup (HasMembers,Page):
     webClass = "Meetup"
     clientClass = "category"
     hidden = False
-    webApproved = False
+    webApproved = True
     
     def __init__(self):
         HasMembers.__init__(self)

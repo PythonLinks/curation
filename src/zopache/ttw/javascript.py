@@ -46,6 +46,7 @@ class JavascriptBase(SourceBase):
     def postProcess(self,view=None):    
         self.createJavascriptCaches()
 
+    #THIS CAN BE REMOVED    
     def postEditProcess(self,view=None):    
         self.postProcess(view=view)
         

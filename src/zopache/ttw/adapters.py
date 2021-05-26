@@ -16,7 +16,7 @@ class IHTMLContainerAdaptor(object):
     def __init__(self,context):
         self.context=context   
     def getSegment(self):
-        return 'aceedit'
+        return 'manage'
 
 
 from zopache.ttw.interfaces import IMailHost    

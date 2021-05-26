@@ -121,6 +121,7 @@ class SharedForm(TransactionNote,AceScripts,CkScripts):
     layoutName = "UserMenu"
 
     def update(self):
+
         self.template = self.getTemplates()['Skulpt']
 
     def isTeacher(self):
@@ -180,6 +181,7 @@ class AssignmentForm(SharedForm):
         return False
     
     def update(self):
+        
         isAnonymous = self.isAnonymousVisitor()
         isTeacher = self.isTeacher()
         isStudent = self.isStudent()

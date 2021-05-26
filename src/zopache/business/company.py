@@ -57,7 +57,7 @@ class Company  (GeoBase,LocationContainer):
 class OnlineOrganization  (Base):        
     webClass = "Organization"
     clientClass = "Category"
-    webApproved = False
+    webApproved = True
     def getCompaniesRecursively(self,result,showChildren = False):
         return [self]
     
@@ -71,7 +71,7 @@ class Organization  (
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
-    webApproved = False
+    webApproved = True
     donationsPageURL = ""
     youTubeChanneURL = ""
     ballotStatus = ""

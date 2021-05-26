@@ -33,6 +33,13 @@ class ISkulptAssignment(ICanonical):
         required = True,
     )
 
+    #description= schema.Text(
+    #    title = 'Description',
+    #    description = """A brief description of this problem.""",  
+    #    required = False,
+    #    default = u'',
+    #)
+    
     problemText= schema.Text(
         title = 'The problem statement.',
         description = 'Please explain the problem.',

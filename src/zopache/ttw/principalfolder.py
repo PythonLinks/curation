@@ -14,6 +14,7 @@
 # AND SIMPLIFIED
 from slugify import slugify
 import time
+from jinja2.sandbox import SecurityError
 from BTrees.OOBTree import OOBTree
 from zope.schema import ValidationError
 from zope.interface import implementer, Interface
@@ -46,7 +47,7 @@ class InternalPrincipal(FileBase,Page):
     title = ""
     source = ""
     description = ""
-    permissions = ['Vote']
+    permissions = ['Vote','Developer']
     chatPermission = False
     newsPermission = False
     pugPermission = False
@@ -60,8 +61,7 @@ class InternalPrincipal(FileBase,Page):
     lastNotificationTime = 0
     
     def secureParent(self):
-        breakpoint()
-        return None
+        raise SecurityError('''You are not allowed to access attribute "secureParent" on %r %r ''' % (self.name,self.__class__.__name__))
     
     secureParent = property(secureParent)
     

@@ -5,7 +5,7 @@ from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase
 from zopache.crud.forms import AddByTitleForm, AddByNameForm
 from zopache.crud.addbytitleactions import *
-
+from dolmen.forms.base import Fields
 from zopache.pages.interfaces import (IMap,
                                       ILocation,
                                       IPage,
@@ -23,12 +23,19 @@ from zopache.pages.proxypage import ProxyPage
 from zopache.crud.getimage import getImage
 from zopache.ttw.mail import Notify
 
-class BaseAdd(AddCkHTMLBase,Notify):
+class BaseAdd(AddCkHTMLBase,AddByTitleForm,Notify):
     count = 0 
     layoutName = "UserMenu"
     actions = Actions()
     dataValidators = [Duplicate, DuplicateURLValidator, HTMLValidator]
+    def __init__(self,context,request):
+        #First give it a context, then initialize Notify.
+        AddByTitleForm.__init__(self,context,request)
+        Notify.__init__(self)
     
+    @property
+    def fields(self):
+        return  Fields(self.interface)    
         
     def addAuthorizedActions(self):           
         self.actions = Actions(
@@ -38,15 +45,10 @@ class BaseAdd(AddCkHTMLBase,Notify):
               AddByTitleAndManage("Add and Manage", self.factory),            
               Cancel("Cancel","Cancel"))
 
-        
-#THIS ONE SHOULD BE RETIRED 
-class AddPageBase(BaseAdd, AddByTitleForm):
-    def __init__(self,context,request):
-        #First give it a context, then baseAdd can initialize Notify.
-        AddByTitleForm.__init__(self,context,request)
-        BaseAdd.__init__(self)
+#class AddPageBase( BaseAdd):
+#     pass
  
-class AddAuthorizedPage(AddPageBase):
+class AddAuthorizedPage(BaseAdd):
 
     actions = Actions()
 

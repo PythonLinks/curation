@@ -11,7 +11,7 @@ class EventBase(Page,HasMembers):
     count = 0
     webClass = "Event"
     clientClass = "Category"
-    webApproved = False
+    webApproved = True
     
     def __init__(self):
         Page.__init__(self)

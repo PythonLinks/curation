@@ -8,7 +8,7 @@ from zopache.ttw import actions as ttwactions
 from zopache.ttw.acescripts import AceScripts
 from zopache.crud.forms import TreeSecurityAddForm
 
-class AceAddForm (TreeSecurityAddForm,AceScripts):
+class AceAddForm (AceScripts,TreeSecurityAddForm):
 
     def addAuthorizedActions(self):    
          self.actions = Actions(
