@@ -261,6 +261,20 @@ class IJSON(IJavascript):
         default = '{}',
     )
 
+class IYAML (IJSON):
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'Please Describe this YAML.',
+        required = False,
+    )
+
+    source= schema.Text(
+        title = u'YAML Source',
+        description = u'The YAML goes here.',
+        required = False,
+        default = '',
+    )    
+
     
 class IJinjaJSON(IJSON,ITemplate):
     pass

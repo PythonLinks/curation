@@ -184,7 +184,9 @@ Tree  <span class="caret"></span></a>
 
 <li tal:condition="view.isManager() " class="dropdown-item
         "><a href="${relativeURL}/addSecureHTML ">Secure HTML</a></li>
-
+	s
+<li tal:condition="view.treeSecurity() " class="dropdown-item
+        "><a href="${relativeURL}/addYAML ">YAML</a></li>
 
 <li class="dropdown-item "><a href="${relativeURL}/addAceFolder ">HTML Folder</a></li>
 

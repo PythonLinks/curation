@@ -142,6 +142,7 @@ class AssignmentForm(SharedForm):
 
          result = """ <script>
          createAce("form-field-problemCode","python");
+         listenForErrors();
            """
 
          if self.isTeacher():
