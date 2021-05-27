@@ -15,7 +15,7 @@ class IMixed(Interface):
 class IPythonIndex(Interface):
      pass
 
-class IPython(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
+class ITranscrypt(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
     """Basic Python  FORM with CRUD"""
 
     title = schema.TextLine(
