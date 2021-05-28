@@ -48,7 +48,7 @@ class ContainerAddForm(AddForm):
 
     @property
     def actions(self):
-        return Actions(
+         return Actions(
               ttwactions.AddAndManage(_("Add and Manage","Add and Manage"), self.factory),
               ttwactions.AddAndCkEdit(_("Add and ckEdit","Add and CkEdit"), self.factory),
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
@@ -65,9 +65,8 @@ class AceContainerAddForm(AddAceHTML):
     ignoreContent = True
     factory=AceContainer
 
-    @property
-    def actions(self):
-        return Actions(
+    def authorizedActions(self):
+        self.actions = Actions(
               ttwactions.AddAndManage(_("Add and Manage","Add and Manage"), self.factory),
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
               formactions.Cancel(_("Cancel","Cancel")))        

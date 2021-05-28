@@ -59,20 +59,4 @@ class AddPython(AceScripts,AceAddForm):
     interface = IPython
     ignoreContent = True
     factory=Python
-    
-    def footerScripts(self):
-        return AceScripts.footerScripts(self)
 
-    def headerScripts(self):
-          return AceScripts.headerScripts(self)    
-    
-    @property
-    def actions(self):
-        return Actions(
-              AddPythonAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
-              #AddPythonAndTest(("Add and Test","Add -> Test"), self.factory),
-              Cancel(_("Cancel","Cancel")))
-
-    @property
-    def fields(self):
-        return  Fields(IName,self.interface)    

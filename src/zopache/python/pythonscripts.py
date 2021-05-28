@@ -31,7 +31,7 @@ from zopache.ttw.acescripts import AceScripts
 from RestrictedPython import safe_builtins, utility_builtins, limited_builtins
 from RestrictedPython import RestrictingNodeTransformer
 from zopache.ttw.interfaces import ITestURL
-from zopache.python.interfaces import IPythonScript
+from zopache.python.interfaces import IPythonScript, IPython
 from zopache.core.getroot import getRoot
 
 import RestrictedPython
@@ -231,14 +231,14 @@ def make_python_response(view, result, *args, **kwargs):
 
 @view_component
 @name('index')
-@context(IPythonScript)
+@context(IPython)
 @title("View")
 class Index(View):
     responseFactory = Response
     make_response = make_view_response
         
     def render(self):
-               return  str(self.context(aView = self))
+               return  self.context.source
 
 @form_component
 @context(IPythonScript)

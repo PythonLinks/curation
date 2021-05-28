@@ -39,6 +39,24 @@ class ITranscrypt(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
 #        default = True,
 #    )       
 
+
+
+class IPython(Interface):
+    "Basic Python Form"
+
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'Describe this Python  Object.',
+        required = False,
+    )
+
+    source= schema.Text(
+        title = 'Python Source Code',
+        description = u'The Python code goes here.',
+        required = False,
+        default = u' ',
+    )
+    
 class IPythonScript(IPython):
     arguments = schema.TextLine(
         title = u'Arguments',
