@@ -6,12 +6,11 @@ from dolmen.forms.base import Actions
 from zopache.ttw.addeditforms import AceAddForm
 from zopache.ttw.acescripts import AceScripts
 from zopache.core.viewdecorators import *
-from zopache.python.python import Python
-from zopache.python.interfaces import IPython, IPythonFolder
+from zopache.python.pyodide import Pyodide
+from zopache.python.interfaces import ITitle, IPython, IPythonFolder, IPyodide
 from zopache.crud.actions import Add
 from zopache.crud import actions as formactions, i18n as _
 from zopache.crud.actions import Cancel
-from zopache.python.python import AceScripts
 
 from zope.schema.interfaces import ValidationError
 from dolmen.container import IBTreeContainer
@@ -38,7 +37,7 @@ class IName(Interface):
            required=True,
            default=None)
  
-class AddPythonAndEdit(AceScripts,Add):
+class AddPythonAndEdit(Add):
     parentClass=Add
     def newURL(self,baseURL):
         return baseURL + '/aceedit'
@@ -49,14 +48,3 @@ class AddPythonAndTest(Add):
         return self.form.new.testURL
 
     
-@form_component
-@name('addPython')
-@context(IBTreeContainer)
-@implementer(IPython)
-@implementer(ITreeSecurity)
-class AddPython(AceScripts,AceAddForm):
-    subTitle = "Add  a Python Object"
-    interface = IPython
-    ignoreContent = True
-    factory=Python
-

@@ -106,8 +106,9 @@ class IEdit(Interface):
 
 
 @form_component
-@name (u'edit')
+@name (u'ckedit')
 @context(IInternalPrincipal)
+@permissions('Manage')
 class EditPrincipal(EditForm):
     title = 'Your Profile'
     interface = IEdit
@@ -127,3 +128,12 @@ class EditPrincipal(EditForm):
     @property
     def fields(self):
         return  Fields(self.interface)
+    def update(self):
+        self.raiseUnauthorized()
+        
+@form_component
+@name (u'aceedit')
+@context(IInternalPrincipal)
+@permissions('Manage')
+class AceEditPrincipal(EditPrincipal):
+    pass

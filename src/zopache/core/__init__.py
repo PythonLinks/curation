@@ -21,7 +21,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 
 class AllObjects(object):
     icon=''
-        
+    count = 0        
     def getParent(self):
         return self.__parent__
     

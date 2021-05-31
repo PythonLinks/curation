@@ -23,6 +23,18 @@ class IFileAdaptor(object):
     def getSegment(self):
         return 'index'
 
+from zopache.python.iskulpt import ISkulptAssignment    
+@crom.adapter
+@crom.sources(ISkulptAssignment)
+@crom.target(IURLSegment)
+class ISkulptAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'index'
+
+
+    
 @crom.adapter
 @crom.sources(IPythonScript)
 @crom.target(IURLSegment)
@@ -30,6 +42,16 @@ class IPythonScriptAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'aceedit'    
+        return 'aceedit'
+
+from zopache.python.interfaces import IPyodide    
+@crom.adapter
+@crom.sources(IPyodide)
+@crom.target(IURLSegment)
+class IPythonScriptAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'aceedit'        
 
 

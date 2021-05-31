@@ -13,7 +13,7 @@ from zopache.pages.page import Page
 from zopache.core import Leaf
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.core.transactionnote import TransactionNote
-from zopache.ttw.interfaces import IJSON, IJSONContainer
+from zopache.python.interfaces import ITitle
 from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.javascript import JavascriptBase
 from zopache.core.interfaces import ITreeSecurity
@@ -21,9 +21,10 @@ from zopache.core.viewdecorators import *
 from zopache.core import Container
 from zopache.pages.interfaces import IPage
 from zopache.crud.update import Edit
-from zopache.crud.forms import AddByTitle, EditForm
+from zopache.crud.forms import AddByTitleForm, EditForm
 from zopache.python.iskulpt import ISkulptSolution, ISkulptAssignment
 from zopache.crud import update as editactions                    
+from zopache.business.exists import Duplicate
 
 @implementer(ISkulptSolution)
 class Solution(Leaf):
@@ -79,9 +80,8 @@ class SkulptAssignment(Page):
     problemText = ""
     timeIsUp = False
     showSolution = False
-    problemCode ="""#Please complete this program to solve the problem.
-def run():
-"""
+    problemCode ="#Enter the solution here."
+
     solutionText = ""
     solutionCode = ""
     showSolution = False
@@ -98,7 +98,6 @@ def run():
             transaction.commit()
         return self[handle]
 
-from zopache.crud.forms import AddByTitleForm
 from dolmen.forms.base import Fields
 from zopache.ttw.htmlviews import CkScripts
 
@@ -196,7 +195,7 @@ class AssignmentForm(SharedForm):
 
         if isTeacher or isAnonymous:
             self.fields = self.fields.omit('comments')
-        sharedForm.update()
+        SharedForm.update(self)
     
 class SolutionForm(SharedForm):
     fields = Fields(ISkulptSolution)
@@ -228,24 +227,22 @@ class SolutionForm(SharedForm):
             
         #Must be after Edit Form    
         SharedForm.update(self)          
-     
+
+
 @view_component
-@name('addAssignment')
+@name('addSkulpt')
 @target(IView)
 @context(IPage)
 @implementer(ITreeSecurity)
-class AddAssignment(AssignmentForm,AddByTitle):
+class AddAssignment(AddByTitleForm):
     title = 'Create a Python (Skulpt) Assignment'
     subTitle= ""
     ignoreContent = True
     factory = SkulptAssignment
     schemaName = "AssignmentSchema"
-    interface = ISkulptAssignment
-    aceMode = "python"
-    def update(self):
-        AddByTitleForm.updateWidgets(self)    
-        AssignmentForm.update(self)        
-
+    interface = ITitle        
+    dataValidators = [Duplicate]
+    
 @form_component
 @context(ISkulptAssignment)
 @name("index")

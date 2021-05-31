@@ -1,3 +1,4 @@
+
 from jsmin import jsmin
 from . import tal_template
 from html import escape

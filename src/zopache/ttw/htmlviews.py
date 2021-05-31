@@ -10,6 +10,7 @@ from zopache.crud import actions as formactions, i18n as _
 from zopache.crud import update as updateactions
 from . import actions  as ttwactions
 from zopache.core.interfaces import ITreeSecurity
+from zopache.core.interfaces import ITreeSecurity
 from chameleon import PageTemplate
 from zope import interface
 from zope import schema
@@ -19,7 +20,6 @@ from zopache.crud.forms import AddForm, BaseEditForm, EditDemoForm
 from dolmen.forms.base import action, name, context, form_component
 from crom import target, order
 from cromlech.browser.directives import title
-from cromlech.security import permissions
 from zopache.ttw.acescripts import AceScripts
 from dolmen.view import name, context, view_component
 from zopache.ttw.interfaces import (ISource,
@@ -96,7 +96,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 @form_component
 @name ('addHTML')
 @context(IBTreeContainer)
-@permissions('Developer')
+@implementer(ITreeSecurity)
 class AddCkHTML(AddCkHTMLBase,AddForm):
     pass
 
@@ -116,7 +116,7 @@ class AddAceHTMLBase(AceScripts,AddHTMLBase,TreeSecurityAddForm):
 @form_component
 @name (u'addAceHTML')
 @context(IBTreeContainer)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddAceHTML (AddAceHTMLBase):
     pass
 
@@ -124,14 +124,14 @@ class AddAceHTML (AddAceHTMLBase):
 @form_component
 @name (u'addAceIFrame')
 @context(IBTreeContainer)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddAceIFrame (AddAceHTMLBase):
     factory = AceIFrameHTML
 
 @form_component
 @name (u'addAceCMS')
 @context(IBTreeContainer)
-@permissions('Manage')
+@implementer(ITreeSecurity)
 class AddAceCMS (AddAceHTMLBase):
     factory = AceCMSHTML
 

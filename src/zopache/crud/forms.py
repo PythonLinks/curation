@@ -77,6 +77,10 @@ class AddByNameForm(TreeSecurityAddForm,UniqueName):
             formactions.Cancel(_("Cancel","Cancel")))
     
 class AddByTitleForm(TreeSecurityAddForm,Notify):
+    @property
+    def fields(self):
+        return  Fields(self.interface)
+    
     def __init__(self,context,request):
         TreeSecurityAddForm.__init__(self,context,request) 
         Notify.__init__(self)       

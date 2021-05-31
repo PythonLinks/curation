@@ -1,7 +1,7 @@
 import crom
 from zopache.core.getroot import getPrincipalFolder
 from zopache.zmi.cutcopypaste import Renamer, Deleter , Copier
-from zopache.ttw.interfaces import IInternalPrincipal as IPrincipal
+from zopache.ttw.interfaces import IInternalPrincipal 
 
 from zopache.zmi.cutfolder import cutFolder
 
@@ -11,7 +11,7 @@ from zopache.zmi.interfaces import IObjectRenamer
 from zopache.core.transactionnote import TransactionNote
 
 @crom.adapter
-@crom.sources(IPrincipal)
+@crom.sources(IInternalPrincipal)
 @crom.target(IObjectCopier)
 class PrincipalCopier(Copier):
     # YOU NEVER WANT TO COPY Principals
@@ -19,7 +19,7 @@ class PrincipalCopier(Copier):
         return False
 
 @crom.adapter
-@crom.sources(IPrincipal)
+@crom.sources(IInternalPrincipal)
 @crom.target(IObjectRenamer)
 class PrincipalRenamer(Renamer):
     # YOU NEVER WANT TO RENMAE Principals
@@ -27,7 +27,7 @@ class PrincipalRenamer(Renamer):
         return False
 
 @crom.adapter
-@crom.sources(IPrincipal)
+@crom.sources(IInternalPrincipal)
 @crom.target(IObjectDeleter)
 class PrincipalDeleter(Deleter):
     def deleteItem(self,view):

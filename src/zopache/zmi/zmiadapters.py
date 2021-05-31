@@ -49,17 +49,6 @@ class IPythonAdaptor(object):
     def getSegment(self):
         return 'aceedit'
 
-"""
-THERE IS ANOTHER ONE FOR return 'permissions'
-@crom.adapter
-@crom.sources(IInternalPrincipal)
-@crom.target(IURLSegment)
-class IPrincipalAdaptor(object):
-    def __init__(self,context):
-        self.context=context
-    def getSegment(self):
-        return 'edit'            
-"""    
 
 # FOR A PRINCIPAL
 from zopache.ttw.interfaces import IInternalPrincipal
@@ -70,4 +59,4 @@ class IPrincipalAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'manage'    
+        return 'permissions'    

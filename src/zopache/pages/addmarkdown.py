@@ -56,18 +56,18 @@ class AddMarkdown(AceScripts,AceAddForm, Notify):
      
     def __init__(self,context,request):
         AceScripts.__init__(self)
+        AceAddForm.__init__(self,context,request) 
         Notify.__init__(self)        
-        AceAddForm.__init__(self,context,request)
-   
+  
     def footerScripts(self):
         return AceScripts.footerScripts(self)
 
     def headerScripts(self):
           return AceScripts.headerScripts(self)    
     
-    @property
-    def actions(self):
-        return Actions(
+       
+    def authorizedActions(self):
+        self.actions = Actions(
               AddAndEdit(_("Add and Edit","Add -> Edit"), self.factory),
               AddAndView(_("Add and View","Add -> View"), self.factory),
               Cancel(_("Cancel","Cancel")))

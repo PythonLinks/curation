@@ -59,7 +59,10 @@ class TrustedHTML(Trusted,HTMLBase):
     trusted = True    
     icon="ttwicons/CkHTML.svg"
     def postProcess(self,view=None):
-            self.setTrusted(view = view)
+        self.setTrusted(view = view)
+        if hasattr(self,'_v_compiledTemplate'):
+           del self._v_compiledTemplate 
+        self.compileTemplate()
             
     def postAddProcess(self,view=None):
             self.postProcess(view=view)
@@ -69,17 +72,17 @@ class TrustedHTML(Trusted,HTMLBase):
                return     
             if not hasattr(self,'_v_compiledTemplate'):
                self.compileTemplate()
-            #return self._v_compiledTemplate 
+            return self._v_compiledTemplate 
 
 
     def compileTemplate(self):
                  if self.trusted == False:
                     return     
-                 source=self.getHTML()
-                 template = PageTemplate(source)
+                 theSource=self.getHTML()
+                 template = PageTemplate(theSource)
                  template.filename = self.__name__
                  self._v_compiledTemplate = template
-                 #return self._v_compiledTemplate
+                 return self._v_compiledTemplate
 
             
     #So here we pass the context into the template    

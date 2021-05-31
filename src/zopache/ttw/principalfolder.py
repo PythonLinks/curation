@@ -47,7 +47,7 @@ class InternalPrincipal(FileBase,Page):
     title = ""
     source = ""
     description = ""
-    permissions = ['Vote','Developer']
+    permissions = ['Vote','Develop']
     chatPermission = False
     newsPermission = False
     pugPermission = False

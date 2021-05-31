@@ -15,7 +15,15 @@ class IMixed(Interface):
 class IPythonIndex(Interface):
      pass
 
-class ITranscrypt(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
+class ITitle(Interface):
+    title = schema.TextLine(
+        title = u'Title',
+        description = u'A short reminder of what is this Python Assignment.',
+        default='',            
+        required = False,
+    )
+    
+class ITranscrypt(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI):
     """Basic Python  FORM with CRUD"""
 
     title = schema.TextLine(
@@ -41,8 +49,8 @@ class ITranscrypt(ISourceLeaf,IPythonIndex,IMixed,IJavascript,IZMI,IDeletable):
 
 
 
-class IPython(Interface):
-    "Basic Python Form"
+class IPyodide(ISourceLeaf):
+    "Basic Python Pyodide Form"
 
     title = schema.TextLine(
         title = u'Title',
@@ -54,9 +62,12 @@ class IPython(Interface):
         title = 'Python Source Code',
         description = u'The Python code goes here.',
         required = False,
-        default = u' ',
+        default = '\n\n\n',
     )
-    
+
+class IPython(IPyodide):
+     pass
+
 class IPythonScript(IPython):
     arguments = schema.TextLine(
         title = u'Arguments',

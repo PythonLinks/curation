@@ -10,7 +10,6 @@ class Trusted (object):
        
             if 'Python' in view.request.principal.permissions:
                self.trusted = True
-               self.compileTemplate()
             else:
                self.trusted = False
 

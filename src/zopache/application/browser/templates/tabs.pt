@@ -8,7 +8,7 @@
 
 <!--  NODE MENU  -->
 
-        <li class="dropdown nav-item">
+        <li class="dropdown nav-item"  tal:condition = "view.treeSecurity()">
 <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
 
 Node  <span class="caret"></span></a>
@@ -29,7 +29,7 @@ Node  <span class="caret"></span></a>
 		
                 <li 
                 class="dropdown-item">
-<a href="${relativeURL}/editors">Editors</a>
+<a href="${relativeURL}/editors">Security</a>
 </li>
 
                 <span tal:condition="view.isManager()" tal:omit-tag="">
@@ -184,6 +184,9 @@ Tree  <span class="caret"></span></a>
 
 <li tal:condition="view.isManager() " class="dropdown-item
         "><a href="${relativeURL}/addSecureHTML ">Secure HTML</a></li>
+
+<li class="dropdown-item "><a href="${relativeURL}/addSkulpt">
+Skulpt Assignment</a></li>
 
 <li class="dropdown-item "><a href="${relativeURL}/addAceFolder ">HTML Folder</a></li>
 
