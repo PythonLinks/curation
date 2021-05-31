@@ -124,7 +124,7 @@ class SharedForm(TransactionNote,AceScripts,CkScripts):
         self.template = self.getTemplates()['Skulpt']
 
     def isTeacher(self):
-        return self.isManager()
+        return self.treeSecurity()
 
     def isAnonymousVisitor(self):
         return not self.isAuthenticated()    
@@ -176,7 +176,7 @@ class AssignmentForm(SharedForm):
            return self.context.title
        
     def isStudent(self):
-        if self.isAuthenticated() and not self.isManager():
+        if self.isAuthenticated() and not self.isTeacher():
            return True
         return False
     

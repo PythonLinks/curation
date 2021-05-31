@@ -69,7 +69,10 @@ class InternalPrincipal(FileBase,Page):
          if not hasattr(self,'_groups'):
             self._groups =  set()
          return self._groups
-     
+
+    def isPage(self):
+        return False
+        
     groups = property (getGroups)
     def addGroup(self,name):
         self.groups.add(name)
