@@ -3,6 +3,7 @@ from dolmen.container import IBTreeContainer
 from zopache.python.interfaces import IFile, IDirectory,IPythonScript
 from zopache.zmi.interfaces import IURLSegment
 from zopache.pages.interfaces import INotebook
+from zopache.python.iskulpt import ISkulptSolution
 
 #FOR BTREES    
 @crom.adapter
@@ -23,7 +24,7 @@ class IFileAdaptor(object):
     def getSegment(self):
         return 'index'
 
-from zopache.python.iskulpt import ISkulptAssignment    
+from zopache.python.iskulpt import ISkulptAssignment, ISkulptSolution
 @crom.adapter
 @crom.sources(ISkulptAssignment)
 @crom.target(IURLSegment)
@@ -33,6 +34,16 @@ class ISkulptAdaptor(object):
     def getSegment(self):
         return 'index'
 
+
+@crom.adapter
+@crom.sources(ISkulptSolution)
+@crom.target(IURLSegment)
+class SolutinAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'index'
+    
 
     
 @crom.adapter

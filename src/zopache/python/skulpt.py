@@ -28,6 +28,7 @@ from zopache.business.exists import Duplicate
 
 @implementer(ISkulptSolution)
 class Solution(Leaf):
+    #webClass = "Skulpt"    
     icon="ttwicons/Python.svg"
     _solutionCode = ""
     comments = ""
@@ -118,7 +119,8 @@ class SharedForm(TransactionNote,AceScripts,CkScripts):
     aceMode = "python"
     actions = Actions()
     layoutName = "UserMenu"
-
+    layoutName = ""
+    
     def update(self):
 
         self.template = self.getTemplates()['Skulpt']
@@ -284,6 +286,7 @@ class AceEditSkulptAssignment(AssignmentForm,EditForm):
         else:
            if not isTeacher:           
                self.fields = self.fields.omit('solutionText')
+               self.fields = self.fields.omit('title')               
                self.fields = self.fields.omit('solutionCode')           
         #AceEditForm.updateWidgets(self)              
 
@@ -327,7 +330,6 @@ class AceEditSkulptSolution(SolutionForm, EditForm):
     title = "Students's Work"
     subTitle = ""
     interface = ISkulptSolution
-    
 
     def addAuthorizedActions(self):
         if self.isTeacher() or self.isStudent():

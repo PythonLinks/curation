@@ -6,7 +6,7 @@ from zopache.ttw.interfaces import ISourceLeaf
 from zopache.zmi.interfaces import IZMI
 from zopache.crud.interfaces import IDeletable
 
-class ISkulptSolution(ISourceLeaf,IZMI,IDeletable):
+class ISkulptSolution(ISourceLeaf,IDeletable):
     """Student solution data. """
 
     comments= schema.Text(
