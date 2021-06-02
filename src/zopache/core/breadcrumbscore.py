@@ -166,8 +166,6 @@ class BreadcrumbsCore(object):
         return result
 
     
-    def breadcrumbsIndex(self,item):
-        return self.breadcrumbsView(item,viewName='',showTitles=True)
 
     #THE DEFAULT BREADCRUMBS
     def breadcrumbs(self):

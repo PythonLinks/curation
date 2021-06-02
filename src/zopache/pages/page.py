@@ -243,9 +243,8 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
         
     def __setitem__(self,  key,item):
         OrderedBTreeContainer.__setitem__(self,key,item)
-        if IPage.providedBy(item):
-           siteRoot = self.getSiteRoot()     
-           siteRoot.addItem(item)
+        siteRoot = self.getSiteRoot()     
+        siteRoot.addItem(item)
                   
     def hasContent(self):
          if len(self.source)<2:

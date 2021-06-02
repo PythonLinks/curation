@@ -73,19 +73,12 @@ class JinjaBase(Leaf):
             self.setTemplate(view)
             request = view.request
             try:
-               if self.trusted:
-                  return self._v_compiledTemplate.render(
-                               view2= view,
-                               context = context,
-                               request = request
-                           )
-               else:
-                   ctx = {
+               ctx = {
                                "view": view,
                                "node" : context,
                                "request" : request}
-
-                   return self._v_compiledTemplate.render(context = ctx,
+                    
+               return self._v_compiledTemplate.render(context = ctx,
                                                           node = context,
                                                           view= view,
                                                           request = request)
@@ -208,9 +201,8 @@ class IndexJinjaJS(View,Breadcrumbs):
         #In the case of /index/index
         if not hasattr(self,'zopacheTemplate'):
                self.zopacheTemplate=self.context
-               self.context=self.context.__parent__        
+               self.context=self.context.__parent__
         return self.zopacheTemplate.callWithContext(self,context)
-
 
 @view_component
 @name('index')

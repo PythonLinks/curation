@@ -81,6 +81,15 @@ class JavascriptFolderBase (BTreeContainer):
     sourceCache=u''
     def cacheSource(self):
         self.sourceCache=self.getJavascript()
+        
+    def __delitem__(self,key):
+        OrderedBTreeContainer.__delitem__(self,key)
+        item = self[key]
+        self.createJavascriptCaches()
+        
+    def __setitem__(self,  key,item):
+        OrderedBTreeContainer.__setitem__(self,key,item)
+        self.createJavascriptCaches()        
 
     def getJavascript(self):
         result = self.source or ' '

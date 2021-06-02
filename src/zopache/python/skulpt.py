@@ -35,7 +35,7 @@ class Solution(Leaf):
     result = ""
     def className(self):
         return self.__class__.__name__
-    
+
     @property
     def title (self):
         return  self.parent.title
@@ -119,7 +119,6 @@ class SharedForm(TransactionNote,AceScripts,CkScripts):
     aceMode = "python"
     actions = Actions()
     layoutName = "UserMenu"
-    layoutName = ""
     
     def update(self):
 
@@ -270,7 +269,6 @@ class AceEditSkulptAssignment(AssignmentForm,EditForm):
                     editactions.Cancel("Cancel","Cancel"))
         #Must be after EditForm.update()
         SharedForm.update(self)          
-
         
         if not self.context.showSolution and not isTeacher:
              self.fields = self.fields.omit('solutionText')
@@ -278,7 +276,8 @@ class AceEditSkulptAssignment(AssignmentForm,EditForm):
    
         if not isTeacher:
             self.fields = self.fields.omit('showSolution')
-           
+            self.fields['title'].mode = DISPLAY
+            
         if self.context.showSolution:
            if not isTeacher:
                self.fields['solutionText'].mode = DISPLAY
@@ -286,9 +285,8 @@ class AceEditSkulptAssignment(AssignmentForm,EditForm):
         else:
            if not isTeacher:           
                self.fields = self.fields.omit('solutionText')
-               self.fields = self.fields.omit('title')               
-               self.fields = self.fields.omit('solutionCode')           
-        #AceEditForm.updateWidgets(self)              
+               self.fields = self.fields.omit('solutionCode')
+               
 
     def addUnauthorizedActions(self):
         self.actions = Actions()
