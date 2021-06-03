@@ -120,6 +120,10 @@ class RSS(Link,UniqueName):
           new.publishedAt = time.mktime( article["published_parsed"])
        else:
           new.publishedAt = time.time()
+          
+       #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
+       #PREVENTS BUNCHING THEM UP.
+       new.importTime = new.publishedAt   
        newName = slugify (new.title)
        newName = self.uniqueBothName (self,newName)
        self[newName] = new
