@@ -98,7 +98,6 @@ class Branch(SimpleBranch):
        self.globalArticles = OOBTree()
        self.newestArticles = OOBTree()       
        self.remoteArticles = OOBTree()
-       self.uniqueTime = LOTreeSet()
        
     def urlOnly(self,link):
        if link.startswith('http'):
@@ -158,7 +157,6 @@ class Branch(SimpleBranch):
         self.globalArticles = OOBTree()
         self.newestArticles = OOBTree()
         self.remoteArticles = OOBTree()                
-        self.uniqueTime = LOTreeSet()
         self.indexBranch(self,self)
 
 
@@ -196,7 +194,9 @@ class Branch(SimpleBranch):
                     
         if item.className()  == "RSSArticle":
             self.globalArticles [item.permaLink] = item
-            self.addNews(item)                
+            newestArticles = self.newestArticles
+            time = item.getImportTime(newestArticles)
+            newestArticles[-time] = item
             
         if item.className() =='Politician':
             if (hasattr(item, 'candidateInfo') or
@@ -206,16 +206,6 @@ class Branch(SimpleBranch):
         if item.className() == 'Link':
             self.addNews(item)
         
-    def addNews(self,item):            
-            time = item.creationTime
-            newestArticles = self.newestArticles
-            while True:
-                if time in newestArticles:
-                   time = time + 1
-                   continue
-                newestArticles[-time] = item
-                item.creationTime = time
-                break
             
     def unIndexItem(self,item, itemType=IPage):
         if not item.__name__ in self.valuesByToken: 
@@ -234,7 +224,7 @@ class Branch(SimpleBranch):
                 
         if item.className() == "RSSArticle":
             del self.globalArticles [item.permaLink]
-            #del self.newestArticles [item.creationTime]
+            del self.newestArticles [- item.importTime]
             
         if item.className() == "Link":
             #del self.newestArticles [item.creationTime]            

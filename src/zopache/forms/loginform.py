@@ -56,6 +56,7 @@ class LoginForm(Form):
     """ Used to login
     """
     __name__ = "login2"
+    
     dataValidators = [LoginValidator]    
     layoutName = "UserMenu"
     title='Log in '
@@ -65,12 +66,11 @@ class LoginForm(Form):
     submissionError = []
     count = 0
     allowAnonymous = True
+    
     def update(self):
-        if 'staging.greenmaps.us' == self.getDomain():
-           return
-        if 'greenmaps.us' in self.getDomain():
+        if not self.getSiteRoot().localLogin:
             self.raiseUnauthorized()
-            
+                        
     @property
     def actions(self):
         return Actions(

@@ -45,7 +45,12 @@ class RSSArticle(Page,Voteable):
     webClass = "RSSLink"
     emailApproved = True
     publicationApproved = False
-    
+
+    def __init__(self):
+        importTime=time.time()
+        importTime = int(sortTime)
+        self.importTime = sortTime
+        
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
         del self.rssFeed.localArticles [self.permaLink]
@@ -76,24 +81,23 @@ class RSSArticle(Page,Voteable):
         
     creationTime = property(getCreationTime,setCreationTime)
 
+    #AND NOW RESET  A UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
+
+    def getImportTime(self,siteRoot):
+        uniqueTime = siteRoot.uniqueTime
+        while (- self.importTime) in uniqueTime:
+             self.sortTime += 1  
+        return self.sortTime
+
     def postAddProcess (self, view = None):
         Page.postAddProcess(self,view = view)
         if "exclusive for subscribers" in self.title.lower():
            self.webApproved = False
 
-        #AND NOW CREATE UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
-        """
-        sortTime=time.time()
-        sortTime = int(sortTime)
-        siteRoot = self.getSiteRoot()
-        uniqueTime = siteRoot.uniqueTime
-        while sortTime in uniqueTime:
-             sortTime += 1
-        self.sortTime = sortTime    
         #categories = parentsWhichImplement(self,IRSSCategory)
         #for item in categories:
         #     item.articlesByTime[- sortTime] = self
-        """
+
         
     def addImage(self):
            if  'Logo' in self:

@@ -48,7 +48,11 @@ class Register(Form,Notify):
     def __init__(self,context,request):
         Form.__init__(self,context,request)
         Notify.__init__(self)
-    
+        
+    def update(self):
+        if not self.getSiteRoot().locallogin:
+            self.raiseUnauthorized()
+            
     def acquireTitle(self):
        return 'Sign Up'
     

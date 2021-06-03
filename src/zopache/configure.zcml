@@ -12,7 +12,6 @@
 	        <grok:grok package="zopache.python" />
         <grok:grok package="zopache.climate" />
         <grok:grok package="zopache.remote" />		
-	<grok:grok package="zopache.iodide" />
     <grok:grok package="zopache.application" />
     <grok:grok package="zopache.copy" />
   <grok:grok package="cromlech.location" />

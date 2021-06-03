@@ -23,7 +23,6 @@ extensions =[
     Extension("zopache.forms/*",
                  ["src/zopache/forms/*.py"]),
     Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
-    Extension("zopache.iodide/*", ["src/zopache/iodide/*.py"]),
     Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
     Extension("zopache.python/*", ["src/zopache/python/*.py"]),    
     Extension("zopache.climate/*", ["src/zopache/climate/*.py"]),    
@@ -145,7 +144,6 @@ setup(
            'fanstatic.libraries': [
                 'ttwicons = zopache.ttw:library',
                 'zmiicons = zopache.zmi:library',
-                'iodide = zopache.iodide:library',                             
                 ],
         },
               

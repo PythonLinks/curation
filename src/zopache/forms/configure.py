@@ -27,6 +27,13 @@ class IForm(Interface):
         default = u'',
     )
 
+    localLogin = Bool(
+        title = "Allow Local Logins?",
+        description = "For security best to disable, and use Google OAuth login",
+        required = False,
+        default = True,
+    )    
+
     mapBoxKey= TextLine(
         title = "MapBox Key",
         description = "Required For Maps",

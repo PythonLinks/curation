@@ -358,6 +358,9 @@ class SiteRoot(Branch,PageBase,PageMixIn):
          
 @implementer(IRootPage)         
 class RootPage(SiteRoot):
+    twitterId = ""
+    localLogin = True
+    googleClientId = ""
     def getSiteRootFor(self,hostName):
         return self
 
