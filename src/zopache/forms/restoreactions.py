@@ -44,7 +44,7 @@ class BaseAction(Action):
 class RestoreAction(BaseAction):
     def processImport(self,context,branch):
         name = branch.__name__
-        newName = UniqueName().uniqueContainerName(context,name)          
+        newName = UniqueName().uniqueContainerName(context,name)
         self.form.context [newName] = branch
         send(newName + " was restored")
         

@@ -47,9 +47,10 @@ class RSSArticle(Page,Voteable):
     publicationApproved = False
 
     def __init__(self):
+        Page.__init__(self)
         importTime=time.time()
-        importTime = int(sortTime)
-        self.importTime = sortTime
+        self.importTime = int(importTime)
+
         
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
@@ -83,11 +84,10 @@ class RSSArticle(Page,Voteable):
 
     #AND NOW RESET  A UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
 
-    def getImportTime(self,siteRoot):
-        uniqueTime = siteRoot.uniqueTime
-        while (- self.importTime) in uniqueTime:
-             self.sortTime += 1  
-        return self.sortTime
+    def getImportTime(self,newestArticles):
+        while (- self.importTime) in newestArticles:
+             self.importTime += 1  
+        return self.importTime
 
     def postAddProcess (self, view = None):
         Page.postAddProcess(self,view = view)
@@ -96,16 +96,22 @@ class RSSArticle(Page,Voteable):
 
         #categories = parentsWhichImplement(self,IRSSCategory)
         #for item in categories:
-        #     item.articlesByTime[- sortTime] = self
+        #     item.articlesByTime[- importTime] = self
 
-        
-    def addImage(self):
-           if  'Logo' in self:
-               return
+    def getImageURL(self):    
            if hasattr(self,'imageURL'):
                if self.imageURL != "":
-                     getImage(context,imageURL)           
+                  return self.imageURL
            elif  hasattr(self,'links'):
                 for item in self.links:
                     if "image" in item.type:
-                       getImage(self,item.href)
+                        return self.item.href
+           return ''
+       
+    def addImage(self):
+           if  'Logo' in self:
+               return ''
+           imageURL = self.getImageURL()
+           if imageURL:
+               getImage(imageURL)
+

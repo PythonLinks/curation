@@ -56,6 +56,11 @@ class SimpleBranch(object):
         return (key in self._data  or 
                 key in self.valuesByToken)
 
+    def __delitem__(self, key):
+        BTreeContainer.__delitem__(self,key)
+        if key in self.valuesByToken:
+                self.valuesByToken.__delitem__(key)
+    
     def __getitem__(self, name):
         if BTreeContainer.__contains__(self,name):
            return  BTreeContainer.__getitem__(self,name)
@@ -173,6 +178,8 @@ class Branch(SimpleBranch):
                    self.indexBranch(tree,item)
 
     def indexItem(self,item, itemType=ICanonical):
+        if not IPage.providedBy(item):
+            return
         self.valuesByToken[item.__name__] = item       
         if (hasattr(item,'webApproved') and
                    not item.webApproved ):
@@ -208,6 +215,8 @@ class Branch(SimpleBranch):
         
             
     def unIndexItem(self,item, itemType=IPage):
+        if not IPage.providedBy(item):
+            return        
         if not item.__name__ in self.valuesByToken: 
            return
 

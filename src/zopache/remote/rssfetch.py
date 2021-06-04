@@ -5,9 +5,10 @@ from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
 from zopache.remote.rssdownload import getRSS
 from zopache.pages.interfaces import IPage
-from zopache.remote.rss import IRSSBase
 from zopache.crud.getimage import createImageIn
 from zopache.core.interfaces import ITreeSecurity
+from zopache.remote.irss import IRSSBase
+from zopache.remote.rssarticle import IRSSArticle, RSSArticle
 
 
 async def processRssResponse(url,response):
@@ -21,6 +22,12 @@ async def processRssResponse(url,response):
 async def processImageResponse(url,response):
           response.content  =  await response.read()          
           return  ('Success' ,url,response)
+
+def getImages(urls):
+          return getRSS(urls,processImageResponse)
+
+def getArticles(urls):
+          return getRSS(urls, processRssResponse)
 
 @form_component
 @context(IPage)
@@ -62,13 +69,11 @@ class GetImages(Form):
            urls = []
            articlesByURL = {}
            for article in self.context.allBlogObjects():
-               if IRSSArticle.providedBy(item):
-                 if not 'Logo' in item:
-                   if getattr(item,'image',''):        
-                       imageURL =  article.image
+               if IRSSArticle.providedBy(article):
+                  imageURL = article.getImageURL()
+                  if imageURL:
                        urls.append (imageURL)
-                       articlesByURL [imageURL] = item
-
+                       articlesByURL [imageURL] = article        
            result = getRSS(urls, processImageResponse)
            for key, value in result.items():
                if value.status == 200:      

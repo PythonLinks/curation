@@ -5,7 +5,8 @@ from zopache.crud.forms import AddByTitleForm
 from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPageBase, IPage
-from zopache.remote.rss import IRSS, IJustRSS, IRSSBase, RSS, JustRSS
+from zopache.remote.rss import  RSS, JustRSS
+from zopache.remote.irss import IRSS, IJustRSS, IRSSBase
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
 from zopache.core.page import Page
 from zopache.ttw.mail import Notify
