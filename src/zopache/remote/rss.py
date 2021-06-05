@@ -159,8 +159,12 @@ class RSS(Link,UniqueName):
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)
 
-
-    
+    async def processResponse(self, response,view):
+          html  =  await response.text()
+          feed = feedparser.parse(html)
+          entries = feed['entries']
+          for article in entries:
+                    self.createArticles(entries,view)
 
 @implementer(IJustRSS)
 class JustRSS(RSS):

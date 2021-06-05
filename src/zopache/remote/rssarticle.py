@@ -5,7 +5,8 @@ from zopache.pages.interfaces import IPage
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from zopache.remote.interfaces import IVoteable
-from zopache.crud.getimage import getImage
+from zopache.crud.getimage import createImageInFrom
+from webpreview import web_preview
 
 class IRSSArticle(IPage,IVoteable):
 
@@ -42,6 +43,7 @@ from zopache.pages.page import Page
 @implementer (IRSSArticle)
 class RSSArticle(Page,Voteable):
     _category = ""
+    imageURL = ""
     webClass = "RSSLink"
     emailApproved = True
     publicationApproved = False
@@ -102,10 +104,37 @@ class RSSArticle(Page,Voteable):
     def addImage(self):
            if  'Logo' in self:
                return
-           if hasattr(self,'imageURL'):
-               if self.imageURL != "":
-                     getImage(context,imageURL)           
-           elif  hasattr(self,'links'):
-                for item in self.links:
-                    if "image" in item.type:
-                       getImage(self,item.href)
+           imageURL = self.getImageURL()
+           if imageURL:
+               getImage(self,imageURL)           
+
+    def getImageURL(self):
+        if hasattr(self,'imageURL'):
+            if self.imageURL != "":
+                return self.imageURL           
+        elif  hasattr(self,'links'):
+            for item in self.links:
+                if "image" in item.type:
+                    return self.item.href
+        return ""
+
+    async def processResponse(self,response,view):
+
+        if self.getImageURL():
+           print ("Fetching  Image " + self.parent.name + " " +self.name) 
+           content = await response.read()
+           return self, content, response
+        else:
+            print ("Fetching Page " + self.name)             
+            html  =  await response.text()
+            result = web_preview(self.articleURL, content = html, parser="html.parser")
+            imageURL = result [2]
+            print (result)
+            breakpoint()            
+
+            print ("HERE is the IMAGE URL ", imageURL)
+            return None
+            #if imageURL != "":
+            #   self.imageURL = imageURL 
+            #   print ("Found IMAGE URL", self.imageURL)
+            #   return await fetch(self,5, time.time(),view)

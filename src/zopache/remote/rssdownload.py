@@ -2,79 +2,73 @@ import aiohttp
 import asyncio
 import ssl
 import time
-import feedparser
+from zopache.remote.rss import IRSSBase
+from zopache.remote.rssarticle import IRSSArticle
 
-count = []
-
-async def fetch(url,allowedTime,startTime,processResponse):
+async def fetch(node,allowedTime,startTime,view):
    duration =  time.time() - startTime 
    timeout = aiohttp.ClientTimeout(total=allowedTime)
+
+   if IRSSBase.providedBy(node):
+      url = node.rssURL
+      print ("URL IS  AN RSS FEED " + node.name)      
+   elif IRSSArticle.providedBy(node):
+      if  'Logo' in node:
+         return None
+      url = node.getImageURL()
+      if url == "":
+         url = node.articleURL
+         print("URL is An Article " + node.name)
+      else:
+         print ("URL is  an Image " + node.name)
+      
    async with aiohttp.ClientSession(timeout = timeout) as session:
      try:
         async with session.get(url) as response:
-          if response.status != 200:
-               return (response.status,url,'')      
-          count.append(1)
-          return await processResponse(url,response)
+          if response.status == 200:
+             print ("FETCHING THE URL " + node.name)
+             return await node.processResponse(response,view)
        
-     except (asyncio.TimeoutError):
+     except asyncio.TimeoutError as err:
           duration =  time.time() - startTime 
-          print ("TIME OUT", duration, url)
-          return ("timeOut",url,'')
-       
+          print ("TIME OUT", duration, node.name)
+          print (node.name,err)
+          
      except (aiohttp.client_exceptions.InvalidURL):
-        result = ("InvalidURL",url,'')
-        print (result)
-        return result
+          print (node.name,err)
+
        
      except (aiohttp.client_exceptions.ClientConnectorError):    
-        result = ("Cannot Connect",url,'')
-        print (result)
-        return result
+          print (node.name,err)
      
      except (aiohttp.client_exceptions.ServerDisconnectedError):    
-        result = ("Server DisConnect",url,'')
-        print (result)
-        return result
+          print (node.name,err)
      
-     except (ssl.SSLError):    
-        result = ("SSL ERROR",url,'')              
-        print (result)
-        return result
+     except ssl.SSLError as err:    
+          print (node.name,err)
+
 
      except Exception as err:
-        print ("other errror",err)
-        result = ("Other err",url,'')
-        print (result)
-        return result
-       
-async def fetch_all(urls,processResponse):
-    tasks = []
-    count = len(urls)
-    allowedTime = 2 + count
+          print (node.name,err)
+          
+     return None     
+
+tasks = []     
+def fetchAll(nodes,view):
+   return  asyncio.run(fetchCore(nodes,view))
+
+async def fetchCore(nodes,view):   
+    allowedTime = 40
     startTime = time.time()    
-    for url in urls:
-        task = asyncio.create_task(fetch(url,
+    for node in nodes:
+        print ("Starting " + node.name)
+        task = asyncio.create_task(fetch(node,
                                          allowedTime,
                                          startTime,
-                                         processResponse))
+                                         view))
         tasks.append(task)
-    results = await asyncio.gather(*tasks)
-    return results
+    return await asyncio.gather(*tasks)
 
 
-async def fetchURLS(urls,processResponse):    
-        session = None
-        responses = await fetch_all( urls,processResponse)
-        results = {}
-        for item in responses:
-            results [item[1]]=item [2]
-        return results
-               
-def getRSS(urls,processResponse):
-   result = asyncio.run(fetchURLS(urls,processResponse))
-   return result
 
 
-if __name__ == '__main__':
-   pass
