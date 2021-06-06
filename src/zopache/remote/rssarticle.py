@@ -50,8 +50,9 @@ class RSSArticle(Page,Voteable):
 
     def __init__(self):
         importTime=time.time()
-        importTime = int(sortTime)
-        self.importTime = sortTime
+        importTime = int(importTime)
+        self.importTime = importTime
+        Page.__init__(self)
         
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
@@ -85,11 +86,10 @@ class RSSArticle(Page,Voteable):
 
     #AND NOW RESET  A UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
 
-    def getImportTime(self,siteRoot):
-        uniqueTime = siteRoot.uniqueTime
-        while (- self.importTime) in uniqueTime:
-             self.sortTime += 1  
-        return self.sortTime
+    def getImportTime(self,newestArticles):
+        while (- self.importTime) in newestArticles:
+             self.importTime += 1  
+        return self.importTime
 
     def postAddProcess (self, view = None):
         Page.postAddProcess(self,view = view)
@@ -98,7 +98,7 @@ class RSSArticle(Page,Voteable):
 
         #categories = parentsWhichImplement(self,IRSSCategory)
         #for item in categories:
-        #     item.articlesByTime[- sortTime] = self
+        #     item.articlesByTime[-self.importTime] = self
 
         
     def addImage(self):
@@ -119,22 +119,26 @@ class RSSArticle(Page,Voteable):
         return ""
 
     async def processResponse(self,response,view):
-
         if self.getImageURL():
-           print ("Fetching  Image " + self.parent.name + " " +self.name) 
            content = await response.read()
-           return self, content, response
+           return self, content, response.headers['Content-Type']
         else:
-            print ("Fetching Page " + self.name)             
             html  =  await response.text()
             result = web_preview(self.articleURL, content = html, parser="html.parser")
             imageURL = result [2]
-            print (result)
-            breakpoint()            
 
-            print ("HERE is the IMAGE URL ", imageURL)
-            return None
-            #if imageURL != "":
-            #   self.imageURL = imageURL 
-            #   print ("Found IMAGE URL", self.imageURL)
-            #   return await fetch(self,5, time.time(),view)
+            if imageURL:
+               self.imageURL = imageURL
+               """
+               print ("Found IMAGE URL", self.imageURL)
+               response =  await fetch(self,10, time.time(),view)
+               print("IN ARticle RETURNIng IMAge", self.name)
+               return self, content, response.headers['Content-Type']
+               """
+            else:
+               print ("No IMAGE URL")
+
+
+
+
+

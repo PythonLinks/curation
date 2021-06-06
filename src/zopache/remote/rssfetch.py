@@ -7,9 +7,23 @@ from zopache.core.baseform import Form
 from zopache.remote.rssdownload import fetchAll
 from zopache.pages.interfaces import IPage
 from zopache.remote.rss import IRSSBase
-from zopache.crud.getimage import createImageIn
+from zopache.crud.getimage import createImageInFrom
 from zopache.core.interfaces import ITreeSecurity
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
+
+def callTwice(self):
+        articles = []
+        for  item  in self.context.allBlogObjects():
+               if IRSSArticle.providedBy(item):
+                   if not 'Logo' in item:
+                      articles.append(item)
+        results = fetchAll(articles, self)
+        for item in results:
+            if item == None:
+               continue
+            (article, content, contentType) = item
+            #print ("CREATING IMAGE" + article.name)
+            createImageInFrom(article,content,contentType)
 
 
 
@@ -28,6 +42,8 @@ class GetRSS(Form):
                if IRSS.providedBy(item):
                       feeds.append(item)
         fetchAll(feeds,self)
+        callTwice(self)
+        callTwice(self)
         self.status='RSS Feeds were downloaded.'
         Form.update(self)
 
@@ -41,19 +57,10 @@ class GetRSS(Form):
 class GetImages(Form):
     title = "Download the Article Images"
     subTitle = "To get the newest pictures."
+            
     def update(self):
-        articles = []
-        for  item  in self.context.allBlogObjects():
-               if IRSSArticle.providedBy(item):
-                   if not 'Logo' in item:
-                      articles.append(item)
-        results = fetchAll(articles, self)
-        breakpoint()
-        for item in results:
-            if item == None:
-               continue 
-            (article, content, contentType) = item
-            createImageInFrom(article,content,contentType)
+        callTwice(self)
+        callTwice(self)
         self.status='Images were downloaded.'
         Form.update(self)
            

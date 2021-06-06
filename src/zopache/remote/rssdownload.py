@@ -5,69 +5,72 @@ import time
 from zopache.remote.rss import IRSSBase
 from zopache.remote.rssarticle import IRSSArticle
 
-async def fetch(node,allowedTime,startTime,view):
+async def fetch(session,node,startTime,view):
    duration =  time.time() - startTime 
-   timeout = aiohttp.ClientTimeout(total=allowedTime)
 
    if IRSSBase.providedBy(node):
       url = node.rssURL
-      print ("URL IS  AN RSS FEED " + node.name)      
+      #print ("URL IS  AN RSS FEED " + node.name)      
    elif IRSSArticle.providedBy(node):
       if  'Logo' in node:
          return None
       url = node.getImageURL()
       if url == "":
          url = node.articleURL
-         print("URL is An Article " + node.name)
+         #print("URL is An Article " + node.name)
       else:
          print ("URL is  an Image " + node.name)
-      
-   async with aiohttp.ClientSession(timeout = timeout) as session:
-     try:
+
+   try:
         async with session.get(url) as response:
           if response.status == 200:
-             print ("FETCHING THE URL " + node.name)
+             #print ("FETCHED THE URL " + node.name)
+             #print("IN DOWNLOAD  RETURNIng IMAge", node.name)             
              return await node.processResponse(response,view)
        
-     except asyncio.TimeoutError as err:
+   except asyncio.TimeoutError as err:
           duration =  time.time() - startTime 
           print ("TIME OUT", duration, node.name)
           print (node.name,err)
           
-     except (aiohttp.client_exceptions.InvalidURL):
+   except (aiohttp.client_exceptions.InvalidURL):
           print (node.name,err)
-
        
-     except (aiohttp.client_exceptions.ClientConnectorError):    
+   except (aiohttp.client_exceptions.ClientConnectorError):    
           print (node.name,err)
      
-     except (aiohttp.client_exceptions.ServerDisconnectedError):    
+   except (aiohttp.client_exceptions.ServerDisconnectedError):    
           print (node.name,err)
      
-     except ssl.SSLError as err:    
+   except ssl.SSLError as err:    
           print (node.name,err)
 
 
-     except Exception as err:
+   except Exception as err:
           print (node.name,err)
           
-     return None     
+   return None     
 
-tasks = []     
+
 def fetchAll(nodes,view):
-   return  asyncio.run(fetchCore(nodes,view))
-
+    loop = asyncio.get_event_loop()
+    return loop.run_until_complete(fetchCore(nodes,view))
+   
 async def fetchCore(nodes,view):   
+    tasks = []
     allowedTime = 40
-    startTime = time.time()    
-    for node in nodes:
+    timeout = aiohttp.ClientTimeout(total=allowedTime)
+    async with aiohttp.ClientSession(timeout = timeout) as session:    
+      for node in nodes:
+        startTime = time.time()    
         print ("Starting " + node.name)
-        task = asyncio.create_task(fetch(node,
-                                         allowedTime,
+        task = asyncio.create_task(fetch(session,
+                                         node,
                                          startTime,
                                          view))
         tasks.append(task)
-    return await asyncio.gather(*tasks)
+      result = await asyncio.gather(*tasks)
+    return result  
 
 
 

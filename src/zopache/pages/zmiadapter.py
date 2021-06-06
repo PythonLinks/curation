@@ -133,17 +133,12 @@ class PageDeleter(Deleter):
            root.recalculateRootJSON()
         cache.resetCache(view.context)
 
-#THIS IS NEEDED FOR PRIVATE PARTS
-#              if hasattr(item,'privatePart') and item.privatePart!=None:
-#                 item.privatePart.groupPart=None
-#                 item.groupDeleted=True
            
     def allowed(self,item):
-         if  not IDeletable.providedBy(item):
-                return False
-         if   (IPage.providedBy(item)):
-            for i in item.values():
-               return False
+         if len(item) > 1:
+             return Flase
+         if 'Logo' in item:
+             return True
          return True    
 
 from zopache.zmi.interfaces import IURLSegment

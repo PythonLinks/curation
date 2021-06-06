@@ -198,5 +198,5 @@ class IRSSAdaptor(object):
         self.context=context   
 
     def getSegment(self):
-        return 'ckedit'
+        return 'manage'
 
