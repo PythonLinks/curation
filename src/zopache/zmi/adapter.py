@@ -115,9 +115,9 @@ class ZMIAdapter(object):
             return self.context.__class__.__name__
 
       def size (self):
-            if hasattr(self.context, 'valuesAsList'):
-              return len(list(self.context.valuesAsList()))
-            return 1
+            if IBTreeContainer.providedBy(self.context):
+                return len(self.context)
+            return 0
 
       def modified (self):
           if self.context._p_mtime != None:

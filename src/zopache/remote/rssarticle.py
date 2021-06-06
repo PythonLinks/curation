@@ -5,7 +5,8 @@ from zopache.pages.interfaces import IPage
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from zopache.remote.interfaces import IVoteable
-from zopache.crud.getimage import getImage
+from zopache.crud.getimage import createImageInFrom
+from webpreview import web_preview
 
 class IRSSArticle(IPage,IVoteable):
 
@@ -42,6 +43,7 @@ from zopache.pages.page import Page
 @implementer (IRSSArticle)
 class RSSArticle(Page,Voteable):
     _category = ""
+    imageURL = ""
     webClass = "RSSLink"
     emailApproved = True
     publicationApproved = False
@@ -49,8 +51,14 @@ class RSSArticle(Page,Voteable):
     def __init__(self):
         Page.__init__(self)
         importTime=time.time()
+<<<<<<< HEAD
         self.importTime = int(importTime)
 
+=======
+        importTime = int(importTime)
+        self.importTime = importTime
+        Page.__init__(self)
+>>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
         
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
@@ -96,6 +104,7 @@ class RSSArticle(Page,Voteable):
 
         #categories = parentsWhichImplement(self,IRSSCategory)
         #for item in categories:
+<<<<<<< HEAD
         #     item.articlesByTime[- importTime] = self
 
     def getImageURL(self):    
@@ -114,4 +123,49 @@ class RSSArticle(Page,Voteable):
            imageURL = self.getImageURL()
            if imageURL:
                getImage(imageURL)
+=======
+        #     item.articlesByTime[-self.importTime] = self
+
+        
+    def addImage(self):
+           if  'Logo' in self:
+               return
+           imageURL = self.getImageURL()
+           if imageURL:
+               getImage(self,imageURL)           
+
+    def getImageURL(self):
+        if hasattr(self,'imageURL'):
+            if self.imageURL != "":
+                return self.imageURL           
+        elif  hasattr(self,'links'):
+            for item in self.links:
+                if "image" in item.type:
+                    return self.item.href
+        return ""
+
+    async def processResponse(self,response,view):
+        if self.getImageURL():
+           content = await response.read()
+           return self, content, response.headers['Content-Type']
+        else:
+            html  =  await response.text()
+            result = web_preview(self.articleURL, content = html, parser="html.parser")
+            imageURL = result [2]
+
+            if imageURL:
+               self.imageURL = imageURL
+               """
+               print ("Found IMAGE URL", self.imageURL)
+               response =  await fetch(self,10, time.time(),view)
+               print("IN ARticle RETURNIng IMAge", self.name)
+               return self, content, response.headers['Content-Type']
+               """
+            else:
+               print ("No IMAGE URL")
+
+
+
+
+>>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
 

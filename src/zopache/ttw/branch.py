@@ -193,24 +193,24 @@ class Branch(SimpleBranch):
             if twitterId != "":
                 self.pagesByTwitterId[twitterId] = item
                 
-        if item.className() in [ "SocialNode"]:
+        if item.__class__.__name__ in [ "SocialNode"]:
             for node in item.allNodes():
                 twitterId= node.twitterId
                 if twitterId:
                     self.socialNodeByTwitterId[twitterId] = item
                     
-        if item.className()  == "RSSArticle":
+        if item.__class__.__name__  == "RSSArticle":
             self.globalArticles [item.permaLink] = item
             newestArticles = self.newestArticles
             time = item.getImportTime(newestArticles)
             newestArticles[-time] = item
             
-        if item.className() =='Politician':
+        if item.__class__.__name__ =='Politician':
             if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
-        if item.className() == 'Link':
+        if item.__class__.__name__ == 'Link':
             self.addNews(item)
         
             
@@ -231,11 +231,11 @@ class Branch(SimpleBranch):
             if remoteURL:
                 self.deleteRemoteURL(remoteURL)
                 
-        if item.className() == "RSSArticle":
+        if item.__class__.__name__ == "RSSArticle":
             del self.globalArticles [item.permaLink]
             del self.newestArticles [- item.importTime]
             
-        if item.className() == "Link":
+        if item.__class__.__name__ == "Link":
             #del self.newestArticles [item.creationTime]            
             pass
         

@@ -2,78 +2,81 @@ import aiohttp
 import asyncio
 import ssl
 import time
-import feedparser
+from zopache.remote.rss import IRSSBase
+from zopache.remote.rssarticle import IRSSArticle
 
-count = []
-
-async def fetch(url,allowedTime,startTime,processResponse):
+async def fetch(session,node,startTime,view):
    duration =  time.time() - startTime 
-   timeout = aiohttp.ClientTimeout(total=allowedTime)
-   async with aiohttp.ClientSession(timeout = timeout) as session:
-     try:
+
+   if IRSSBase.providedBy(node):
+      url = node.rssURL
+      #print ("URL IS  AN RSS FEED " + node.name)      
+   elif IRSSArticle.providedBy(node):
+      if  'Logo' in node:
+         return None
+      url = node.getImageURL()
+      if url == "":
+         url = node.articleURL
+         #print("URL is An Article " + node.name)
+      else:
+         print ("URL is  an Image " + node.name)
+
+   try:
         async with session.get(url) as response:
-          if response.status != 200:
-               return (response.status,url,'')      
-          count.append(1)
-          return await processResponse(url,response)
+          if response.status == 200:
+             #print ("FETCHED THE URL " + node.name)
+             #print("IN DOWNLOAD  RETURNIng IMAge", node.name)             
+             return await node.processResponse(response,view)
        
-     except (asyncio.TimeoutError):
+   except asyncio.TimeoutError as err:
           duration =  time.time() - startTime 
-          print ("TIME OUT", duration, url)
-          return ("timeOut",url,'')
+          print ("TIME OUT", duration, node.name)
+          print (node.name,err)
+          
+   except (aiohttp.client_exceptions.InvalidURL):
+          print (node.name,err)
        
-     except (aiohttp.client_exceptions.InvalidURL):
-        result = ("InvalidURL",url,'')
-        print (result)
-        return result
-       
-     except (aiohttp.client_exceptions.ClientConnectorError):    
-        result = ("Cannot Connect",url,'')
-        print (result)
-        return result
+   except (aiohttp.client_exceptions.ClientConnectorError):    
+          print (node.name,err)
      
-     except (aiohttp.client_exceptions.ServerDisconnectedError):    
-        result = ("Server DisConnect",url,'')
-        print (result)
-        return result
+   except (aiohttp.client_exceptions.ServerDisconnectedError):    
+          print (node.name,err)
      
-     except (ssl.SSLError):    
-        result = ("SSL ERROR",url,'')              
-        print (result)
-        return result
+   except ssl.SSLError as err:    
+          print (node.name,err)
 
-     except Exception as err:
-        print ("other errror",err)
-        result = ("Other err",url,'')
-        print (result)
-        return result
-       
-async def fetch_all(urls,processResponse):
+
+   except Exception as err:
+          print (node.name,err)
+          
+   return None     
+
+
+def fetchAll(nodes,view):
+    loop = asyncio.get_event_loop()
+    return loop.run_until_complete(fetchCore(nodes,view))
+   
+async def fetchCore(nodes,view):   
     tasks = []
-    count = len(urls)
-    allowedTime = 2 + count
-    startTime = time.time()    
-    for url in urls:
-        task = asyncio.create_task(fetch(url,
-                                         allowedTime,
+    allowedTime = 40
+    timeout = aiohttp.ClientTimeout(total=allowedTime)
+    async with aiohttp.ClientSession(timeout = timeout) as session:    
+      for node in nodes:
+        startTime = time.time()    
+        print ("Starting " + node.name)
+        task = asyncio.create_task(fetch(session,
+                                         node,
                                          startTime,
-                                         processResponse))
+                                         view))
         tasks.append(task)
-    results = await asyncio.gather(*tasks)
-    return results
+      result = await asyncio.gather(*tasks)
+    return result  
 
 
-async def fetchURLS(urls,processResponse):    
-        session = None
-        responses = await fetch_all( urls,processResponse)
-        results = {}
-        for item in responses:
-            results [item[1]]=item [2]
-        return results
-               
-def getRSS(urls,processResponse):
-   result = asyncio.run(fetchURLS(urls,processResponse))
-   return result
 
+<<<<<<< HEAD
 if __name__ == '__main__':
    pass
+=======
+
+>>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7

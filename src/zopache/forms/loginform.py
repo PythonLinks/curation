@@ -58,7 +58,7 @@ class LoginForm(Form):
     __name__ = "login2"
     
     dataValidators = [LoginValidator]    
-    layoutName = "UserMenu"
+    #layoutName = "UserMenu"
     title='Log in '
     subTitle='Please Login'
     fields = Fields(ILogin)

@@ -1,27 +1,37 @@
 import feedparser
 
+from zopache.remote.rss import IRSSBase, IRSS
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
-from zopache.remote.rssdownload import getRSS
+from zopache.remote.rssdownload import fetchAll
 from zopache.pages.interfaces import IPage
+<<<<<<< HEAD
 from zopache.crud.getimage import createImageIn
 from zopache.core.interfaces import ITreeSecurity
 from zopache.remote.irss import IRSSBase
+=======
+from zopache.remote.rss import IRSSBase
+from zopache.crud.getimage import createImageInFrom
+from zopache.core.interfaces import ITreeSecurity
+>>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
 
+def callTwice(self):
+        articles = []
+        for  item  in self.context.allBlogObjects():
+               if IRSSArticle.providedBy(item):
+                   if not 'Logo' in item:
+                      articles.append(item)
+        results = fetchAll(articles, self)
+        for item in results:
+            if item == None:
+               continue
+            (article, content, contentType) = item
+            #print ("CREATING IMAGE" + article.name)
+            createImageInFrom(article,content,contentType)
 
-async def processRssResponse(url,response):
-          html  =  await response.text()
-          feed = feedparser.parse(html)
-          entries = feed['entries']
-          for article in entries:
-               permaLink = article['id']
-          return  ('Success', url, entries)
 
-async def processImageResponse(url,response):
-          response.content  =  await response.read()          
-          return  ('Success' ,url,response)
 
 def getImages(urls):
           return getRSS(urls,processImageResponse)
@@ -39,21 +49,15 @@ class GetRSS(Form):
     title = "Download the RSS Feeds"
     subTitle = "To get the newest news."
     def update(self):
-           urls = []
-           feedsByURL = {}
-           for item in self.context.allBlogObjects():
-               if IRSSBase.providedBy(item):
-                   rssURL =  item.rssURL
-                   urls.append (rssURL)
-                   feedsByURL [rssURL] = item
-
-           result = getRSS(urls,processRssResponse)
-           for key, value in result.items():
-               feed = feedsByURL [key]
-               feed.createArticles(value,self)
-
-           self.status='RSS Feeds were downloaded.'
-           Form.update(self)
+        feeds = []
+        for  item  in self.context.allBlogObjects():
+               if IRSS.providedBy(item):
+                      feeds.append(item)
+        fetchAll(feeds,self)
+        callTwice(self)
+        callTwice(self)
+        self.status='RSS Feeds were downloaded.'
+        Form.update(self)
 
            
 @form_component
@@ -65,7 +69,9 @@ class GetRSS(Form):
 class GetImages(Form):
     title = "Download the Article Images"
     subTitle = "To get the newest pictures."
+            
     def update(self):
+<<<<<<< HEAD
            urls = []
            articlesByURL = {}
            for article in self.context.allBlogObjects():
@@ -81,4 +87,10 @@ class GetImages(Form):
                    createImageIn(article,value)               
            self.status='Images were downloaded.'
            Form.update(self)
+=======
+        callTwice(self)
+        callTwice(self)
+        self.status='Images were downloaded.'
+        Form.update(self)
+>>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
            
