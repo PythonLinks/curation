@@ -6,15 +6,9 @@ from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
 from zopache.remote.rssdownload import fetchAll
 from zopache.pages.interfaces import IPage
-<<<<<<< HEAD
-from zopache.crud.getimage import createImageIn
-from zopache.core.interfaces import ITreeSecurity
-from zopache.remote.irss import IRSSBase
-=======
 from zopache.remote.rss import IRSSBase
 from zopache.crud.getimage import createImageInFrom
 from zopache.core.interfaces import ITreeSecurity
->>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
 
 def callTwice(self):
@@ -32,12 +26,6 @@ def callTwice(self):
             createImageInFrom(article,content,contentType)
 
 
-
-def getImages(urls):
-          return getRSS(urls,processImageResponse)
-
-def getArticles(urls):
-          return getRSS(urls, processRssResponse)
 
 @form_component
 @context(IPage)
@@ -71,26 +59,8 @@ class GetImages(Form):
     subTitle = "To get the newest pictures."
             
     def update(self):
-<<<<<<< HEAD
-           urls = []
-           articlesByURL = {}
-           for article in self.context.allBlogObjects():
-               if IRSSArticle.providedBy(article):
-                  imageURL = article.getImageURL()
-                  if imageURL:
-                       urls.append (imageURL)
-                       articlesByURL [imageURL] = article        
-           result = getRSS(urls, processImageResponse)
-           for key, value in result.items():
-               if value.status == 200:      
-                   article = articlesByURL [key]
-                   createImageIn(article,value)               
-           self.status='Images were downloaded.'
-           Form.update(self)
-=======
         callTwice(self)
         callTwice(self)
         self.status='Images were downloaded.'
         Form.update(self)
->>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
            

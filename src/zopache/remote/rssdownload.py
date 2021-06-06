@@ -74,9 +74,4 @@ async def fetchCore(nodes,view):
 
 
 
-<<<<<<< HEAD
-if __name__ == '__main__':
-   pass
-=======
 
->>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7

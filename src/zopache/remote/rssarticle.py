@@ -49,16 +49,10 @@ class RSSArticle(Page,Voteable):
     publicationApproved = False
 
     def __init__(self):
-        Page.__init__(self)
         importTime=time.time()
-<<<<<<< HEAD
-        self.importTime = int(importTime)
-
-=======
         importTime = int(importTime)
         self.importTime = importTime
         Page.__init__(self)
->>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
         
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
@@ -104,26 +98,6 @@ class RSSArticle(Page,Voteable):
 
         #categories = parentsWhichImplement(self,IRSSCategory)
         #for item in categories:
-<<<<<<< HEAD
-        #     item.articlesByTime[- importTime] = self
-
-    def getImageURL(self):    
-           if hasattr(self,'imageURL'):
-               if self.imageURL != "":
-                  return self.imageURL
-           elif  hasattr(self,'links'):
-                for item in self.links:
-                    if "image" in item.type:
-                        return self.item.href
-           return ''
-       
-    def addImage(self):
-           if  'Logo' in self:
-               return ''
-           imageURL = self.getImageURL()
-           if imageURL:
-               getImage(imageURL)
-=======
         #     item.articlesByTime[-self.importTime] = self
 
         
@@ -167,5 +141,4 @@ class RSSArticle(Page,Voteable):
 
 
 
->>>>>>> ef56173d3c1a0bc32a067cfed31152cb85de0cb7
 

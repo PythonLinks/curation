@@ -14,9 +14,72 @@ from zopache.core.uniquename import UniqueName
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import ILink
 from zopache.remote.rssarticle import RSSArticle
-from zopache.remote.rssfetch import getArticles
-from zopache.remote.irss import IRSS, IJustRSS
-from zopache.crud.getimage import getImage
+from bs4 import BeautifulSoup
+
+
+class IRSSBase(Interface):
+    pass
+
+class IJustRSS(IRSSBase):
+    rssURL=schema.URI(
+        title = "Primary RSS URI",
+        description ="""This is the source of new articles.  
+              Please include "https://" or "http://".""",
+        required = True,
+        )
+
+    htmlSummary=schema.Bool(
+        title = "Is the Summary HTML?",
+        description ="For those sources where the summary contains html tags",
+        required = False,
+        default = False,
+        )
+
+
+class IRSS(IRSSBase):
+    title=schema.TextLine(
+        title = "RSS Feed Name",
+        description ="What is the web site called?",
+        required = True,
+        )
+
+    description= schema.Text(
+        title = 'Description',
+        description = """A brief introduction of this RSS Source.  """,
+        required = False,
+        default = '',
+    )    
+
+    twitterId=schema.TextLine(
+        title = "Twitter Id",
+        description ="""Without the "@" sign?""",
+        required = False,
+        )
+    
+    remoteURL= schema.URI(
+        title = 'URL',
+        description = """A URL That this page refers to. 
+             Please include 'https://'""",
+        required = False,
+    )
+    
+    rssURL=schema.URI(
+        title = "Primary RSS URI",
+        description ="""This is the source of new articles.  
+              Please include "https://" or "http://".""",
+        required = True,
+        )
+
+    htmlSummary=schema.Bool(
+        title = "Is the Summary HTML?",
+        description ="For those sources where the summary contains html tags",
+        required = False,
+        default = False,
+        )        
+
+    
+class IRSSPage (IRSS):
+      pass
     
 from zopache.core.getroot import getSiteRoot    
 @implementer (IRSS)     
@@ -27,13 +90,25 @@ class RSS(Link,UniqueName):
     def __init__(self):
          self.localArticles = OOBTree()
          Link.__init__(self)
-          
+
+    def parseHTML(self,html):
+        if not self.htmlSummary:
+            return html
+        
+        soup = BeautifulSoup(html, 'html.parser')
+        try:
+           return soup.find_all('p')[0].text
+        except:
+           return ""
+       
     # FOR A NEW RSS FEED       
     def createOneArticle(self,article,view):
        new = RSSArticle()
        new.title = unescape (article.title)
        if self.htmlSummary:
-             new.source = unescape( article.summary)
+           unescaped = unescape( article.summary)
+           result  = self.parseHTML(unescaped)
+           new.description = result
        else:
              new.description = article.summary
        
@@ -83,15 +158,14 @@ class RSS(Link,UniqueName):
     def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)
         self.fetchURLS(view = view)
-        if getattr(self,'logoURL', False):
+        if self.logoURL:
             getImage(self,self.logoURL)
         
     def fetchURLS(self, view = None):    
         urls = [self.rssURL]
 
-        #urls += self.otherFeeds
-
-        result = getArticles(urls)
+        urls += self.otherFeeds
+        result = getRSS(urls)
         for key, value in result.items():
                self.createArticles(value,view)
         view.status='RSS Feeds were downloaded.'
@@ -103,8 +177,7 @@ class RSS(Link,UniqueName):
           html  =  await response.text()
           feed = feedparser.parse(html)
           entries = feed['entries']
-          for article in entries:
-                    self.createArticles(entries,view)
+          self.createArticles(entries,view)
 
 @implementer(IJustRSS)
 class JustRSS(RSS):

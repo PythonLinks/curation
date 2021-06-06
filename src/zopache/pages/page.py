@@ -1,6 +1,8 @@
 import time
 import os
 import datetime
+import itertools
+
 from pydoc import locate
 from operator import methodcaller
 from dolmen.container import BTreeContainer
@@ -374,6 +376,10 @@ class SiteRootPage(SiteRoot):
        #NOT SURE WHY THIS COULD NOT BE AT THE TOP OF THE PAGE
        from zopache.ttw.principalfolder import PrincipalFolder
        self ["person"] = PrincipalFolder()
-        
+
+    def bestMostRecentPage(self):
+        articles self.newestArticles.values()
+        return itertools.islice(articles, 100)
+ 
     def getSiteRootFor(self,hostName):
         return self    
