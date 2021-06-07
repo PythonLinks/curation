@@ -20,7 +20,7 @@ class LocalRestore(Form):
         path = os.path.join(HERE,'data','data.import')        
         theFile = open (path,'rb')
         context = self.context
-        branch = self.context._p_jar.importFile(theFile)
+        branch = context._p_jar.importFile(theFile)
         name = branch.__name__
         newName = UniqueName().uniqueContainerName(context,name)
         context [newName] = branch
