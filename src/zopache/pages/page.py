@@ -345,6 +345,9 @@ from zopache.pages.cache import Cache
 class SiteRoot(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     homePage = ''
+    localLogin = True
+    googleClientId = ""
+    localLogin = True
     
     def preProcess(self,view=None):
         pass
@@ -361,14 +364,12 @@ class SiteRoot(Branch,PageBase,PageMixIn):
 @implementer(IRootPage)         
 class RootPage(SiteRoot):
     twitterId = ""
-    localLogin = True
-    googleClientId = ""
     def getSiteRootFor(self,hostName):
         return self
 
+#FOR MULTIPLE SITES    
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
-    localLogin = True
     def __init__(self):
        Branch.__init__(self)
        Page.__init__(self)

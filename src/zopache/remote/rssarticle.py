@@ -43,6 +43,7 @@ from zopache.pages.page import Page
 @implementer (IRSSArticle)
 class RSSArticle(Page,Voteable):
     _category = ""
+    importTime = 0
     imageURL = ""
     webClass = "RSSLink"
     emailApproved = True
