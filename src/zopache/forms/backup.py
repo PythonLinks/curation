@@ -73,7 +73,6 @@ class LocalBackup(Base, Form):
         context = self.context
         with  open (path,'wb') as f:
             context._p_jar.exportFile(context._p_oid, f)
-            breakpoint()
         self.status='The branch was backed up on the server.'
 
 
