@@ -57,7 +57,13 @@
 	    <div tal:replace="structure slot:contextualactions" />
 	    ${structure: view.breadcrumbs()}
 <br><br>
-         
+<noscript >
+  <div style= "color:red">
+    <h1>Please enable Javascript</h1>
+    <p>Without Javascript these forms will not work correctly.  </p>
+	
+    </div>
+</noscript>         
 	  <div tal:replace="structure content" />
 	  </div>
 	</div>

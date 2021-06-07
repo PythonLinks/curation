@@ -1,7 +1,7 @@
 import time
 import os
 import datetime
-import itertools
+from itertools import islice 
 
 from pydoc import locate
 from operator import methodcaller
