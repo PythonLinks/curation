@@ -378,7 +378,7 @@ class SiteRootPage(SiteRoot):
        self ["person"] = PrincipalFolder()
 
     def bestMostRecentPage(self):
-        articles self.newestArticles.values()
+        articles = self.newestArticles.values()
         return itertools.islice(articles, 100)
  
     def getSiteRootFor(self,hostName):
