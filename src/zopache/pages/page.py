@@ -369,6 +369,9 @@ class RootPage(SiteRoot):
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
     localLogin = True
+    googleClientId = ""
+    twitterId = ""
+    
     def __init__(self):
        Branch.__init__(self)
        Page.__init__(self)
