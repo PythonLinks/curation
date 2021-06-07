@@ -1,7 +1,7 @@
 import time
 import os
 import datetime
-import itertools
+from itertools import islice 
 
 from pydoc import locate
 from operator import methodcaller
@@ -378,8 +378,9 @@ class SiteRootPage(SiteRoot):
        self ["person"] = PrincipalFolder()
 
     def bestMostRecentPage(self):
-        articles self.newestArticles.values()
-        return itertools.islice(articles, 100)
+        articles = self.newestArticles.values()
+        for i in islice(articles, 100): 
+            yield(i)
  
     def getSiteRootFor(self,hostName):
         return self    

@@ -99,6 +99,16 @@ table-hover table-condensed" summary="Content listing"
         </tbody>
 	      </table>
 
+<div tal:condition = "view.isAuthenticated()">
+  <div tal:define = "items list(view.request.principal['cutFolder'].values())"
+  tal:condition = "len(items)">
+   Pastable Items:
+     <span  tal:repeat="item items" style = "color:red">
+        ${item.name}
+    </span>
+  </div>
+
+
 <span>
   <tal:actions tal:condition="view.actionWidgets">
       <tal:widget tal:content="structure widget.render()"   tal:repeat="widget view.bootstrapActionWidgets()" />
@@ -115,6 +125,6 @@ table-hover table-condensed" summary="Content listing"
      <input type="button" id="form-action-Delete" name="form.action.Delete" value="Delete" class="action btn" accesskey="#">
       </span>
       </form>
-
+      
 <script src="/Products/Templates/Manage.js"></script>
 

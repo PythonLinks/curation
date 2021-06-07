@@ -6,13 +6,15 @@ from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
 from BTrees.LOBTree import  LOTreeSet
-
 from BTrees.OOBTree import OOBTree
+
+
+
 from cromlech.browser.interfaces import IPublicationRoot
 from zopache.pages.interfaces import IPage
 from dolmen.container import IBTreeContainer
 from zopache.ttw.interfaces import ICanonical
-from dolmen.container import BTreeContainer
+from dolmen.container import BTreeContainer, OrderedBTreeContainer
 
 from .interfaces import IBranch
 from zopache.pages.interfaces import IRootPage, IPage
@@ -23,6 +25,7 @@ from zopache.pages.interfaces import IImaginary
 from zopache.ttw.interfaces import  ICanonical
 from BTrees.LOBTree import  LOTreeSet
 
+#THIS ONE SUBCLASSES OFF OF BTREE CONTAINER
 @implementer(IBranch)
 class SimpleBranch(object):
     branchSize = 0
@@ -37,19 +40,6 @@ class SimpleBranch(object):
 
     def indexTree(self):
         self.valuesByToken=OOBTree()
-        """
-        if hasattr(self,"phoneTreeByTwitterId"):
-            del self.phoneTreeByTwitterId
-        if hasattr(self,"remoteURLS"):            
-            del self.remoteURLs
-        if hasattr(self,"politicians"):                    
-            del self.politicians
-        if hasattr(self,"pagesByTwitterId"):                    
-            del self.pagesByTwitterId
-        if hasattr(self,"socialNodeByTwitterId"):                    
-            del self.socialNodeByTwitterId
-        """
-        
         self.indexBranch(self,self)
         
     def __contains__(self, key):
@@ -91,6 +81,7 @@ class SimpleBranch(object):
       # IF ALL ELSE FAILS
       return default
 
+#THIS ONE SUBCLASSES OFF OF ORDERED CONTAINER  
 @implementer (IBranch)
 class Branch(SimpleBranch):
 
@@ -104,6 +95,11 @@ class Branch(SimpleBranch):
        self.newestArticles = OOBTree()       
        self.remoteArticles = OOBTree()
        
+    def __delitem__(self, key):
+        OrderedBTreeContainer.__delitem__(self,key)
+        if key in self.valuesByToken:
+                self.valuesByToken.__delitem__(key)
+                
     def urlOnly(self,link):
        if link.startswith('http'):
           link = link.split('://')[1:]
