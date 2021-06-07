@@ -1,9 +1,12 @@
 import os
+
 from cromlech.security import permissions
 from dolmen.container import IBTreeContainer
+
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
 from here import HERE
+from zopache.core.uniquename import UniqueName
 
 @form_component
 @context(IBTreeContainer)
@@ -16,9 +19,10 @@ class LocalRestore(Form):
     def update(self):
         path = os.path.join(HERE,'data','data.import')        
         theFile = open (path,'rb')
+        context = self.context
         branch = self.context._p_jar.importFile(theFile)
         name = branch.__name__
         newName = UniqueName().uniqueContainerName(context,name)
-        self.form.context [newName] = branch
+        context [newName] = branch
         self.status = "Branch was restored"
      
