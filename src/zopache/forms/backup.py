@@ -49,7 +49,8 @@ class Index(View):
     make_response = make_file_response
     def doit(self):
         with  tempfile.TemporaryFile(prefix="DUP")  as f:
-            f = self.context._p_jar.exportFile(context._p_oid, f)
+            context = self.context    
+            f = context._p_jar.exportFile(context._p_oid, f)
             f.seek (0)
             return f.read()
             
@@ -69,8 +70,10 @@ class LocalBackup(Base, Form):
         
     def doit(self):
         path = os.path.join(HERE,'data', self.context.name + '.export')
+        context = self.context
         with  open (path,'wb') as f:
-            self.context._p_jar.exportFile(context._p_oid, f)
+            context._p_jar.exportFile(context._p_oid, f)
+            breakpoint()
         self.status='The branch was backed up on the server.'
 
 
