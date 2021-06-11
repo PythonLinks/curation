@@ -5,7 +5,7 @@ from zopache.business.addcompany import (
                                          AddOrganization,
                                          AddOnlineOrganization,
                                          AddNews)
-from zopache.business.editjsonschema import AddCandidate
+from zopache.business.editpolitician import AddCandidate
 from zopache.business.addmeetup import AddEvent, AddOnlineEvent
 
 class Base(object):
