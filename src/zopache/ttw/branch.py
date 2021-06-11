@@ -115,8 +115,6 @@ class Branch(SimpleBranch):
        return self.remoteURLs.get(link,None)
    
     def addRemoteURL(self,anObject):
-       breakpoint()
-       return
        link = self.urlOnly(anObject.remoteURL)
        if link == "":
            return
