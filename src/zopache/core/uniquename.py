@@ -7,7 +7,7 @@ class UniqueName(object):
         count=0
         copyName=new_name+ofType
         copyName = slugify (copyName, lower=False)
-        while container.has_key(new_name):
+        while new_name in container:
                count +=1
                new_name=copyName+str(count)
         return new_name

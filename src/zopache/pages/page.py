@@ -345,6 +345,9 @@ from zopache.pages.cache import Cache
 class SiteRoot(Branch,PageBase,PageMixIn):
     webClass='HomePage'
     homePage = ''
+    localLogin = True
+    googleClientId = ""
+    twitterId = ""
     
     def preProcess(self,view=None):
         pass
@@ -361,16 +364,12 @@ class SiteRoot(Branch,PageBase,PageMixIn):
 @implementer(IRootPage)         
 class RootPage(SiteRoot):
     twitterId = ""
-    localLogin = True
-    googleClientId = ""
     def getSiteRootFor(self,hostName):
         return self
 
+#FOR MULTIPLE SITES    
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
-    localLogin = True
-    googleClientId = ""
-    twitterId = ""
     
     def __init__(self):
        Branch.__init__(self)
@@ -382,8 +381,7 @@ class SiteRootPage(SiteRoot):
 
     def bestMostRecentPage(self):
         articles = self.newestArticles.values()
-        for i in islice(articles, 100): 
-            yield(i)
+        return itertools.islice(articles, 100)
  
     def getSiteRootFor(self,hostName):
         return self    

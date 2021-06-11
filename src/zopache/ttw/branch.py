@@ -120,6 +120,7 @@ class Branch(SimpleBranch):
        link = self.urlOnly(anObject.remoteURL)
        if link == "":
            return
+
        if link in self.remoteURLs:
           raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
        else:
@@ -208,8 +209,8 @@ class Branch(SimpleBranch):
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
-        if item.__class__.__name__ == 'Link':
-            self.addNews(item)
+        #if item.__class__.__name__ == 'Link':
+        #    self.addNews(item)
         
             
     def unIndexItem(self,item, itemType=IPage):
