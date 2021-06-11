@@ -14,7 +14,7 @@ from zopache.pages.interfaces import (IMap,
                                       IAddLink,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, SiteRootPage, ActionNetwork
-from zopache.pages import Map, Location
+from zopache.pages.location import SimpleMap, Location
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
@@ -144,7 +144,7 @@ class AddMap(AddAuthorizedPage):
     subTitile = 'Remember to enable map tokens.'
     interface = IMap
     label="Add a Map"
-    factory = Map
+    factory = SimpleMap
     
 
 

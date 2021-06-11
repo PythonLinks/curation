@@ -1,1 +1,1 @@
-from .location import Map, Location
+pass

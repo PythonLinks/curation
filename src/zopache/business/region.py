@@ -16,7 +16,7 @@ class RegionBase(LocationContainer):
     #JUST ADD ONE MARKER TO THE LIST                        
     def getOneMarker(self, firstItem, result):
                   if not hasattr(self, 'longitude'):
-`                      return result,firstItem
+                      return result,firstItem
                   if not firstItem:
                      result +=','
                   firstItem=False      
