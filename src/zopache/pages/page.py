@@ -282,7 +282,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def allValues(self):
         return self.values()
 
-class PageBase(PageVeryBase,JsonObject):
+class PageBase(PageVeryBase,JsonObject,PageMixIn):
     title = ''
     description = ''
     source = ''

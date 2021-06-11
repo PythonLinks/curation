@@ -1,4 +1,5 @@
-
+#MEMBERSHIP ORGANIZATIONS HAVE A LIST OF MEMBERS.
+#VERY SIMPLE REALLY
 
 class Member(object):
     subscriber = False

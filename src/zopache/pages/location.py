@@ -15,103 +15,10 @@ class MapOrLocation (PageBase):
     latitude = 45.
     longitude = 0.
     webClass = 'Location'
-    specialization = ''
-    showChildren = True
     
     def getTitle(self):
         return self.title
-    
-    #JUST ADD ONE MARKER TO THE LIST                        
-    def getOneMarker(self, firstItem, result):
-                  if not hasattr(self, 'longitude'):
-                      return result,firstItem
-                  if not firstItem:
-                     result +=','
-                  firstItem=False      
-                  result+='\n'
-                  result += '['
-                  result +='"' +  self.__name__ + '"'
-                  result += ','
-                  result +='"' +  self.getTitle() + '"'
-                  result += ','
-                  lat,lng = self.getMarkerLatLng()
-                  result +=  str(lat)  
-                  result += ","                   
-                  result += str(lng)
-                  aClass = self.__class__.__name__[0]
-                  result += self.getArg(aClass)
-                  hasFutureEvent =  str(self.hasFutureEvent())
-                  result += self.getArg(hasFutureEvent)
-                  if self.__class__.__name__ in [
-                          "Organization","MapOrganization"]:
-                      focus = getattr(self,'focus',"")
-                      focus = focus [:4]
-                      result += ',"' + focus + '"'
-                      
-                  if self.__class__.__name__ == "Politician":
-                     result += self.getArg(str(hasattr(
-                                        self,'candidateInfo'))[0])
-                     result += self.getArg(str(hasattr(
-                                        self,'electedOfficial'))[0])
-                     result += self.getArg(
-                          str(hasattr(self,'partyOfficer'))[0])
-                     result += self.getArg(
-                          str(hasattr(self,'history'))[0])                     
-                     outcome = self.getCandidateInfo("result")
-                     if len(outcome) > 0:
-                         outcome = outcome [0]
-                     result += ',"' + outcome +' "'
-                     
-                  result += ',"' + self.remoteURL  + '"'                  
-                  result += "]"
-                  return result, firstItem
-              
-    def isElectedOfficial(self):
-        if hasattr(self,'electedOfficial'):
-           return True
-        if self.getCandidateInfo("result") =="Won":
-           return True
-        return False                                   
 
-    def getArg(self,aString,comma = True):
-          result = ""
-          if comma:
-              result += ","
-          result += '"'
-          result += aString
-          result += '"'
-          return result
-      
-    def getColor(self):
-        #COLOR BASED ON CLASS
-        choose = {'Driver':'black',
-                  'Business': 'yellow',
-                  'Map': 'gold2x' 
-                  }
-        aClass = self.__class__.__name__
-        if aClass in choose:
-            return choose[aClass]
-
-        #SELECT BASED On (CLASS, FUTURE EVENTS)
-        hasFutureEvent = self.hasFutureEvent()
-        choose = {
-                  ('Politician',True):"orange",
-                  ('Politician',False):"blue",
-                  ('City',True):"orange",
-                  ('City',False):"blue",            
-                  ('MapOrganization',False):"red",                  
-                  ('MapOrganization',True):"orange",                  
-                  ('Organization',False):"red",
-                  ('Organization',True):"orange",
-                  ('Location',True):"bluered",
-                  ('Location',False):"blue",
-                  ('Company',True):"yellow2x",
-                  ('Company',False):"yellow"                                    
-                  }
-        icon = choose[(aClass,bool(hasFutureEvent))]
-        return icon
-                        
-class MarkerLocation(MapOrLocation, PageMixIn):
     def getMarkerLatLng (self):
            #OOPS AN ANCIENT TYPO
            if hasattr(self,'lattitude'):
@@ -132,7 +39,7 @@ class MarkerLocation(MapOrLocation, PageMixIn):
 
 #At least used by events. 
 @implementer (ILocationLeaf)
-class LocationLeaf (MarkerLocation):
+class LocationLeaf (MapOrLocation):
     icon="ttwicons/Location.svg"
     def getCompanies(self):
         return self
@@ -141,7 +48,7 @@ class LocationLeaf (MarkerLocation):
         return result.append(self)
         
 @implementer (ILocationContainer)
-class LocationContainer (MarkerLocation):
+class LocationContainer (MapOrLocation):
     icon="ttwicons/Location.svg"    
     def getCompanies(self):
         result=[]
@@ -279,5 +186,5 @@ class MapBase(LocationContainer):
 #So the old maps had a center
 #Which was also their Marker
 @implementer (IMap)
-class Map(MapBase,LocationContainer,PageMixIn):        
+class SimpleMap(MapBase):        
     pass
