@@ -350,6 +350,8 @@ class SiteRoot(Branch,PageBase,PageMixIn):
     googleClientId = ""
     localLogin = True
     subscribeSlug = ""
+    twitterId = ""
+
     def preProcess(self,view=None):
         pass
         
@@ -371,6 +373,7 @@ class RootPage(SiteRoot):
 #FOR MULTIPLE SITES    
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
+    
     def __init__(self):
        Branch.__init__(self)
        Page.__init__(self)

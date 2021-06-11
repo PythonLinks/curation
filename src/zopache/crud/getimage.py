@@ -7,8 +7,8 @@ from zopache.ttw.file import BTreeImage
 
 def createImageIn(self,response):
             content = response.content
-            contentType = response.headers['content-type']            
-            self.createImageInFrom(self,content,contentType)
+            contentType = response.headers['content-type']
+            createImageInFrom(self,content,contentType)
                                  
 def createImageInFrom(self,content,contentType):
             zodbImage =BTreeImage()
