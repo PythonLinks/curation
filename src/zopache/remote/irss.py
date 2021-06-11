@@ -1,5 +1,7 @@
 from zope.interface import Interface
 from zope import schema
+from zopache.pages.interfaces import IPage
+from zopache.remote.interfaces import IVoteable
 
 class IRSSBase(Interface):
     pass
@@ -18,6 +20,7 @@ class IJustRSS(IRSSBase):
         required = False,
         default = False,
         )
+
 
 
 class IRSS(IRSSBase):
@@ -54,13 +57,6 @@ class IRSS(IRSSBase):
         required = True,
         )
 
-    logoURL=schema.URI(
-        title = "Logo URL ",
-        description ="An image is important",
-        required = True,
-        )
-    
-
     htmlSummary=schema.Bool(
         title = "Is the Summary HTML?",
         description ="For those sources where the summary contains html tags",
@@ -68,6 +64,50 @@ class IRSS(IRSSBase):
         default = False,
         )        
 
+    rssApproved=schema.Bool(
+        title = "Is this feed approved for downloading",
+        description ="We can block some feeds without deleting them.",
+        required = False,
+        default = True,
+        )    
+
+class IAddRSS(IRSS):
+    logoURL=schema.URI(
+        title = "Logo URL ",
+        description ="An image is important",
+        required = False,
+        )
     
 class IRSSPage (IRSS):
       pass
+
+class IRSSArticle(IPage,IVoteable):
+
+    title = schema.TextLine(
+        title = 'Remote Article Name',
+        description = 'What is the title of this link?',
+        required = True,
+    )
+    
+    articleURL= schema.URI(
+        title = 'Article URL',
+        description = 'The url of the remote article',
+        required = False,
+    )
+    
+    description= schema.Text(
+        title = u'Description',
+        description = """A brief introduction of this page.  
+                        This is used by the search functions.""",
+        required = False,
+        default = u'',
+    )
+
+    source= schema.Text(
+        title = 'Content',
+        description = 'This is the main content for this page',
+        required = False,
+        default = '',
+    )
+
+  

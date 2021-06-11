@@ -172,12 +172,12 @@ class UnVolunteer(Disconnect):
 @name('subscribe')
 @context(IFollow)
 class Subscribe(Connect):
-    subject = "New Subscriber "    
+    subject = "New Subscriber "
     def updateMember(self,member):
         member.subscriber = True
     
 @view_component
-@name('unsubscribe')
+@name('unSubscribe')
 @context(IFollow)
 class Unsubscribe(Disconnect):
     subject = "Subscriber Resigned "

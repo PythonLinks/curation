@@ -4,39 +4,10 @@ from zope import schema
 from zopache.pages.interfaces import IPage
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
-from zopache.remote.interfaces import IVoteable
 from zopache.crud.getimage import createImageInFrom
 from webpreview import web_preview
-
-class IRSSArticle(IPage,IVoteable):
-
-    title = schema.TextLine(
-        title = 'Remote Article Name',
-        description = 'What is the title of this link?',
-        required = True,
-    )
-    
-    articleURL= schema.URI(
-        title = 'Article URL',
-        description = 'The url of the remote article',
-        required = False,
-    )
-    
-    description= schema.Text(
-        title = u'Description',
-        description = """A brief introduction of this page.  
-                        This is used by the search functions.""",
-        required = False,
-        default = u'',
-    )
-
-    source= schema.Text(
-        title = 'Content',
-        description = 'This is the main content for this page',
-        required = False,
-        default = '',
-    )
-
+from zopache.remote.rssdownload import fetch
+from zopache.remote.irss import IRSSArticle
     
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
@@ -57,7 +28,10 @@ class RSSArticle(Page,Voteable):
         
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
-        del self.rssFeed.localArticles [self.permaLink]
+        localArticles = self.rssFeed.localArticles
+        if hasattr(self,'permalink'):
+            if self.permalink in localArticles:
+                 del localArticles [self.permaLink]
     
     def getCategory(self):
       return self._category
@@ -87,10 +61,11 @@ class RSSArticle(Page,Voteable):
 
     #AND NOW RESET  A UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
 
-    def getImportTime(self,newestArticles):
-        while (- self.importTime) in newestArticles:
-             self.importTime += 1  
-        return self.importTime
+    def getImportTime(self,siteRoot):
+        importTime = self.importTime
+        importTime = siteRoot.getImportTime(importTime)
+        self.importTime = importTime                                    
+        return importTime
 
     def postAddProcess (self, view = None):
         Page.postAddProcess(self,view = view)
@@ -119,7 +94,7 @@ class RSSArticle(Page,Voteable):
                     return self.item.href
         return ""
 
-    async def processResponse(self,response,view):
+    async def processResponse(self,session, response,view):
         if self.getImageURL():
            content = await response.read()
            return self, content, response.headers['Content-Type']
@@ -127,17 +102,13 @@ class RSSArticle(Page,Voteable):
             html  =  await response.text()
             result = web_preview(self.articleURL, content = html, parser="html.parser")
             imageURL = result [2]
-
             if imageURL:
                self.imageURL = imageURL
-               """
-               print ("Found IMAGE URL", self.imageURL)
-               response =  await fetch(self,10, time.time(),view)
-               print("IN ARticle RETURNIng IMAge", self.name)
-               return self, content, response.headers['Content-Type']
-               """
+               response =  await fetch(session, self, view)
+               (article, content, contentType) = response               
+               return self, content, contentType
             else:
-               print ("No IMAGE URL")
+               return self, "NO IMAge urL in page html"
 
 
 

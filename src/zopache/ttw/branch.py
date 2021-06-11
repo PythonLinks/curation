@@ -92,7 +92,9 @@ class Branch(SimpleBranch):
        self.pagesByTwitterId = OOBTree()
        self.socialNodeByTwitterId = OOBTree()
        self.globalArticles = OOBTree()
-       self.newestArticles = OOBTree()       
+       self.newestArticles = OOBTree()
+       self.newestLinks = OOBTree()       
+       self.approvedArticles = OOBTree()       
        self.remoteArticles = OOBTree()
        
     def __delitem__(self, key):
@@ -158,6 +160,8 @@ class Branch(SimpleBranch):
         self.socialNodeByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
         self.newestArticles = OOBTree()
+        self.newestLinks = OOBTree()        
+        self.approvedArticles = OOBTree()        
         self.remoteArticles = OOBTree()                
         self.indexBranch(self,self)
 
@@ -198,18 +202,32 @@ class Branch(SimpleBranch):
                     
         if item.__class__.__name__  == "RSSArticle":
             self.globalArticles [item.permaLink] = item
-            newestArticles = self.newestArticles
-            time = item.getImportTime(newestArticles)
-            newestArticles[-time] = item
+            time = item.getImportTime(self)
+            assert item.__class__.__name__ == 'RSSArticle'
+            if item.publicationApproved:
+                self.approvedArticles [-time] = item
+            else:
+                self.newestArticles[-time] = item
             
         if item.__class__.__name__ =='Politician':
             if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
-        #if item.__class__.__name__ == 'Link':
-        #    self.addNews(item)
+                    
+        if item.__class__.__name__ == 'Link':
+             self.newestLinks [-item.creationTime] = item
+
+    def hasArticle(self,importTime):
+        ((importTime in self.newestArticles) or
+        (importTime in self.approvedArticles))
         
+    def getImportTime(self,importTime):
+        while (True):
+           if not self.hasArticle(importTime):
+                break;
+                importTime += 1
+        return importTime
             
     def unIndexItem(self,item, itemType=IPage):
         if not IPage.providedBy(item):
@@ -230,11 +248,18 @@ class Branch(SimpleBranch):
                 
         if item.__class__.__name__ == "RSSArticle":
             del self.globalArticles [item.permaLink]
-            del self.newestArticles [- item.importTime]
+            importTime = -item.importTime
+            newestArticles = self.newestArticles
+            if importTime in newestArticles:
+               del newestArticles [importTime]
+               
+            approvedArticles = self.approvedArticles   
+            if importTime in approvedArticles:   
+               del approvedArticles [importTime]
             
         if item.__class__.__name__ == "Link":
-            #del self.newestArticles [item.creationTime]            
-            pass
+            del self.newestLinks [item.creationTime]            
+
         
         if hasattr(item,'twitterId'):
             twitterId = item.twitterId            

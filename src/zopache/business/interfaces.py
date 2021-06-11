@@ -291,6 +291,7 @@ class ISocialMedia(Interface):
 class IOnlineOrganization(IOrganizationBase,
                           ICompanyOrOrganization,
                           ISocialMedia,
+                          IFollow,
                           IOrganizationOrPolitician):
     
      pass          

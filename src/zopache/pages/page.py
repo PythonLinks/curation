@@ -1,3 +1,4 @@
+import itertools
 import time
 import os
 import datetime
@@ -343,12 +344,12 @@ from zopache.pages.interfaces import ISiteRoot
 from zopache.pages.cache import Cache
 @implementer(ISiteRoot)
 class SiteRoot(Branch,PageBase,PageMixIn):
-    webClass='HomePage'
+    webClass = 'HomePage'
     homePage = ''
     localLogin = True
     googleClientId = ""
     localLogin = True
-    
+    subscribeSlug = ""
     def preProcess(self,view=None):
         pass
         
@@ -378,9 +379,20 @@ class SiteRootPage(SiteRoot):
        from zopache.ttw.principalfolder import PrincipalFolder
        self ["person"] = PrincipalFolder()
 
-    def bestMostRecentPage(self):
-        articles = self.newestArticles.values()
-        return itertools.islice(articles, 100)
- 
+    def bestMostRecentPage(self,lastImportTime = None, limit = 100):
+        if lastImportTime:
+            lastImportTime = - lastImportTime
+        articles = self.newestArticles.values(min = lastImportTime,                                                 excludemin = True)
+        result = itertools.islice(articles, limit)
+        return result
+
+    def bestApprovedArticles(self, days):
+        since = - time.time() + (days * 24 * 3600)
+        articles = self.approvedArticles.values(max = since)
+        links = self.newestLinks.values(max = since)
+        return list(articles) + list (links)
+
+
+    
     def getSiteRootFor(self,hostName):
         return self    

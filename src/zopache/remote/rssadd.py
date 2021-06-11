@@ -6,8 +6,8 @@ from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPageBase, IPage
 from zopache.remote.rss import  RSS, JustRSS
-from zopache.remote.irss import IRSS, IJustRSS, IRSSBase
-from zopache.remote.rssarticle import IRSSArticle, RSSArticle
+from zopache.remote.irss import IAddRSS,IRSS, IJustRSS, IRSSBase
+from zopache.remote.rssarticle import  RSSArticle
 from zopache.core.page import Page
 from zopache.ttw.mail import Notify
 from BTrees.OOBTree import OOBTree
@@ -22,7 +22,7 @@ from zopache.remote.rsscategory import RSSCategory, IRSSCategory
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddRSS(AddByTitleForm,Notify):
-     interface = IRSS
+     interface = IAddRSS
      title = "Add an RSS Feed"
      subTitle =""
      count = 0

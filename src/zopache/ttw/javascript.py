@@ -7,7 +7,6 @@ from zope.schema.interfaces import IField
 from zope.interface import Interface
 from zopache.ttw.interfaces import ITestSource as ISource
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
-from dolmen.container import IBTreeContainer
 from zopache.crud.forms import EditDemoForm
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
@@ -83,12 +82,12 @@ class JavascriptFolderBase (BTreeContainer):
         self.sourceCache=self.getJavascript()
         
     def __delitem__(self,key):
-        OrderedBTreeContainer.__delitem__(self,key)
+        BTreeContainer.__delitem__(self,key)
         item = self[key]
         self.createJavascriptCaches()
         
     def __setitem__(self,  key,item):
-        OrderedBTreeContainer.__setitem__(self,key,item)
+        BTreeContainer.__setitem__(self,key,item)
         self.createJavascriptCaches()        
 
     def getJavascript(self):

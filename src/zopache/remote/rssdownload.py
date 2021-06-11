@@ -2,54 +2,53 @@ import aiohttp
 import asyncio
 import ssl
 import time
-from zopache.remote.rss import IRSSBase
-from zopache.remote.rssarticle import IRSSArticle
+import sys
 
-async def fetch(session,node,startTime,view):
-   duration =  time.time() - startTime 
+from zopache.remote.irss import IRSSBase, IRSSArticle
 
+async def fetch(session,node,view):
+   startTime = time.time()    
+   duration =  0
    if IRSSBase.providedBy(node):
       url = node.rssURL
-      #print ("URL IS  AN RSS FEED " + node.name)      
    elif IRSSArticle.providedBy(node):
-      if  'Logo' in node:
-         return None
       url = node.getImageURL()
       if url == "":
          url = node.articleURL
-         #print("URL is An Article " + node.name)
-      else:
-         print ("URL is  an Image " + node.name)
+   else:
+      return node, "Neither Feed Nor RSS Article"
 
    try:
         async with session.get(url) as response:
           if response.status == 200:
-             #print ("FETCHED THE URL " + node.name)
-             #print("IN DOWNLOAD  RETURNIng IMAge", node.name)             
-             return await node.processResponse(response,view)
-       
+             result =  await node.processResponse(session,response,view)
+             return result
+          else:
+             return node.parent, 'status = ' + str(response.status)
+          
    except asyncio.TimeoutError as err:
           duration =  time.time() - startTime 
-          print ("TIME OUT", duration, node.name)
-          print (node.name,err)
+          return node.name, "TIME OUT"  + str(duration)
           
-   except (aiohttp.client_exceptions.InvalidURL):
-          print (node.name,err)
+   except aiohttp.client_exceptions.InvalidURL as err:
+          return node.name, str(err)
        
-   except (aiohttp.client_exceptions.ClientConnectorError):    
-          print (node.name,err)
+   except aiohttp.client_exceptions.ClientConnectorError as err:    
+          return node.name, str(err)          
      
-   except (aiohttp.client_exceptions.ServerDisconnectedError):    
-          print (node.name,err)
-     
+   except aiohttp.client_exceptions.ServerDisconnectedError as err:    
+          return node.name, str(err)          
+  
    except ssl.SSLError as err:    
-          print (node.name,err)
+          return node.name, str(err)          
 
+   except:
+          e = sys.exc_info()[0]
+          return node.name, str(e)
+       
 
-   except Exception as err:
-          print (node.name,err)
-          
-   return None     
+   return node.name, "UNEXPlAINED ERROR"
+
 
 
 def fetchAll(nodes,view):
@@ -62,13 +61,13 @@ async def fetchCore(nodes,view):
     timeout = aiohttp.ClientTimeout(total=allowedTime)
     async with aiohttp.ClientSession(timeout = timeout) as session:    
       for node in nodes:
-        startTime = time.time()    
-        print ("Starting " + node.name)
-        task = asyncio.create_task(fetch(session,
+         if IRSSArticle.providedBy(node):
+              if  'Logo' in node:
+                   continue
+         task = asyncio.create_task(fetch(session,
                                          node,
-                                         startTime,
-                                         view))
-        tasks.append(task)
+                                          view))
+         tasks.append(task)
       result = await asyncio.gather(*tasks)
     return result  
 

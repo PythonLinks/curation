@@ -2,7 +2,7 @@ from zope.interface import implementer
 
 from cromlech.security import Unauthorized
 from zopache.pages.location import LocationContainer
-
+from zopache.business.interfaces import IFollow
 from zopache.business.interfaces import (ICompany, IMap,
                                          IOrganization,
                                          IOnlineOrganization,
@@ -54,7 +54,7 @@ class Company  (GeoBase,LocationContainer):
     clientClass = "category"
 
 @implementer (IOnlineOrganization)
-class OnlineOrganization  (Base):        
+class OnlineOrganization  (Base,HasMembers):        
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True

@@ -7,7 +7,6 @@ from zopache.ttw.interfaces import IWebClass
 @form_component
 @context(IBranch)
 @crom.target(IView)
-@title("reIndex")
 @crom.name("reIndex")
 @permissions('Manage')
 class ReIndex(Form):

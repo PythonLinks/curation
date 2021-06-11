@@ -24,8 +24,15 @@ class IForm(Interface):
         title = "Google Oauth Client Id",
         description = "For Logins",
         required = False,
-        default = u'',
+        default = '',
     )
+
+    subscribeSlug= TextLine(
+        title = "Nefault Subscribe Page Name",
+        description = "The Organization they shoudl subscribe to by default. ",
+        required = False,
+        default = '',
+    )    
 
     localLogin = Bool(
         title = "Allow Local Logins?",

@@ -14,7 +14,11 @@ def createImageInFrom(self,content,contentType):
             zodbImage =BTreeImage()
             zodbImage.contentType=contentType 
             zodbImage.data = content
-            pilImage = PilImage.open(BytesIO(content))
+            try:
+               pilImage = PilImage.open(BytesIO(content))
+            except:
+               print  ("FAILED TO CREATE IMAGE IN " + self.name)         
+               return         
             zodbImage.width = pilImage.width
             zodbImage.height = pilImage.height
             self['Logo']= zodbImage

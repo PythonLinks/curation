@@ -162,9 +162,7 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        #item.leaderNodes()
-        #for it in item.politicians.values():
-        #    it.convert()
+        item.getSiteRoot()
         #pass
     
     def moveTo(self,childName):

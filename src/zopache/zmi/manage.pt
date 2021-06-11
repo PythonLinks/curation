@@ -98,12 +98,16 @@ table-hover table-condensed" summary="Content listing"
 
         </tbody>
 	      </table>
-
-<div tal:condition = "view.isAuthenticated()">
-  <div tal:define = "items list(view.request.principal['cutFolder'].values())"
-  tal:condition = "len(items)">
+<?python
+cutItems = []
+showCuts = False
+if view.isAuthenticated():
+   cutItems  = list(view.request.principal['cutFolder'].values())
+   showCuts = True
+?>
+  <div   tal:condition = "showCuts">
    Pastable Items:
-     <span  tal:repeat="item items" style = "color:red">
+     <span  tal:repeat="item cutItems" style = "color:red">
         ${item.name}
     </span>
   </div>

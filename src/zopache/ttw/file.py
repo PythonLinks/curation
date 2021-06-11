@@ -117,8 +117,9 @@ class Image (Leaf,ImageBase):
     
 #BTreeImages have child thumbnails which are Images, and use
 #the parent title and remoteURL.
+from zopache.core import Container
 @implementer (IBTreeImage)
-class BTreeImage(ImageBase,BTreeContainer):
+class BTreeImage(ImageBase,Container):
     def __init__(self):
         ImageBase.__init__(self)
         BTreeContainer.__init__(self)
