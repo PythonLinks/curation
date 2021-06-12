@@ -25,7 +25,6 @@ extensions =[
     Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
     Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
     Extension("zopache.python/*", ["src/zopache/python/*.py"]),    
-    Extension("zopache.climate/*", ["src/zopache/climate/*.py"]),    
     Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
