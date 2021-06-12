@@ -334,7 +334,11 @@ class Page(PageBase, PageMixIn):
 class Link(PageBase, PageMixIn):
     webClass='Link'
     icon="ttwicons/WikiPage.png"
-
+    
+    def getImportTime(self):
+        return self.creationTime
+    importTime = property (getImportTime)
+    
 @implementer (INews)     
 class News (Page,RecentMixIn):
     webClass = 'NewsItem'
@@ -382,7 +386,16 @@ class SiteRootPage(SiteRoot):
        from zopache.ttw.principalfolder import PrincipalFolder
        self ["person"] = PrincipalFolder()
 
-    def bestMostRecentPage(self,lastImportTime = None, limit = 100):
+    def curatedArticles(self,limit=6,days =2):
+        values = self.bestApprovedArticles(days)
+        for item in self.mostRecentFeeds(limit = limit):
+            if not getattr(item,'publicationApproved',False):
+                assert item.__class__.__name__ == 'RSSArticle'
+                values.append(item)
+        lastImportTime = item.importTime 
+        return lastImportTime, values
+       
+    def mostRecentFeeds(self,lastImportTime = None, limit = 100):
         if lastImportTime:
             lastImportTime = - lastImportTime
         articles = self.newestArticles.values(min = lastImportTime,                                                 excludemin = True)
@@ -393,8 +406,15 @@ class SiteRootPage(SiteRoot):
         since = - time.time() + (days * 24 * 3600)
         articles = self.approvedArticles.values(max = since)
         links = self.newestLinks.values(max = since)
-        return list(articles) + list (links)
+        both = list(articles) + list (links)
+        for item in both:
+            assert item.__class__.__name__  in [ 'RSSArticle','Link']
+        both.sort(key=lambda x:-x.creationTime)
 
+        #for item in both:
+        #    print (item.title)
+        #    breakpoint()
+        return both
 
     
     def getSiteRootFor(self,hostName):

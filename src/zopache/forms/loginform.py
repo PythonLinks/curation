@@ -29,6 +29,7 @@ from zopache.forms.validator import LoginValidator
 class LoginAction(Action):
 
     def __call__(self,form):
+        breakpoint()
         data, errors = form.extractData()
         if errors:
             form.errors = errors
@@ -68,6 +69,8 @@ class LoginForm(Form):
     allowAnonymous = True
     
     def update(self):
+        if self.getDomain() == "dev.pythonlinks.info":
+            return
         if not self.getSiteRoot().localLogin:
             self.raiseUnauthorized()
                         

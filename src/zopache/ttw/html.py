@@ -79,7 +79,8 @@ class TrustedHTML(Trusted,HTMLBase):
                  if self.trusted == False:
                     return     
                  theSource=self.getHTML()
-                 template = PageTemplate(theSource)
+                 fileName = self.parent.name + "/" + self.name
+                 template = PageTemplate(theSource,filename = fileName)
                  template.filename = self.__name__
                  self._v_compiledTemplate = template
                  return self._v_compiledTemplate
