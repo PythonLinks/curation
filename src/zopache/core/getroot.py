@@ -65,7 +65,10 @@ def getRoot(object):
 class Root(object):
 
     def getSiteRoot(self):
-        return getSiteRoot(self.context)
+        siteRoot= getattr(self,'_siteRoot',None)
+        if (siteRoot == None):
+           self._siteRoot = siteRoot =  getSiteRoot(self.context)
+        return siteRoot
 
     def getZodbRoot(self):
         return getZodbRoot(self.context)
@@ -74,14 +77,12 @@ class Root(object):
         return getPrincipalFolder(self.context)               
 
     def getProducts(self):
-        if hasattr(self,'products'):
-           return self.products
-        self.products =  getProducts(self.context)
-        return self.products
+        products = getattr(self,'_products',None)
+        if products == None:
+           self._products = products =  getProducts(self.context)
+        return products
 
     def getLayout(self):
-        if hasattr(self,"layout"):
-           return self.layout
         products = self.getProducts()
         layouts = products ["Layouts"]
         domain = self.getDomain()
@@ -91,7 +92,6 @@ class Root(object):
            layout =  layouts ["default"]
         else:
            layout = layouts
-        self.layout = layout   
         return layout
 
     def getTemplates(self):
@@ -112,7 +112,3 @@ class Root(object):
             result += item.render(self, view = self)
         return result
     
-    def resetArticles (self):
-       siteRoot = self.getSiteRoot()
-       siteRoot.articles = OOBTree()
-       return siteRoot.articles   

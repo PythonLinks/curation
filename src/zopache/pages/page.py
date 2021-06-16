@@ -388,18 +388,23 @@ class SiteRootPage(SiteRoot):
 
     def curatedArticles(self,limit=6,days =2):
         values = self.bestApprovedArticles(days)
-        for item in self.mostRecentFeeds(limit = limit):
+        lastImportTime = 2147483647
+        #lastImportTime = 100000000
+        for item in self.bestMostRecentPage(
+                limit = limit,
+                lastImportTime = lastImportTime):
             if not getattr(item,'publicationApproved',False):
                 assert item.__class__.__name__ == 'RSSArticle'
                 values.append(item)
-        lastImportTime = item.importTime 
+                lastImportTime = item.importTime 
         return lastImportTime, values
        
-    def mostRecentFeeds(self,lastImportTime = None, limit = 100):
-        if lastImportTime:
+    def bestMostRecentPage(self,lastImportTime = None, limit = 10):
+        if lastImportTime != None:
             lastImportTime = - lastImportTime
         articles = self.newestArticles.values(min = lastImportTime,                                                 excludemin = True)
         result = itertools.islice(articles, limit)
+        result = list(result)
         return result
 
     def bestApprovedArticles(self, days):
@@ -410,10 +415,6 @@ class SiteRootPage(SiteRoot):
         for item in both:
             assert item.__class__.__name__  in [ 'RSSArticle','Link']
         both.sort(key=lambda x:-x.creationTime)
-
-        #for item in both:
-        #    print (item.title)
-        #    breakpoint()
         return both
 
     

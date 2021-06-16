@@ -44,12 +44,15 @@ class IEditors(Interface):
 @form_component
 @name (u'editors')
 @context(Interface)
-#@implementer(ITreeSecurity)
+@implementer(ITreeSecurity)
 class EditEditors(EditForm):
-    title = 'Assign Editors'
+    title = 'Assign Editors2'
     interface = IEditors
     fields = Fields(IEditors)
     ignoreContent = False
-  #  mode = 'multiselect'
- 
+    #  mode = 'multiselect'
+  
+    def update(self):
+      self.template = self.getTemplates['Security']
+      
 
