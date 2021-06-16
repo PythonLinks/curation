@@ -44,7 +44,7 @@ class Base(object):
 @name('forest-wiki-backup')
 @context(Interface)
 @permissions('Manage')
-class Index(View):
+class Index(Base,View):
     responseFactory = Response
     make_response = make_file_response
     def doit(self):

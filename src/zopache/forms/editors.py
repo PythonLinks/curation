@@ -53,6 +53,7 @@ class EditEditors(EditForm):
     #  mode = 'multiselect'
   
     def update(self):
-      self.template = self.getTemplates['Security']
-      
+      EditForm.update(self)  
+      self.template = self.getTemplates()['Security']
+           
 

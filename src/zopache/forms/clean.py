@@ -1,3 +1,4 @@
+from BTrees.OOBTree import OOBTree
 from cromlech.security import permissions
 from itertools import islice
 from zopache.core.viewdecorators import *
@@ -25,6 +26,14 @@ class Clean(Form):
            for article in articles:    
                article.preDeleteProcess(self)
                del article.parent [article.name]
+           
+           orphans = []    
+           for key,value in context.localArticles.items():
+               if value.parent == None:
+                   orphans.append[key]
+           #for key in orphans:
+           #    print (key)
+           #    del context.localArticles [key]
            self.status='The Articles Were Removed'
            Form.update(self)
 

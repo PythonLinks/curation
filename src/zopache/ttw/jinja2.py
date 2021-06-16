@@ -72,17 +72,19 @@ class JinjaBase(Leaf):
 
             self.setTemplate(view)
             request = view.request
-            try:
-               ctx = {
+            #try:
+            ctx = {
                                "view": view,
                                "node" : context,
                                "request" : request}
                     
-               return self._v_compiledTemplate.render(context = ctx,
+            result =  self._v_compiledTemplate.render(context = ctx,
                                                           node = context,
                                                           view= view,
                                                           request = request)
-
+            return result
+            try:
+                    pass
             except AttributeError as error:
                result =  """COULD NOT DISPLAY THAT PAGE.
                       HERE IS THE ERROR MESSAGE:\n<br>"""

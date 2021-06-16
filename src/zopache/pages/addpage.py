@@ -69,7 +69,7 @@ class AddPage(AddAuthorizedPage):
     title = "Add a Web Page"
     subTitle = "It can have child pages."
     interface = IPage
-    label="Add a Wiki Page"
+    label=""
     factory = Page
 
 from zopache.application.interfaces import IRootContainer
