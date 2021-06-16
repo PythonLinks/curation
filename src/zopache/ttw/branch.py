@@ -52,10 +52,15 @@ class SimpleBranch(object):
                 self.valuesByToken.__delitem__(key)
     
     def __getitem__(self, name):
-        if BTreeContainer.__contains__(self,name):
-           return  BTreeContainer.__getitem__(self,name)
-        else:
-           return self.valuesByToken[name]
+        result = self._data.get(name)
+        if result != None:
+            return result
+        result = self.valuesByToken.get(name)
+        if result != None:
+            return result
+        if name == self.name:
+            return self
+        return None
     
     def get(self,name,default=None):
       if name in self:

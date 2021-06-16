@@ -162,7 +162,7 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        item.getSiteRoot()
+        view.getSiteRoot()
         #pass
     
     def moveTo(self,childName):
