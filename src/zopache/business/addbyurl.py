@@ -1,8 +1,9 @@
 #ADD LINK
+from dolmen.forms.base import Action, Actions,SuccessMarker
 from zopache.core.viewdecorators import *
 from zopache.core.interfaces import ITreeSecurity
 from zopache.crud.addbyurl import AddByURLForm
-
+from zopache.crud.actions import Cancel
 #The Classes to Add
 from zopache.remote.rss import RSS
 from zopache.business.company import Organization
@@ -16,9 +17,27 @@ from zopache.pages.interfaces import IPage
 @implementer(ITreeSecurity)
 class AddLinkByURL(AddByURLForm):
     title = "Add a Link By URL"
-    def newURL(self,base):
-        return base + '/addLink'
+    addSlug = "addLink"
 
+from zopache.crud.addbyurl import AddFeedByURLAction        
+    
+@view_component
+@name('addRSSByURL')
+@target(IView)
+@context(IPage)
+@permissions('Manage')
+class AddRssByURLForm(AddByURLForm):
+    addSlug = "addRSS"
+    title = "Add an RSS Feed"
+    datavalidators = []
+    def addUnauthorizedActions(self):   
+        actions = Actions(
+                   AddFeedByURLAction("Add"),
+                   Cancel("Cancel"))
+        self.actions= actions    
+
+
+    
 @view_component
 @name('addOrganizationByURL')
 @target(IView)
@@ -26,19 +45,8 @@ class AddLinkByURL(AddByURLForm):
 class AddOrganizationByURL(AddByURLForm):
     allowAnonymous = True
     title = "Add an Organization By URL"
-    def newURL(self,base):
-        return base + '/addOrganization'
+    addSlug = 'addOrganization'
 
-
-@view_component
-@name('addNewsSiteByURL')
-@target(IView)
-@context(IPage)
-class AddRSSByURL(AddByURLForm):
-    title = "Add a News Site"
-    subTitle = "Not an article, just the home page. "
-    def newURL(self,base):
-        return base + '/addRSS'
     
 @view_component
 @name('addPoliticianByURL')
@@ -48,5 +56,4 @@ class AddPoliticianByURL(AddByURLForm):
     allowAnonymous = True
     title = "Add a Politician By URL "
     subTitle = "Not an article, just the home page. "
-    def newURL(self,base):
-        return base + '/addPolitician'        
+    addSlug = 'addPolitician'        

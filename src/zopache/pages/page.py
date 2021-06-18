@@ -418,6 +418,27 @@ class SiteRootPage(SiteRoot):
         both.sort(key=lambda x:-x.creationTime)
         return both
 
+    def mergedCuratedContent(self, count = 10):
+        return islice(self.mergedCore(),count)
+    
+    def mergedCore(self):    
+        articles = self.approvedArticles.itervalues()
+        links = self.newestLinks.itervalues()
+        nextArticle =  next(articles)
+        nextLink = next(links)
+        articleTime = nextArticle.importTime
+        linkTime = nextLink.importTime
+        while (True):
+          if articleTime >= linkTime:
+            currentArticle = nextArticle 
+            nextArticle = next(articles)
+            articleTime = nextArticle.importTime
+            yield currentArticle
+          else:
+            currentLink = nextLink
+            nextLink = next(links)
+            linkTime = nextLink.importTime
+            yield currentLink
     
     def getSiteRootFor(self,hostName):
         return self    
