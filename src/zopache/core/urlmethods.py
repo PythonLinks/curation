@@ -45,7 +45,7 @@ class URLMethods(object):
         result = 'https://'
         result += self.getDomain()
         result += self.getSiteRoot().basePath
-        result += self.getShortPath()
+        result += context.__name__
         return result
 
     def getSecureLongURL(self,context = None):
