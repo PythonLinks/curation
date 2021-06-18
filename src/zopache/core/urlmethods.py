@@ -42,6 +42,7 @@ class URLMethods(object):
     def secureShortURL(self,context = None):
         if context == None:
            context = self.context
+           
         result = 'https://'
         result += self.getDomain()
         result += self.getSiteRoot().basePath

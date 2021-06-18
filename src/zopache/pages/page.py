@@ -390,7 +390,7 @@ class SiteRootPage(SiteRoot):
         values = self.bestApprovedArticles(days)
         lastImportTime = 2147483647
         #lastImportTime = 100000000
-        for item in self.bestMostRecentPage(
+        for item in self.mostRecentFeeds(
                 limit = limit,
                 lastImportTime = lastImportTime):
             if not getattr(item,'publicationApproved',False):
@@ -399,8 +399,9 @@ class SiteRootPage(SiteRoot):
                 lastImportTime = item.importTime 
         return lastImportTime, values
        
-    def bestMostRecentPage(self,lastImportTime = None, limit = 10):
+    def mostRecentFeeds(self,lastImportTime = None, limit = 100):
         if lastImportTime != None:
+
             lastImportTime = - lastImportTime
         articles = self.newestArticles.values(min = lastImportTime,                                                 excludemin = True)
         result = itertools.islice(articles, limit)
