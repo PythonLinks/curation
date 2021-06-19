@@ -17,6 +17,7 @@ from .contents import Contents
 from zopache.core.page  import  Page
 from zopache.zmi.cutfolder import cutFolder
 from . import tal_template
+from zopache.core.interfaces import ITreeSecurity
 
 from zopache.zmi.interfaces import IObjectRetitler
 from zopache.pages.interfaces import IPage
@@ -121,6 +122,7 @@ class ManageDirectory (ManageBase):
 @form_component
 @name('manage')
 @context(Interface)
+@implementer(ITreeSecurity)
 class Manage (ManageBase):
     pass        
      

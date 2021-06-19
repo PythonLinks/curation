@@ -4,7 +4,7 @@ from zopache.pages.location import MapBase
 from zopache.pages.page import Page
 from zopache.business.interfaces import ICity
 from zopache.pages.location import LocationContainer
-from zopache.business.company import GeoBase
+from zopache.business.geocoding import GeoBase
 
 @implementer(ICity)
 class City(GeoBase,LocationContainer):

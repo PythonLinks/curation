@@ -3,7 +3,7 @@
 
 class Social(object):
     def getTitle(self):
-        return self.json[content][0]["title"]
+        return self.json['content'][0]["title"]
 
     def getDescription(self):
         return self.content["english"]["description"]

@@ -9,12 +9,14 @@ from zopache.business.interfaces import (ICompany, IMap,
                                          ICompanyBase,
                                          IMapOrganization)
 from zopache.business.ipolitician import IPolitician
-
+from zopache.pages.location import LocationLeaf
 from zopache.pages.page import Page
 from zopache.pages.interfaces import IPage
-from zopache.business.geocoding import GeoCodeObject
+from zopache.business.geocoding import GeoCodeObject, GeoBase
 from zopache.business.imaginarypage import ImaginaryPage
 from zopache.business.subscribe import HasMembers
+from zopache.business.map import Map
+from zopache.pages.location import MapBase
 
 class Base(Page):    
     hidden = False
@@ -32,21 +34,6 @@ class Base(Page):
         return self.description [0:20]
 
 
-
-#GeoBase inherits  Page from Location
-class GeoBase(GeoCodeObject,Base):
-    longitude = 0.
-    lattitude = 0.
-        
-    #LocationBase inherits from Page
-    def __init__(self):
-        LocationContainer.__init__(self)
-        GeoCodeObject.__init__(self)
-        
-    def canView(self,view):
-         if (self.hidden and
-             (not view.isAuthenticated())):
-             raise Unauthorized 
     
 @implementer (ICompany)
 class Company  (GeoBase,LocationContainer):
@@ -66,7 +53,7 @@ from zopache.business.region import RegionBase
 class Organization  (
                      GeoBase,
                      HasMembers,
-                     RegionBase):
+                     LocationLeaf):
     
     interface = IOrganization
     webClass = "Organization"
@@ -80,13 +67,14 @@ class Organization  (
     facebookId = ""
     facebookGroup = ""
     remoteURL = ""
+    def getOneMarkerCore(self):
+        focus = getattr(self,'focus',"")
+        focus = focus [:4]
+        return  ',"' + focus + '"'
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
 from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
-from zopache.business.map import Map
-from zopache.pages.location import MapBase
-
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
                       GeoBase,

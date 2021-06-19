@@ -52,7 +52,7 @@ class RSS(Link,UniqueName):
            return ""
        
     # FOR A NEW RSS FEED       
-    def createOneArticle(self,article,view):
+    def createOneArticle(self,article,view,time):
        new = RSSArticle()
        new.title = unescape (article.title)
        if self.htmlSummary:
@@ -81,7 +81,9 @@ class RSS(Link,UniqueName):
        theId = article['id']
        new.permaLink = theId
        if hasattr(article,"published_parsed"):
-          new.publishedAt = time.mktime( article["published_parsed"])
+          new.publishedAt = max(
+                            time.mktime( article["published_parsed"]),
+                            now)
        else:
           new.publishedAt = time.time()
           

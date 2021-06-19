@@ -30,7 +30,7 @@ class Clean(Form):
            orphans = []    
            for key,value in context.localArticles.items():
                if value.parent == None:
-                   orphans.append[key]
+                   orphans.append(key)
            #for key in orphans:
            #    print (key)
            #    del context.localArticles [key]
