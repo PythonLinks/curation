@@ -10,9 +10,12 @@ from zopache.business.ipolitician import (IPolitician,
 from zopache.pages.page import SiteRoot
 from zopache.pages.interfaces import IPage
 from zopache.business.imaginarypage import ImaginaryPage
+from zopache.pages.page import Page
+from zopache.pages.location import LocationLeaf
 
 @implementer (IPolitician)
-class Politician (ImaginaryPage,LocationLeaf,HasMembers):
+class Politician (Page,LocationLeaf,HasMembers):
+    hidden = False
     localOrNational = ""
     webClass = "Politician"
     clientClass = "category"
@@ -21,17 +24,31 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
         LocationLeaf.__init__(self)
         HasMembers.__init__(self)
 
-    """    
-    def getTitle(self):
-        if 'title' in self.__dict__:
-            return self.__dict__["title"]
-        return self.content["title"]
+    def getOneMarkerCore(self):
 
-    def setTitle(self,value):
-        if 'title' in self.__dict__:
-            self.__dict__["title"] = value
-        self.content["title"] = value
-    """
+                     result = ""   
+                     result += self.getArg(str(hasattr(
+                                        self,'candidateInfo'))[0])
+                     result += self.getArg(str(hasattr(
+                                        self,'electedOfficial'))[0])
+                     result += self.getArg(
+                          str(hasattr(self,'partyOfficer'))[0])
+                     result += self.getArg(
+                          str(hasattr(self,'history'))[0])                     
+                     outcome = self.getCandidateInfo("result")
+                     if len(outcome) > 0:
+                         outcome = outcome [0]
+                     result += ',"' + outcome +' "'
+                     return result              
+
+
+    def isElectedOfficial(self):
+        if hasattr(self,'electedOfficial'):
+           return True
+        if self.getCandidateInfo("result") =="Won":
+           return True
+        return False                                   
+
     
     def getDescription(self):
         if 'description' in self.__dict__:

@@ -61,12 +61,12 @@ class Index(HTMLIndex):
     make_response = makeXMLResponse
 
 @form_component
-@context(IFeed)
+@context(IXML)
 @name("aceedit")
 @permissions('Manage')
 class AceEditXML(AceScripts,AceEditForm):
     subTitle='Edit an XML Object'
-    interface = IFeed
+    interface = IXML
     
 @view_component
 @name('source')

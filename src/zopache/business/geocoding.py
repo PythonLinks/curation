@@ -1,4 +1,6 @@
 from zopache.pages.address import Base
+from cromlech.security import Unauthorized
+from zopache.pages.location import LocationContainer
 
 class GeoCodeForm(object):
     def update(self):
@@ -25,4 +27,17 @@ class GeoCodeObject(Base):
     
 
         
-
+#GeoBase inherits  Page from Location
+class GeoBase(GeoCodeObject):
+    longitude = 0.
+    lattitude = 0.
+        
+    #LocationBase inherits from Page
+    def __init__(self):
+        LocationContainer.__init__(self)
+        GeoCodeObject.__init__(self)
+        
+    def canView(self,view):
+         if (self.hidden and
+             (not view.isAuthenticated())):
+             raise Unauthorized 

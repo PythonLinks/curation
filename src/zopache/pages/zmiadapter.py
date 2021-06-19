@@ -1,4 +1,3 @@
-    
 import crom
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.core.getroot import getSiteRoot
@@ -136,7 +135,7 @@ class PageDeleter(Deleter):
            
     def allowed(self,item):
          if len(item) > 1:
-             return Flase
+             return False
          if 'Logo' in item:
              return True
          return True    

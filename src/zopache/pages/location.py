@@ -15,7 +15,7 @@ class MapOrLocation (PageBase):
     latitude = 45.
     longitude = 0.
     webClass = 'Location'
-    
+    hidden = False
     def getTitle(self):
         return self.title
 
@@ -36,6 +36,44 @@ class MapOrLocation (PageBase):
     def setMarkerLatLng(self, lat,lng):
         self.latitude = lat
         self.longitude = lng
+        
+    def getOneMarker(self, firstItem, result):
+                  if not hasattr(self, 'longitude'):
+                      return result,firstItem
+                  if not firstItem:
+                     result +=','
+                  firstItem=False      
+                  result+='\n'
+                  result += '['
+                  result +='"' +  self.__name__ + '"'
+                  result += ','
+                  result +='"' +  self.getTitle() + '"'
+                  result += ','
+                  lat,lng = self.getMarkerLatLng()
+                  result +=  str(lat)  
+                  result += ","                   
+                  result += str(lng)
+                  aClass = self.__class__.__name__[0]
+                  result += self.getArg(aClass)
+                  hasFutureEvent =  str(self.hasFutureEvent())
+                  result += self.getArg(hasFutureEvent)
+                  result += self.getOneMarkerCore()
+                  result += ',"' + self.remoteURL  + '"'                  
+                  result += "]"
+                  return result, firstItem
+              
+    #MAY BE OVERRIDDEN BY SUBCLASSES TO GET MORE INFO          
+    def getOneMarkerCore(self):
+        return ""
+ 
+    def getArg(self,aString,comma = True):
+          result = ""
+          if comma:
+              result += ","
+          result += '"'
+          result += aString
+          result += '"'
+          return result
 
 #At least used by events. 
 @implementer (ILocationLeaf)
@@ -46,6 +84,9 @@ class LocationLeaf (MapOrLocation):
     
     def getCompaniesRecursively(self,result,showChildren = False):
         return result.append(self)
+    #JUST ADD ONE MARKER TO THE LIST                        
+
+             
         
 @implementer (ILocationContainer)
 class LocationContainer (MapOrLocation):

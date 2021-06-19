@@ -13,66 +13,9 @@ class RegionBase(LocationContainer):
     specialization = ''
     showChildren = True
    
-    #JUST ADD ONE MARKER TO THE LIST                        
-    def getOneMarker(self, firstItem, result):
-                  if not hasattr(self, 'longitude'):
-                      return result,firstItem
-                  if not firstItem:
-                     result +=','
-                  firstItem=False      
-                  result+='\n'
-                  result += '['
-                  result +='"' +  self.__name__ + '"'
-                  result += ','
-                  result +='"' +  self.getTitle() + '"'
-                  result += ','
-                  lat,lng = self.getMarkerLatLng()
-                  result +=  str(lat)  
-                  result += ","                   
-                  result += str(lng)
-                  aClass = self.__class__.__name__[0]
-                  result += self.getArg(aClass)
-                  hasFutureEvent =  str(self.hasFutureEvent())
-                  result += self.getArg(hasFutureEvent)
-                  if self.__class__.__name__ in [
-                          "Organization","MapOrganization"]:
-                      focus = getattr(self,'focus',"")
-                      focus = focus [:4]
-                      result += ',"' + focus + '"'
-                      
-                  if self.__class__.__name__ == "Politician":
-                     result += self.getArg(str(hasattr(
-                                        self,'candidateInfo'))[0])
-                     result += self.getArg(str(hasattr(
-                                        self,'electedOfficial'))[0])
-                     result += self.getArg(
-                          str(hasattr(self,'partyOfficer'))[0])
-                     result += self.getArg(
-                          str(hasattr(self,'history'))[0])                     
-                     outcome = self.getCandidateInfo("result")
-                     if len(outcome) > 0:
-                         outcome = outcome [0]
-                     result += ',"' + outcome +' "'
                      
-                  result += ',"' + self.remoteURL  + '"'                  
-                  result += "]"
-                  return result, firstItem
               
-    def isElectedOfficial(self):
-        if hasattr(self,'electedOfficial'):
-           return True
-        if self.getCandidateInfo("result") =="Won":
-           return True
-        return False                                   
 
-    def getArg(self,aString,comma = True):
-          result = ""
-          if comma:
-              result += ","
-          result += '"'
-          result += aString
-          result += '"'
-          return result
       
     def getColor(self):
         #COLOR BASED ON CLASS
