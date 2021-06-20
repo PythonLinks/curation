@@ -212,7 +212,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def __init__(self):
          OrderedBTreeContainer.__init__(self)
          self.creationTime=time.time()
-         self.modificationTime=time.time()
+         self.modificationTime=self.creationTime
 
     def getSiteRoot(self):
         return getSiteRoot(self)
@@ -412,9 +412,6 @@ class SiteRootPage(SiteRoot):
             assert item.__class__.__name__  in [ 'RSSArticle','Link']
         both.sort(key=lambda x:-x.creationTime)
 
-        #for item in both:
-        #    print (item.title)
-        #    breakpoint()
         return both
 
     def mergedCuratedContent(self, count = 10):

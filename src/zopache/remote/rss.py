@@ -52,7 +52,7 @@ class RSS(Link,UniqueName):
            return ""
        
     # FOR A NEW RSS FEED       
-    def createOneArticle(self,article,view,time):
+    def createOneArticle(self,article,view,now):
        new = RSSArticle()
        new.title = unescape (article.title)
        if self.htmlSummary:
@@ -102,10 +102,11 @@ class RSS(Link,UniqueName):
 
     def createArticles(self,entries,view):
        globalArticles= self.getSiteRoot().globalArticles
+       now = time.time()
        for article in entries:
            theId = article['id']
            if not theId in globalArticles:
-              self.createOneArticle(article,view )
+              self.createOneArticle(article,view,now )
 
     def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)

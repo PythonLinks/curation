@@ -14,7 +14,7 @@ from zopache.pages.page import Page
 from zopache.pages.location import LocationLeaf
 
 @implementer (IPolitician)
-class Politician (Page,LocationLeaf,HasMembers):
+class Politician (ImaginaryPage,LocationLeaf,HasMembers):
     hidden = False
     localOrNational = ""
     webClass = "Politician"

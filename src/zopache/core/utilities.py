@@ -12,6 +12,18 @@ def sortFunction(item):
   return item.__name__
 
 class Utilities (object):
+    def parentalMenu(self):
+        parentalMenu = self.parentalAcquire("ParentalMenu")
+        if parentalMenu != None:
+           return parentalMenu(view)
+        return ""
+
+    def webClassMenu(self):
+        webClassMenu = self.webClassAcquire("WebClassMenu")
+        if webClassMenu != None:
+           return webClassMenu(view)
+        return ""      
+      
     def htmlEscape(self,text):
         return escape(text)
     

@@ -1,6 +1,8 @@
 import time
 from zope.interface import Interface
 from zope import schema
+from dolmen.container import OrderedBTreeContainer
+
 from zopache.pages.interfaces import IPage
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
@@ -21,10 +23,11 @@ class RSSArticle(Page,Voteable):
     publicationApproved = False
 
     def __init__(self):
-        importTime=time.time()
-        importTime = int(importTime)
-        self.importTime = importTime
-        Page.__init__(self)
+         #Simpler to not call page initialization.
+         #HOPE I DO NOT MISS ANYTHING
+         OrderedBTreeContainer.__init__(self)
+         self.modificationTime= time.time()
+         self.importTime = int(self.modificationTime)
         
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)

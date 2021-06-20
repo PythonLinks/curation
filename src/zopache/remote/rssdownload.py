@@ -17,7 +17,6 @@ async def fetch(session,node,view):
          url = node.articleURL
    else:
       return node, "Neither Feed Nor RSS Article"
-
    try:
         async with session.get(url) as response:
           if response.status == 200:
