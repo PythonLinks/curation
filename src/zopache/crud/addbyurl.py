@@ -47,7 +47,6 @@ import feedparser
 class AddFeedByURLAction(AddByURLAction):
     addSlug = "addRSS"
     def processURL(self,rssURL,form):
-        breakpoint()
         try:
            feed = feedparser.parse(rssURL)
 
