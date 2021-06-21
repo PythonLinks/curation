@@ -38,6 +38,11 @@ class Reject (View,Breadcrumbs):
         return "Rejected"
     
     def update(self):
+        breakpoint()
+        context = self.context
+        siteRoot = self.getSiteRoot()
+        siteRoot.unIndexItem(context)
         self.context.webApproved = False
+        siteRoot.indexItem(context)
         cache.resetCache(self)
 
