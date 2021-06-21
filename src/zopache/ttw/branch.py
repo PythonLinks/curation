@@ -234,7 +234,7 @@ class Branch(SimpleBranch):
            if not self.hasArticle(importTime):
                 break;
                 importTime += 1
-        return importTime
+        return int(importTime)
             
     def unIndexItem(self,item, itemType=IPage):
         if not IPage.providedBy(item):

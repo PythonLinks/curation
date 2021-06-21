@@ -212,7 +212,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def __init__(self):
          OrderedBTreeContainer.__init__(self)
          self.creationTime=time.time()
-         self.modificationTime=time.time()
+         self.modificationTime=self.creationTime
 
     def getSiteRoot(self):
         return getSiteRoot(self)

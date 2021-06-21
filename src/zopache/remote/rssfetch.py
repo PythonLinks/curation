@@ -50,7 +50,11 @@ class GetRSS(Form):
                if IRSS.providedBy(item):
                   if item.rssApproved:   
                       feeds.append(item)
-        fetchAll(feeds,self)
+        result = fetchAll(feeds,self)
+        for item in result:
+            if item != None:  
+              if len(item) == 2:
+                  print ("ERROR", item[0], item[1])
         callTwice(self)
         callTwice(self)
         self.status='RSS Feeds were downloaded.'
