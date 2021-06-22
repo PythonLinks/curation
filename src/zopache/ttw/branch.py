@@ -186,7 +186,11 @@ class Branch(SimpleBranch):
     def indexItem(self,item, itemType=ICanonical):
         if not IPage.providedBy(item):
             return
-        self.valuesByToken[item.__name__] = item       
+        self.valuesByToken[item.__name__] = item
+        
+        if item.__class__.__name__  == "RSSArticle":
+            self.globalArticles [item.permaLink] = item
+            
         if (hasattr(item,'webApproved') and
                    not item.webApproved ):
                    return
@@ -206,7 +210,6 @@ class Branch(SimpleBranch):
                     self.socialNodeByTwitterId[twitterId] = item
                     
         if item.__class__.__name__  == "RSSArticle":
-            self.globalArticles [item.permaLink] = item
             time = item.getImportTime(self)
             assert item.__class__.__name__ == 'RSSArticle'
             if item.publicationApproved:
