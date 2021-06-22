@@ -185,7 +185,6 @@ class Branch(SimpleBranch):
 
     def indexItem(self,item, itemType=ICanonical):
         #if item.__class__.__name__ == "RSSArticle":
-        #    breakpoint()
         if not IPage.providedBy(item):
             return
         self.valuesByToken[item.__name__] = item       
