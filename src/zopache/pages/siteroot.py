@@ -9,7 +9,7 @@ class NewsMethods(object):
     def headlines(self):
         now = datetime.now().timestamp()
         articles = []
-        days = 1
+        days = 2
         while len(articles) < 6:
             midnight = self.midnight(now)
             lastImportTime = midnight
@@ -48,7 +48,9 @@ class NewsMethods(object):
               else:           
                   midnight -= secondsInADay
                   lastImportTime = midnight
-                  approvedArticles = list(self.todaysApprovedArticles(midnight))
+                  previousNight = midnight - secondsInADay
+                  approvedArticles = list(self.todaysApprovedArticles(
+                                          previousNight))
                   articles = articles + approvedArticles
         return articles
    
