@@ -105,6 +105,10 @@ class RSSArticle(Page,Voteable):
             html  =  await response.text()
             result = web_preview(self.articleURL, content = html, parser="html.parser")
             imageURL = result [2]
+            
+            if "This post is for paying subscribers." in html:
+               self.webApproved = False
+               
             if imageURL:
                self.imageURL = imageURL
                response =  await fetch(session, self, view)

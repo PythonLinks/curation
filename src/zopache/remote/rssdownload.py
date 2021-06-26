@@ -51,7 +51,8 @@ async def fetch(session,node,view):
 
 
 def fetchAll(nodes,view):
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    #asyncio.set_event_loop(loop)
     return loop.run_until_complete(fetchCore(nodes,view))
    
 async def fetchCore(nodes,view):   
