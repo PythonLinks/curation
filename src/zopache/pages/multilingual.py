@@ -1,6 +1,15 @@
+import json
 from zope.interface import implementer
+
+from dolmen.forms.base.errors import Error, Errors
+
 from zopache.pages.page import PageVeryBase
 from zopache.pages.interfaces import IMultilingual
+
+
+from zopache.core.viewdecorators import *
+from zopache.business.editjsonschema import AddJson, EditJson
+from zopache.core.interfaces import ITreeSecurity
 
 @implementer(IMultilingual)
 class Multilingual(PageVeryBase):
@@ -37,37 +46,22 @@ class Multilingual(PageVeryBase):
             item["title"]=item["title"].replace ('\n' , " ")
             item["title"]=item["title"].replace ('\r' , " ")                
 
-import json
-from dolmen.forms.base.errors import Error, Errors
-from zopache.core.viewdecorators import *
-from zopache.business.editjsonschema import AddJson, EditJson
-from zopache.core.interfaces import ITreeSecurity
-class MultilingualBase(object):
-    def applyData(self,data):
-        context = self.target()
-        jsonSchemaDict =self.jsonSchemaDict
-        requestJsonDict = self.requestJsonDict                
-        context.json = json.loads(data["json"])        
-        self.context._p_changed = True
-        return Errors()    
-
 @form_component
 @name ('ckedit')
 @context(IMultilingual)
 @implementer(ITreeSecurity)
-class EditMultilingual (MultilingualBase,EditJson):
+class EditMultilingual (EditJson):
     title = 'Edit this Multilingual Page.'
     subTitle = ''
     schemaName = "MultilingualSchema"  
-    def contextJsonDict(self):
-        return self.context.json
+
 
 from zopache.pages.interfaces import IPageBase
 @view_component
 @name('addMultilingual')
 @target(IView)
 @context(IPageBase)
-class AddMultilingual(MultilingualBase,AddJson):
+class AddMultilingual(AddJson):
     title = "Add a MultiLingual Page"
     subTitle = "You can add as many language versions as you need."
     factory = Multilingual

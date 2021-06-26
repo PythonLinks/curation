@@ -8,7 +8,7 @@ from . import tal_template
 from zopache.core.scripts import Scripts
 
 class View(DolmenView,Breadcrumbs):
-    pass
+    responseFactory = Response
 
 class LayoutView(Scripts,View):
     responseFactory = Response

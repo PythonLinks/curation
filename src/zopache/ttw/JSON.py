@@ -65,12 +65,6 @@ class JSONDict(JSON,OrderedBTreeContainer):
         source2 = self.source           
         json2 = json.loads (source2)
 
-        #if self.title != "":
-        #    json2["title"] =self.title
-
-        #if self.description != "":
-        #    json2["description"] =self.description
-            
         properties = json2.get("properties",dict()) 
         for key,value  in self.items():
             if IJSON.providedBy(value):
