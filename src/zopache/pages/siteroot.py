@@ -13,6 +13,7 @@ class NewsMethods(object):
         while len(articles) < 6:
             midnight = self.midnight(now)
             lastImportTime = midnight
+            print("HEADLINES CUrATED  2days",datetime.fromtimestamp(midnight))
             approved = list(self.todaysCuratedArticles(midnight, days = days) )
             articles += approved
             feedArticles = self.todaysFeedArticles(midnight)
@@ -30,12 +31,14 @@ class NewsMethods(object):
                    midnight  -= secondsInADay
                    lastImportTime = midnight
                    now = midnight
+                   print("More Headlines Curated",
+                         datetime.fromtimestamp(midnight))                  
                    approved = list(self.todaysCuratedArticles(midnight) )
                    articles += approved
                    feedArticles = self.todaysFeedArticles(midnight)
             return lastImportTime,articles
 
-    def moreNews(self,lastImportTime,howMany = 6):        
+    def moreNews(self,lastImportTime,howMany = 6):
         articles = []
         midnight = self.midnight(lastImportTime)
         while len(articles) < howMany:
@@ -46,10 +49,12 @@ class NewsMethods(object):
               if self.midnight(item.importTime) == midnight:
                   articles.append(item)
               else:           
+                  breakpoint()
                   midnight -= secondsInADay
                   lastImportTime = midnight
                   previousNight = midnight - secondsInADay
-                  approvedArticles = list(self.todaysApprovedArticles(
+                  print("MoreNews",datetime.fromtimestamp(previousNight))
+                  approvedArticles = list(self.todaysCuratedArticles(
                                           previousNight))
                   articles = articles + approvedArticles
         return articles
