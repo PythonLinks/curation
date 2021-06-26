@@ -10,6 +10,12 @@ from zopache.business.interfaces import IMapOrganization
 from zopache.pages.interfaces import IPage
 
 class PoliticianBase(object):
+
+    def updateFromJsonDict(self,target,key,requestJsonDict):
+        if key in requestJsonDict:
+           value =  requestJsonDict[key]
+           setattr(target,key,value)
+           
     def contextJsonDict(self):
         contextJsonDict = dict()
         context = self.context
@@ -59,7 +65,7 @@ class PoliticianBase(object):
             if hasattr(target,key):
                 delattr(target,key)
             self.updateFromJsonDict(target,key,requestJsonDict)
-        self.context._p_changed = True
+        target._p_changed = True
         return Errors()
 
     
@@ -70,6 +76,7 @@ class AddPolitician (PoliticianBase,AddJson):
     def newName(self,data):
         newName =  self.requestJsonDict["introduction"]['title']
         return newName
+    
 @form_component
 @name ('ckedit')
 @context(IPolitician)
@@ -79,6 +86,8 @@ class EditPolitician (PoliticianBase,EditJson):
     subTitle = 'Using JSON Schema.'
     schemaName = "PoliticianSchema"
 
+
+        
 
 @form_component
 @name ('edit')

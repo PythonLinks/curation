@@ -74,10 +74,12 @@ function createAce(fieldName,mode){
         return result
 
     def  footerScripts(self):
-      return f"""
+      result =  f"""
 <script > 
 createAndSave('form-field-source',"{self.aceMode}");
 </script> """
+      #result += self.getTemplates()["MQTT"]["Template"].source
+      return result
 
 class  AceScriptPug(AceScripts):
     aceMode = 'jade'        

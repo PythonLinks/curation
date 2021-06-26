@@ -164,8 +164,7 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        view.getSiteRoot()
-        #pass
+        pass
     
     def moveTo(self,childName):
         self.moveItem('personCopy1',childName,'person')

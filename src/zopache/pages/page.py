@@ -374,67 +374,17 @@ class RootPage(SiteRoot):
     def getSiteRootFor(self,hostName):
         return self
 
-#FOR MULTIPLE SITES    
+#FOR MULTIPLE SITES
+from zopache.pages.siteroot import NewsMethods
 @implementer(ISiteRootPage)         
-class SiteRootPage(SiteRoot):
+class SiteRootPage(SiteRoot,NewsMethods):
     
     def __init__(self):
-       Branch.__init__(self)
-       Page.__init__(self)
-       
-       #NOT SURE WHY THIS COULD NOT BE AT THE TOP OF THE PAGE
        from zopache.ttw.principalfolder import PrincipalFolder
        self ["person"] = PrincipalFolder()
+       Branch.__init__(self)
+       Page.__init__(self)
 
-    def curatedArticles(self,limit=6,days =2):
-        values = self.bestApprovedArticles(days)
-        for item in self.mostRecentFeeds(limit = limit):
-            if not getattr(item,'publicationApproved',False):
-                assert item.__class__.__name__ == 'RSSArticle'
-                values.append(item)
-        lastImportTime = item.importTime 
-        return lastImportTime, values
-
-    
-    def mostRecentFeeds(self,lastImportTime = None, limit = 100):
-        if lastImportTime:
-            lastImportTime = - lastImportTime
-        articles = self.newestArticles.values(min = lastImportTime,                                                 excludemin = True)
-        result = itertools.islice(articles, limit)
-        return result
-
-    def bestApprovedArticles(self, days):
-        since = - time.time() + (days * 24 * 3600)
-        articles = self.approvedArticles.values(max = since)
-        links = self.newestLinks.values(max = since)
-        both = list(articles) + list (links)
-        for item in both:
-            assert item.__class__.__name__  in [ 'RSSArticle','Link']
-        both.sort(key=lambda x:-x.creationTime)
-
-        return both
-
-    def mergedCuratedContent(self, count = 10):
-        return islice(self.mergedCore(),count)
-    
-    def mergedCore(self):    
-        articles = self.approvedArticles.itervalues()
-        links = self.newestLinks.itervalues()
-        nextArticle =  next(articles)
-        nextLink = next(links)
-        articleTime = nextArticle.importTime
-        linkTime = nextLink.importTime
-        while (True):
-          if articleTime >= linkTime:
-            currentArticle = nextArticle 
-            nextArticle = next(articles)
-            articleTime = nextArticle.importTime
-            yield currentArticle
-          else:
-            currentLink = nextLink
-            nextLink = next(links)
-            linkTime = nextLink.importTime
-            yield currentLink
-    
     def getSiteRootFor(self,hostName):
         return self    
+

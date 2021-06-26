@@ -18,9 +18,7 @@ from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.crud.actions import AddByJSON, AddByJsonAndEdit,Cancel
 from zopache.business.exists import Duplicate
 
-
 class IClass(Interface):
-
     json= schema.Text(
         title = 'Json Data',
         required = True,
@@ -30,6 +28,9 @@ class IClass(Interface):
 class Base(object):
     interface = IClass
     fields = Fields(IClass)
+
+    def contextJsonDict(self):
+        return self.context.json
 
     @property
     def jsonSchemaDict(self):
@@ -42,11 +43,6 @@ class Base(object):
         result = result.getAsString()
         return result
 
-    def updateFromJsonDict(self,target,key,requestJsonDict):
-        if key in requestJsonDict:
-           value =  requestJsonDict[key]
-           setattr(target,key,value)
-        
     def footerScripts(self):
         return ""
 
@@ -69,7 +65,6 @@ class AddJson (Base, AddAnonymousPage):
         else:
            return self.dataModel()
 
-
     def addUnauthorizedActions(self):    
            self.actions = Actions(
                   formactions.AddByJSON("Add and View", self.factory),
@@ -81,12 +76,21 @@ class AddJson (Base, AddAnonymousPage):
     def addAuthorizedActions(self):       
         self.actions = Actions(
               AddByJSON("Add and View", self.factory),
-              #AddByJsonAndEdit("Add and CME Edit", self.factory),
+              AddByJsonAndEdit("Add and CME Edit", self.factory),
               Cancel("Cancel","Cancel"))
     
 class EditJson( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
-
+    
+    def applyData(self,data):
+        target = self.target()
+        target.json =  self.requestJsonDict
+        target._p_changed = True
+        return Errors()
+    
+    def contextJsonDict(self):
+        return self.context.json
+    
     def acquireTitle(self):
         return 'Edit ' + self.context.title
 
@@ -97,7 +101,6 @@ class EditJson( Base,EditForm):
         products = self.getProducts()
         self.template = self.getTemplates()['json-editor']    
         EditForm.update(self)
-
 
     def contextJsonString(self):
         if hasattr(self,'submissionError') and len(self.submissionError):
