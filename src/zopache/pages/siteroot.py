@@ -13,7 +13,6 @@ class NewsMethods(object):
         while len(articles) < 6:
             midnight = self.midnight(now)
             lastImportTime = midnight
-            print("HEADLINES CUrATED  2days",datetime.fromtimestamp(midnight))
             approved = list(self.todaysCuratedArticles(midnight, days = days) )
             articles += approved
             feedArticles = self.todaysFeedArticles(midnight)
@@ -31,16 +30,16 @@ class NewsMethods(object):
                    midnight  -= secondsInADay
                    lastImportTime = midnight
                    now = midnight
-                   print("More Headlines Curated",
-                         datetime.fromtimestamp(midnight))                  
                    approved = list(self.todaysCuratedArticles(midnight) )
                    articles += approved
                    feedArticles = self.todaysFeedArticles(midnight)
             return lastImportTime,articles
 
-    def moreNews(self,lastImportTime,howMany = 6):
+
+    def moreNews(self,lastImportTime,howMany = 6):        
         articles = []
         midnight = self.midnight(lastImportTime)
+        tonight = self.midnight(datetime.now().timestamp())
         while len(articles) < howMany:
             more = list(self.feedArticles(lastImportTime,limit = howMany))
             for item in more:
@@ -48,15 +47,13 @@ class NewsMethods(object):
                   break
               if self.midnight(item.importTime) == midnight:
                   articles.append(item)
-              else:           
-                  breakpoint()
+              else:
                   midnight -= secondsInADay
                   lastImportTime = midnight
-                  previousNight = midnight - secondsInADay
-                  print("MoreNews",datetime.fromtimestamp(previousNight))
-                  approvedArticles = list(self.todaysCuratedArticles(
-                                          previousNight))
-                  articles = articles + approvedArticles
+                  if  ( tonight - secondsInADay != midnight):    
+                      approvedArticles = list(self.todaysApprovedArticles(
+                          midnight))
+                      articles = articles + approvedArticles
         return articles
    
     def midnight(self,time):
