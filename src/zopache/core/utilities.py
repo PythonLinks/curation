@@ -15,13 +15,13 @@ class Utilities (object):
     def parentalMenu(self):
         parentalMenu = self.parentalAcquire("ParentalMenu")
         if parentalMenu != None:
-           return parentalMenu(view)
+           return parentalMenu(self)
         return ""
 
     def webClassMenu(self):
         webClassMenu = self.webClassAcquire("WebClassMenu")
         if webClassMenu != None:
-           return webClassMenu(view)
+           return webClassMenu(self)
         return ""      
       
     def htmlEscape(self,text):

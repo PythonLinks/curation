@@ -88,7 +88,13 @@ class NewsMethods(object):
         both = list(articles) + list (links)
         both.sort(key=lambda x:-x.creationTime)
         return both
+    
+    def mergedApproved(self,count):
+        return islice(self.mergedCore(),count)
 
+    #Maybe this next weird name can now be retired.
+    #Check he rss feed does not break. 
+    
     def mergedApprovedDays(self, count = 10):
         return islice(self.mergedCore(),count)
     

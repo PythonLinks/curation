@@ -13,6 +13,7 @@ class GeoCodeForm(object):
     
 class GeoCodeObject(Base):
     address = ''
+    
     def postProcess(self,view=None):
         super().postProcess(view = view)
         if self.address:

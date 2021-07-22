@@ -17,14 +17,8 @@ from zopache.business.jsonschemavalidator import JSONSchemaValidator
 from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.crud.actions import AddByJSON, AddByJsonAndEdit,Cancel
 from zopache.business.exists import Duplicate
-
-class IClass(Interface):
-    json= schema.Text(
-        title = 'Json Data',
-        required = True,
-        default = '{}',
-    )         
-
+from zopache.business.interfaces import IClass
+    
 class Base(object):
     interface = IClass
     fields = Fields(IClass)

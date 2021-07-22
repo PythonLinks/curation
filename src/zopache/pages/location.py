@@ -140,7 +140,7 @@ class MapBase(LocationContainer):
     mapHeight=0.
     mapWidth=0.
     webClass = 'OpenStreetMap'
-    clientClass = 'Category'
+    #clientClass = 'Category'
     icon="ttwicons/Map.svg"
     
       

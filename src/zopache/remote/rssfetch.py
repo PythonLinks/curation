@@ -30,7 +30,7 @@ def callTwiceCore(view,allArticles):
                print (item[0], item  [1])
                continue
             (article, content, contentType) = item
-            print ("CREATING IMAGE " + article.name)
+            #print ("CREATING IMAGE " + article.name)
             createImageInFrom(article,content,contentType)
 
 

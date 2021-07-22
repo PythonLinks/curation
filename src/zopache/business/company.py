@@ -8,7 +8,7 @@ from zopache.business.interfaces import (ICompany, IMap,
                                          IOnlineOrganization,
                                          ICompanyBase,
                                          IMapOrganization)
-from zopache.business.ipolitician import IPolitician
+from zopache.business.interfaces import IPolitician
 from zopache.pages.location import LocationLeaf
 from zopache.pages.page import Page
 from zopache.pages.interfaces import IPage
@@ -77,7 +77,6 @@ class Organization  (
 from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
-                      GeoBase,
                       MapBase,
                       HasMembers,
                       Page,

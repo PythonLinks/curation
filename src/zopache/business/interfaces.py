@@ -13,15 +13,24 @@ from zopache.pages.interfaces  import (
                                        ILocationContainer,
                                        ILocationLeaf)
 from z3c.schema.email import RFC822MailAddress as Email
-from zopache.pages.address import Address
-from zopache.pages.interfaces import IAddress
 
 from zopache.pages.interfaces import IPage, ITime
 from zopache.business.iorganization import IOrganizationBase
 from zopache.business.ifollow import IFollow
 
+class IClass(Interface):
+    json= schema.Text(
+        title = 'Json Data',
+        required = True,
+        default = '{}',
+    )
+    
+class IPolitician(IClass):
+    pass
+
+
 class ICity (ILocationContainer):
-    address= Address(
+    address= schema.Text(
         title = u'City Address',
         description = """This is used to locate the city  on the map.  You only need the name of the city and country """,
         required = False
@@ -121,8 +130,8 @@ discord server invite.   Include  'https://'""",
        
 from zopache.pages.interfaces import ITime
 #ITime is on future events.
-class IEvent(IEventBase, IAddress, ILocationLeaf):  
-    address= Address(
+class IEvent(IEventBase,  ILocationLeaf):  
+    address= schema.Text(
         title = u'Event Address',
            description = """Where is this event being held?""",
         required = True
@@ -223,7 +232,7 @@ class ICompanyBase(ICompanyOrOrganization):
     )
 
 class ICompany(ICompanyBase):    
-    address= Address(
+    address= schema.Text(
         title = u'Company Address',
         description = """This is used to 
                  locate the company on the map. List more than just the town, or else all the companies will just have one shared map pin. """,
@@ -232,7 +241,7 @@ class ICompany(ICompanyBase):
     )    
 
 class IAddCompany(ICompany):    
-    address= Address(
+    schema.Text(
         title = u'Company Address',
         description = """This is used to 
                  locate the company on the map. List more than just the town, or else all the companies will just have one shared map pin. """,
@@ -301,7 +310,7 @@ class IOrganization(IOrganizationBase,
                     ISocialMedia,ILocationContainer,
                     IOrganizationOrPolitician):
     
-    address= Address(
+    address= schema.Text(
         title = u'Organization Address',
         description = """This is used to 
                  locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,

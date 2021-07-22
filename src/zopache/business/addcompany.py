@@ -24,13 +24,10 @@ from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
-from zopache.business.politician import IAddPolitician, Politician
 from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.driver import IAddDriver, Driver
-from zopache.business.ipolitician import IPoliticiansSite
-from zopache.business.politician import  PoliticiansSite
 from zopache.business.map import City
 
 #ADD NEWS
@@ -152,21 +149,6 @@ class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
 
 
 
-
-
-from zopache.application.interfaces import IRootContainer
-@view_component
-@name('addPoliticiansSite')
-@target(IView)
-@context(IRootContainer)    
-class AddPoliticiansSite(AddPage,GeoCodeForm):
-    interface = IPoliticiansSite
-    dataValidators = []
-    factory = PoliticiansSite
-    title = "Create a Website for a Politician"
-    def update(self):
-        AddPage.update(self)
-        GeoCodeForm.update(self)
         
 @view_component
 @name('addCompanyMap')

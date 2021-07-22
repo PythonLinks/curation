@@ -4,7 +4,7 @@ from dolmen.forms.base.errors import Error, Errors
 from zopache.core.viewdecorators import *
 from zopache.business.editjsonschema import AddJson, EditJson
 from zopache.business.politician import Politician    
-from zopache.business.ipolitician import IPolitician
+from zopache.business.interfaces import IPolitician
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.interfaces import IMapOrganization
 from zopache.pages.interfaces import IPage
@@ -88,7 +88,6 @@ class EditPolitician (PoliticianBase,EditJson):
 
 
         
-
 @form_component
 @name ('edit')
 @context(IMapOrganization)

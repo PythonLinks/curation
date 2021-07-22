@@ -53,13 +53,31 @@ class FileBase(object):
 class File(Leaf,FileBase):    
      pass
 
+import base64 
 class ImageBase(FileBase): 
     icon="ttwicons/Image.svg"
-    
+
+        
     #JUST A QUICK BUG FIX AVOIDANCE
     def get(self,arg):
         print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
         return self
+
+    def getImageTag(self,alt = "", style = ""):
+        result = ""
+
+        result += '<img src="data:' 
+        result += self.contentType      
+        result += ';base64,' 
+        result += str(base64.b64encode(self.data).decode('utf-8'))
+        result += '" ' 
+        result += f'width = "{self.width}"' 
+        #result += f'height = "{self.height}"' 
+        result +=f'style = "{style}"'                              
+        result +=f'alt="{alt}" />'
+
+        return result
+
     
     def getHTML(self, view=None, style = ''):
         url = view.absoluteURL(self)

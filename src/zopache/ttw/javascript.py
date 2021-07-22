@@ -83,7 +83,6 @@ class JavascriptFolderBase (BTreeContainer):
         
     def __delitem__(self,key):
         BTreeContainer.__delitem__(self,key)
-        item = self[key]
         self.createJavascriptCaches()
         
     def __setitem__(self,  key,item):

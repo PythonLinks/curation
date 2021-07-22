@@ -1,9 +1,8 @@
 from zope.interface import implementer
 
 from zopache.core.relatives import Parents
-from zopache.business.ipolitician import IPolitician
+from zopache.business.interfaces import IPolitician
 from zopache.business.interfaces import IOrganization
-from zopache.business.ipolitician import IPolitician
 from zopache.pages.location import LocationContainer
 from zopache.business.interfaces import IRegion
 from zopache.business.interfaces import IEvent

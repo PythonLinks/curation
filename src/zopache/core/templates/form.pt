@@ -76,7 +76,8 @@
   <p style= "max-width:40em" tal:condition="hasattr(view,'postamble')">
   ${view.postamble}</p>
       <script>
-	document.getElementById('form-action-cancel').addEventListener("click",
+        //NO COMMENT
+	document.getElementById('form-action-Cancel').addEventListener("click",
 	function(){
 	window.location.href = '..';
 	        });

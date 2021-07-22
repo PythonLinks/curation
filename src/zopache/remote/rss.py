@@ -45,7 +45,6 @@ class RSS(Link,UniqueName):
                   if text[i]==' ':
                      break
               result = text [0:i-1] +  '...'
-              print (result)
               return result
            
         except:
@@ -129,7 +128,7 @@ class RSS(Link,UniqueName):
           feed = feedparser.parse(html)
           entries = feed['entries']
           self.createArticles(entries,view)
-          print (self.name + "RSS WAS CREATED")
+          #print ("RSS WAS CREATED" + self.name)
           
 @implementer(IJustRSS)
 class JustRSS(RSS):
