@@ -1,7 +1,10 @@
 from zopache.pages.page import Page
 from zopache.business.interfaces import IOrganization
 
-def convert(item):
+class Convert(object):
+  newClass = Page
+    
+  def convert(item):
     new = Page()
     parent = item.parent
     for attribute in [
@@ -20,4 +23,5 @@ def convert(item):
     newName = item.name    
     del item.parent[newName]
     parent[newName] = new
+
 
