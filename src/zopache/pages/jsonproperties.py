@@ -4,16 +4,15 @@
 class BasicProperties(object):
     @property
     def title(self):
-        return self.json['content']["items"][0]["title"]
+        return self.json['content'][0]["title"]
 
     @property
     def description(self):
-        return self.json['content']["items"][0]["description"]
+        return self.json['content'][0]["description"]
 
     @property    
     def source(self):
-        return self.json['content']["items"][0]["source"]
-
+        return self.json['content'][0].get("source","")
 
     def getIntroduction(self,arg):
         return self.getJsonValue('introduction',arg)    
@@ -35,10 +34,20 @@ class SocialProperties(BasicProperties):
     @property
     def facebookURL(self):
         return self.getConnect("facebookURL")
-    
+
+    #THIS NEEDS TO BE RETIRED EVENTUALLY
+    @property
+    def facebookId(self):
+        return self.getConnect("facebookURL")    
+
+    #THIS ONE NEEDS TO BE RETIRED EVENTUALLY
+    @property
+    def facebookGroup(self):
+        return self.getConnect("facebookGroupURL")
+
     @property
     def facebookGroupURL(self):
-        return self.getConnect("facebookGroupURL")
+        return self.getConnect("facebookGroupURL")    
 
     @property
     def facebookURL(self):
@@ -78,7 +87,7 @@ class OnlineOrganizationProperties(SocialProperties):
 
     @property
     def focus(self):
-        return self.getOrganiztion("focus")
+        return self.getIntroduction("focus")
 
     @property
     def joinURL(self):

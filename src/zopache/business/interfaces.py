@@ -15,7 +15,6 @@ from zopache.pages.interfaces  import (
 from z3c.schema.email import RFC822MailAddress as Email
 
 from zopache.pages.interfaces import IPage, ITime
-from zopache.business.iorganization import IOrganizationBase
 from zopache.business.ifollow import IFollow
 
 class IClass(Interface):
@@ -40,23 +39,6 @@ class ICity (ILocationContainer):
 class IRegion(ILocationContainer):
     pass
 
-class IOrganizationOrPolitician(Interface):
-    
-    eventsPageURL = schema.URI(
-        title = u'Where are the Events Listed?',
-        description = """ Link to where related events are posted. Please
-   Include  'https://'""",
-        required = False,
-        missing_value ='',
-    )
-
-    donationsPageURL = schema.URI(
-        title = u'Where can one donate money??',
-        description = """ Link to where they can donate money. Please
-   Include  'https://'""",
-        required = False,
-        missing_value ='',
-    )    
     
 class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
@@ -183,10 +165,8 @@ discord server invite.   Include  'https://'""",
 class ITree(ITreeBase,ILatLng):
     pass
     
-class ICompanyOrOrganization (ILocationContainer,IPage,IFollow):
-    pass
 
-class ICompanyBase(ICompanyOrOrganization):
+class ICompanyBase(ILocationContainer,IPage,IFollow):
     title = schema.TextLine(
         title = 'Company Name',
         description = u'What is this company called?',
@@ -296,37 +276,15 @@ class ISocialMedia(Interface):
         missing_value = '',
     )
        
-    
-class IOnlineOrganization(IOrganizationBase,
-                          ICompanyOrOrganization,
-                          ISocialMedia,
-                          IFollow,
-                          IOrganizationOrPolitician):
-    
+class IOnlineOrganization(
+                ILocationContainer,IPage,
+                          IFollow):
      pass          
 
-class IOrganization(IOrganizationBase,
-                    ICompanyOrOrganization,
-                    ISocialMedia,ILocationContainer,
-                    IOrganizationOrPolitician):
-    
-    address= schema.Text(
-        title = u'Organization Address',
-        description = """This is used to 
-                 locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,
-        required = False
-    )
-
-class IAddOrganization(IOrganization):
-    imageURL= schema.URI(
-        title = 'Image URL',
-        missing_value = "",
-        description = """An image or Logo for this organization. 
-             Please include "https://"
-             The image will be automatically downloaded.""",
-        required = False,
-    )            
-    
+class IOrganization(
+                ILocationContainer,IPage,IFollow        
+                    ):
+     pass
 
 from zopache.pages.interfaces import IMap as IMapBase
 class IMap (IMapBase,IFollow):

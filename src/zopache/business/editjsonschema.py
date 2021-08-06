@@ -43,6 +43,12 @@ class Base(object):
     def options(self):
         return ""
     
+    def applyData(self,data):
+        target = self.target()
+        target.json =  self.requestJsonDict
+        target._p_changed = True
+        return Errors()
+    
 class AddJson (Base, AddAnonymousPage):
     dataValidators = [JSONSchemaValidator, Duplicate]
 
@@ -75,12 +81,6 @@ class AddJson (Base, AddAnonymousPage):
     
 class EditJson( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
-    
-    def applyData(self,data):
-        target = self.target()
-        target.json =  self.requestJsonDict
-        target._p_changed = True
-        return Errors()
     
     def contextJsonDict(self):
         return self.context.json

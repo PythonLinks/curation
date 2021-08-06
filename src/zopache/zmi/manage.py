@@ -124,8 +124,9 @@ class ManageDirectory (ManageBase):
 @context(Interface)
 @implementer(ITreeSecurity)
 class Manage (ManageBase):
-    pass        
-     
+        pass
+
+    
 #USED TO FIRE UP A DEBUGGER TO MAKE MANUAL CHANGES    
 @form_component
 @name('fix')

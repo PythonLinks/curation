@@ -47,6 +47,7 @@ class SimpleBranch(object):
                 key in self.valuesByToken)
 
     def __delitem__(self, key):
+        self.unIndexItem(key)
         BTreeContainer.__delitem__(self,key)
         if key in self.valuesByToken:
                 self.valuesByToken.__delitem__(key)
@@ -103,9 +104,9 @@ class Branch(SimpleBranch):
        self.remoteArticles = OOBTree()
        
     def __delitem__(self, key):
+        item = self[key]
+        self.unIndexItem(item)
         OrderedBTreeContainer.__delitem__(self,key)
-        if key in self.valuesByToken:
-                self.valuesByToken.__delitem__(key)
                 
     def urlOnly(self,link):
        if link.startswith('http'):
@@ -127,7 +128,8 @@ class Branch(SimpleBranch):
            return
 
        if link in self.remoteURLs:
-          raise Exception (f"""The object called {anObject.__name__} with url: {link} is already in the database. """) 
+          message = f"""The object called {anObject.__name__} with url: {link} is already in the database. """ 
+          raise Exception (message)
        else:
           self.remoteURLs[link] = anObject 
            

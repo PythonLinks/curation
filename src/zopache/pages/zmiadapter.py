@@ -1,10 +1,9 @@
 import crom
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.core.getroot import getSiteRoot
-from zopache.pages.interfaces import IPage
 from zopache.zmi.cutcopypaste import Cutter, Copier, Deleter
 from zopache.zmi.cutcopypaste import Paster, Renamer
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zopache.pages.uniquename import UniquePageName
 
 from zopache.zmi.interfaces import IObjectDeleter
@@ -23,7 +22,7 @@ from zopache.pages.cache import cache
 
             
 @crom.adapter
-@crom.sources(IPage)
+@crom.sources(IPageBase)
 @crom.target(IObjectCopier)
 class CategoryCopier(Copier):
     # YOU NEVER WANT TO COPY CATEGORIES
@@ -32,7 +31,7 @@ class CategoryCopier(Copier):
         return False
 
 @crom.adapter
-@crom.sources(IPage)
+@crom.sources(IPageBase)
 @crom.target(IObjectCutter)
 class PageCutter(Cutter):
     """Adapter for moving objects between containers
@@ -43,7 +42,7 @@ class PageCutter(Cutter):
         cache.resetCache(view.context)
         
 @crom.adapter
-@crom.sources(IPage)
+@crom.sources(IPageBase)
 @crom.target(IObjectPaster)
 class PagePaster(Paster,UniquePageName):
                            
@@ -70,7 +69,7 @@ class PagePaster(Paster,UniquePageName):
 class ItemNotFoundError(Exception):
     pass
 @crom.adapter
-@crom.sources(IPage)
+@crom.sources(IPageBase)
 @crom.target(IObjectRenamer)
 class PageRenamer(Renamer,UniquePageName):
     def renameItem(self, oldName, newName,view):
@@ -94,7 +93,7 @@ class PageRenamer(Renamer,UniquePageName):
 #IF NOT EMPTY DO NOT DELETE.
 #DELTE ROOT.INDEX
 @crom.adapter
-@crom.sources(IPage)
+@crom.sources(IPageBase)
 @crom.target(IObjectDeleter)
 class PageDeleter(Deleter):
     def deleteItem(self,view):
@@ -115,7 +114,7 @@ class PageDeleter(Deleter):
         container=contained.__parent__
         # So even though root is not used till later, 
         #we have to do this before deleting the __parent__ Pointer.
-        if IPage.providedBy (container):
+        if IPageBase.providedBy (container):
            root = getSiteRoot(contained)
         if hasattr(contained,'preDeleteProcess'):
              contained.preDeleteProcess(view)
@@ -128,7 +127,7 @@ class PageDeleter(Deleter):
            
         # UNLESS IT IS THE ROOT CATEGORY, RECALCULATE THE JSON   
         # THIS SHOULD ALWAYS BE TRUE
-        if IPage.providedBy (container):
+        if IPageBase.providedBy (container):
            root.recalculateRootJSON()
         cache.resetCache(view.context)
 

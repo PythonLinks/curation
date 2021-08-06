@@ -64,19 +64,16 @@ class Organization  (
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True
-    donationsPageURL = ""
-    youTubeChanneURL = ""
-    ballotStatus = ""
-    focus = ""
-    twitterId = ""
-    facebookId = ""
-    facebookGroup = ""
-    remoteURL = ""
     
     def getOneMarkerCore(self):
-        focus = getattr(self,'focus',"")
+        focus = self.focus
         focus = focus [:4]
         return  ',"' + focus + '"'
+    
+    #Since organizations are now multilingual,
+    #The defaul Post Process Core does not work. 
+    def partialPostProcess(self, view=None):
+        return ""
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
