@@ -8,7 +8,7 @@ from zopache.business.interfaces import (ICompany, IMap,
                                          IOnlineOrganization,
                                          ICompanyBase,
                                          IMapOrganization)
-from zopache.business.ipolitician import IPolitician
+from zopache.business.interfaces import IPolitician
 from zopache.pages.location import LocationLeaf
 from zopache.pages.page import Page
 from zopache.pages.interfaces import IPage
@@ -17,6 +17,9 @@ from zopache.business.imaginarypage import ImaginaryPage
 from zopache.business.subscribe import HasMembers
 from zopache.business.map import Map
 from zopache.pages.location import MapBase
+from zopache.business.moveattr import Convert
+from zopache.pages.jsonproperties import (OnlineOrganizationProperties,
+                                          LocalOrganizationProperties)
 
 class Base(Page):    
     hidden = False
@@ -41,7 +44,7 @@ class Company  (GeoBase,LocationContainer):
     clientClass = "category"
 
 @implementer (IOnlineOrganization)
-class OnlineOrganization  (Base,HasMembers):        
+class OnlineOrganization  (Base,HasMembers,OnlineOrganizationProperties,Convert):        
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True
@@ -51,33 +54,32 @@ class OnlineOrganization  (Base,HasMembers):
 from zopache.business.region import RegionBase
 @implementer (IOrganization)
 class Organization  (
+                     LocalOrganizationProperties,
                      GeoBase,
                      HasMembers,
-                     LocationLeaf):
+                     LocationLeaf,
+                              Convert):
     
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True
-    donationsPageURL = ""
-    youTubeChanneURL = ""
-    ballotStatus = ""
-    focus = ""
-    twitterId = ""
-    facebookId = ""
-    facebookGroup = ""
-    remoteURL = ""
+    
     def getOneMarkerCore(self):
-        focus = getattr(self,'focus',"")
+        focus = self.focus
         focus = focus [:4]
         return  ',"' + focus + '"'
+    
+    #Since organizations are now multilingual,
+    #The defaul Post Process Core does not work. 
+    def partialPostProcess(self, view=None):
+        return ""
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
 from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
-                      GeoBase,
                       MapBase,
                       HasMembers,
                       Page,

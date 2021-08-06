@@ -1,4 +1,4 @@
-from zopache.business.interfaces import IMap, ICompanyOrOrganization
+from zopache.business.interfaces import IMap
 from zope.interface import implementer
 from zopache.pages.location import MapBase
 from zopache.pages.page import Page

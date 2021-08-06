@@ -78,7 +78,7 @@ function createAce(fieldName,mode){
 <script > 
 createAndSave('form-field-source',"{self.aceMode}");
 </script> """
-      #result += self.getTemplates()["MQTT"]["Template"].source
+      #result += self.getTemplates()["MQTT"]["Template"](self)
       return result
 
 class  AceScriptPug(AceScripts):

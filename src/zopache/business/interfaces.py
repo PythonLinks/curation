@@ -13,15 +13,23 @@ from zopache.pages.interfaces  import (
                                        ILocationContainer,
                                        ILocationLeaf)
 from z3c.schema.email import RFC822MailAddress as Email
-from zopache.pages.address import Address
-from zopache.pages.interfaces import IAddress
 
 from zopache.pages.interfaces import IPage, ITime
-from zopache.business.iorganization import IOrganizationBase
 from zopache.business.ifollow import IFollow
 
+class IClass(Interface):
+    json= schema.Text(
+        title = 'Json Data',
+        required = True,
+        default = '{}',
+    )
+    
+class IPolitician(IClass):
+    pass
+
+
 class ICity (ILocationContainer):
-    address= Address(
+    address= schema.Text(
         title = u'City Address',
         description = """This is used to locate the city  on the map.  You only need the name of the city and country """,
         required = False
@@ -31,23 +39,6 @@ class ICity (ILocationContainer):
 class IRegion(ILocationContainer):
     pass
 
-class IOrganizationOrPolitician(Interface):
-    
-    eventsPageURL = schema.URI(
-        title = u'Where are the Events Listed?',
-        description = """ Link to where related events are posted. Please
-   Include  'https://'""",
-        required = False,
-        missing_value ='',
-    )
-
-    donationsPageURL = schema.URI(
-        title = u'Where can one donate money??',
-        description = """ Link to where they can donate money. Please
-   Include  'https://'""",
-        required = False,
-        missing_value ='',
-    )    
     
 class IEventBase(IPage,IFollow,ITime):
     title = schema.TextLine(
@@ -121,8 +112,8 @@ discord server invite.   Include  'https://'""",
        
 from zopache.pages.interfaces import ITime
 #ITime is on future events.
-class IEvent(IEventBase, IAddress, ILocationLeaf):  
-    address= Address(
+class IEvent(IEventBase,  ILocationLeaf):  
+    address= schema.Text(
         title = u'Event Address',
            description = """Where is this event being held?""",
         required = True
@@ -174,10 +165,8 @@ discord server invite.   Include  'https://'""",
 class ITree(ITreeBase,ILatLng):
     pass
     
-class ICompanyOrOrganization (ILocationContainer,IPage,IFollow):
-    pass
 
-class ICompanyBase(ICompanyOrOrganization):
+class ICompanyBase(ILocationContainer,IPage,IFollow):
     title = schema.TextLine(
         title = 'Company Name',
         description = u'What is this company called?',
@@ -223,7 +212,7 @@ class ICompanyBase(ICompanyOrOrganization):
     )
 
 class ICompany(ICompanyBase):    
-    address= Address(
+    address= schema.Text(
         title = u'Company Address',
         description = """This is used to 
                  locate the company on the map. List more than just the town, or else all the companies will just have one shared map pin. """,
@@ -232,7 +221,7 @@ class ICompany(ICompanyBase):
     )    
 
 class IAddCompany(ICompany):    
-    address= Address(
+    schema.Text(
         title = u'Company Address',
         description = """This is used to 
                  locate the company on the map. List more than just the town, or else all the companies will just have one shared map pin. """,
@@ -287,37 +276,15 @@ class ISocialMedia(Interface):
         missing_value = '',
     )
        
-    
-class IOnlineOrganization(IOrganizationBase,
-                          ICompanyOrOrganization,
-                          ISocialMedia,
-                          IFollow,
-                          IOrganizationOrPolitician):
-    
+class IOnlineOrganization(
+                ILocationContainer,IPage,
+                          IFollow):
      pass          
 
-class IOrganization(IOrganizationBase,
-                    ICompanyOrOrganization,
-                    ISocialMedia,ILocationContainer,
-                    IOrganizationOrPolitician):
-    
-    address= Address(
-        title = u'Organization Address',
-        description = """This is used to 
-                 locate the organization on the map.  You need at least a street name.  If you only give the city, multiple organizations will share the same pin, and only one will be visible. """,
-        required = False
-    )
-
-class IAddOrganization(IOrganization):
-    imageURL= schema.URI(
-        title = 'Image URL',
-        missing_value = "",
-        description = """An image or Logo for this organization. 
-             Please include "https://"
-             The image will be automatically downloaded.""",
-        required = False,
-    )            
-    
+class IOrganization(
+                ILocationContainer,IPage,IFollow        
+                    ):
+     pass
 
 from zopache.pages.interfaces import IMap as IMapBase
 class IMap (IMapBase,IFollow):

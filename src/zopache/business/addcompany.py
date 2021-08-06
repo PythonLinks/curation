@@ -12,25 +12,20 @@ from zopache.business.interfaces import (IMap,
                                          IMapOrganization,
                                          ICity)
 
-from zopache.business.interfaces import ICompanyOrOrganization
-from zopache.business.interfaces import IAddOrganization, IOnlineOrganization
 from zopache.business.company import MapOrganization
 
 from zopache.business.interfaces import  IOnlineEvent, IEvent
-from zopache.business.company import Company, Organization, OnlineOrganization
+from zopache.business.company import Company
 from zopache.business.map import Map
 from zopache.pages.addpage import AddAuthorizedPage, AddPage
 from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.pages.interfaces import IPage
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
-from zopache.business.politician import IAddPolitician, Politician
 from zopache.pages.interfaces import  INews
 from zopache.pages.page import  News
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.driver import IAddDriver, Driver
-from zopache.business.ipolitician import IPoliticiansSite
-from zopache.business.politician import  PoliticiansSite
 from zopache.business.map import City
 
 #ADD NEWS
@@ -72,16 +67,6 @@ class AddRegion(AddAll):
     title = "Add a Region"
 
     
-@view_component
-@name('addOrganization')
-@title("Add Organization")
-@target(IView)
-@context(IPage)    
-class AddOrganization(AddAll):
-    interface = IAddOrganization
-    factory = Organization
-    title = "Add an Organization"
-
 
 from zopache.business.socialnode import SocialNode
 from zopache.business.iphonetree import ISocialNode
@@ -136,37 +121,7 @@ class AddDriver(AddAnonymousPage,GeoCodeForm):
 @context(IPage)
 @implementer(ITreeSecurity)
 class AddOrganizationByURL(AddByURLForm):
-    factory = Organization
     title = "Add an Organization by URL"
-
-@view_component
-@name('addOnlineOrganization')
-@title("Add Online Organization")
-@target(IView)
-@context(IPage)    
-class AddOnlineOrganization(AddAnonymousPage,GeoCodeForm):
-    interface = IOnlineOrganization
-    factory = OnlineOrganization
-    title = "Add an Online Organization"
-        
-
-
-
-
-
-from zopache.application.interfaces import IRootContainer
-@view_component
-@name('addPoliticiansSite')
-@target(IView)
-@context(IRootContainer)    
-class AddPoliticiansSite(AddPage,GeoCodeForm):
-    interface = IPoliticiansSite
-    dataValidators = []
-    factory = PoliticiansSite
-    title = "Create a Website for a Politician"
-    def update(self):
-        AddPage.update(self)
-        GeoCodeForm.update(self)
         
 @view_component
 @name('addCompanyMap')

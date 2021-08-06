@@ -12,8 +12,6 @@ from zopache.pages.interfaces  import (IPage,
                                        )
 
 class MapOrLocation (PageBase):
-    latitude = 45.
-    longitude = 0.
     webClass = 'Location'
     hidden = False
     def getTitle(self):
@@ -31,6 +29,7 @@ class MapOrLocation (PageBase):
                    self.longitude = self.longintude
                #del self.longintude
            return self.latitude, self.longitude
+           
 
            
     def setMarkerLatLng(self, lat,lng):
@@ -47,7 +46,7 @@ class MapOrLocation (PageBase):
                   result += '['
                   result +='"' +  self.__name__ + '"'
                   result += ','
-                  result +='"' +  self.getTitle() + '"'
+                  result +='"' +  self.title + '"'
                   result += ','
                   lat,lng = self.getMarkerLatLng()
                   result +=  str(lat)  
@@ -140,7 +139,7 @@ class MapBase(LocationContainer):
     mapHeight=0.
     mapWidth=0.
     webClass = 'OpenStreetMap'
-    clientClass = 'Category'
+    #clientClass = 'Category'
     icon="ttwicons/Map.svg"
     
       

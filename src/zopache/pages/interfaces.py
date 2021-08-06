@@ -94,7 +94,8 @@ class IActionNetwork(ILinkTop,
 class IPageBase(Interface):
     pass
 
-class IPage(ILayoutView,IPageTop,IPageBottom,IContent, IOrderedContainer,
+class IPage(ILayoutView,IPageTop,IPageBottom,IPageBase,
+            IContent, IOrderedContainer,
             IJSONInclude, IUntrustedHTML,IAceHTML):
     pass
 

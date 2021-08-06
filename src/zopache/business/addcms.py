@@ -2,8 +2,6 @@ from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
 
 from zopache.business.addcompany import (
-                                         AddOrganization,
-                                         AddOnlineOrganization,
                                          AddNews)
 from zopache.business.editpolitician import AddCandidate
 from zopache.business.addmeetup import AddEvent, AddOnlineEvent
@@ -11,7 +9,8 @@ from zopache.business.addmeetup import AddEvent, AddOnlineEvent
 class Base(object):
      def getNavBar(self):
          return ""
-     
+
+"""    
 @view_component
 @name('iframe-addOrganization')
 @target(IView)
@@ -41,7 +40,7 @@ from dolmen.forms.base import interfaces
 @context(IPage)    
 class AddCMSPolitician(Base,AddCandidate):
     pass
-
+"""
 
 
 @view_component

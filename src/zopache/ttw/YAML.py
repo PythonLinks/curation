@@ -44,7 +44,7 @@ class YAML(Leaf):
         return self.json
     
     def getAsDict(self):
-        return self.getYamlObject()
+        return self.getYAMLObject()
     
     def postProcess(self,view = None):
         self.json = self.convertToJSON()

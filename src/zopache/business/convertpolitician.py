@@ -60,35 +60,8 @@ class Convert(object):
                 delattr(self,'localOrNational')
 
 
-            """
-----
-        title
-        address
-        
 
-        description
-        source
 
-        twitterId
-        phonr
-        instagramId
-        status (set) delete
-        localOrNational Set
-
-        
-        remoteURL
-        facebookId
-        facebookGroup
-        youTubeChannelURL
-        eventsPageURL
-        donationsPageURL
-        email
-        hasScheduledEvents
-        affiliation
-        
-        districtURL
-
-      """
 
 
 

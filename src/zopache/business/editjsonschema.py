@@ -17,14 +17,8 @@ from zopache.business.jsonschemavalidator import JSONSchemaValidator
 from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.crud.actions import AddByJSON, AddByJsonAndEdit,Cancel
 from zopache.business.exists import Duplicate
-
-class IClass(Interface):
-    json= schema.Text(
-        title = 'Json Data',
-        required = True,
-        default = '{}',
-    )         
-
+from zopache.business.interfaces import IClass
+    
 class Base(object):
     interface = IClass
     fields = Fields(IClass)
@@ -48,6 +42,12 @@ class Base(object):
 
     def options(self):
         return ""
+    
+    def applyData(self,data):
+        target = self.target()
+        target.json =  self.requestJsonDict
+        target._p_changed = True
+        return Errors()
     
 class AddJson (Base, AddAnonymousPage):
     dataValidators = [JSONSchemaValidator, Duplicate]
@@ -81,12 +81,6 @@ class AddJson (Base, AddAnonymousPage):
     
 class EditJson( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
-    
-    def applyData(self,data):
-        target = self.target()
-        target.json =  self.requestJsonDict
-        target._p_changed = True
-        return Errors()
     
     def contextJsonDict(self):
         return self.context.json

@@ -27,12 +27,22 @@ class Imaginary(object):
     
     def getTitle(self):
         return self.realObject.title
+    
+    def getTitleForDomain(self,view):
+        return self.realObject.getTitleForDomain(view)
+
+    def getDescriptionForDomain(self,view):
+        return self.realObject.getDescriptionForDomain(view)
+    
     def getDescription(self):
         return self.realObject.description
+    
     def getSource(self):
         return self.realObject.source
+    
     def getWebClass(self):
         return self.realObject.webClass
+    
     def getWebApproved(self):
         return self.realObject.webApproved     
     

@@ -4,9 +4,8 @@ from dolmen.container import IBTreeContainer
 from zopache.business.subscribe import HasMembers
 
 from zopache.pages.location import LocationLeaf
-from zopache.business.ipolitician import (IPolitician,
-                                          IAddPolitician,
-                                          IPoliticiansSite)
+from zopache.business.interfaces import IPolitician
+
 from zopache.pages.page import SiteRoot
 from zopache.pages.interfaces import IPage
 from zopache.business.imaginarypage import ImaginaryPage
@@ -141,7 +140,7 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
         return (self.isCandidate() or
                 self.isElectedOffical() or
                 self.isPartyOfficer())
-    
+"""    
 from zopache.business.company import GeoBase        
 @implementer (IPoliticiansSite)
 class PoliticiansSite (LocationLeaf,SiteRoot):
@@ -154,4 +153,4 @@ class PoliticiansSite (LocationLeaf,SiteRoot):
 
     def setLatLng(self):
         pass
-    
+"""    

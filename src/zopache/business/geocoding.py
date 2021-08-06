@@ -13,6 +13,7 @@ class GeoCodeForm(object):
     
 class GeoCodeObject(Base):
     address = ''
+    
     def postProcess(self,view=None):
         super().postProcess(view = view)
         if self.address:
@@ -29,9 +30,6 @@ class GeoCodeObject(Base):
         
 #GeoBase inherits  Page from Location
 class GeoBase(GeoCodeObject):
-    longitude = 0.
-    lattitude = 0.
-        
     #LocationBase inherits from Page
     def __init__(self):
         LocationContainer.__init__(self)
