@@ -381,9 +381,10 @@ class SiteRootPage(SiteRoot,NewsMethods):
     
     def __init__(self):
        from zopache.ttw.principalfolder import PrincipalFolder
-       self ["person"] = PrincipalFolder()
-       Branch.__init__(self)
        Page.__init__(self)
+       Branch.__init__(self)
+       self ["person"] = PrincipalFolder()
+
 
     def getSiteRootFor(self,hostName):
         return self    

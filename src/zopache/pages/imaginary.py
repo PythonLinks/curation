@@ -13,7 +13,10 @@ class Imaginary(object):
         self.__parent__ = parent
         self.__name__ = parent.__name__ + '.' + realObject.__name__
         self.realObject = realObject
-        
+
+    def getTitleForDomain(self,domain):
+        return self.title
+
     def bestMostRecentPage(self):
         return self.realObject.bestMostRecentPage()
     
