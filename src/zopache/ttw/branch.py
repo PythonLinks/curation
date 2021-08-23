@@ -258,7 +258,8 @@ class Branch(SimpleBranch):
                 self.deleteRemoteURL(remoteURL)
                 
         if item.__class__.__name__ == "RSSArticle":
-            del self.globalArticles [item.permaLink]
+            if item.permaLink in self.globalArticles:
+                del self.globalArticles [item.permaLink]
             importTime = -item.importTime
             newestArticles = self.newestArticles
             if importTime in newestArticles:

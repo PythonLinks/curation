@@ -22,7 +22,7 @@ from zopache.crud.getimage import getImage
 @implementer (IRSS)     
 class RSS(Link,UniqueName):
     webClass = "RSS"
-    htmlSummary = False
+    htmlSummary = True
     title = ""
     rssApproved = True
     def __init__(self):
@@ -40,6 +40,9 @@ class RSS(Link,UniqueName):
                del article.parent [article.name]
                
     """
+    REMOVES ARTICLES LISTED IN localArticles, but which has no parent. 
+    should be an empty set.
+
     Has not yet been tested, so commented out. 
     def clearOrphans(self):           
            orphans = []    

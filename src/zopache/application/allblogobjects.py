@@ -17,9 +17,6 @@ class AllChildObjects:
     def __iter__(self):
         return self
 
-    def next(self):
-        return self.next()
-    
     def __next__(self):
         if not self.stack: raise StopIteration
         node = self.stack.pop()
@@ -53,21 +50,16 @@ class AllBlogObjects(AllWikiObjects):
 class RSSLeaves(AllWikiObjects):
     def __next__(self):
         while True:
-           nextItem = self.nextItem()
-           if nextItem.__class__.__name__ == self.downTo:           
-              yield nextItem              
+            if not self.stack:
+                raise StopIteration 
+            node = self.stack.pop()
+            if node.__class__.__name__ == self.downTo:           
+                    return node
+            if self.interface.providedBy(node):
+               for item in  node.values():
+                    if (self.interface.providedBy(item)):                   
+                       self.stack.append(item)
 
-    def nextItem(self):    
-        if not self.stack:
-            raise StopIteration
-        node = self.stack.pop()
-        if self.interface.providedBy(node):
-           for item in  node.values():
-                if item.__class__.__name__ == self.downTo:
-                   continue
-                if (self.interface.providedBy(item)):                   
-                   self.stack.append(item)
-        return node           
 
 
 
