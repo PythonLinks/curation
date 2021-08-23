@@ -22,20 +22,41 @@ from zopache.crud.getimage import getImage
 @implementer (IRSS)     
 class RSS(Link,UniqueName):
     webClass = "RSS"
-    htmlSummary = False
+    htmlSummary = True
     title = ""
     rssApproved = True
     def __init__(self):
          self.localArticles = OOBTree()
          Link.__init__(self)
 
+    def removeOldArticles(self):
+           articles = []
+           for value in self.values():
+               if value.__class__.__name__ == "RSSArticle":               
+                   articles.append(value)
+               
+           for article in articles[0:-100]:    
+               article.preDeleteProcess(self)
+               del article.parent [article.name]
+               
+    """
+    REMOVES ARTICLES LISTED IN localArticles, but which has no parent. 
+    should be an empty set.
+
+    Has not yet been tested, so commented out. 
+    def clearOrphans(self):           
+           orphans = []    
+           for articlein self.localArticles.values():
+               if article.parent == None:
+                   orphans.append(article.permalink)
+           for key in orphans:
+               print (key)
+               del context.localArticles [key]
+    """
+         
     def parseHTML(self,html):
-        if not self.htmlSummary:
-            return html
-        
         soup = BeautifulSoup(html, 'html.parser')
         try:
-            
            text = soup.text
            length = len(text)
            if length <= 300:
@@ -43,31 +64,24 @@ class RSS(Link,UniqueName):
            else:
               for i in range(300,length):
                   if text[i]==' ':
-                     break
-              result = text [0:i-1] +  '...'
-              return result
-           
+                     result = text [0:i-1] +  '...'
+                     return result
         except:
            return ""
        
     # FOR A NEW RSS FEED       
     def createOneArticle(self,article,view,now):
        new = RSSArticle()
-       new.title = unescape (article.title)
-       if self.htmlSummary:
-           unescaped = unescape( article.summary)
-           result  = self.parseHTML(unescaped)
-           new.description = result
-       else:
-             new.description = article.summary
-       
-       #if hasattr(article, 'content'):
-       #    if len(article.content):
-       #      new.source = article.content[0].value
-       #else:
-       #    new.source = article.summary
-       
        new.articleURL = article.link
+       
+       unescaped = unescape (article.title)
+       result  = self.parseHTML(unescaped)
+       new.title = result
+       
+       unescaped = unescape( article.summary)
+       result  = self.parseHTML(unescaped)
+       new.description = result
+       
        if hasattr(article, 'updated_parsed'):
           new.updated = article.updated_parsed
 

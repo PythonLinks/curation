@@ -35,7 +35,9 @@ class RSSArticle(Page,Voteable):
         if hasattr(self,'permalink'):
             if self.permalink in localArticles:
                  del localArticles [self.permaLink]
-    
+            else:
+                raise Exception("That article was not listed in localArticles.")
+            
     def getCategory(self):
       return self._category
 
@@ -46,7 +48,7 @@ class RSSArticle(Page,Voteable):
               self.__name__ = name
   
     def setCategory(self,value):       
-      self._category = value
+        self._category = value
        
     def getSrcSet(self):
         pass
