@@ -11,19 +11,9 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
 from itertools import islice
 
-def callTwice(view):
-      allArticles = view.getSiteRoot().newestArticles.values()
-      return callTwiceCore(view,allArticles)
    
-def callTwiceCore(view,allArticles):
-   someArticles = []
-   articles = []
-   for item in islice(allArticles,0,100 ):
-       if item.__class__.__name__ == 'RSSArticle':
-          someArticles.append(item)          
-   for i in range(5):
-      articles = someArticles [0:20]
-      someArticles = someArticles[20: ]
+def fetchImages(view,results):
+      articles = []
       results = fetchAll(articles, view)
       for item in results:
             if len(item) == 2:
@@ -55,8 +45,7 @@ class GetRSS(Form):
             if item != None:  
               if len(item) == 2:
                   print ("ERROR", item[0], item[1])
-        callTwice(self)
-        callTwice(self)
+        fetchImages(self,result)
         self.status='RSS Feeds were downloaded.'
         Form.update(self)
 

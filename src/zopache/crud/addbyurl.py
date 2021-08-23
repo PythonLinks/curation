@@ -22,51 +22,13 @@ class AddByURLAction(Action):
             form.submissionError = errors
             return FAILURE
         remoteURL = data["remoteURL"]
-        response = self.processURL(remoteURL,form)
+        response = form.processURL(remoteURL)
         baseURL = '/' + form.context.__name__
         postingURL = (baseURL + '/' + form.addSlug + 
                       "?" +
                       urlencode(response))
         return SuccessMarker('Updated', True, url=postingURL)
         
-    def processURL(self,remoteURL,form):
-        try:
-            result = web_preview(remoteURL, parser="html.parser")
-        except:
-            error = Error("Failed to Fetch and Parse URL")
-            return Errors().append(error)
-        
-        response = {}
-        response ['form.field.remoteURL'] = remoteURL
-        response ['form.field.title']= result[0]
-        response['form.field.description']= result[1]
-        response ['form.field.imageURL'] = result[2]
-        return response
-
-import feedparser
-class AddFeedByURLAction(AddByURLAction):
-    addSlug = "addRSS"
-    def processURL(self,rssURL,form):
-        try:
-           feed = feedparser.parse(rssURL)
-
-        except:
-            error = Error("Failed to Fetch and Parse Feed")
-            return Errors().append(error)
-        
-        feed = feed.feed
-        response = {}
-        response ['form.field.rssURL'] = rssURL
-        if 'link' in feed:
-            response ['form.field.remoteURL'] = feed.link
-        if 'title' in feed:             
-            response ['form.field.title']= feed.title
-        if 'description' in feed:
-            response['form.field.description']= feed.description
-        if 'image' in feed:
-            if 'href' in feed.image:     
-               response ['form.field.logoURL'] = feed.image.href
-        return response       
     
 class AddByURLForm(AddFormBase):
     
@@ -96,7 +58,7 @@ class AddByURLForm(AddFormBase):
     interface = IURLForm
     actions = Actions()
     
-    def addUnauthorizedActions(self):   
+    def addAuthorizedActions(self):   
         actions = Actions(
                    AddByURLAction("Add"),
                    Cancel("Cancel"))

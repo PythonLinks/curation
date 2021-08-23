@@ -1,4 +1,4 @@
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zope.interface import Interface
 from dolmen.container import IBTreeContainer
 
@@ -7,11 +7,13 @@ from zope.interface import Interface
 class AllChildObjects:
     interface = IBTreeContainer
     
-    def __init__(self, node, interface = None):
+    #downTo is only used by one sub class: AllObjectsDownTo
+    def __init__(self, node, interface = None, downTo = 'RSS'):
         self.stack = [node]
+        self.downTo = downTo
         if interface != None:
            self.interface = interface
-        
+    
     def __iter__(self):
         return self
 
@@ -41,26 +43,33 @@ class EveryObject(AllChildObjects):
                   
         return node
 
-    
-class AllBlogObjects(AllChildObjects):
-      interface = IPage
-
-#DELETES ALL BUT CATEGORY OBJECTS
-#    def __next__(self):
-#        if not self.stack: raise StopIteration
-#        node = self.stack.pop()
-#        for item in  node.allValuesAsList():
-#              if (item.__class__.__name__ == 'Category'):
-#                  self.stack.append(item)
-#              else: 
-#                  del item.__parent__[item.__name__]
-#        return node    
-
-
-from zopache.pages.interfaces import IPage
 class AllWikiObjects(AllChildObjects):
-    def __init__(self, node):
-        return self.AllChildObjects(node,interface = IPage)
+      interface = IPageBase
+    
+class AllBlogObjects(AllWikiObjects):
+    pass
+
+#GET ALL OF THE RSS LEAVES
+class RSSLeaves(AllWikiObjects):
+    def __next__(self):
+        while True:
+           nextItem = self.nextItem()
+           if nextItem.__class__.__name__ == self.downTo:           
+              yield nextItem              
+
+    def nextItem(self):    
+        if not self.stack:
+            raise StopIteration
+        node = self.stack.pop()
+        if self.interface.providedBy(node):
+           for item in  node.values():
+                if item.__class__.__name__ == self.downTo:
+                   continue
+                if (self.interface.providedBy(item)):                   
+                   self.stack.append(item)
+        return node           
+
+
 
 from zopache.core.interfaces  import IVideo    
 class AllVideoObjects(AllChildObjects):
@@ -93,3 +102,6 @@ class ProcessTree(object):
 
     def everyObject(self):
         return EveryObject(self)    
+
+    def rssLeaves(self):
+        return RSSLeaves(self)            

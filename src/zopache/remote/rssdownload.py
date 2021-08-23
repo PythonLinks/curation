@@ -61,6 +61,8 @@ async def fetchCore(nodes,view):
     timeout = aiohttp.ClientTimeout(total=allowedTime)
     async with aiohttp.ClientSession(timeout = timeout) as session:    
       for node in nodes:
+         if view.className(node) not in ['RSS','RSSArticle']:
+            continue
          if IRSSArticle.providedBy(node):
               if  'Logo' in node:
                    continue
