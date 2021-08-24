@@ -63,5 +63,7 @@ class AddByURLForm(AddFormBase):
                    AddByURLAction("Add"),
                    Cancel("Cancel"))
         self.actions= actions
-              
+
+    def addUnauthorizedActions(self):
+       self.addAuthorizedActions()
 
