@@ -17,6 +17,7 @@ class AddByURLAction(Action):
     
     def __call__(self, form):
         self.form=form
+
         data, errors = form.extractData()
         if errors:
             form.submissionError = errors

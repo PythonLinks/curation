@@ -1,4 +1,6 @@
 #ADD LINK
+import requests
+
 from dolmen.forms.base import Action, Actions,SuccessMarker
 from zopache.core.viewdecorators import *
 from zopache.core.interfaces import ITreeSecurity
@@ -20,15 +22,19 @@ from webpreview import web_preview
 class AddLinkByURL(AddByURLForm):
     title = "Add a Link By URL"
     addSlug = "addLink"
-
+    
     def processURL(self,remoteURL):
         try:
-            content = requests.get(remoteURL)
-            title, description, image  = web_preview(
-                remoteURL, content = content )
+            response = requests.get(remoteURL)
         except:
-            error = Error("Failed to Fetch and Parse URL")
+            error = Error("Failed to Fetch URL")
             return Errors().append(error)
+        
+        try:
+            title, description, image  = web_preview( remoteURL, content = response.content )
+        except:
+            error = Error("Web Preview Failed to  Parse Response")
+            return Errors().append(error)            
         
         response = {}
         response ['form.field.remoteURL'] = remoteURL
