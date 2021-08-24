@@ -58,7 +58,7 @@ class JsonObject(object):
          name='description'
          data += '\"'+name+'\": \"'
 
-         data += self.description
+         data += self.description or ""
          data += '\"' 
 
          #PROVIDE THE BRANCH SIZE

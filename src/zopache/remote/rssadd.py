@@ -16,10 +16,9 @@ from zopache.business.exists import Duplicate
 from zopache.remote.rsscategory import RSSCategory, IRSSCategory
 
 @view_component
-@name('addRSS')
+@name ('addRSS')
 @target(IView)
 @context(IPage)
-@context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddRSS(AddByTitleForm,Notify):
      interface = IAddRSS
@@ -102,15 +101,3 @@ class EditRSS2(BaseEditForm):
     pass
 
 """
-
-
-@view_component
-@name('addRSSByURL')
-@target(IView)
-@context(IBTreeContainer)
-@implementer(ITreeSecurity)
-class AddRSSByURL(AddByURLForm,Notify):
-
-     factory = RSS
-              
-
