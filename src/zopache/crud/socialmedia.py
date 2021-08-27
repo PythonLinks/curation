@@ -1,53 +1,45 @@
 
-"""class NotUsed():
-    def extractSocialMediaLinks(self,response):
+from html_to_etree import parse_html_bytes
+from extract_social_media import find_links_tree
+ 
+class SocialMediaExtractor(object):
+    def addToConnect(self,connect,pattern,key,url):
+        if pattern in url:
+           connect[key] = url
+    
+    def addSocialMedia(self,connect, response):
          tree = parse_html_bytes(response.content,
                     response.headers.get('content-type'))
          links = set(find_links_tree(tree))
-         remainingLinks = []
          
          for url in links:
              if 'facebook.com/group/' in url:
-                 self.processURL(self,url,'facebookGroup',
-                                 'acebook.com/group/')
-                 continue
-             if 'facebook.com/' in url:
-                  self.processURL(self,url,'facebookId',
-                                 'acebook.com/')
-                  continue
-             if 'twitter.com/' in url:  
-                  self.processURL(self,url,'twitterId',
+                 connect['facebookGroup'] = url
+
+             elif 'facebook.com/' in url:
+                  connect['facebookPage'] = url
+
+             elif 'twitter.com/intent/follow?screen_name=' in url:  
+                  parts = url.split('witter.com/intent/follow?screen_name=')
+                  connect['twitterId'] = parts [1]
+                  
+             elif 'twitter.com/' in url:  
+                  self.addToConnect(self,url,'twitterId',
                                  'witter.com/')
-                  continue              
-             if 'twitter.com/intent/follow?screen_name=' in url:  
-                  self.processURL(self,url,'twitterId',
-                    'witter.com/intent/follow?screen_name=')
-                  continue
-             if 'twitter.com/' in url:  
-                  self.processURL(self,url,'twitterId',
-                                 'witter.com/')
-                  continue              
-             if 'youtube.com/channel' in url:  
-                  self.processURL(self,url,'youtubeId',
+
+             elif 'youtube.com/channel' in url:  
+                  self.addToConnect(self,url,'youtubeId',
                                  'youtube.com/channel/')
-                  continue
-             if 'youtube.com/user' in url:  
-                  self.processURL(self,url,'youtubeId',
+
+             elif 'youtube.com/user' in url:  
+                  self.addToConnect(self,url,'youtubeId',
                                  'youtube.com/user/')
-                  continue
-             if 'youtube.com/' in url:  
-                  self.processURL(self,url,'youtubeId',
+
+             elif 'youtube.com/' in url:  
+                  self.addToConnect(self,url,'youtubeId',
                                  'youtube.com/')
-                  continue                            
-             if 'instagram.com/' in url:  
-                  self.processURL(self,url,'instagramId',
+
+             elif 'instagram.com/' in url:  
+                  self.addToConnect(self,url,'instagramURL',
                                  'stagram.com/')
-                  continue
-             remainingLinks.append(url)
-                 
-         allLinks = []       
-         for item in remainingLinks:                                
-              oneLink = self.href(item,item)
-              allLinks.append(oneLink)                    
-              self.new.source = '<br>'.join(allLinks)
-"""
+

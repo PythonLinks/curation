@@ -44,7 +44,7 @@ class Tests(object):
         return self.hasPermission('Manage')
 
     def isPython(self):
-        return self.hasPermission('Manage')    
+        return self.hasPermission('Python')    
     
     def isDeveloper(self):
         return self.hasPermission('Develop')    

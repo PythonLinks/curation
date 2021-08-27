@@ -62,8 +62,12 @@ class AddJson (Base, AddAnonymousPage):
     def contextJsonString(self):
         if hasattr(self,'submissionError') and len(self.submissionError):
            return self.requestJsonString
-        else:
-           return self.dataModel()
+        # IF A JSON STRING WAS PROVIDED, RETURN IT
+        try:
+            return self.request.form['json']   
+        except:
+            pass
+        return self.dataModel()
 
     def addUnauthorizedActions(self):    
            self.actions = Actions(
