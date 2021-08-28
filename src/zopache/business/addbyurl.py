@@ -1,3 +1,4 @@
+import json
 import requests
 from webpreview import web_preview
 
@@ -41,9 +42,12 @@ class AddLinkByURL(AddByURLForm):
         
         response = {}
         response ['form.field.remoteURL'] = remoteURL
-        response ['form.field.title']= title
-        response['form.field.description']= description
-        response ['form.field.imageURL'] = image
+        if title:
+           response ['form.field.title']= title
+        if description:
+            response['form.field.description']= description
+        if image:
+           response ['form.field.imageURL'] = image
         return response
 
 import feedparser    
@@ -92,6 +96,7 @@ class ProcessJSON(object):
         response = self.saveData(remoteURL,title, description, image)
         connect = response ["connect"]
         self.addSocialMedia(connect,remoteResponse)
+        response = json.dumps(response)
         return {'json': response}
 
 @view_component
@@ -104,10 +109,10 @@ class AddOrganizationByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
     addSlug = 'addOrganization'
 
     def saveData(self,remoteURL, title,description,image):           
-        response = {'introduction': {},
-                    'content':[{}],
-                    'connect': {},
-                    'organization':{}
+        response = {"introduction": {},
+                    "content":[{}],
+                    "connect": {},
+                    "organization":{}
         }
 
         response ['connect']['remoteURL'] = remoteURL
@@ -132,16 +137,21 @@ class AddCandidateByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
     addSlug = 'addCandidate'        
 
     def saveData(self,remoteURL, title,description,image):           
-        response = {'introduction': {}, 
-                    'content':{'english':{}},
-                    'connect': {},
-                    'organization':{},
-                    'candidateInfo':{}
+        response = {"introduction": {}, 
+                    "content":{"english":{}},
+                    "connect": {},
+                    "organization":{},
+                    "candidateInfo":{}
         }
 
         response ['connect']['remoteURL'] = remoteURL
 
-        response ['content']['english']['title']= title
-        response['content']['english']['description']= description
-        response ['introduction']['imageURL'] = image
+        if title:
+            response ['content']['english']['title']= title
+        
+        if description:
+            response['content']['english']['description']= description
+            
+        if image:
+            response ['introduction']['imageURL'] = image
         return response

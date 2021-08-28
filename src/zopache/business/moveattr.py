@@ -9,7 +9,7 @@ def moveAttr(self,attrName,dictName, array = False, newName = None):
                if not dictName in self.json:
                  if array:
                    self.json[dictName] = []
-                   self.json[dictName].aopend(dict())
+                   self.json[dictName].append(dict())
                  else:  
                    self.json[dictName] = dict()
                sub =  self.json[dictName] 
@@ -18,8 +18,12 @@ def moveAttr(self,attrName,dictName, array = False, newName = None):
                sub [newAttrName] = attrValue
 
 
-class Convert(object):               
+class Convert(object):
    def convert(self):
+        self.convertCore()
+
+       
+   def convertCore(self):
       if not hasattr(self,'json'):
           self.json = dict()
       else:
@@ -52,7 +56,7 @@ class Convert(object):
                           'editedBy',
                           'json']:
                   keys.append(key)
-                  
+
       for key in keys:        
           if key   in [
                          "focus",        
