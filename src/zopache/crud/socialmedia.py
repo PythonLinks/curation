@@ -3,7 +3,7 @@ from html_to_etree import parse_html_bytes
 from extract_social_media import find_links_tree
  
 class SocialMediaExtractor(object):
-    def addToConnect(self,connect,pattern,key,url):
+    def addToConnect(self,connect,url,key,pattern):
         if pattern in url:
            connect[key] = url
     
@@ -20,26 +20,18 @@ class SocialMediaExtractor(object):
                   connect['facebookPage'] = url
 
              elif 'twitter.com/intent/follow?screen_name=' in url:  
-                  parts = url.split('witter.com/intent/follow?screen_name=')
+                  parts = url.split('twitter.com/intent/follow?screen_name=')
                   connect['twitterId'] = parts [1]
                   
              elif 'twitter.com/' in url:  
-                  self.addToConnect(self,url,'twitterId',
-                                 'witter.com/')
-
-             elif 'youtube.com/channel' in url:  
-                  self.addToConnect(self,url,'youtubeId',
-                                 'youtube.com/channel/')
-
-             elif 'youtube.com/user' in url:  
-                  self.addToConnect(self,url,'youtubeId',
-                                 'youtube.com/user/')
+                  parts = url.split('twitter.com/')
+                  connect['twitterId'] = parts [1]                  
 
              elif 'youtube.com/' in url:  
-                  self.addToConnect(self,url,'youtubeId',
+                  self.addToConnect(connect, url,'youTubeChannelURL',
                                  'youtube.com/')
 
              elif 'instagram.com/' in url:  
-                  self.addToConnect(self,url,'instagramURL',
+                  self.addToConnect(connect, url,'instagramId',
                                  'stagram.com/')
 

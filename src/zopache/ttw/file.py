@@ -110,14 +110,15 @@ class Image (Leaf,ImageBase):
         if self.__parent__.__class__ == BTreeImage:
            return self.__parent__.title
         else:
-           return self.__getattr_("title")
+           return self.__dict__["title"]
 
     def setTitle(self,value):
         if self.__parent__.__class__ == BTreeImage:
            self.__parent__.__setattr__('title',value)
         else:
-           self.__setattr__("title",value)       
-       
+           self.__dict__["title"]=value       
+           self._p_changed = True
+           
     def getRemoteURL(self):
         if self.__parent__.__class__ == BTreeImage:
            return self.__parent__.remoteURL

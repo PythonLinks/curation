@@ -10,6 +10,19 @@ class Update(Action,TransactionNote):
     """Update action for any locatable object.
     """
 
+
+    """
+        import cProfile, pstats
+        profiler = cProfile.Profile()
+        profiler.enable()
+        
+        self.callInner(form)
+        
+        profiler.disable()
+        stats = pstats.Stats(profiler).sort_stats('cumtime')
+        stats.print_stats()
+    """
+    
     def __call__(self, form):
         self.form=form
         data, errors = form.extractData()

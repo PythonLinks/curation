@@ -92,7 +92,6 @@ class ProcessJSON(object):
         except:
             error = Error("Failed to Fetch and Parse URL")
             return Errors().append(error)
-
         response = self.saveData(remoteURL,title, description, image)
         connect = response ["connect"]
         self.addSocialMedia(connect,remoteResponse)
@@ -151,7 +150,6 @@ class AddCandidateByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
         
         if description:
             response['content']['english']['description']= description
-            
         if image:
-            response ['introduction']['imageURL'] = image
+            response ['introduction']['logoURL'] = image
         return response
