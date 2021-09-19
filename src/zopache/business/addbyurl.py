@@ -97,7 +97,6 @@ class AddOrganizationByURL(AddByURLForm):
             error = Error("Failed to Fetch and Parse URL")
             return Errors().append(error)
 
-        breakpoint()
         response = self.saveData(remoteURL,title, description, iamge)
         connect = response ["connect"]
         self.addSocialMedia(connect,remotePage)
