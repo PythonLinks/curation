@@ -115,13 +115,6 @@ class AddDriver(AddAnonymousPage,GeoCodeForm):
         AddAnonymousPage.update(self)
         GeocodeForm.update(self) 
 
-@view_component
-@name('addOrgByURL')
-@target(IView)
-@context(IPage)
-@implementer(ITreeSecurity)
-class AddOrganizationByURL(AddByURLForm):
-    title = "Add an Organization by URL"
         
 @view_component
 @name('addCompanyMap')

@@ -43,8 +43,7 @@ class PoliticianBase(object):
     
     def applyData(self,data):
         target = self.target()
-        jsonSchemaDict =self.jsonSchemaDict
-        rootProperties = jsonSchemaDict["properties"]
+        rootProperties = self.jsonSchemaDict["properties"]
         
         if "introduction" in rootProperties:
            introductionKeys = (rootProperties

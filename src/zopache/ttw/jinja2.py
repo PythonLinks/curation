@@ -33,7 +33,7 @@ class JinjaBase(Leaf):
         self.postProcess(view = view)
 
     def postProcess(self,view = None):
-        self.trusted = view.isPython()
+        self.trusted = view.isManager()
         if hasattr(self, '_v_compiledTemplate'):
            del self._v_compiledTemplate
         self.compileTemplate(view)

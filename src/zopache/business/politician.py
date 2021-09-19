@@ -23,6 +23,10 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
         LocationLeaf.__init__(self)
         HasMembers.__init__(self)
 
+    #BECAUSE WE DO NOT USE THE JSON FOR POLITICIANS.     
+    def recalculateRootJSON(self):
+        pass
+        
     def getOneMarkerCore(self):
 
                      result = ""   
@@ -62,7 +66,7 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
     def getSource(self):
         if 'source' in self.__dict__:
             return self.__dict__["source"]
-        return self.content["english"]["source"]
+        return self.content["english"].get("source","")
 
     def setSource(self,value):
         if 'source' in self.__dict__:

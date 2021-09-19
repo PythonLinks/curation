@@ -8,7 +8,7 @@ class BasicProperties(object):
 
     @property
     def description(self):
-        return self.json['content'][0]["description"]
+        return self.json['content'][0].get("description","")
 
     @property    
     def source(self):

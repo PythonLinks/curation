@@ -1,18 +1,22 @@
-#ADD LINK
+import json
 import requests
+from webpreview import web_preview
 
 from dolmen.forms.base import Action, Actions,SuccessMarker
+from dolmen.forms.base.errors import Error, Errors
+
 from zopache.core.viewdecorators import *
 from zopache.core.interfaces import ITreeSecurity
 from zopache.crud.addbyurl import AddByURLForm
 from zopache.crud.actions import Cancel
+from zopache.crud.socialmedia import SocialMediaExtractor
+
 #The Classes to Add
 from zopache.remote.rss import RSS
 from zopache.business.company import Organization
 from zopache.pages.page import Link
 from zopache.pages.interfaces import IPage
-from html_to_etree import parse_html_bytes
-from webpreview import web_preview
+
 
 @view_component
 @name('addByURL')
@@ -38,9 +42,12 @@ class AddLinkByURL(AddByURLForm):
         
         response = {}
         response ['form.field.remoteURL'] = remoteURL
-        response ['form.field.title']= title
-        response['form.field.description']= description
-        response ['form.field.imageURL'] = image
+        if title:
+           response ['form.field.title']= title
+        if description:
+            response['form.field.description']= description
+        if image:
+           response ['form.field.imageURL'] = image
         return response
 
 import feedparser    
@@ -75,38 +82,36 @@ class AddRssByURLForm(AddByURLForm):
                response ['form.field.logoURL'] = feed.image.href
         return response       
 
-def addToConnect(connect,pattern,key,url):
-    if pattern in url:
-       connect[key] = url
-                 
+
+class ProcessJSON(object):
+    def processURL(self,remoteURL):
+        try:
+            remoteResponse = requests.get(remoteURL)
+            title, description, image= web_preview(
+                remoteURL, content = remoteResponse.content )
+        except:
+            error = Error("Failed to Fetch and Parse URL")
+            return Errors().append(error)
+        response = self.saveData(remoteURL,title, description, image)
+        connect = response ["connect"]
+        self.addSocialMedia(connect,remoteResponse)
+        response = json.dumps(response)
+        return {'json': response}
+
 @view_component
 @name('addOrganizationByURL')
 @target(IView)
 @context(IPage)
-class AddOrganizationByURL(AddByURLForm):
+class AddOrganizationByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
     allowAnonymous = True
     title = "Add an Organization By URL"
     addSlug = 'addOrganization'
 
-    def processURL(self,remoteURL):
-        try:
-            remote = requests.get(remoteURL)
-            title, description, image= web_preview(
-                remoteURL, content = remote.content )
-        except:
-            error = Error("Failed to Fetch and Parse URL")
-            return Errors().append(error)
-
-        response = self.saveData(remoteURL,title, description, iamge)
-        connect = response ["connect"]
-        self.addSocialMedia(connect,remotePage)
-        return response
-    
     def saveData(self,remoteURL, title,description,image):           
-        response = {introduction: {},
-                    content:[],
-                    connect: {},
-                    organization:{}
+        response = {"introduction": {},
+                    "content":[{}],
+                    "connect": {},
+                    "organization":{}
         }
 
         response ['connect']['remoteURL'] = remoteURL
@@ -115,44 +120,36 @@ class AddOrganizationByURL(AddByURLForm):
         response ['introduction']['imageURL'] = image
         return response
 
-    def addSocialMedia (self, connect, remotePage): 
-        tree = parse_html_bytes(remotePage.content, remotePage.headers.get('content-type'))
-        socialMedia = set(find_links_tree(tree))        
-        for link in socialMedia:
-           if 'facebook.com' in link:
-               if 'facebook.com/group' in link:
-                  connect['facebookGroup'] = link
-               else:
-                  connect['facebookPage'] = link
-           if 'twitter.com/' in link:
-               parts = link.split('twitter.com/')
-               connect['twitterId'] = parts[1]
 
-           addToConnect(connect,'instagram.com','instagramURL', link)
-           addToConnect(connect,'youtube.com','youtubeChannelURL', link)
-           addToConnect(connect,'vimeo.com', 'vimeoURL', link)
+
+
 
     
 @view_component
 @name('addCandidateByURL')
 @target(IView)
 @context(IPage)
-class AddCandidateByURL(AddByURLForm):
+class AddCandidateByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
     allowAnonymous = True
     title = "Add a Candidate By URL "
     subTitle = "Just submit the URL for the candidate. "
     addSlug = 'addCandidate'        
 
     def saveData(self,remoteURL, title,description,image):           
-        response = {introduction: {}, 
-                    content:[],
-                    connect: {},
-                    organization:{},
-                    candidateInfo:{}
+        response = {"introduction": {}, 
+                    "content":{"english":{}},
+                    "connect": {},
+                    "organization":{},
+                    "candidateInfo":{}
         }
 
         response ['connect']['remoteURL'] = remoteURL
-        response ['content']['english']['title']= title
-        response['content']['english']['description']= description
-        response ['introduction']['imageURL'] = image
+
+        if title:
+            response ['content']['english']['title']= title
+        
+        if description:
+            response['content']['english']['description']= description
+        if image:
+            response ['introduction']['logoURL'] = image
         return response

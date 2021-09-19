@@ -1,5 +1,6 @@
 import googlemaps
 import json
+
 from zopache.crud import actions as formactions
 from zope.interface import Interface
 from zope.schema._field import Choice
@@ -28,13 +29,22 @@ class Base(object):
 
     @property
     def jsonSchemaDict(self):
-            result =  self.template[self.schemaName]
-            result = result.getAsDict()
-            return result
-    
+        result = getattr(self,'_jsonSchemaDict','')
+        if result:
+           return result 
+        schema =  self.template[self.schemaName]
+        result = schema.getAsDict()
+        self._jsonSchemaDict = result
+        return result
+
+    @property    
     def jsonSchemaString(self):
-        result =  self.template[self.schemaName]        
-        result = result.getAsString()
+        result = getattr(self,'_jsonSchemaString','')
+        if result:
+           return result
+        result =  self.jsonSchemaDict        
+        result = json.dumps(result)
+        self._jsonSchemaString = result
         return result
 
     def footerScripts(self):
@@ -62,8 +72,12 @@ class AddJson (Base, AddAnonymousPage):
     def contextJsonString(self):
         if hasattr(self,'submissionError') and len(self.submissionError):
            return self.requestJsonString
-        else:
-           return self.dataModel()
+        # IF A JSON STRING WAS PROVIDED, RETURN IT
+        try:
+            return self.request.form['json']   
+        except:
+            pass
+        return self.dataModel()
 
     def addUnauthorizedActions(self):    
            self.actions = Actions(

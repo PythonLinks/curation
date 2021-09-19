@@ -54,6 +54,7 @@ class EditSchemaClass (EditJson):
         result = result.getAsDict()
         return result
     
+    @property
     def jsonSchemaString(self):
         result =  self.context['schema']
         result = result.getAsString()

@@ -6,7 +6,7 @@ from dolmen.message.utils import send
 from zopache.core.getroot import getSiteRoot
 from zopache.application.everyobject import EveryObject
 
-from html import escape
+from html import escape, unescape
 
 def sortFunction(item):
   return item.__name__
@@ -26,6 +26,9 @@ class Utilities (object):
       
     def htmlEscape(self,text):
         return escape(text)
+
+    def htmlUnEscape(self,text):
+        return unescape(text)      
     
     def everyObject(self):
         return EveryObject(self.context)
