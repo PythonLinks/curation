@@ -79,7 +79,6 @@ class Utilities (object):
         item.__parent__ = parent
         item.__name__ = newName
 
-
     def className(self,*args):
         item = self.context if len(args)==0 else args [0]
         return item.__class__.__name__
