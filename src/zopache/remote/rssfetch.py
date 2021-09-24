@@ -36,8 +36,8 @@ class GetRSS(Form):
     subTitle = "To get the newest news."
     def update(self):
         feeds = []
-
-        for  item  in self.context.rssLeaves():
+        leaves = self.context.rssLeaves()
+        for  item  in leaves:
                if IRSS.providedBy(item):
                   if item.rssApproved:   
                       feeds.append(item)

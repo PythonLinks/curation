@@ -119,7 +119,7 @@ class AddDriver(AddAnonymousPage,GeoCodeForm):
 @view_component
 @name('addCompanyMap')
 @target(IView)
-@permissions('AddContent')
+@permissions('Manage')
 @context(IPage)    
 class AddMap(AddAuthorizedPage):
     subTitle = 'Add a map'

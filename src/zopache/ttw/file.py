@@ -288,7 +288,21 @@ class LogoAcquire(View):
                logo = ParentalAcquire(self.context)['Logo']
                if logo == None:
                    return ''
-               return logo.data                      
+               return logo.data
+
+
+@view_component
+@name('Logo150W')
+@context(IBTreeContainer)
+class Logo150WAcquire(View):
+    responseFactory = Response
+    make_response = make_logo_response
+        
+    def render(self):
+               logo = ParentalAcquire(self.context)['Logo']
+               if logo == None:
+                   return ''
+               return logo.get('150W').data                                 
 
 
 from zopache.ttw.interfaces import IInternalPrincipal           
