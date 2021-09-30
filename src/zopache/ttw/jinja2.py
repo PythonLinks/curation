@@ -77,7 +77,6 @@ class JinjaBase(Leaf):
                                "view": view,
                                "node" : context,
                                "request" : request}
-                    
             result =  self._v_compiledTemplate.render(context = ctx,
                                                           node = context,
                                                           view= view,

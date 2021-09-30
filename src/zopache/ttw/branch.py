@@ -186,7 +186,6 @@ class Branch(SimpleBranch):
                    self.indexBranch(tree,item)
 
     def indexItem(self,item, itemType=ICanonical):
-        #if item.__class__.__name__ == "RSSArticle":
         if not IPage.providedBy(item):
             return
         self.valuesByToken[item.__name__] = item
@@ -213,7 +212,7 @@ class Branch(SimpleBranch):
                     self.socialNodeByTwitterId[twitterId] = item
                     
         if item.__class__.__name__  == "RSSArticle":
-            time = item.getImportTime(self)
+            time = item.importTime
 
             if item.publicationApproved:
                 self.approvedArticles [-time] = item
@@ -230,16 +229,10 @@ class Branch(SimpleBranch):
              self.newestLinks [-item.creationTime] = item
 
     def hasArticle(self,importTime):
+        importTime = - importTime
         ((importTime in self.newestArticles) or
         (importTime in self.approvedArticles))
         
-    def getImportTime(self,importTime):
-        while (True):
-           if not self.hasArticle(importTime):
-                break;
-                importTime += 1
-        return int(importTime)
-            
     def unIndexItem(self,item, itemType=IPage):
         if not IPage.providedBy(item):
             return        

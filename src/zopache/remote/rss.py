@@ -68,9 +68,10 @@ class RSS(Link,UniqueName):
                      return result
         except:
            return ""
-       
+
+   
     # FOR A NEW RSS FEED       
-    def createOneArticle(self,article,view,now):
+    def createOneArticle(self,article,view,importTime):
        new = RSSArticle()
        new.articleURL = article.link
        
@@ -94,15 +95,16 @@ class RSS(Link,UniqueName):
        theId = article['id']
        new.permaLink = theId
        if hasattr(article,"published_parsed"):
-          new.publishedAt = max(
+          new.publishedAt = min(
                             time.mktime( article["published_parsed"]),
-                            now)
+                            importTime)
        else:
-          new.publishedAt = time.time()
+          new.publishedAt = importTime
           
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
-       new.importTime = new.publishedAt   
+       new.setImportTime(importTime, view.getSiteRoot())
+
        newName = slugify (new.title)
        newName = self.uniqueBothName (self,newName)
        self[newName] = new
@@ -116,11 +118,13 @@ class RSS(Link,UniqueName):
     def createArticles(self,entries,view):
        globalArticles= self.getSiteRoot().globalArticles
        now = time.time()
+       importTime = int(now)
        for article in entries:
            theId = article['id']
            if not theId in globalArticles:
-              self.createOneArticle(article,view,now )
-
+              self.createOneArticle(article,view,importTime )
+              importTime -= 3600 
+              
     def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)
         self.fetchAll(view = view)

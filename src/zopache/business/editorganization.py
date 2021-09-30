@@ -3,7 +3,27 @@ from zopache.business.editjsonschema import AddJson, EditJson
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.company import Organization,OnlineOrganization
 from zopache.business.interfaces import IOrganization, IOnlineOrganization
+from zopache.pages.interfaces import IPage,IPageBase
 
+class OnlineSchema(object):
+    subTitle = ""
+    schemaName = "OrganizationSchema"
+    
+    @property
+    def jsonSchemaDict(self):
+        result = getattr(self,'_jsonSchemaDict','')
+        if result:
+           return result 
+        schema =  self.template[self.schemaName]
+        result = schema.getAsDict()
+        introduction = result ["properties"]["introduction"]["properties"]
+        del introduction["latitude"]
+        del introduction["longitude"]
+        del introduction["address"]        
+        result = result
+        self._jsonSchemaDict = result
+        return result
+    
 @form_component
 @name ('ckedit')
 @context(IOrganization)
@@ -11,14 +31,20 @@ from zopache.business.interfaces import IOrganization, IOnlineOrganization
 class EditOrganization (EditJson):
     title = 'Edit this Multilingual Page.'
     subTitle = ''
-    schemaName = "OrganizationSchema"  
+    schemaName = "OrganizationSchema"
+
+@form_component
+@name ('ckedit')
+@context(IOnlineOrganization)
+@implementer(ITreeSecurity)
+class EditOnlineOrganization (OnlineSchema,EditJson):
+    title = 'Edit this Multilingual Page.'
 
 
-from zopache.pages.interfaces import IPageBase
 @view_component
 @name('addOrganization')
 @target(IView)
-@context(IPageBase)
+@context(IPage)
 class AddOrganization(AddJson):
     title = "Add an Organization"
     subTitle = ""
@@ -35,3 +61,12 @@ class AddOrganization(AddJson):
         #result = json.dumps(contextJsonDict)
         #return result
     
+@view_component
+@name('addOnline Organization')
+@target(IView)
+@context(IPageBase)
+class AddOnlineOrganization (OnlineSchema,AddOrganization):
+    title = "Add an Online Organization"
+    subTitle = ""
+    factory = OnlineOrganization
+

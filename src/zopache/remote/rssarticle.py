@@ -47,6 +47,15 @@ class RSSArticle(Page,Voteable):
               category [name] = self
               self.__name__ = name
   
+    def setImportTime(self,importTime,root):
+        importTime = int(importTime)
+        while (True):
+           if not root.hasArticle(importTime):
+                break;
+                importTime += 1
+        self.importTime = importTime
+            
+
     def setCategory(self,value):       
         self._category = value
        
@@ -65,12 +74,6 @@ class RSSArticle(Page,Voteable):
     creationTime = property(getCreationTime,setCreationTime)
 
     #AND NOW RESET  A UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
-
-    def getImportTime(self,siteRoot):
-        importTime = self.importTime
-        importTime = siteRoot.getImportTime(importTime)
-        self.importTime = importTime                                    
-        return importTime
 
     def postAddProcess (self, view = None):
         Page.postAddProcess(self,view = view)

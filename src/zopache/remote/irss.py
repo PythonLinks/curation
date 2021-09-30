@@ -47,7 +47,7 @@ class IRSS(IRSSBase):
         title = 'URL',
         description = """A URL That this page refers to. 
              Please include 'https://'""",
-        required = False,
+        required = True,
     )
     
     rssURL=schema.URI(
@@ -76,6 +76,7 @@ class IAddRSS(IRSS):
         title = "Logo URL ",
         description ="An image is important",
         required = False,
+        missing_value = '',
         )
     
 class IRSSPage (IRSS):

@@ -14,7 +14,7 @@ from zopache.pages.interfaces  import (
                                        ILocationLeaf)
 from z3c.schema.email import RFC822MailAddress as Email
 
-from zopache.pages.interfaces import IPage, ITime
+from zopache.pages.interfaces import IPage, IPageBase, ITime, ILocation
 from zopache.business.ifollow import IFollow
 
 class IClass(Interface):
@@ -276,13 +276,11 @@ class ISocialMedia(Interface):
         missing_value = '',
     )
        
-class IOnlineOrganization(
-                ILocationContainer,IPage,
-                          IFollow):
+class IOnlineOrganization(IPageBase,IFollow):
      pass          
 
 class IOrganization(
-                ILocationContainer,IPage,IFollow        
+                ILocationContainer,IPageBase,IFollow        
                     ):
      pass
 
@@ -334,7 +332,7 @@ class IMapOrganizationBase(IOrganization):
 	    required = False,
 	    default = True)
     
-class IMapOrganization(IMapOrganizationBase,IMapBase):    
+class IMapOrganization(ILocation,IMapOrganizationBase,IMapBase):    
       pass
 
 class IEndorsingOrganization(IMapOrganization,IMap):
