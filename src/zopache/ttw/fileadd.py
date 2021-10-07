@@ -13,7 +13,8 @@ from zopache.core.viewdecorators import *
 from zopache.crud.forms import AddForm
 from zopache.core.uniquename import UniqueName
 from zopache.core.interfaces import ITreeSecurity
-from zopache.forms.imagevalidator import BannerValidator, LogoValidator
+from zopache.forms.imagevalidator import (BannerValidator, LogoValidator,
+                                    ImageValidator,SocialMediaImageValidator)
 
 
 @form_component
@@ -36,6 +37,7 @@ class AddFile(AddForm,UniqueName):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddImage(AddFile):
+    dataValidators = [ImageValidator]
     subTitle='Add an Image'
     interface = IAddBTreeImage
     ignoreContent = True
@@ -51,7 +53,7 @@ class AddImage(AddFile):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddBanner(AddImage):
-    dataValidators = [BannerValidator]     
+    dataValidators = [ImageValidator,BannerValidator]     
     subTitle='Add a Banner'
     @property
     def fields(self):
@@ -70,7 +72,7 @@ class AddBanner(AddImage):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddLogo(AddImage):
-    dataValidators = [LogoValidator] 
+    dataValidators = [ImageValidator,LogoValidator] 
     subTitle="Add a Logo or politician's photo."
     @property
     def fields(self):
@@ -89,7 +91,7 @@ class AddLogo(AddImage):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddSocialMediaImage(AddImage):
-    dataValidators = [LogoValidator] 
+    dataValidators = [ImageValidator,SocialMediaImageValidator] 
     subTitle="Add a Social Media Image."
     @property
     def fields(self):

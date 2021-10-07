@@ -14,7 +14,7 @@ from zopache.crud.interfaces import ILeaf
 from zopache.crud.interfaces import IImutable
 from zopache.crud.interfaces import IMoveable
 from zopache.core.interfaces import ITreeSecurity
-
+from zopache.forms.imagevalidator import ImageValidator
 
 class IMailHost(ILeaf):
     """Basic Mail CRUD"""
@@ -88,12 +88,6 @@ class IImageBase(Interface):
         description = u'Describe this Image, so that the user has some idea what they are looking at. ',
         required = True,
     )
-    remoteURL = schema.URI(
-        title = "The url to visit when the image is clicked.",
-        description = """The html template can use this info.. Include  'https://'""",
-        missing_value="",
-        required = False,
-    )    
     data = FileField(title=u'Upload an Image',
                      required = False,)         
 
@@ -106,10 +100,17 @@ class IImage(IImageBase,ILeaf):
 class IBTreeImage(IImage,IBTreeContainer):
     pass
 
+     
 class IAddBTreeImage(IImage,IBTreeContainer):
+    imageURL = schema.URI(
+        title = "The url of the image to download.",
+        description = """Include  'https://'""",
+        missing_value="",
+        required = False,
+    )    
     data = FileField(title=u'Upload an Image',
-                     required = True,)         
-    
+                     required = False,)         
+
 #I THINK ALL OD MY ZODB OBJECTS GET THIS ONE    
 class ICanonical (Interface):
       pass   

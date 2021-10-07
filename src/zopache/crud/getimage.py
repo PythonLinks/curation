@@ -5,12 +5,12 @@ import requests
 from zopache.ttw.file import BTreeImage
 
 
-def createImageIn(self,response):
+def createImageIn(self,response,name = 'Logo'):
             content = response.content
             contentType = response.headers['content-type']
-            createImageInFrom(self,content,contentType)
+            createImageInFrom(self,content,contentType,name)
                                  
-def createImageInFrom(self,content,contentType):
+def createImageInFrom(self,content,contentType,name):
             zodbImage =BTreeImage()
             zodbImage.contentType=contentType 
             zodbImage.data = content
@@ -21,19 +21,19 @@ def createImageInFrom(self,content,contentType):
                return         
             zodbImage.width = pilImage.width
             zodbImage.height = pilImage.height
-            self['Logo']= zodbImage
+            self[name]= zodbImage
             zodbImage.__parent__ = self
 
-def getImage(self,imageURL):
+def getImage(self,imageURL, name = 'Logo'):
         try:
             response = requests.get(imageURL)
-            createImageIn(self,response)
+            createImageIn(self,response, name)
         except:
             pass
 
-async def asyncGetImage(self,imageURL):
+async def asyncGetImage(self,imageURL, name = 'Logo'):
         try:
             response = await requests.get(imageURL)
-            createImageIn(self,response)
+            createImageIn(self,response, name)
         except:
             pass 

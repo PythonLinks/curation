@@ -23,8 +23,18 @@ class BaseValidator(object):
         form = self.form
         context = form.context
         return 'Banner' in context
-   
-   
+
+
+class ImageValidator(BaseValidator):
+    def validate(self, data):        
+        errors = Errors()
+        if data['data'] == b'' and data['imageURL'] == '':
+            msg = "Please link to an image, or upload an image." 
+            error =Error(title=msg, identifier = "image.validator")
+            error.args = [msg]
+            errors.append(error)
+        return errors        
+        
 class LogoValidator(BaseValidator):             
     def validate(self, data):        
         errors = Errors()
@@ -42,6 +52,24 @@ class BannerValidator(BaseValidator):
         errors = Errors()
         if self.bannerExists():
            msg = "There is already a Banner in this folder.  "
+           msg += "Please delete it before adding a new one. "
+           msg += "Use the Manage -> Manage menu to delete it. "
+           error =Error(title=msg, identifier = "Banner.validator")
+           error.args = [msg]
+           errors.append(error)
+        return errors        
+
+
+class SocialMediaImageValidator(BaseValidator):             
+    def socialMediaImageExists(self):
+        form = self.form
+        context = form.context
+        return 'SocialMediaImage' in context
+   
+    def validate(self, data):        
+        errors = Errors()
+        if self.socialMediaImageExists():
+           msg = "There is already a Social Media in this folder.  "
            msg += "Please delete it before adding a new one. "
            msg += "Use the Manage -> Manage menu to delete it. "
            error =Error(title=msg, identifier = "Banner.validator")

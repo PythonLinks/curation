@@ -23,6 +23,14 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
         LocationLeaf.__init__(self)
         HasMembers.__init__(self)
 
+    def postAddProcess(self,view = None):
+        breakpoint()
+        LocationLeaf.postAddProcess(self,view = view)
+        imageURL = view.jsonDict['introduction']['imageURL']
+        getImage(self.new, imageURL)
+        
+    
+        
     #BECAUSE WE DO NOT USE THE JSON FOR POLITICIANS.     
     def recalculateRootJSON(self):
         pass

@@ -13,8 +13,10 @@ from cromlech.browser.exceptions import HTTPFound
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
+
 from zopache.ttw.html import HTML
 from zopache.ttw.javascript import Javascript
+from zopache.crud.getimage import getImage
 from zopache.ttw.css import CSS
 from zopache.ttw.JSON import JSON
 from zopache.ttw.file  import File, Image, BTreeImage
@@ -101,7 +103,14 @@ class AddImageAction(AddFileAction):
     def message(self):    
         message(u"Image Uploaded")
 
-
+    def upload(self, formData):
+        if formData['imageURL']:
+            name = self.getName (formData)
+            context = self.form.context
+            getImage(context,formData['imageURL'],name)
+        else:
+            AddFileAction.upload(self,formData)        
+    
     def createFile(self,formData):
          self.nextView = '/manage'
          new = BTreeImage()
