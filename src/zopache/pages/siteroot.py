@@ -6,31 +6,30 @@ secondsInADay = 24*60*60
 
 class NewsMethods(object):
 
-    def headlines(self):
+    def headlines(self,daysArg = 2):
+        days = daysArg
         now = datetime.now().timestamp()
         articles = []
-        days = 2
         while len(articles) < 6:
             midnight = self.midnight(now)
             lastImportTime = midnight
-            approved = list(self.todaysCuratedArticles(midnight, days = days) )
+            approved = list(self.recentCuratedArticles(midnight, days = days) )
             articles += approved
             feedArticles = self.todaysFeedArticles(midnight)
             while len(articles) < 6:
-
                 try:
                    article = next(feedArticles)
                    lastImportTime = article.importTime
                    articles.append (article)
                 except StopIteration:
-                   if days == 2:
+                   if days == daysArg:
                       days = 0
                    else:
                        days = 1
                    midnight  -= secondsInADay
                    lastImportTime = midnight
                    now = midnight
-                   approved = list(self.todaysCuratedArticles(midnight) )
+                   approved = list(self.recentCuratedArticles(midnight) )
                    articles += approved
                    feedArticles = self.todaysFeedArticles(midnight)
             return lastImportTime,articles
@@ -79,7 +78,7 @@ class NewsMethods(object):
         result = islice(articles, limit)
         return result
 
-    def todaysCuratedArticles(self, endTime, days = 1):
+    def recentCuratedArticles(self, endTime, days = 1):
         beginTime = endTime - (days * secondsInADay)                                  
         articles = self.approvedArticles.itervalues(min = -endTime,
                                                 max = -beginTime)
