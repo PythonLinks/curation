@@ -69,7 +69,6 @@ class Add(Action, UniqueName, TransactionNote):
            url=self.newURL(baseURL)
            
         #Form Specific postAddProcessing
-
         if hasattr(form,'postAddProcess'):
                form.postAddProcess()
         elif hasattr(form.new,'postAddProcess'):

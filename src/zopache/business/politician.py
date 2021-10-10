@@ -11,7 +11,7 @@ from zopache.pages.interfaces import IPage
 from zopache.business.imaginarypage import ImaginaryPage
 from zopache.pages.page import Page
 from zopache.pages.location import LocationLeaf
-
+from zopache.crud.getimage import getImage
 @implementer (IPolitician)
 class Politician (ImaginaryPage,LocationLeaf,HasMembers):
     hidden = False
@@ -24,10 +24,9 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
         HasMembers.__init__(self)
 
     def postAddProcess(self,view = None):
-        breakpoint()
         LocationLeaf.postAddProcess(self,view = view)
-        imageURL = view.jsonDict['introduction']['imageURL']
-        getImage(self.new, imageURL)
+        imageURL = view.requestJsonDict['introduction']['logoURL']
+        getImage(self, imageURL)
         
     
         
