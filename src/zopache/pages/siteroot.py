@@ -6,7 +6,74 @@ secondsInADay = 24*60*60
 
 class NewsMethods(object):
 
-    def headlines(self,daysArg = 2):
+    def todaysFeedArticles(self,midnight):
+        return self.newestArticles.itervalues(min = - midnight,
+                                              max = -midnight + secondsInADay,
+                                                  excludemin = True)
+    def rawHeadlines(self):
+        articles = list (self.feedArticles())
+        lastImportTime = articles [-1].importTime
+        return lastImportTime,articles
+    
+    def moreFeedArticles(self,lastImportTime,howMany = 6):        
+        return self.feedArticles(lastImportTime,howMany = howMany)
+
+    def feedArticles(self,lastImportTime = None, howMany = 100):
+        if lastImportTime:
+            lastImportTime = - lastImportTime
+        articles = self.newestArticles.itervalues(min = lastImportTime,                                                 excludemin = True)
+        result = islice(articles, howMany)
+        return result
+
+        
+    #Check the rss feed does not break.
+    def curatedHeadlines(self,count = 10):
+        articles = list(islice(self.mergedApproved(),count))
+        lastImportTime = articles [-1].importTime
+        return lastImportTime, articles
+
+    def todaysApprovedArticles(self,midnight):     
+        return  self.approvedArticles.itervalues(min = -midnight,
+                                      max = -midnight + secondsInADay,
+                                      excludemin = True)                           
+    #GET MORE APPROVED ARTICLES AFTER THE LAST IMPORT TIME
+    def moreMergedApproved(self,lastImportTime,howMany = 6):
+        return islice(self.mergedApproved(lastImportTime = lastImportTime),
+                      howMany)
+
+    def mergedApproved(self, lastImportTime = None):
+        if lastImportTime:
+            lastImportTime = - lastImportTime        
+        articles = self.approvedArticles.itervalues(min = lastImportTime,
+                                                excludemin = True)
+        links = self.newestLinks.itervalues(min = lastImportTime,
+                                           excludemin = True)  
+        nextArticle =  next(articles)
+        nextLink = next(links)
+        articleTime = nextArticle.importTime
+        linkTime = nextLink.importTime
+        while (True):
+          if articleTime >= linkTime:
+            currentArticle = nextArticle 
+            nextArticle = next(articles)
+            articleTime = nextArticle.importTime
+            yield currentArticle
+          else:
+            currentLink = nextLink
+            nextLink = next(links)
+            linkTime = nextLink.importTime
+            yield currentLink
+
+
+    def midnight(self,time):
+       midnight = datetime.fromtimestamp(time)
+       midnight = midnight.replace(hour=0, minute=0, second=0, microsecond=0)
+       midnight = midnight.timestamp()
+       midnight = midnight + secondsInADay
+       return midnight
+    """
+    #AND HERE WE HAVE THE NO LONGER USED ALGORITHMS
+    #FOR SHOWING BOTH APPROVED AND NEW ARTICLES                                    def mixedHeadlines(self, daysArg = 2):
         days = daysArg
         now = datetime.now().timestamp()
         articles = []
@@ -34,13 +101,15 @@ class NewsMethods(object):
                    feedArticles = self.todaysFeedArticles(midnight)
             return lastImportTime,articles
 
-
-    def moreNews(self,lastImportTime,howMany = 6):        
+    #GET MORE APPROVED AND UNAPPROVED ARTICLES.
+    #APPROVED FOR TODAY, FOLLOWED BY ALL FOR TODAY. 
+    #STARTS WITH 2 DAYS OF APPROVED, 
+    def moreMixed(self,lastImportTime,howMany = 6):        
         articles = []
         midnight = self.midnight(lastImportTime)
         tonight = self.midnight(datetime.now().timestamp())
         while len(articles) < howMany:
-            more = list(self.feedArticles(lastImportTime,limit = howMany))
+            more = list(self.feedArticles(lastImportTime,howMany= howMany))
             for item in more:
               if len(articles) >= howMany:
                   break
@@ -54,65 +123,4 @@ class NewsMethods(object):
                           midnight))
                       articles = articles + approvedArticles
         return articles
-   
-    def midnight(self,time):
-       midnight = datetime.fromtimestamp(time)
-       midnight = midnight.replace(hour=0, minute=0, second=0, microsecond=0)
-       midnight = midnight.timestamp()
-       midnight = midnight + secondsInADay
-       return midnight
-   
-    def todaysApprovedArticles(self,midnight):     
-        return  self.approvedArticles.itervalues(min = -midnight,
-                                      max = -midnight + secondsInADay,
-                                      excludemin = True)                                      
-    def todaysFeedArticles(self,midnight):
-        return self.newestArticles.itervalues(min = - midnight,
-                                              max = -midnight + secondsInADay,
-                                              excludemin = True)
-        
-    def feedArticles(self,lastImportTime = None, limit = 100):
-        if lastImportTime:
-            lastImportTime = - lastImportTime
-        articles = self.newestArticles.itervalues(min = lastImportTime,                                                 excludemin = True)
-        result = islice(articles, limit)
-        return result
-
-    def recentCuratedArticles(self, endTime, days = 1):
-        beginTime = endTime - (days * secondsInADay)                                  
-        articles = self.approvedArticles.itervalues(min = -endTime,
-                                                max = -beginTime)
-        links = self.newestLinks.itervalues(min = -endTime,
-                                        max = -beginTime)
-        both = list(articles) + list (links)
-        both.sort(key=lambda x:-x.creationTime)
-        return both
-    
-    def mergedApproved(self,count):
-        return islice(self.mergedCore(),count)
-
-    #Maybe this next weird name can now be retired.
-    #Check he rss feed does not break. 
-    
-    def mergedApprovedDays(self, count = 10):
-        return islice(self.mergedCore(),count)
-    
-    def mergedCore(self):    
-        articles = self.approvedArticles.itervalues()
-        links = self.newestLinks.itervalues()
-        nextArticle =  next(articles)
-        nextLink = next(links)
-        articleTime = nextArticle.importTime
-        linkTime = nextLink.importTime
-        while (True):
-          if articleTime >= linkTime:
-            currentArticle = nextArticle 
-            nextArticle = next(articles)
-            articleTime = nextArticle.importTime
-            yield currentArticle
-          else:
-            currentLink = nextLink
-            nextLink = next(links)
-            linkTime = nextLink.importTime
-            yield currentLink
-    
+    """
