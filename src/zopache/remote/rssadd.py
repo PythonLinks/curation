@@ -13,7 +13,6 @@ from zopache.ttw.mail import Notify
 from BTrees.OOBTree import OOBTree
 from dolmen.container import IBTreeContainer
 from zopache.business.exists import Duplicate
-from zopache.remote.rsscategory import RSSCategory, IRSSCategory
 
 @view_component
 @name ('addRSS')
@@ -41,21 +40,6 @@ class AddRSS(AddByTitleForm,Notify):
 
 
 
-
-@view_component
-@name('addRSSCategory')
-@target(IView)
-@context(IPageBase)
-@implementer(ITreeSecurity)
-class AddRSSCategory(AddByTitleForm,Notify):
-     interface = IRSSCategory
-     title = "Add an RSS Category"
-     subTitle =""
-     count = 0
-     factory = RSSCategory
-     layoutName = "UserMenu"
-     dataValidators = [Duplicate]
-        
 @view_component
 @name('addJustRSS')
 @target(IView)

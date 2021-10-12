@@ -250,3 +250,5 @@ class IAddress(Interface):
 class IAddressMap(IMap,IAddress):
     pass
 
+class ICategory(IPage):
+    pass

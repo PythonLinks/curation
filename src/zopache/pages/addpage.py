@@ -149,3 +149,21 @@ class AddMap(AddAuthorizedPage):
 
 
     
+
+from zopache.pages.category import Category
+from zopache.pages.interfaces import ICategory,IPageBase
+
+@view_component
+@name('addCategory')
+@target(IView)
+@context(IPageBase)
+@implementer(ITreeSecurity)
+class AddRSSCategory(AddByTitleForm,Notify):
+     interface = ICategory
+     title = "Add aCategory"
+     subTitle =""
+     count = 0
+     factory = Category
+     layoutName = "UserMenu"
+     dataValidators = [Duplicate]
+        

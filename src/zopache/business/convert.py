@@ -1,12 +1,12 @@
-from zopache.pages.page import Page
+from zopache.pages.category import Category
 from zopache.business.interfaces import IOrganization
 
 class Convert(object):
-  newClass = Page
-    
+
   def convert(item):
-    new = Page()
+    new = Category()
     parent = item.parent
+    newName = item.name
     for attribute in [
                   'name',
                   'parent',
@@ -15,12 +15,12 @@ class Convert(object):
                   'source']:
         setattr(new,attribute,getattr(item,attribute))
 
-    for child in item.valuesAsList():
+    for child in item.allValuesAsList():
         childName = child.name
         del item[childName]
         new[childName] = child
 
-    newName = item.name    
+
     del item.parent[newName]
     parent[newName] = new
 

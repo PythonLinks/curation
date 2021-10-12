@@ -110,6 +110,15 @@ class Parents(object):
              item=item.__parent__
            return None     
 
+
+    def parentCalled(self,name):
+           item=self.context
+           while (item!=None):
+             if item.name == name:
+                   return item
+             item=item.__parent__
+           return None     
+   
     def parents(self, item=None):
         if item == None:
            item = self.context

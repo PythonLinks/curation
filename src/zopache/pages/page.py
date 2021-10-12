@@ -8,7 +8,7 @@ from pydoc import locate
 from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from zopache.pages.interfaces import (ITime,IContent,IPage ,
+from zopache.pages.interfaces import (ITime,IContent,IPage ,IPageBase, 
                                       IRootPage, ISiteRootPage, INews)
 from zopache.core.getroot import getSiteRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
@@ -103,7 +103,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def childCategories(self):
         result =[]
         for item in self.values():
-            if (IPage.providedBy (item) and item.webApproved):
+            if (IPageBase.providedBy (item) and item.webApproved):
                result.append (item)
         return result
 
