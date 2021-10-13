@@ -1,8 +1,11 @@
 from time import time
 from datetime import datetime
 from itertools import islice
+from zopache.application.mergeiterator import mergeiterator
 
 secondsInADay = 24*60*60
+def cmp(arg1,arg2):
+    return - arg1.importTime + arg2.importTime
 
 class NewsMethods(object):
 
@@ -48,22 +51,9 @@ class NewsMethods(object):
                                                 excludemin = True)
         links = self.newestLinks.itervalues(min = lastImportTime,
                                            excludemin = True)  
-        nextArticle =  next(articles)
-        nextLink = next(links)
-        articleTime = nextArticle.importTime
-        linkTime = nextLink.importTime
-        while (True):
-          if articleTime >= linkTime:
-            currentArticle = nextArticle 
-            nextArticle = next(articles)
-            articleTime = nextArticle.importTime
-            yield currentArticle
-          else:
-            currentLink = nextLink
-            nextLink = next(links)
-            linkTime = nextLink.importTime
-            yield currentLink
-
+        iterator =  mergeiterator(articles,links, cmp = cmp)
+        for item in iterator:
+            yield item
 
     def midnight(self,time):
        midnight = datetime.fromtimestamp(time)
