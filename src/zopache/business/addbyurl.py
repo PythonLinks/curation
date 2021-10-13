@@ -121,7 +121,14 @@ class AddOrganizationByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
         return response
 
 
-
+@view_component
+@name('addOnlineOrganizationByURL')
+@target(IView)
+@context(IPage)
+class AddOnlineOrganizationByURL(AddOrganizationByURL):
+    allowAnonymous = True
+    title = "Add an Online Organization By URL"
+    addSlug = 'addOnline Organization'
 
 
     

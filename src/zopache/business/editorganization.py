@@ -16,7 +16,10 @@ class OnlineSchema(object):
            return result 
         schema =  self.template[self.schemaName]
         result = schema.getAsDict()
-        introduction = result ["properties"]["introduction"]["properties"]
+
+        introduction = result ["properties"]["introduction"]
+        introduction ["required"] = ["focus","logoURL"] 
+        introduction = introduction ["properties"]
         del introduction["latitude"]
         del introduction["longitude"]
         del introduction["address"]        
@@ -62,7 +65,7 @@ class AddOrganization(AddJson):
         #return result
     
 @view_component
-@name('addOnline Organization')
+@name('addOnlineOrganization')
 @target(IView)
 @context(IPageBase)
 class AddOnlineOrganization (OnlineSchema,AddOrganization):

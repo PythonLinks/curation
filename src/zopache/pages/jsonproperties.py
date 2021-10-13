@@ -27,9 +27,12 @@ class BasicProperties(object):
 
 #NOW THE SOCIAL MEDIA LINKS   
 class SocialProperties(BasicProperties):
-    @property
-    def twitterId(self):
+    def getTwitterId(self):
         return self.getConnect("twitterId")
+
+    def setTwitterId(self,id):
+        self.json["connect"]["twitterId"] = id    
+    twitterId = property (getTwitterId,setTwitterId)
     
     @property
     def facebookURL(self):
@@ -79,8 +82,27 @@ class SocialProperties(BasicProperties):
 
     def getConnect(self,arg):
         return self.getJsonValue('connect',arg)
-    
 
+    @property 
+    def tiktokId(self):
+        return self.getConnect("tiktokId")
+
+    @property 
+    def mastodonId(self):
+        return self.getConnect("mastodonId")
+
+    def mastodonParts(self):
+        id = self.getConnect("mastodonId")
+        parts = id.split('@')
+        if len(id) == 2:
+           return parts 
+        else:
+            return ("","")
+
+    @property 
+    def discordURL(self):
+        return self.getConnect("discordURL")
+    
 class OnlineOrganizationProperties(SocialProperties):
     def getOrganizaiton(self,arg):
         return self.getJsonValue('organization',arg)    
