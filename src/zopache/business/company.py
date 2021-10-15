@@ -44,7 +44,7 @@ class Company  (GeoBase,LocationContainer):
     clientClass = "category"
 
 @implementer (IOnlineOrganization)
-class OnlineOrganization  (Base,HasMembers,OnlineOrganizationProperties,Convert):        
+class OnlineOrganization  (Base,HasMembers,OnlineOrganizationProperties):   
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True

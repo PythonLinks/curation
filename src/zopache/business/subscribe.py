@@ -87,8 +87,7 @@ class HasMembers(object):
         total += len(self.listFutureEvents())
         return total
         
-    
-
+    """
     def getTitle(self):
          if self.hidden:
             return "Hidden"
@@ -97,7 +96,8 @@ class HasMembers(object):
     def setTitle(self,title):
          self.title = title
          return self.title
-     
+    """
+    
 class MemberForms(Form, Notify):
     def __init__(self,context,request):
         Form.__init__(self,context,request)
