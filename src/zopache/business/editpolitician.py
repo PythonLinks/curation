@@ -6,7 +6,6 @@ from zopache.business.editjsonschema import AddJson, EditJson
 from zopache.business.politician import Politician    
 from zopache.business.interfaces import IPolitician
 from zopache.core.interfaces import ITreeSecurity
-from zopache.business.interfaces import IMapOrganization
 from zopache.pages.interfaces import IPage
 
 class PoliticianBase(object):
@@ -85,17 +84,6 @@ class EditPolitician (PoliticianBase,EditJson):
     subTitle = 'Using JSON Schema.'
     schemaName = "PoliticianSchema"
 
-
-        
-@form_component
-@name ('edit')
-@context(IMapOrganization)
-@permissions('NRCV')
-class EditVotingSchema(EditJson):
-    title = 'Edit the NRCV Data.'
-    subTitle = 'Using JSON Schema.'
-    schemaName = "VotingSchema"    
-    
 @form_component
 @name ('aceedit')
 @context(IPolitician)

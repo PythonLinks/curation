@@ -6,8 +6,8 @@ from zopache.business.interfaces import IFollow
 from zopache.business.interfaces import (ICompany, IMap,
                                          IOrganization,
                                          IOnlineOrganization,
-                                         ICompanyBase,
-                                         IMapOrganization)
+                                         ICompanyBase)
+                                         
 from zopache.business.interfaces import IPolitician
 from zopache.pages.location import LocationLeaf
 from zopache.pages.page import Page
@@ -77,7 +77,7 @@ class Organization  (
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
-from zopache.business.interfaces import IMapOrganization, IEndorsingOrganization
+from zopache.business.imaporganization import IMapOrganization, IEndorsingOrganization
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
                       MapBase,
@@ -119,7 +119,6 @@ class MapOrganization(ImaginaryPage,
         return result
     
 from zopache.core.getroot import getSiteRoot
-from zopache.business.interfaces import IEndorsingOrganization
 @implementer(IEndorsingOrganization)    
 class EndorsingOrganization(MapBase,Organization):
     interface = IEndorsingOrganization

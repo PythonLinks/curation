@@ -1,7 +1,7 @@
 from zope import schema
 
 from zope.interface import Interface
-
+from zopache.pages.interfaces import IMap as IMapBase
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
@@ -16,6 +16,7 @@ from z3c.schema.email import RFC822MailAddress as Email
 
 from zopache.pages.interfaces import IPage, IPageBase, ITime, ILocation
 from zopache.business.ifollow import IFollow
+
 
 class IClass(Interface):
     json= schema.Text(
@@ -279,64 +280,14 @@ class ISocialMedia(Interface):
 class IOnlineOrganization(IPageBase,IFollow):
      pass          
 
-class IOrganization(
+class IOrganizationBase(Interface):
+    pass
+
+class IOrganization(IOrganizationBase,
                 ILocationContainer,IPageBase,IFollow        
                     ):
      pass
 
-from zopache.pages.interfaces import IMap as IMapBase
-class IMap (IMapBase,IFollow):
-    showCities = schema.Bool(
-	    title = "Show Cities?",
-	    description = "Should the table of companies show the city name?",           
-	    required = False,
-	    default = False)   
-
-    showChildren = schema.Bool(
-	    title = "Show Children?",
-	    description = "Should it show the objects in the children?",           
-	    required = False,
-	    default = False)   
-    
-class IMapOrganizationBase(IOrganization):
-    lattitude = schema.Float(
-        title = u'Lattitude',
-        description = u'Lattitude',
-        min=-90.,
-        max=90.,
-        default = 51.509865,
-        required = True,
-        )
-
-    longitude = schema.Float(
-        title = u'Longitude',
-        description = u'Longitude ',
-        min=-180.,
-        max=180.,
-        default = 0.,
-        required = True,
-    )
-
-    zoomLevel = schema.Float(
-        title = u'Google Maps Zoom Level',
-        description = u'Google Maps Zoom Level',
-        min=0.,
-        max=22.,
-        default = 5., 
-        required = True,
-    )
-    
-    showChildren = schema.Bool(
-	    title = "Show Children?",
-	    description = "Should it show the objects in the children?",    
-	    required = False,
-	    default = True)
-    
-class IMapOrganization(ILocation,IMapOrganizationBase,IMapBase):    
-      pass
-
-class IEndorsingOrganization(IMapOrganization,IMap):
-       pass
 
 class IMeetup (IPage,IFollow):
     title = schema.TextLine(
@@ -388,3 +339,15 @@ class IMeetup (IPage,IFollow):
         missing_value = ''
     )    
 
+class IMap (IMapBase,IFollow):
+    showCities = schema.Bool(
+	    title = "Show Cities?",
+	    description = "Should the table of companies show the city name?",           
+	    required = False,
+	    default = False)   
+
+    showChildren = schema.Bool(
+	    title = "Show Children?",
+	    description = "Should it show the objects in the children?",           
+	    required = False,
+	    default = False)   

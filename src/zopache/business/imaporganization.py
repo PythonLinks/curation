@@ -3,12 +3,17 @@ from zope.schema.vocabulary import SimpleVocabulary
 from zope.interface import Interface
 from zope.interface import directlyProvides
 from zope.schema.interfaces import IContextSourceBinder
+from zopache.business.interfaces import IMap
 
 from zopache.application.choices import fromDict
 from zopache.ttw.acquisition import ParentalAcquire
 from zopache.ttw.treewidget import TreeField
 from zopache.application.choices import fromList
-
+from zopache.business.ifollow import IFollow
+from zopache.pages.interfaces import IMap as IMapBase
+from zopache.pages.interfaces  import (
+                                       ILocationContainer,
+                                       ILocationLeaf)
 def possibleFocus (context):
     return fromDict(getDict(context))
 
@@ -21,7 +26,7 @@ def getDict(context):
 
 directlyProvides(possibleFocus, IContextSourceBinder)
 
-class IOrganizationBase (Interface):
+class IMapOrganizationBase (Interface):
     title = schema.TextLine(
         title = 'Organization Name',
         description = u'What is this organization called?',
@@ -98,6 +103,50 @@ class IOrganizationBase (Interface):
 
 
 
+    lattitude = schema.Float(
+        title = u'Lattitude',
+        description = u'Lattitude',
+        min=-90.,
+        max=90.,
+        default = 51.509865,
+        required = True,
+        )
+
+    longitude = schema.Float(
+        title = u'Longitude',
+        description = u'Longitude ',
+        min=-180.,
+        max=180.,
+        default = 0.,
+        required = True,
+    )
+
+    zoomLevel = schema.Float(
+        title = u'Google Maps Zoom Level',
+        description = u'Google Maps Zoom Level',
+        min=0.,
+        max=22.,
+        default = 5., 
+        required = True,
+    )
+    
+    showChildren = schema.Bool(
+	    title = "Show Children?",
+	    description = "Should it show the objects in the children?",    
+	    required = False,
+	    default = True)
+
+
+from zopache.business.interfaces import  ISocialMedia,IOrganizationBase
+from zopache.pages.interfaces import ILocationOrMap
+    
+class IMapOrganization(IOrganizationBase,
+            IMapBase,ILocationContainer,
+            IMapOrganizationBase,ISocialMedia,ILocationOrMap):    
+      pass
+
+class IEndorsingOrganization(IMapOrganization,IMap):
+       pass
 
 
 

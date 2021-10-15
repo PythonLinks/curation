@@ -9,9 +9,8 @@ from zopache.crud.forms import AddByTitleForm
 from zopache.business.interfaces import (IMap,
                                          IMapBase,
                                          ICompany,
-                                         IMapOrganization,
                                          ICity)
-
+from zopache.business.imaporganization import IMapOrganization
 from zopache.business.company import MapOrganization
 
 from zopache.business.interfaces import  IOnlineEvent, IEvent

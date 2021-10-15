@@ -115,7 +115,7 @@ class Index(View):
         return self.context.source
 
 
-from zopache.business.interfaces import IMapOrganization
+from zopache.business.imaporganization import IMapOrganization
 from zopache.business.getjson import getStateJson
 
 @view_component
