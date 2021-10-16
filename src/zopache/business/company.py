@@ -33,9 +33,13 @@ class Base(Page):
         
     #NOT SURE WHY THIS HAS TO Be here.
     #REALLY IT SHOULD JUST BE IN ONLINEJSONPROPERTIES
-    @property
-    def title(self):
+    def getTitle(self):
         return self.json['content'][0]["title"]
+
+    def setTitle(self,value):
+        self.json['content'][0]["title"] = value
+        
+    title = property(getTitle,setTitle)    
     
     def getSpecialization(self):
         if hasattr(self,'specialization') and self.specialization != '':
