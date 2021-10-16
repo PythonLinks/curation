@@ -11,10 +11,15 @@ class BasicProperties(object):
     title = property(getTitle,setTitle)    
 
     
-    @property
-    def description(self):
+
+    def getDescription(self):
         return self.json['content'][0].get("description","")
 
+    def setDescription(self,value):
+        self.json['content'][0]["description"] = value
+
+    description = property(getDescription, setDescription)
+        
     @property    
     def source(self):
         return self.json['content'][0].get("source","")
