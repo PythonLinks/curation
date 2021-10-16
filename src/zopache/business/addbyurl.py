@@ -128,7 +128,7 @@ class AddOrganizationByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
 class AddOnlineOrganizationByURL(AddOrganizationByURL):
     allowAnonymous = True
     title = "Add an Online Organization By URL"
-    addSlug = 'addOnline Organization'
+    addSlug = 'addOnlineOrganization'
 
 
     

@@ -30,9 +30,9 @@ table-hover table-condensed" summary="Content listing"
      <tr>
       <th><a onClick="checkAll()">Check<br>All</a></th>
       <th>Icon</th>
+      <th> Class->Manage </th>
       <th> Name->Edit </th>
       <th> Title->View </th>
-      <th> Class->Manage </th>
       <th> Size </th>
       <th> Age </th>
      </tr>
@@ -54,6 +54,16 @@ table-hover table-condensed" summary="Content listing"
 																		                      <td>
            ${structure: view.iconHTML(item.object())}
         </td>
+	  <td>
+         <span tal:switch="item.isBTreeContainer()">
+	 <a href = " ${view.url(item.object())}/manage"
+         tal:case= "True">${item.contextClassName()}</a>
+	 <span tal:case= "False">
+	 ${item.contextClassName()}
+	 </span>
+	 </span>
+	 </td>
+	
 	<td>
 	<textarea  style = "display: none;"
 	id = "${repeat.item.number}-editName"
@@ -80,15 +90,6 @@ table-hover table-condensed" summary="Content listing"
 	tal:content="item.title()"
 	>&nbsp;&nbsp;&nbsp;&nbsp;</a>
 	  </td>
-	  <td>
-         <span tal:switch="item.isBTreeContainer()">
-	 <a href = " ${view.url(item.object())}/manage"
-         tal:case= "True">${item.contextClassName()}</a>
-	 <span tal:case= "False">
-	 ${item.contextClassName()}
-	 </span>
-	 </span>
-	 </td>
 
             <td><span tal:content="item.size()">
 	                          &nbsp;</span></td>

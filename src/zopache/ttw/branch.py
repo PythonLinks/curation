@@ -158,8 +158,8 @@ class Branch(SimpleBranch):
         return False
 
     def indexTree(self):
-        if hasattr(self,"phoneTreeByTwitterId"):
-            del self.phoneTreeByTwitterId
+
+        
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
         self.politicians = OOBTree()
@@ -179,7 +179,7 @@ class Branch(SimpleBranch):
             return
 
         for item in branch.values():
-            
+            print ( itemType.providedBy(item),item.__name__)            
             if itemType.providedBy(item):
                 self.indexItem(item, itemType = itemType)           
                 if IBTreeContainer.providedBy(item):    

@@ -276,14 +276,14 @@ class ISocialMedia(Interface):
         required = False,
         missing_value = '',
     )
+
+class IOrganizationBase(IBTreeContainer,ICanonical):
+    pass
        
-class IOnlineOrganization(IPageBase,IFollow):
+class IOnlineOrganization(IPageBase,IClass,IOrganizationBase,IFollow):
      pass          
 
-class IOrganizationBase(Interface):
-    pass
-
-class IOrganization(IOrganizationBase,
+class IOrganization(IOrganizationBase, IClass,
                 ILocationContainer,IPageBase,IFollow        
                     ):
      pass

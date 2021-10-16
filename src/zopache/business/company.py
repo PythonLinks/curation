@@ -31,6 +31,12 @@ class Base(Page):
         Page.__init__(self)
         HasMembers.__init__(self)
         
+    #NOT SURE WHY THIS HAS TO Be here.
+    #REALLY IT SHOULD JUST BE IN ONLINEJSONPROPERTIES
+    @property
+    def title(self):
+        return self.json['content'][0]["title"]
+    
     def getSpecialization(self):
         if hasattr(self,'specialization') and self.specialization != '':
            return self.specialization
@@ -44,7 +50,7 @@ class Company  (GeoBase,LocationContainer):
     clientClass = "category"
 
 @implementer (IOnlineOrganization)
-class OnlineOrganization  (Base,HasMembers,OnlineOrganizationProperties):   
+class OnlineOrganization  (Base,OnlineOrganizationProperties,HasMembers):   
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True
@@ -57,8 +63,7 @@ class Organization  (
                      LocalOrganizationProperties,
                      GeoBase,
                      HasMembers,
-                     LocationLeaf,
-                              Convert):
+                     LocationLeaf):
     
     interface = IOrganization
     webClass = "Organization"
