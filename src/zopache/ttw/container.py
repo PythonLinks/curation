@@ -17,7 +17,7 @@ from zopache.ttw import actions as ttwactions
 from zopache.ttw.html import HTML
 from .interfaces import IHTMLContainer, IAceContainer
 from zopache.ttw.html import TrustedHTML
-from zopache.crud.forms import AddForm
+from zopache.crud.forms import TreeSecurityAddForm
 from zopache.ttw.interfaces import IWeb    
 from zopache.core.interfaces import ITreeSecurity
 from zopache.ttw.addeditforms import AceAddForm
@@ -40,7 +40,7 @@ class AceContainer(TrustedHTML,Container):
 @name (u'addContainer')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class ContainerAddForm(AddForm):
+class ContainerAddForm(TreeSecurityAddForm):
     subTitle = 'Add a WYSIWYG HTML Folder'
     interface = Interface
     ignoreContent = True

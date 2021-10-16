@@ -16,7 +16,7 @@ from zope import interface
 from zope import schema
 from zope.schema.interfaces import IField
 from zope.interface import Interface
-from zopache.crud.forms import AddForm, BaseEditForm, EditDemoForm
+from zopache.crud.forms import  BaseEditForm, EditDemoForm
 from dolmen.forms.base import action, name, context, form_component
 from crom import target, order
 from cromlech.browser.directives import title
@@ -57,7 +57,7 @@ class CkScripts(object):
     def  headerScripts(self):
         result = """
 <script src="https://cdn.ckeditor.com/4.4.4/standard/ckeditor.js"></script> 
-        """ + AddForm.headerScripts(self)
+        """ + TreeSecurityAddForm.headerScripts(self)
         return result
   
     def  footerScripts(self):
@@ -97,7 +97,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 @name ('addHTML')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddCkHTML(AddCkHTMLBase,AddForm):
+class AddCkHTML(AddCkHTMLBase,TreeSecurityAddForm):
     pass
 
 
