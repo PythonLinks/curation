@@ -70,7 +70,7 @@ class SocialProperties(BasicProperties):
     
     @property
     def youTubeChannelURL(self):
-        return self.getConnect("youTubeURL")
+        return self.getConnect("youTubeChannelURL")
     
     @property
     def youTubeVideoURL(self):

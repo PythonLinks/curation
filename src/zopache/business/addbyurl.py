@@ -70,7 +70,6 @@ class AddRssByURLForm(AddByURLForm):
             return Errors().append(error)
         
         feed = feed.feed
-        breakpoint()
         response = {}
         response ['form.field.rssURL'] = rssURL
         if 'link' in feed:
