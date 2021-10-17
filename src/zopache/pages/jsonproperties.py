@@ -45,31 +45,17 @@ class SocialProperties(BasicProperties):
     twitterId = property (getTwitterId,setTwitterId)
     
     @property
-    def facebookURL(self):
-        return self.getConnect("facebookURL")
+    def facebookPage(self):
+        return self.getConnect("facebookPage")
 
-    #THIS NEEDS TO BE RETIRED EVENTUALLY
-    @property
-    def facebookId(self):
-        return self.getConnect("facebookURL")    
-
-    #THIS ONE NEEDS TO BE RETIRED EVENTUALLY
     @property
     def facebookGroup(self):
-        return self.getConnect("facebookGroupURL")
+        return self.getConnect("facebookGroup")    
 
     @property
-    def facebookGroupURL(self):
-        return self.getConnect("facebookGroupURL")    
-
-    @property
-    def facebookURL(self):
-        return self.getConnect("facebookURL")
-
-    @property
-    def instagramURL(self):
-        return self.getConnect("instagramURL")
-
+    def instagramId(self):
+        return self.getConnect("instagramId")
+    
     @property
     def phone(self):
         return self.getConnect("phone")
@@ -83,8 +69,12 @@ class SocialProperties(BasicProperties):
         return self.getConnect("mastadonURL")
     
     @property
-    def youTubeURL(self):
-        return self.getConnect("youTubeURL")    
+    def youTubeChannelURL(self):
+        return self.getConnect("youTubeURL")
+    
+    @property
+    def youTubeVideoURL(self):
+        return self.getConnect("youTubeVideoURL")        
 
     @property 
     def remoteURL(self):

@@ -30,9 +30,9 @@ table-hover table-condensed" summary="Content listing"
      <tr>
       <th><a onClick="checkAll()">Check<br>All</a></th>
       <th>Icon</th>
-      <th> Class->Manage </th>
-      <th> Name->Edit </th>
-      <th> Title->View </th>
+      <th> Name->Manage </th>
+      <th> Title->Edit </th>
+      <th> Class->View </th>
       <th> Size </th>
       <th> Age </th>
      </tr>
@@ -52,44 +52,45 @@ table-hover table-condensed" summary="Content listing"
 
         </td>
 																		                      <td>
-           ${structure: view.iconHTML(item.object())}
+           ${structure: view.iconHTML(item.context)}
         </td>
-	  <td>
-         <span tal:switch="item.isBTreeContainer()">
-	 <a href = " ${view.url(item.object())}/manage"
-         tal:case= "True">${item.contextClassName()}</a>
-	 <span tal:case= "False">
-	 ${item.contextClassName()}
-	 </span>
-	 </span>
-	 </td>
 	
 	<td>
 	<textarea  style = "display: none;"
 	id = "${repeat.item.number}-editName"
-        rows ="${3 if item.object.__class__.__name__=='ConferenceVideo' else '1'}"
         name= "newNameValue_list"
         tal:content="item.id()">
         </textarea>
 
-        <a href="#"
-        id = "${repeat.item.number}-showName"
-	tal:attributes="href view.getManageURL(item.object())"
-	tal:content="item.id()"
-	>foo</a>
+         <span tal:switch="item.isBTreeContainer()"
+	 id = "${repeat.item.number}-showName">
+	 <span tal:case = "True">
+	 <a href = " ${view.url(item.context)}/manage">
+	   ${item.context.__name__}</a>
+	 </span>
+	 <span tal:case= "False">
+	 ${item.context.__name__}
+	 </span>
+	 </span>
+
+
 	 <td>
+	 
 	 <textarea  style = "display: none;"
 	 id = "${repeat.item.number}-editTitle"
-	 rows ="${3 if item.object.__class__.__name__=='ConferenceVideo' else '1'}"
+	 rows ="${3 if item.context.__class__.__name__=='ConferenceVideo' else '1'}"
 	 name= "newTitleValue_list"
-	 tal:content="item.title()">
+	 tal:content="item.title() ">
 	 </textarea>
         <a id = "${repeat.item.number}-showTitle"
-	tal:attributes="href
-         string:${view.url(item.object())}"
-	tal:content="item.title()"
-	>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+         href = "${view.getLongURL(item.context) + item.editTag()}"
+	>${item.title() or '---' }</a>
 	  </td>
+	  
+	  <td>
+	 <a href = " ${view.url(item.context)}">
+	   ${item.contextClassName()}</a>
+	 </td>
 
             <td><span tal:content="item.size()">
 	                          &nbsp;</span></td>

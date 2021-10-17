@@ -10,7 +10,8 @@ from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
 from zopache.zmi.interfaces import IObjectRetitler
 from zopache.zmi.cutcopypaste import BaseClass
 from dolmen.container import IBTreeContainer
-
+from zopache.pages.interfaces import IPageBase
+from zopache.ttw.interfaces import IAceHTML
 
 #GENERIC RETITLER
 #IF STATEMENT FOR CONFERENCE VIDEOS
@@ -58,7 +59,21 @@ class ZMIAdapter(object):
           self.context = obj
           self.view = view
           self.request = view.request
-          
+
+      def editTag(self):
+          edits = {
+              "InternalPrincipal":"permissions",
+              "PrincipalFolder":"index"
+          }
+          className =  self.context.__class__.__name__
+          if className in edits:
+              return "/" + edits [className]
+          if IPageBase.providedBy(self.context):
+            return "/ckedit"
+          if IAceHTML.providedBy(self.context):
+            return "/aceedit"
+          return "/edit"
+      
       def isBTreeContainer(self):
           item = self.context 
           return  IBTreeContainer.providedBy(item)
@@ -117,7 +132,7 @@ class ZMIAdapter(object):
       def size (self):
             if IBTreeContainer.providedBy(self.context):
                 return len(self.context)
-            return 0
+            return ""
 
       def modified (self):
           if self.context._p_mtime != None:

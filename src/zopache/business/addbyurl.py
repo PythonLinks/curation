@@ -59,6 +59,7 @@ import feedparser
 class AddRssByURLForm(AddByURLForm):
     addSlug = "addRSS"
     title = "Add an RSS Feed"
+    subTitle = "Please enter the RSS feed URL."
     datavalidators = []
 
     def processURL(self,rssURL):
@@ -69,6 +70,7 @@ class AddRssByURLForm(AddByURLForm):
             return Errors().append(error)
         
         feed = feed.feed
+        breakpoint()
         response = {}
         response ['form.field.rssURL'] = rssURL
         if 'link' in feed:
