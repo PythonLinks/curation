@@ -339,7 +339,7 @@ class IMeetup (IPage,IFollow):
         missing_value = ''
     )    
 
-class IMap (IMapBase,IFollow):
+class IMap (IPage,IMapBase,IFollow):
     showCities = schema.Bool(
 	    title = "Show Cities?",
 	    description = "Should the table of companies show the city name?",           

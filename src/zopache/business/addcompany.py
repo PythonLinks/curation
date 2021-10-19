@@ -18,7 +18,7 @@ from zopache.business.company import Company
 from zopache.business.map import Map
 from zopache.pages.addpage import AddAuthorizedPage, AddPage
 from zopache.pages.addanonymous import AddAnonymousPage
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage,IPageBase
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
 from zopache.pages.interfaces import  INews
@@ -47,7 +47,7 @@ class AddAll(AddAnonymousPage,GeoCodeForm):
 @view_component
 @name('addCompany')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 class AddCompany(AddAll):
     interface = ICompany
     label="Add a Company"
@@ -59,7 +59,7 @@ from zopache.business.region import Region
 @view_component
 @name('addRegion')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 class AddRegion(AddAll):
     interface = IRegion
     factory = Region
@@ -72,7 +72,7 @@ from zopache.business.iphonetree import ISocialNode
 @view_component
 @name('addSocialNode')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 class AddPhoneTree(AddAll):
     interface = ISocialNode
     factory = SocialNode
@@ -104,7 +104,7 @@ class AddCity(AddAuthorizedPage, GeoCodeForm):
 @view_component
 @name('addDriver')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 class AddDriver(AddAnonymousPage,GeoCodeForm):
     interface = IAddDriver
     factory = Driver
@@ -119,7 +119,7 @@ class AddDriver(AddAnonymousPage,GeoCodeForm):
 @name('addCompanyMap')
 @target(IView)
 @permissions('Manage')
-@context(IPage)    
+@context(IPageBase)    
 class AddMap(AddAuthorizedPage):
     subTitle = 'Add a map'
     interface = IMap
@@ -130,7 +130,7 @@ class AddMap(AddAuthorizedPage):
 @view_component
 @name('addMapOrganization')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class AddMapOrganization(AddAuthorizedPage):
     title = "Add an Organization with a Map"

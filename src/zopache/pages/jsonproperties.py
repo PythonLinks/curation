@@ -4,7 +4,7 @@
 class BasicProperties(object):
     def getTitle(self):
         return self.json['content'][0]["title"]
-
+       
     def setTitle(self,value):
         self.json['content'][0]["title"] = value
         

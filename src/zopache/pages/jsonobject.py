@@ -1,5 +1,5 @@
 #JSON VIEWS ON OBJECTS
-from zopache.pages.interfaces import IJSONInclude,IPage
+from zopache.pages.interfaces import IJSONInclude, IPageBase
 from zopache.core.viewdecorators import *
 import datetime
 from dolmen.container import IBTreeContainer
@@ -241,7 +241,7 @@ class MYJSON(View):
 @view_component
 @name('categories.json')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class JSONCategories(View):
     responseFactory = Response
     make_response = make_json_response
@@ -251,7 +251,7 @@ class JSONCategories(View):
 @view_component
 @name('allCategories')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class AllCategories(View):
     responseFactory = Response
     make_response = make_json_response

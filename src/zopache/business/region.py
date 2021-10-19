@@ -2,7 +2,7 @@ from zope.interface import implementer
 
 from zopache.core.relatives import Parents
 from zopache.business.interfaces import IPolitician
-from zopache.business.interfaces import IOrganizationBase
+from zopache.business.interfaces import IOrganizationBase,IOnlineOrganization
 from zopache.pages.location import LocationContainer
 from zopache.business.interfaces import IRegion
 from zopache.business.interfaces import IEvent
@@ -189,7 +189,9 @@ class RegionBase(LocationContainer):
                 continue
             if not IOrganizationBase.providedBy(item):
                 continue
-
+            
+            if IOnlineOrganization.providedBy(item):
+                continue
             if not item.webApproved:
                 continue
 

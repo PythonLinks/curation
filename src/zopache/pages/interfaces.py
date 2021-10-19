@@ -177,7 +177,7 @@ class INews (IPage,IRecent):
 class ISiteRoot(IBranch,IPublicationRoot,IPage):
     pass
 
-class IRootPage(ISiteRoot,IZodbRoot,IPageBase):
+class IRootPage(ISiteRoot,IZodbRoot,IPageBase,IBTreeContainer):
     pass
 
 class ISiteRootPage(ISiteRoot):
