@@ -9,12 +9,14 @@ from dolmen.forms.base import Fields
 from zopache.pages.interfaces import (IMap,
                                       ILocation,
                                       IPage,
+                                      IPin,
+                                      IPageBase,
                                       ISiteRootPage,
                                       IProxyPage,
                                       IAddLink,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, SiteRootPage, ActionNetwork
-from zopache.pages.location import SimpleMap, Location
+from zopache.pages.location import SimpleMap, Location, Pin
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
@@ -124,7 +126,7 @@ class AddLink(AddAuthorizedPage):
 @view_component
 @name('addLocation')
 @target(IView)
-@context(IMap)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class AddLocation(AddAuthorizedPage):
     interface = ILocation
@@ -132,7 +134,18 @@ class AddLocation(AddAuthorizedPage):
     subTitle = 'These points show up on parent maps. '
     factory = Location
 
-    
+# PIN
+@view_component
+@name('addPin')
+@target(IView)
+@context(IPageBase)
+@implementer(ITreeSecurity)
+class AddPin(AddAuthorizedPage):
+    interface = IPin
+    label="Add a Pin"
+    subTitle = 'These points show up on parent maps. '
+    factory = Pin
+
 #MAP
 @view_component
 @name('addSimpleMap')

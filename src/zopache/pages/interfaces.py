@@ -191,20 +191,6 @@ class INotPage (Interface):
 class ILocationOrMap(Interface):    
     pass
 
-#This is the legacy Location,
-#Used in pages.location.Location
-#So it has to stay
-class ILocation(ILocationOrMap,IRecent,ICanonical,IPage):
-    pass
-
-#For Politicians
-class ILocationLeaf(ILocation):
-    pass
-
-#For State Party Organizations
-class ILocationContainer(ILocation):
-    pass
-
 class ILatLng(Interface):
     lattitude = schema.Float(
         title = u'Lattitude',
@@ -223,6 +209,23 @@ class ILatLng(Interface):
         default = 0.,
         required = True,
     )
+
+#This is the legacy Location,
+#Used in pages.location.Location
+#So it has to stay
+class ILocation(ILocationOrMap,IRecent,ICanonical,IPage):
+    pass
+
+#For Politicians
+class ILocationLeaf(ILocation):
+    pass
+
+#For State Party Organizations
+class ILocationContainer(ILocation):
+    pass
+
+class IPin(ILocationContainer,ILatLng):
+    pass
 
 class IMap(ILocationOrMap,ILatLng):
     zoomLevel = schema.Float(

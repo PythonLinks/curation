@@ -3,6 +3,7 @@ from zopache.pages.geo import geoCache
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.pages.page import PageBase
 from zopache.pages.interfaces  import (IPage,
+                                       IPin,
                                        IRootPage,
                                        ILocationContainer,
                                        ILocationOrMap,
@@ -227,4 +228,9 @@ class MapBase(LocationContainer):
 #Which was also their Marker
 @implementer (IMap)
 class SimpleMap(MapBase):        
+    pass
+
+
+@implementer(IPin)
+class Pin(LocationContainer):
     pass

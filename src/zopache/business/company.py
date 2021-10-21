@@ -30,13 +30,11 @@ class Base(Page):
     def __init__(self):
         Page.__init__(self)
         HasMembers.__init__(self)
-        
-    
+            
     def getSpecialization(self):
         if hasattr(self,'specialization') and self.specialization != '':
            return self.specialization
         return self.description [0:20]
-
 
     
 @implementer (ICompany)
@@ -49,6 +47,7 @@ class OnlineOrganization  (OnlineOrganizationProperties,Base,HasMembers):
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True
+    
     def getCompaniesRecursively(self,result,showChildren = False):
         return [self]
     
