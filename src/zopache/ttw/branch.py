@@ -179,7 +179,6 @@ class Branch(SimpleBranch):
             return
 
         for item in branch.values():
-            print ( itemType.providedBy(item),item.__name__)            
             if itemType.providedBy(item):
                 self.indexItem(item, itemType = itemType)           
                 if IBTreeContainer.providedBy(item):    
