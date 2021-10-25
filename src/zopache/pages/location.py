@@ -98,7 +98,6 @@ class LocationContainer (MapOrLocation):
     def getCompaniesRecursively(self,result, showChildren = None):
         values = self.values()
         for item in values:
-
             #FOR APPROVED ORGANIZATIONS
             #FOR POLITICIANS, DO IT FIRST
             if not ILocationOrMap.providedBy(item):
@@ -233,4 +232,7 @@ class SimpleMap(MapBase):
 
 @implementer(IPin)
 class Pin(LocationContainer):
-    pass
+    showChildren = False
+    remoteURL = ""
+    def hasFutureEvent(self):
+        return False

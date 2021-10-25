@@ -21,7 +21,7 @@ class RSSArticle(Page,Voteable):
     webClass = "RSSLink"
     emailApproved = True
     publicationApproved = False
-
+    tags = {}
     def __init__(self):
          #Simpler to not call page initialization.
          #HOPE I DO NOT MISS ANYTHING

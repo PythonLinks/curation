@@ -72,9 +72,10 @@ class RSS(Link,UniqueName):
    
     # FOR A NEW RSS FEED       
     def createOneArticle(self,article,view,importTime):
+       breakpoint() 
        new = RSSArticle()
        new.articleURL = article.link
-       
+       new.tags = article.tags
        unescaped = unescape (article.title)
        result  = self.parseHTML(unescaped)
        new.title = result

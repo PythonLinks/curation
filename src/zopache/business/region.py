@@ -173,10 +173,7 @@ class RegionBase(LocationContainer):
         #byClass = list(map(lambda x: x.sortByClass(), parents))
         #politicians = byClass[0]['Politician']
 
-
     def mapPoints(self):
-        result = []
-
         politicians = self.getMapPoliticians()
         return politicians  +  self.getOrganizations()
     
@@ -203,8 +200,7 @@ class RegionBase(LocationContainer):
             else:
                 result = result + item.getOrganizations()
         return result
-        
-    
+
 @implementer(IRegion)
 class Region(RegionBase):
 

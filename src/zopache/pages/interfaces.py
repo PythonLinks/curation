@@ -224,7 +224,7 @@ class ILocationLeaf(ILocation):
 class ILocationContainer(ILocation):
     pass
 
-class IPin(ILocationContainer,ILatLng):
+class IPin(ILocationLeaf,ILatLng,ILocationOrMap):
     pass
 
 class IMap(ILocationOrMap,ILatLng):

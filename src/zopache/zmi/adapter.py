@@ -61,18 +61,21 @@ class ZMIAdapter(object):
           self.request = view.request
 
       def editTag(self):
+          context = self.context
           edits = {
               "InternalPrincipal":"permissions",
               "PrincipalFolder":"index"
           }
-          className =  self.context.__class__.__name__
+          className =  context.__class__.__name__
           if className in edits:
               return "/" + edits [className]
-          if IPageBase.providedBy(self.context):
+          if IPageBase.providedBy(context):
             return "/ckedit"
           if IAceHTML.providedBy(self.context):
             return "/aceedit"
-          return "/edit"
+          if "Folder" in className:
+              return "/search"
+          return "/aceedit"
       
       def isBTreeContainer(self):
           item = self.context 

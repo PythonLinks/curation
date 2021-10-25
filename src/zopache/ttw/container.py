@@ -46,9 +46,9 @@ class ContainerAddForm(TreeSecurityAddForm):
     ignoreContent = True
     factory=HTMLContainer
 
-    @property
-    def actions(self):
-         return Actions(
+
+    def addAuthorizedActions(self):
+         self.actions = Actions(
               ttwactions.AddAndManage(_("Add and Manage","Add and Manage"), self.factory),
               ttwactions.AddAndCkEdit(_("Add and ckEdit","Add and CkEdit"), self.factory),
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
@@ -65,7 +65,7 @@ class AceContainerAddForm(AddAceHTML):
     ignoreContent = True
     factory=AceContainer
 
-    def authorizedActions(self):
+    def addAuthorizedActions(self):
         self.actions = Actions(
               ttwactions.AddAndManage(_("Add and Manage","Add and Manage"), self.factory),
               ttwactions.AddAndAceEdit(_("Add and AceEdit","Add and AceEdit"), self.factory),
