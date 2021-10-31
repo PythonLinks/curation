@@ -14,13 +14,17 @@ def mergeiterator(i1, i2, cmp):
     objects, and we assume that i1 and i2 are both individually sorted.
     """
 
-
     left, right = ExtendedIter(i1), ExtendedIter(i2)
     while 1:
         if not left.has_next():
-            while True: yield right.next()
-        if not right.has_next():
-            while True: yield left.next()
+            while right.has_next():
+                 yield right.next()
+            return None
+        elif not right.has_next():
+            while left.has_next():
+                 yield left.next()
+            return None
+        
         comparison = cmp(left.peek(), right.peek())
         if comparison < 0:
             yield  left.next()

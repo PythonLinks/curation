@@ -1,4 +1,6 @@
 import time
+from slugify import slugify
+
 from zope.interface import Interface
 from zope import schema
 from dolmen.container import OrderedBTreeContainer
@@ -22,13 +24,29 @@ class RSSArticle(Page,Voteable):
     emailApproved = True
     publicationApproved = False
     tags = {}
+    
     def __init__(self):
          #Simpler to not call page initialization.
          #HOPE I DO NOT MISS ANYTHING
          OrderedBTreeContainer.__init__(self)
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
-        
+
+    def tagsAsString(self):
+               return" ".join (self.tagsAsArray())
+
+    def tagsAsHTML(self):
+               return"<br>".join (self.tagsAsArray())
+           
+    def tagsAsArray(self):       
+               terms = set()
+               for tag in self.tags:
+                   term = tag["term"]
+                   term = "#" + slugify(term)
+                   if term not in {"#news","#featured"}:
+                       terms.add (term)
+               return terms 
+           
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
         localArticles = self.rssFeed.localArticles
@@ -48,6 +66,7 @@ class RSSArticle(Page,Voteable):
               self.__name__ = name
   
     def setImportTime(self,importTime,root):
+        breakpoint()
         importTime = int(importTime)
         while (True):
            if not root.hasArticle(importTime):

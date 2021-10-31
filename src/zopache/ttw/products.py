@@ -9,7 +9,7 @@ class Products(SimpleBranch,WebClass):
     icon="ttwicons/branch.svg"
     title = "Products"
     def __init__(self):
-        Container.__init__(self)
+        WebClass.__init__(self)
         SimpleBranch.__init__(self) #valuesByToken
 
     def indexBranch(self,tree,branch):

@@ -91,7 +91,7 @@ class IActionNetwork(ILinkTop,
         default = u'',
     )       
 
-class IPageBase(Interface):
+class IPageBase(ICanonical):
     pass
 
 class IPage(ILayoutView,IPageTop,IPageBottom,IPageBase,

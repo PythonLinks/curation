@@ -7,23 +7,22 @@ from zope.schema.interfaces import IField
 from zope.interface import implementer
 from BTrees.LOBTree import  LOTreeSet
 from BTrees.OOBTree import OOBTree
-
-
+from BTrees.LOBTree import  LOTreeSet
 
 from cromlech.browser.interfaces import IPublicationRoot
-from zopache.pages.interfaces import IPage
-from dolmen.container import IBTreeContainer
-from zopache.ttw.interfaces import ICanonical
 from dolmen.container import BTreeContainer, OrderedBTreeContainer
+from dolmen.container import IBTreeContainer
 
-from .interfaces import IBranch
-from zopache.pages.interfaces import IRootPage, IPage
-from zopache.ttw.interfaces import IWebClass, IProducts
-from zopache.ttw.interfaces import IInternalPrincipal
-#from zopache.business.ipolitician import IPolitician
-from zopache.pages.interfaces import IImaginary
+from zopache.pages.interfaces import IPage,IRootPage, IPageBase
+from zopache.ttw.interfaces import ICanonical
+from zopache.core.relatives import parentsWhichImplement
+from zopache.ttw.interfaces import (IBranch,
+                                    IWebClass,
+                                     IProducts,
+                                     IInternalPrincipal)
+
 from zopache.ttw.interfaces import  ICanonical
-from BTrees.LOBTree import  LOTreeSet
+from zopache.pages.interfaces import ICategory, IImaginary
 
 #THIS ONE SUBCLASSES OFF OF BTREE CONTAINER
 @implementer(IBranch)
@@ -31,7 +30,7 @@ class SimpleBranch(object):
     branchSize = 0
     def __init__(self):
        self.valuesByToken = OOBTree()
-
+       
     def addItem(self,item):
         self.indexItem(item,itemType = ICanonical)
         
@@ -92,17 +91,16 @@ class SimpleBranch(object):
 class Branch(SimpleBranch):
 
     def __init__(self):
-       self.valuesByToken = OOBTree()
-       self.remoteURLs = OOBTree
-       self.politicians = OOBTree()
-       self.pagesByTwitterId = OOBTree()
-       self.socialNodeByTwitterId = OOBTree()
-       self.globalArticles = OOBTree()
-       self.newestArticles = OOBTree()
-       self.newestLinks = OOBTree()       
-       self.approvedArticles = OOBTree()       
-       self.remoteArticles = OOBTree()
-       
+        Branch.__init__(self)
+        self.reInit()
+
+    def reInit(self):        
+        self.valuesByToken=OOBTree()
+        self.remoteURLs = OOBTree()
+        self.politicians = OOBTree()
+        self.pagesByTwitterId = OOBTree()
+        self.socialNodeByTwitterId = OOBTree()
+
     def __delitem__(self, key):
         item = self[key]
         self.unIndexItem(item)
@@ -158,21 +156,9 @@ class Branch(SimpleBranch):
         return False
 
     def indexTree(self):
-
-        
-        self.valuesByToken=OOBTree()
-        self.remoteURLs = OOBTree()
-        self.politicians = OOBTree()
-        self.pagesByTwitterId = OOBTree()
-        self.socialNodeByTwitterId = OOBTree()
-        self.globalArticles = OOBTree()
-        self.newestArticles = OOBTree()
-        self.newestLinks = OOBTree()        
-        self.approvedArticles = OOBTree()        
-        self.remoteArticles = OOBTree()                
+        self.reInit()
         self.indexBranch(self,self)
-
-
+        
     def indexBranch(self,tree,branch,itemType=ICanonical):
         
         if IImaginary.providedBy(branch):
@@ -185,17 +171,15 @@ class Branch(SimpleBranch):
                    self.indexBranch(tree,item)
 
     def indexItem(self,item, itemType=ICanonical):
-        if not IPage.providedBy(item):
+        if not IPageBase.providedBy(item):
             return
+
+        #Unless WebApproved, return.
+        if not getattr(item,'webApproved',True):
+                   return
+        
         self.valuesByToken[item.__name__] = item
         
-        if item.__class__.__name__  == "RSSArticle":
-            self.globalArticles [item.permaLink] = item
-            
-        if (hasattr(item,'webApproved') and
-                   not item.webApproved ):
-                   return
-               
         if hasattr(item,'remoteURL'):
             self.addRemoteURL(item)
             
@@ -203,81 +187,94 @@ class Branch(SimpleBranch):
             twitterId = item.twitterId
             if twitterId != "":
                 self.pagesByTwitterId[twitterId] = item
-                
-        if item.__class__.__name__ in [ "SocialNode"]:
+
+        if item.__class__.__name__  == "Category":
+           item.reInit()
+
+        elif item.__class__.__name__  == "RSS":
+           for category in parentsWhichImplement(item,ICategory):
+               category.childFeeds += 1
+               
+        elif item.__class__.__name__  == "RSSArticle":
+            self.globalArticles [item.permaLink] = item
+            importTime = item.importTime
+            for category in parentsWhichImplement(item,ICategory):
+                if item.publicationApproved:
+                   category.approvedArticles[-importTime] = item 
+                else:
+                   category.newestArticles[-importTime] = item
+
+        elif item.__class__.__name__ == 'Link':
+            for category in parentsWhichImplement(item,ICategory):            
+                category.newestLinks [-item.creationTime] = item
+    
+        elif item.__class__.__name__ == "SocialNode":
             for node in item.allNodes():
                 twitterId= node.twitterId
                 if twitterId:
                     self.socialNodeByTwitterId[twitterId] = item
                     
-        if item.__class__.__name__  == "RSSArticle":
-            time = item.importTime
-
-            if item.publicationApproved:
-                self.approvedArticles [-time] = item
-            else:
-                self.newestArticles[-time] = item
-            
-        if item.__class__.__name__ =='Politician':
+        elif item.__class__.__name__ =='Politician':
             if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
                     
-        if item.__class__.__name__ == 'Link':
-             self.newestLinks [-item.creationTime] = item
-
     def hasArticle(self,importTime):
         importTime = - importTime
-        ((importTime in self.newestArticles) or
+        return ((importTime in self.newestArticles) or
         (importTime in self.approvedArticles))
         
     def unIndexItem(self,item, itemType=IPage):
-        if not IPage.providedBy(item):
+        if not IPageBase.providedBy(item):
             return        
         if not item.__name__ in self.valuesByToken: 
            return
 
         del self.valuesByToken[item.__name__]
         
-        if (hasattr(item,'webApproved') and
-                   not item.webApproved ):
+        if not getattr(item,'webApproved',True): 
                    return
        
         if hasattr(item,'remoteURL'):
             remoteURL = item.remoteURL
             if remoteURL:
                 self.deleteRemoteURL(remoteURL)
-                
-        if item.__class__.__name__ == "RSSArticle":
+
+        if getattr(item,'twitterId',''):
+            del self.pagesByTwitterId [item.twitterId]
+
+            
+        if item.__class__.__name__  == "RSSArticle":
             if item.permaLink in self.globalArticles:
                 del self.globalArticles [item.permaLink]
-            importTime = -item.importTime
-            newestArticles = self.newestArticles
-            if importTime in newestArticles:
-               del newestArticles [importTime]
+            importTime = - item.importTime
+            for category in parentsWhichImplement(item,ICategory):
+                if item.publicationApproved:
+                     approvedArticles = category.approvedArticles  
+                     if importTime in approvedArticles:                    
+                        del category.approvedArticles[importTime] 
+                else:
+                    newestArticles = category.newestArticles
+                    if importTime in newestArticles:
+                        del category.newestArticles[importTime]  
+
+        elif item.__class__.__name__  == "RSS":
+           for category in parentsWhichImplement(item,ICategory):
+               category.childFeeds -= 1
                
-            approvedArticles = self.approvedArticles   
-            if importTime in approvedArticles:   
-               del approvedArticles [importTime]
+        elif item.__class__.__name__ == 'Link':
+            for category in parentsWhichImplement(item,ICategory):            
+                del category.newestLinks [-item.creationTime]  
             
-        if item.__class__.__name__ == "Link":
-            del self.newestLinks [-item.creationTime]            
-
-        
-        if hasattr(item,'twitterId'):
-            twitterId = item.twitterId            
-            if twitterId:
-                del self.pagesByTwitterId [twitterId]
-
-        if item.__class__.__name__ in [ "SocialNode"]:
+        elif item.__class__.__name__ == "SocialNode":
             for node in item.allNodes():
                 twitterId = node.twitterId
                 if twitterId:
                    if twitterId in self.socialNodeByTwitterId:  
                        del self.socialNodeByTwitterId[node.twitterId] 
                                                      
-        if item.__class__.__name__=='Politician':
+        elif item.__class__.__name__=='Politician':
             if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):

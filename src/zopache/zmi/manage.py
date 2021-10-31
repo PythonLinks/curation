@@ -165,7 +165,6 @@ class Fix(Manage):
         ManageBase.update(self)
         item=self.context
         import pdb; pdb.set_trace()
-        item.longitude
         pass
     
     def moveTo(self,childName):

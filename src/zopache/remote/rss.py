@@ -100,7 +100,7 @@ class RSS(Link,UniqueName):
                             importTime)
        else:
           new.publishedAt = importTime
-          
+       breakpoint()   
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
        new.setImportTime(importTime, view.getSiteRoot())

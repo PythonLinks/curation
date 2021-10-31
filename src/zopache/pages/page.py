@@ -334,10 +334,17 @@ class Page(PageBase, PageMixIn):
 class Link(PageBase, PageMixIn):
     webClass='Link'
     icon="ttwicons/WikiPage.png"
+    tags = {}
     
     def getImportTime(self):
         return self.creationTime
     importTime = property (getImportTime)
+
+    def tagsAsString(self):
+        return ""
+    
+    def tagsAsHTML(self):
+        return ""
     
 @implementer (INews)     
 class News (Page,RecentMixIn):
@@ -375,9 +382,8 @@ class RootPage(SiteRoot):
         return self
 
 #FOR MULTIPLE SITES
-from zopache.pages.siteroot import NewsMethods
 @implementer(ISiteRootPage)         
-class SiteRootPage(SiteRoot,NewsMethods):
+class SiteRootPage(SiteRoot):
     
     def __init__(self):
        from zopache.ttw.principalfolder import PrincipalFolder
