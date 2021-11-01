@@ -56,11 +56,10 @@ class JsonObject(object):
              data += '\"'          
 
          #PROVIDE THE DESCRIPTION
-         data+= ',\n   '
-         name='description'
-         data += '\"'+name+'\": ' 
-
-         data += json.dumps(self.description)
+         #data+= ',\n   '
+         #name='description'
+         #data += '\"'+name+'\": ' 
+         #data += json.dumps(self.description)
 
 
          #PROVIDE THE BRANCH SIZE
