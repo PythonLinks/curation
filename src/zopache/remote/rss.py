@@ -74,7 +74,8 @@ class RSS(Link,UniqueName):
     def createOneArticle(self,article,view,importTime):
        new = RSSArticle()
        new.articleURL = article.link
-       new.tags = article.tags
+       if hasattr(article, 'tags'):
+           new.tags = article.tags
        unescaped = unescape (article.title)
        result  = self.parseHTML(unescaped)
        new.title = result
@@ -100,7 +101,6 @@ class RSS(Link,UniqueName):
                             importTime)
        else:
           new.publishedAt = importTime
-       breakpoint()   
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
        new.setImportTime(importTime, view.getSiteRoot())

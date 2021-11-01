@@ -24,7 +24,7 @@ class RSSArticle(Page,Voteable):
     emailApproved = True
     publicationApproved = False
     tags = {}
-    
+    _toot = ""    
     def __init__(self):
          #Simpler to not call page initialization.
          #HOPE I DO NOT MISS ANYTHING
@@ -32,6 +32,32 @@ class RSSArticle(Page,Voteable):
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
 
+    def getToot(self):
+        if self._toot != "":
+            return self._toot
+        
+        else:
+            twitterId = self.rssFeed.twitterId
+            return   (
+                self.title +
+                "\n\n" +
+                self.description +
+                "\n\n" +
+                self.articleURL +
+                (("\n\nBy @" + twitterId + "@twitter.com")
+                    if twitterId else '') +
+               "\n\n" +
+               "Via https://UncensoredNews.US/" + self.parent.name + 
+               "\n\n" +
+                self.tagsAsString()
+                )
+
+
+    def setToot(self,value):
+        self._toot = value
+
+    toot = property (getToot, setToot)    
+        
     def tagsAsString(self):
                return" ".join (self.tagsAsArray())
 
@@ -66,7 +92,6 @@ class RSSArticle(Page,Voteable):
               self.__name__ = name
   
     def setImportTime(self,importTime,root):
-        breakpoint()
         importTime = int(importTime)
         while (True):
            if not root.hasArticle(importTime):

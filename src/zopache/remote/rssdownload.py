@@ -20,11 +20,11 @@ async def fetch(session,node,view):
    try:
         async with session.get(url) as response:
           if response.status == 200:
-             result =  await node.processResponse(session,response,view)
+             result =  await node.pgrocessResponse(session,response,view)
              return result
           else:
-             return node.parent, 'status = ' + str(response.status)
-          
+             return node.name, 'status = ' + str(response.status)
+
    except asyncio.TimeoutError as err:
           duration =  time.time() - startTime 
           return node.name, "TIME OUT"  + str(duration)
@@ -44,7 +44,6 @@ async def fetch(session,node,view):
    except:
           e = sys.exc_info()[0]
           return node.name, str(e)
-       
 
    return node.name, "UNEXPlAINED ERROR"
 
@@ -57,7 +56,7 @@ def fetchAll(nodes,view):
    
 async def fetchCore(nodes,view):   
     tasks = []
-    allowedTime = 40
+    allowedTime = 120
     timeout = aiohttp.ClientTimeout(total=allowedTime)
     async with aiohttp.ClientSession(timeout = timeout) as session:    
       for node in nodes:

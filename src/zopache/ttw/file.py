@@ -194,6 +194,33 @@ class BTreeImage(ImageBase,Container):
          new.__parent__ = self
          return new
 
+    #And now we make a smaller image. 
+    def mastodonImage(self,name):
+        
+         #Max size of 4MB for images on Mastodon
+         ratio = 3900000  / self.size
+         if ratio >=1:
+             return self.data, self.contentType
+         
+         newWidth = int(ratio * self.width)
+         newHeight = int (ratio * self.height)
+         size = (newWidth,newHeight)
+
+         #PIL.Image.frombytes  Docs say to do it this way.  
+         byteImgIO = io.BytesIO()
+         byteImgIO.write(self.data)
+         byteImgIO.seek(0)
+         
+         pilImage = PilImage.open(byteImgIO)
+         pilImage = pilImage.resize(size)
+         pilImage = pilImage.crop((0,0,newWidth,newHeight))
+         
+         #We could try to use pilImage.getdata()
+         byteImgIO = io.BytesIO()
+         pilImage.save(byteImgIO,'PNG')
+         byteImgIO.seek(0)
+         return bytesImgIO.read(), "image/png"
+
     #THE FOLLOWING METHOD I THINK CUTS A PORTRAIT MODE PICTURE SQUARE
     #I THINK IT BREAKS ON LANDSCAPE MODE
     def cropSquare(self,image, height):

@@ -106,7 +106,6 @@ class EditJson( Base,EditForm):
         return self.context
     
     def update(self):
-        products = self.getProducts()
         self.template = self.getTemplates()['json-editor']    
         EditForm.update(self)
 
