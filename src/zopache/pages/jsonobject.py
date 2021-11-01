@@ -1,7 +1,10 @@
 #JSON VIEWS ON OBJECTS
+import json
+import datetime
+
 from zopache.pages.interfaces import IJSONInclude, IPageBase
 from zopache.core.viewdecorators import *
-import datetime
+
 from dolmen.container import IBTreeContainer
 from zope.interface.interface import Attribute
 from dolmen.view import View
@@ -28,9 +31,8 @@ class JsonObject(object):
 
          #PROVIDE THE TEXT LINE
          name='title'
-         text='\"'+name+'\": \"'
-         text += self.title 
-         text+='\"'
+         text='\"'+name+'\":'
+         text += json.dumps(self.title) 
 
          text += self.descriptionUrlAndWebClass()         
          return text
@@ -56,10 +58,10 @@ class JsonObject(object):
          #PROVIDE THE DESCRIPTION
          data+= ',\n   '
          name='description'
-         data += '\"'+name+'\": \"'
+         data += '\"'+name+'\": ' 
 
-         data += self.description or ""
-         data += '\"' 
+         data += json.dumps(self.description)
+
 
          #PROVIDE THE BRANCH SIZE
          data+= ',\n   '
@@ -78,9 +80,8 @@ class JsonObject(object):
 
          #PROVIDE THE TITLE
          name='title'
-         text='\"'+name+'\": \"'
-         text += self.title 
-         text+='\"' 
+         text='\"'+name+'\":' 
+         text += json.dumps(self.title) 
 
          #AND NOW THE DATA
          data= ',\n\"data\":{'
@@ -102,9 +103,8 @@ class JsonObject(object):
          #PROVIDE THE TITLE
          data+= ',\n   '
          name='title'
-         data += '\"'+name+'\": \"'
-         data += self.title
-         data += '\"'
+         data += '\"'+name+'\": '
+         data += json.dumps(self.title)
 
          data += self.descriptionUrlAndWebClass()
 
