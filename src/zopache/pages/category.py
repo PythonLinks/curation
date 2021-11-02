@@ -20,6 +20,7 @@ class Category(Page):
     title = ""
     description = ""
     source = ""
+    tags = ""
     childFeeds = 0
     def __init__(self):
        Page.__init__(self)

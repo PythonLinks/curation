@@ -5,14 +5,15 @@ from zope.interface import Interface
 from zope import schema
 from dolmen.container import OrderedBTreeContainer
 
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage, ICategory
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from zopache.crud.getimage import createImageInFrom
 from webpreview import web_preview
 from zopache.remote.rssdownload import fetch
 from zopache.remote.irss import IRSSArticle
-    
+from zopache.core.relatives import parentsWhichImplement
+
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
 @implementer (IRSSArticle)
@@ -81,6 +82,15 @@ class RSSArticle(Page,Voteable):
                  del localArticles [self.permaLink]
             else:
                 raise Exception("That article was not listed in localArticles.")
+
+    def parentalTags(self):
+        result = []
+        parents = parentsWhichImplement(self,ICategory)
+        for item in parents:
+            tags = item.tags
+            if tags != '':
+               result.append(tags)
+        return ' '.join(result) 
             
     def getCategory(self):
       return self._category

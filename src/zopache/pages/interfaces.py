@@ -254,4 +254,8 @@ class IAddressMap(IMap,IAddress):
     pass
 
 class ICategory(IPage):
-    pass
+    tags = schema.TextLine(
+        title = 'Tags',
+        description = 'For this Cateogry.',
+        required = False,
+    )

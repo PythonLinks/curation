@@ -173,7 +173,7 @@ from zopache.pages.interfaces import ICategory,IPageBase
 @implementer(ITreeSecurity)
 class AddRSSCategory(AddByTitleForm,Notify):
      interface = ICategory
-     title = "Add aCategory"
+     title = "Add a Category"
      subTitle =""
      count = 0
      factory = Category
