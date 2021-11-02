@@ -107,6 +107,7 @@ class RSS(Link,UniqueName):
 
        newName = slugify (new.title)
        newName = self.uniqueBothName (self,newName)
+       print ("CREATING", newName)
        self[newName] = new
 
        #LocalList

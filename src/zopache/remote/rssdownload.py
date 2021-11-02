@@ -20,7 +20,7 @@ async def fetch(session,node,view):
    try:
         async with session.get(url) as response:
           if response.status == 200:
-             result =  await node.pgrocessResponse(session,response,view)
+             result =  await node.processResponse(session,response,view)
              return result
           else:
              return node.name, 'status = ' + str(response.status)
@@ -39,7 +39,10 @@ async def fetch(session,node,view):
           return node.name, str(err)          
   
    except ssl.SSLError as err:    
-          return node.name, str(err)          
+          return node.name, str(err)
+       
+   except AttributeError as err:
+          return node.name, str(err)                 
 
    except:
           e = sys.exc_info()[0]
