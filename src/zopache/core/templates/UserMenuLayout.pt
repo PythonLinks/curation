@@ -36,7 +36,6 @@
   </head>
   <body class="bg-light">
     
-    ${structure: view.getNavBar()}
      
     <div class="container" style= "margin-top: 46px;">
       <h1>${view.title}</h1>
