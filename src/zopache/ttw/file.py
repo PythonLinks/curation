@@ -23,7 +23,7 @@ class FileBase(object):
         
     @property
     def size(self):
-        return self.blob.getSize()
+        return len(self.data)
 
     def setData(self, data):
         try:
@@ -195,7 +195,7 @@ class BTreeImage(ImageBase,Container):
          return new
 
     #And now we make a smaller image. 
-    def mastodonImage(self,name):
+    def mastodonImage(self):
         
          #Max size of 4MB for images on Mastodon
          ratio = 3900000  / self.size

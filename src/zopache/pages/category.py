@@ -26,6 +26,27 @@ class Category(Page):
        Page.__init__(self)
        self.reInit()
 
+    def descendants(self):
+        yield self
+        for item in self.onlyChildCategories():
+            yield item
+            for child  in item.onlyChildCategories():    
+                yield child.descendants()
+        
+        raise StopIteration
+    
+    def onlyChildCategories(self):
+        for item in self.iterValues():
+            if item.__class__ == Category:
+                yield item
+        raise StopIteration
+
+    def onlyNewsItems(self):
+        for item in self.iterValues():
+            if item.__class__ in { Category,Link}:
+                yield item
+        raise StopIteration            
+
     def reInit(self):
        self.newestArticles = OOBTree()
        self.newestLinks = OOBTree()       

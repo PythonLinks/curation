@@ -11,7 +11,15 @@ from html import escape, unescape
 def sortFunction(item):
   return item.__name__
 
-class Utilities (object):
+class Utilities (object): 
+    @property
+    def accessToken(self):
+        if not hasattr(self,'_accessToken'):
+           self._accessToken = getattr(self.getPrincipal(),
+                                       'accessToken',
+                                       False)
+        return self._accessToken
+ 
     def parentalMenu(self):
         parentalMenu = self.parentalAcquire("ParentalMenu")
         if parentalMenu != None:

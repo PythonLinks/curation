@@ -91,7 +91,7 @@ class SimpleBranch(object):
 class Branch(SimpleBranch):
 
     def __init__(self):
-        Branch.__init__(self)
+        SimpleBranch.__init__(self)
         self.reInit()
 
     def reInit(self):        
