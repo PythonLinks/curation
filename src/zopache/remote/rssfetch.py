@@ -36,7 +36,6 @@ class GetRSS(Form):
     subTitle = "To get the newest news."
     def update(self):
         feeds = []
-        breakpoint()
         leaves = self.context.rssLeaves()
         for  item  in leaves:
                if IRSS.providedBy(item):

@@ -43,16 +43,16 @@ class Configure (EditForm,Remote):
     subTitle = "Various Parameters"
     interface = IForm
     fields = Fields(IForm)    
-
-    @property
-    def description(self):
-        desciption = '''In order to allow you to access Mastodon from this 
-                site, an accessToken is needed.  <a href=" '''
-        description += ""
-        description +='''
-        ">Please click here</a>, authorize this application, 
-        and then manually copy the authorization token back into the form 
-        below.'''
+    description = ""
+    #@property
+    #def description(self):
+    #    desciption = '''In order to allow you to access Mastodon from this 
+    #            site, an accessToken is needed.  <a href=" '''
+    #    description += ""
+    #    description +='''
+    #    ">Please click here</a>, authorize this application, 
+    #    and then manually copy the authorization token back into the form 
+    #    below.'''
  
     def acquireTitle(self):
         return "Configure Server"

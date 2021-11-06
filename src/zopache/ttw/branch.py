@@ -199,9 +199,6 @@ class Branch(SimpleBranch):
             self.globalArticles [item.permaLink] = item
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):
-                if category.name == "climate-change":
-                   #breakpoint()
-                   pass 
                 if item.publicationApproved:
                    category.approvedArticles[-importTime] = item 
                 else:
