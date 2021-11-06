@@ -63,7 +63,8 @@ class BreadcrumbsCore(object):
         result += "</div>"
         return result
     
-    def breadcrumbsIndex(self,item):
+    def breadcrumbsIndex(self,*args):
+        item = self.context if len(args)==0 else args [0]         
         return self.breadcrumbsView(item,viewName='',showTitles=True)
 
     #THE DEFAULT BREADCRUMBS

@@ -140,21 +140,21 @@ class JsonObject(object):
         #NOW GET THE VARIBLgES
         result+=getattr(self,aFunction)(spacing)
         #NOW GET THE CONTAINED OBJECTS
-        childCategories = self.childCategories()
+        newsItemsOnly = self.newsItemsOnly()
 
-        if childCategories:
+        if newsItemsOnly:
                   result+=',\n \"folder\":true'
                   result+=',\n'
                   result += spacing + '\"children\":'
                   result += '['
         firstLine=True
-        for item in self.childCategories():
+        for item in newsItemsOnly:
                    if not firstLine:
                       result+=',' 
                    else:
                       firstLine=False
                    result+=item.getJSONCategories(indent+1,aFunction)
-        if childCategories:
+        if newsItemsOnly:
              result+=']'
         result+='}'
         return result

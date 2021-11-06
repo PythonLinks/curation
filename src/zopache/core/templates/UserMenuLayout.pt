@@ -11,37 +11,26 @@
     ${structure: layout.bootstrap4()}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
-    <style>
-      .navbar {
-      padding-bottom:0px;
-      margin-bottom:0px;      
-      }
-      #footer {
-          color: white;
-	  background-color: #464c4a;
-	  margin-top: 2em
-      }
-
-      #footer a {
-	  color: white;
-	  font-weight: bold;
-      }
-
-      .form-group.required label:after {
-          content: "•";
-          color: red;
-	  font-weight: bold;
-      }
-    </style>
   </head>
   <body class="bg-light">
+    ${structure: view.getLayout()["navbar.py"](view)}
+    <div style = "padding-left: 20px;">
+    ${structure: view.layoutAcquire('breadcrumbs')(view=view)} 
+ 
+    <div class="container">
+      <div class="img-fluid" style="float:left; margin:20px">
+	<a href ="https://ForestWiki.com">
+      <img src="/fanstatic/ttwicons/ForestWiki.png" width="87"
+	   height="95" ></a>	  
+      </div>
+      <center>
+      <h1>${view.acquireTitle()}</h1>
+      <h2>${view.subTitle}</h2>
+      </center>
+    </div>
     
      
-    <div class="container" style= "margin-top: 46px;">
-      <h1>${view.title}</h1>
-      <h2>${view.subTitle}</h2>      
 
-    </div>
     <a name="content"></a>
      <a name="manage"></a>
     <div id="wrapper">
@@ -58,6 +47,7 @@
       <div id="footer">
 	${structure: view.footerScripts()}
       </div>
+    </div>
     </div>
   </body>
 </html>

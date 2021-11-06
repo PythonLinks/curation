@@ -38,6 +38,9 @@ class RSSArticle(Page,Voteable):
             return self._toot
         
         else:
+            return self.defaultToot()
+        
+    def defaultToot(self):        
             twitterId = self.rssFeed.twitterId
             return   (
                 self.title +

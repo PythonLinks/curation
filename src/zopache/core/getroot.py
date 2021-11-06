@@ -76,6 +76,9 @@ class Root(object):
     def getPrincipalFolder(self):
         return getPrincipalFolder(self.context)               
 
+    def getPrincipal(self):
+           return self.request.principal
+
     def getProducts(self):
         products = getattr(self,'_products',None)
         if products == None:
