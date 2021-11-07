@@ -76,6 +76,7 @@ class Category(Page):
 
     #Check the rss feed does not break.
     def curatedHeadlines(self,count = 6):
+
         articles = self.mergedApproved(howMany = count)
         if len(articles) == 0:
            return 0, [] 
@@ -85,20 +86,21 @@ class Category(Page):
     def todaysApprovedArticles(self,midnight):     
         return  self.approvedArticles.itervalues(min = -midnight,
                                       max = -midnight + secondsInADay,
-                                      excludemin = True)                           
-       
+                                      excludemin = True)                              
     def mergedApproved(self, howMany = 6, lastImportTime = None):
         result = []
         if lastImportTime:
             lastImportTime = - lastImportTime
         articles = self.approvedArticles.itervalues(min = lastImportTime,
-                                                excludemin = True)
+                                                    excludemin = False)
         links = self.newestLinks.itervalues(min = lastImportTime,
-                                           excludemin = True)
+                                            excludemin = False)
         for item in mergeiterator(articles,links, cmp = cmp):
                if item == None:
                    break
                result.append(item)
+        if lastImportTime and len(result) > 0:
+            result = result [1]
         return result
 
     #GET MORE APPROVED ARTICLES AFTER THE LAST IMPORT TIME

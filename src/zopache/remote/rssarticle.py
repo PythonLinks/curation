@@ -48,7 +48,7 @@ class RSSArticle(Page,Voteable):
                 self.description +
                 "\n\n" +
                 self.articleURL +
-                (("\n\nBy @" + twitterId + "@twitter.com")
+                (("\n\nBy @" + twitterId.strip() + "@twitter.com")
                     if twitterId else '') +
                "\n\n" +
                "Via https://UncensoredNews.US/" + self.parent.name + 
