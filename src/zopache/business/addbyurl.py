@@ -28,19 +28,21 @@ class AddLinkByURL(AddByURLForm):
     addSlug = "addLink"
     
     def processURL(self,remoteURL):
+        response = {}
+        errors = Errors()
         try:
             response = requests.get(remoteURL)
         except:
             error = Error("Failed to Fetch URL")
-            return Errors().append(error)
+            return response, errors.append(error)
         
         try:
             title, description, image  = web_preview( remoteURL, content = response.content )
         except:
             error = Error("Web Preview Failed to  Parse Response")
-            return Errors().append(error)            
+            return response, errors.append(error)            
         
-        response = {}
+
         response ['form.field.remoteURL'] = remoteURL
         if title:
            response ['form.field.title']= title
@@ -48,29 +50,32 @@ class AddLinkByURL(AddByURLForm):
             response['form.field.description']= description
         if image:
            response ['form.field.imageURL'] = image
-        return response
+        return response, errors
 
 
 class ProcessJSON(object):
     def processURL(self,remoteURL):
+        response = {}
+        errors = Errors()
         try:
             remoteResponse = requests.get(remoteURL)
             title, description, image= web_preview(
-                remoteURL, content = remoteResponse.content )
+                remoteURL, content = remoteeesponse.content )
         except:
             error = Error("Failed to Fetch and Parse URL")
-            return Errors().append(error)
+            return response, errors.append(error)
         response = self.saveData(remoteURL,title, description, image)
         connect = response ["connect"]
         self.addSocialMedia(connect,remoteResponse)
         response = json.dumps(response)
-        return {'json': response}
+        return {'json': response}, errors
 
 @view_component
 @name('addOrganizationByURL')
 @target(IView)
 @context(IPage)
 class AddOrganizationByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
+    errors = Errors()
     allowAnonymous = True
     title = "Add an Organization By URL"
     addSlug = 'addOrganization'
@@ -110,7 +115,7 @@ class AddCandidateByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
     subTitle = "Just submit the URL for the candidate. "
     addSlug = 'addCandidate'        
 
-    def saveData(self,remoteURL, title,description,image):           
+    def saveData(self,remoteURL, title,description,image):
         response = {"introduction": {}, 
                     "content":{"english":{}},
                     "connect": {},
