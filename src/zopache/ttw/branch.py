@@ -206,7 +206,7 @@ class Branch(SimpleBranch):
 
         elif item.__class__.__name__ == 'Link':
             for category in parentsWhichImplement(item,ICategory):            
-                category.newestLinks [-item.creationTime] = item
+                category.newestLinks [-int(item.creationTime)] = item
     
         elif item.__class__.__name__ == "SocialNode":
             for node in item.allNodes():
@@ -265,7 +265,7 @@ class Branch(SimpleBranch):
                
         elif item.__class__.__name__ == 'Link':
             for category in parentsWhichImplement(item,ICategory):            
-                del category.newestLinks [-item.creationTime]  
+                del category.newestLinks [-int(item.creationTime)]  
             
         elif item.__class__.__name__ == "SocialNode":
             for node in item.allNodes():

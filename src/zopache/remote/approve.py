@@ -5,10 +5,15 @@ from zopache.remote.rssarticle import IRSSArticle
 from cromlech.browser.exceptions import HTTPFound
 from zopache.forms.interfaces import IApprove
 from zope.schema import Text
+
+from dolmen.forms.base import Actions
+
 from zopache.crud.forms import EditForm
 from zopache.core.viewdecorators import *
 from zopache.ttw.treewidget import TreeField
 from zopache.core.interfaces import ITreeSecurity
+import zopache.crud.update as editactions
+
 
 class IApprove(Interface):
     title = schema.TextLine(
@@ -55,7 +60,13 @@ class Approve (EditForm,Breadcrumbs):
     fields = Fields(IApprove)
     def newURL (self,baseURL):
            return baseURL 
-       
+    def addAuthorizedActions(self):
+
+        self.actions = Actions(editactions.Edit("Save","Save"),
+                    editactions.SaveAndView("Save And View","Save And View"),
+                    editactions.SaveAndToot("Save And Toot","saveToot"),
+                    editactions.Cancel("Cancel","Cancel"))
+        
     def postProcess(self, view = None):
         self.siteRoot = self.getSiteRoot()
         context = self.context

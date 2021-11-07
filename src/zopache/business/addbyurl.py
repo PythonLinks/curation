@@ -50,39 +50,6 @@ class AddLinkByURL(AddByURLForm):
            response ['form.field.imageURL'] = image
         return response
 
-import feedparser    
-@view_component
-@name('addRSSByURL')
-@target(IView)
-@context(IPage)
-@permissions('Manage')
-class AddRssByURLForm(AddByURLForm):
-    addSlug = "addRSS"
-    title = "Add an RSS Feed"
-    subTitle = "Please enter the RSS feed URL."
-    datavalidators = []
-
-    def processURL(self,rssURL):
-        try:
-           feed = feedparser.parse(rssURL)
-        except:
-            error = Error("Failed to Fetch and Parse Feed")
-            return Errors().append(error)
-        
-        feed = feed.feed
-        response = {}
-        response ['form.field.rssURL'] = rssURL
-        if 'link' in feed:
-            response ['form.field.remoteURL'] = feed.link
-        if 'title' in feed:             
-            response ['form.field.title']= feed.title
-        if 'description' in feed:
-            response['form.field.description']= feed.description
-        if 'image' in feed:
-            if 'href' in feed.image:     
-               response ['form.field.logoURL'] = feed.image.href
-        return response       
-
 
 class ProcessJSON(object):
     def processURL(self,remoteURL):
