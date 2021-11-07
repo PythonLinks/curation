@@ -46,7 +46,8 @@ class RSSArticle(Page):
                "\n\n" +
                "Via https://UncensoredNews.US/" + self.parent.name + 
                "\n\n" +
-                self.tagsAsString()
+                self.tagsAsString() + ' ' +
+                self.parentalTags()                 
                 )
 
         
