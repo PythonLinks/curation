@@ -136,7 +136,8 @@ class TootForm (EditForm,Remote):
             self.addAuthorizedActions()
     
     def addAuthorizedActions(self):
-        actionList = [Toot("Toot","toot"),
+        actionList = [Edit("Save",'save'),
+                      Toot("Toot","toot"),
                             TootAndView("Toot And View","tootView"),
                             Reset("Reset",'reset')
                             ]
