@@ -9,7 +9,8 @@ from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import (ITime,IContent,IPage ,IPageBase, 
-                                      IRootPage, ISiteRootPage, INews)
+                                      IRootPage, ISiteRootPage, INews,
+                                      ICategory)
 from zopache.core.getroot import getSiteRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
@@ -28,6 +29,8 @@ from zopache.core.interfaces import ICountable
 from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink,IActionNetwork
 from zopache.ttw.branch import Branch
+from zopache.core.relatives import parentsWhichImplement
+
 
 class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,ProcessTree):
     private = False
@@ -37,7 +40,19 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     basePath = "/"
     createdBy = None
     editedBy = None
+    toot = ""
+    
+    def getToot(self):
+        if self._toot != "":
+            return self._toot
+        
+        else:
+            return self.defaultToot()
 
+    def setToot(self,value):
+        self._toot = value
+
+    toot = property (getToot, setToot)    
     
     def className(self):
         return self.__class__.__name__
@@ -294,6 +309,24 @@ class PageBase(PageVeryBase,JsonObject,PageMixIn):
     title = ''
     description = ''
     source = ''
+    
+    def defaultToot(self):
+        return( self.title +
+                "\n\n" + 
+                self.description +
+                "\n\n" +
+                self.parentalTags() +
+                "\n\n"          
+        )
+    
+    def parentalTags(self):
+        result = []
+        parents = parentsWhichImplement(self,ICategory)
+        for item in parents:
+            tags = item.tags
+            if tags != '':
+               result.append(tags)
+        return ' '.join(result) 
 
     def sortedByTitle(self):
            unsortedList=[]
@@ -343,6 +376,18 @@ class Link(PageBase, PageMixIn):
     webClass='Link'
     icon="ttwicons/WikiPage.png"
     tags = {}
+    _toot = ""
+    
+        
+    def defaultToot(self):                
+        return ( Page.defaultToot(self) +
+                self.remoteURL +
+               "\n\n" +
+               "Via https://UncensoredNews.US/" + self.parent.name + 
+               "\n\n" +
+                self.parentalTags() +
+                "\n\n"                                  
+                )
     
     def getImportTime(self):
         return self.creationTime

@@ -17,7 +17,7 @@ from zopache.core.relatives import parentsWhichImplement
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
 @implementer (IRSSArticle)
-class RSSArticle(Page,Voteable):
+class RSSArticle(Page):
     _category = ""
     importTime = 0
     imageURL = ""
@@ -33,13 +33,6 @@ class RSSArticle(Page,Voteable):
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
 
-    def getToot(self):
-        if self._toot != "":
-            return self._toot
-        
-        else:
-            return self.defaultToot()
-        
     def defaultToot(self):        
             twitterId = self.rssFeed.twitterId
             return   (
@@ -56,11 +49,6 @@ class RSSArticle(Page,Voteable):
                 self.tagsAsString()
                 )
 
-
-    def setToot(self,value):
-        self._toot = value
-
-    toot = property (getToot, setToot)    
         
     def tagsAsString(self):
                return" ".join (self.tagsAsArray())
@@ -86,14 +74,6 @@ class RSSArticle(Page,Voteable):
             else:
                 raise Exception("That article was not listed in localArticles.")
 
-    def parentalTags(self):
-        result = []
-        parents = parentsWhichImplement(self,ICategory)
-        for item in parents:
-            tags = item.tags
-            if tags != '':
-               result.append(tags)
-        return ' '.join(result) 
             
     def getCategory(self):
       return self._category

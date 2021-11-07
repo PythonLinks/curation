@@ -9,6 +9,7 @@ from dolmen.forms.base import Actions
 
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
+from zopache.pages.interfaces import IPage
 from zopache.remote.irss import IRSSArticle
 from zopache.crud.update import Cancel, Edit
 from zopache.crud.update import Edit
@@ -86,7 +87,7 @@ class Remote(object):
     
 @form_component
 @name ('toot')
-@context(IRSSArticle)
+@context(IPage)
 @permissions('Manage')
 class TootForm (EditForm,Remote):
     title = 'Toot'
