@@ -22,7 +22,12 @@ class AddByURLAction(Action):
             form.submissionError = errors
             return FAILURE
         remoteURL = data["remoteURL"]
-        response = form.processURL(remoteURL)
+        response, errors = form.processURL(remoteURL)
+        if errors:
+            for item in errors.keys():
+                form.submissionError += str(errors.get(item))[6: -1] + ' '            
+
+            return FAILURE
         baseURL = '/' + form.context.__name__
         postingURL = (baseURL + '/' + form.addSlug + 
                       "?" +
@@ -31,7 +36,8 @@ class AddByURLAction(Action):
         
     
 class AddByURLForm(AddFormBase):
-    
+    count = 0
+    layoutName = "UserMenu"    
     datavalidators = [DuplicateURLValidator]
     
     preamble = """This form may take a few moments  to process. 

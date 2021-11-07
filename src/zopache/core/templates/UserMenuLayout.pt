@@ -15,8 +15,9 @@
   <body class="bg-light">
     ${structure: view.getLayout()["navbar.py"](view)}
     <div style = "padding-left: 20px;">
-    ${structure: view.layoutAcquire('breadcrumbs')(view=view)} 
- 
+      ${structure: view.layoutAcquire('breadcrumbs')(view=view)}
+
+
     <div class="container">
       <div class="img-fluid" style="float:left; margin:20px">
 	<a href ="https://ForestWiki.com">
@@ -27,16 +28,19 @@
       <h1>${view.acquireTitle()}</h1>
       <h2>${view.subTitle}</h2>
       </center>
-    </div>
-    
+    </div>    
      
-
     <a name="content"></a>
      <a name="manage"></a>
     <div id="wrapper">
       <div class="container" id="page-content-wrapper">
 	<div id="main">
 	  <div id="content">
+            <center>
+              <span style = "color:red">
+		${structure: view.submissionError}
+	      </span>
+            </center>
 	    <div tal:condition="hasattr(view,'error')"
 		 style="color:red;">${view.error} </div>
 	  <div tal:replace="structure content" />
