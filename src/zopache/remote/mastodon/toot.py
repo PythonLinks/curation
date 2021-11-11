@@ -1,4 +1,4 @@
-from mastodon import Mastodon
+
 
 from zope.interface import Interface
 from zope.schema import Text
@@ -13,7 +13,7 @@ from zopache.pages.interfaces import IPage
 from zopache.remote.irss import IRSSArticle
 from zopache.crud.update import Cancel, Edit
 from zopache.crud.update import Edit
-
+from zopache.remote.mastodon.basebot import BaseBot
 
 
 class Toot(Edit):
@@ -43,7 +43,7 @@ class Delete(Action):
         if not tootId:
             form.submissionError += "No Toot to Delete"            
         try:
-            result = form.mastodon.status_delete(tootId)
+            result = form.userProxy().status_delete(tootId)
             del form.context.tootURL 
             del form.context.tootId 
         except Exception as error:
@@ -77,19 +77,12 @@ class IClass(Interface):
         default = '',
     )         
 
-class Remote(object):
-    @property
-    def mastodon(self):
-        return  Mastodon(
-          access_token = self.getPrincipal().accessToken,
-          api_base_url = 'https://mastodon.social')
-
     
 @form_component
 @name ('toot')
 @context(IPage)
 @permissions('Manage')
-class TootForm (EditForm,Remote):
+class TootForm (EditForm,BaseBot):
     title = 'Toot'
     subTitle = 'Limit 500 characters'
     interface = IClass

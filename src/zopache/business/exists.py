@@ -30,3 +30,12 @@ it is the URL's which have to be unique. """
             errors.append(error)
         return errors
 
+class DuplicatePerson(Duplicate):
+    def slugExists(self, data):
+        principalFolder = self.form.getPrincipalFolder()
+        title = data ['title']
+        return getIdByHandle(self, title) != None            
+
+
+
+    

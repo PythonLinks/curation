@@ -1,4 +1,4 @@
-#Subject to the non-compete MIT licesne
+from cromlech.browser.exceptions import HTTPFound
 
 #Permissins, Context, and title are not in crom.
 from crom import target, order
@@ -21,4 +21,4 @@ from dolmen.forms.base import Fields
 
 __all__ =['order','target','implementer','crom','name','context','Interface',
           'form_component','view_component','permissions','title','Fields',
-          'action','IView']
+          'action','IView','HTTPFound']

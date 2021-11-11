@@ -10,26 +10,13 @@ from cromlech.browser.interfaces import IPublicationRoot
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
 from zopache.ttw.interfaces import IInternalPrincipal
-from zopache.forms.toot import Remote
+from zopache.remote.mastodon.basebot import BaseBot
 
 class IForm(Interface):
-    """
-    clientSecret= TextLine(
-        title = "Mastodon Client Secret",
-        required = False,
-        default = '',
-    )
-
-    clientKey= TextLine(
-        title = "Mastodon Client Key",
-        required = False,
-        default = '',
-    )
-    """
 
     accessToken= TextLine(
-        title = "Access Token",
-        description = "For Logins",
+        title = "Mastodon Access Token",
+        description = "Used by the api.",
         required = False,
         default = '',
     )    
@@ -38,7 +25,7 @@ class IForm(Interface):
 @name ('mastodon')
 @context(IInternalPrincipal)
 @permissions('Manage')
-class Configure (EditForm,Remote):
+class Configure (EditForm,BaseBot):
     title = 'Mastodon Configurtion'
     subTitle = "Various Parameters"
     interface = IForm

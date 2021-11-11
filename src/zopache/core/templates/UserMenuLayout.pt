@@ -21,8 +21,8 @@
     <div class="container">
       <div class="img-fluid" style="float:left; margin:20px">
 	<a href ="https://ForestWiki.com">
-      <img src="/fanstatic/ttwicons/ForestWiki.png" width="87"
-	   height="95" ></a>	  
+      <img src="/Logo150W" width="150"
+	   ></a>	  
       </div>
       <center>
       <h1>${view.acquireTitle()}</h1>

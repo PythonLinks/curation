@@ -19,7 +19,27 @@ class IForm(Interface):
         required = False,
         missing_value = "",
     )
+    clientKey= TextLine(
+        title = "Mastodon Client Key",
+        required = False,
+        default = '',
+    )
 
+    clientSecret= TextLine(
+        title = "Mastodon Client Secret",
+        required = False,
+        default = '',
+    )
+    
+    #Mastodon Access token
+    accessToken= TextLine(
+        title = "Mastodon Access Token",
+        description = "Used by the api.",
+        required = False,
+        default = '',
+    )
+
+    
     googleClientId= TextLine(
         title = "Google Oauth Client Id",
         description = "For Logins",

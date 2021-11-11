@@ -28,7 +28,6 @@ class AddLinkByURL(AddByURLForm):
     addSlug = "addLink"
     
     def processURL(self,remoteURL):
-        response = {}
         errors = Errors()
         try:
             response = requests.get(remoteURL)
@@ -42,7 +41,7 @@ class AddLinkByURL(AddByURLForm):
             error = Error("Web Preview Failed to  Parse Response")
             return response, errors.append(error)            
         
-
+        response = {}
         response ['form.field.remoteURL'] = remoteURL
         if title:
            response ['form.field.title']= title

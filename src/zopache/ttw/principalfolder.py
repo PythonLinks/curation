@@ -330,6 +330,7 @@ class PrincipalFolder(Container):
     
         
     def authenticate(self, credentials):
+        breakpoint()
         """Return principal info if credentials can be authenticated
         """
         if not ('email' in credentials and 'password' in credentials):

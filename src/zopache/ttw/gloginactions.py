@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#This software is subject to the CV and Zope Public Licenses.
+
 
 import sys
 
@@ -14,6 +14,7 @@ from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
+
 from zopache.core.getroot import getPrincipalFolder, getSiteRoot
 from zopache.forms.validator import AccessGoogle
 from zopache.pages.interfaces import IPage
@@ -38,7 +39,7 @@ class GoogleLoginAction(Action,AccessGoogle):
         
         
     def __call__(self, form):
-
+        breakpoint()
         self.form = form
         data, errors = form.extractData()
         if errors:
