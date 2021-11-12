@@ -78,6 +78,7 @@ class Save(Update):
     
 class SaveAndView(Update):
         def newURL(self,baseURL):
+               breakpoint()
                return baseURL
 
 class SaveAndToot(Update):

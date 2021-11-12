@@ -15,7 +15,7 @@ class IServer(IContainer):
         required = True,
     )
     
-    domain = schema.DottedName(
+    mastodonDomain = schema.DottedName(
         title = u'Host Name',
         description = u'Which Server is this?',
         required = True,
@@ -59,15 +59,19 @@ class IServer(IContainer):
 
 
 class IRegister(Interface):
-
-    title = schema.TextLine(
-        title = "Mastodon Id")
-
-    displayName = schema.TextLine(
-        title = "Display Name"         
+    mastodonDomain = schema.DottedName(
+        title = "Mastodon Server",
+        readonly = True,
+     )   
+    userName = schema.TextLine(
+        readonly = True,
+        title = "User Name"         
     )
-    email  = schema.TextLine(
-        title='Email Address')
+        
+    displayName = schema.TextLine(
+        readonly = True,
+        title = "Display Name"         
+    )    
 
     accessToken= schema.Text(
         title="Access Token",

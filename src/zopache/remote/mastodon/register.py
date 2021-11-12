@@ -16,38 +16,41 @@ from zopache.crud.actions import Cancel
 from zopache.ttw.mail import Notify
 from zopache.business.exists import DuplicatePerson
 
-class MastodonRegister(AddForm,Notify):
+from zopache.remote.mastodon.interfaces import IServer
+from zopache.remote.mastodon.account import Account
+from zopache.remote.mastodon.actions import RegisterAction
+from zopache.remote.mastodon.basebot import BaseBot
+
+@form_component
+@name ('register')
+@context(IServer)
+class MastodonRegister(AddForm,Notify,BaseBot):
     count = 0
-    dataValidators = [DuplicatePerson]
+    #dataValidators = [DuplicatePerson]
     layoutName = "UserMenu"    
-    factory = InternalPrincipal
+    factory = Account
     fields = Fields(IRegister)
     ignoreContent = True
     igrnoreRequest = False
     successfulRegistration = False
     submissionError = ""
     allowAnonymous = True
-
+    interface = IRegister
+    subTitle = "Please review your account, and grant the site your GDPR permission. "
+    
     def __init__(self,context,request):
         AddForm.__init__(self,context,request)
         Notify.__init__(self)
-
+        
     def updateWidgets(self):
         self.fields["accessToken"].mode = HIDDEN
-        self.fields["userName"].mode = DISPLAY
-        self.fields["displayName"].mode = DISPLAY
-        self.fields["serverName"].mode = DISPLAY        
-        self.fields["email"].mode = DISPLAY        
-        
-        AddForm.updateWidgets(self)
+        AddForm.updateWidgets(self)        
 
     def acquireTitle(self):
         return 'GDPR Permissions'
     
-    @property
-    def actions(self):
-        return Actions(
-            RegisterAction("Please Register Me", self),
+    actions = Actions(
+            RegisterAction("Please Register Me", "register"),
             Cancel("Cancel","Cancel")
             
         )

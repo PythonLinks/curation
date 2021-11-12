@@ -1,35 +1,52 @@
 from mastodon import Mastodon
 
-baseURL = 'https://mastodon.social'
-
 class BaseBot(object):
-    SITE = "https://dev.pythonlinks.info/callback"
-    #SITE = 'https://UncensoredNews.US/callback'
     SCOPES = ['read:accounts','write:media','write:statuses']
 
-    def getProxy (self,accessToken,baseURL,code):
-        siteRoot = self.getSiteRoot()
+    def getProxy (self,accessToken,clientId,clientSecret,mastodonDomain):
         return  Mastodon(
-            access_token = accessToken,
-            client_id = siteRoot.clientKey.strip(),
-            client_secret = siteRoot.clientSecret.strip(),
-            code = code,
-            api_base_url = baseURL)
+            access_token = accessToken.strip(),
+            client_id = clientId.strip(),
+            client_secret = clientSecret.strip(),
+            api_base_url = "https://" + mastodonDomain)
 
-    def userProxy(self):
-        return self.getProxy(self.getPrincipal().accessToken.strip(),
-                             baseURL,
-                             None)
-  
-    def oauthProxy(self):
-        accessToken = self.getSiteRoot().accessToken
-        return self.getProxy(accessToken, baseURL,None)
+    def userProxy(self,accessToken):
+        context = self.context
+        mastodonDomain = context.mastodonDomain
+        mastodon =   Mastodon(
+            access_token = accessToken.strip(),
+            api_base_url = "https://" + mastodonDomain)
+        return mastodon 
+
+    def proxyForUser(self):
+        proxy = getattr (self.request.principal,'accountProxy',None)        
+        if proxy == None:
+           raise Exception("First you need to log in to a Mastodon server. ")
+        return proxy
     
-    #def callbackProxy(self, accessToken):
-    #    return self.getProxy(accessToken,baseURL,None)
+    def oauthProxy(self):
+        context = self.context
+        accessToken = context.accessToken
+        clientSecret = context.clientSecret
+        clientId = context.clientKey
+        mastodonDomain = context.mastodonDomain
+        return self.getProxy(accessToken, clientId, clientSecret, mastodonDomain)
 
-    def accountProxy(self,code):
-        return self.getProxy(self.getPrincipal().accessToken.strip(),
-                             baseURL,
-                             code)
+    def redirectURL(self):
+        url = ("https://"+
+           self.getDomain()+
+           '/servers/' +
+           self.context.name +
+           '/callback')
+        return url
+
+    def registerURL(self):
+        url = ("https://"+
+           self.getDomain()+
+           '/servers/' +
+           self.context.name +
+           '/register?')
+        return url
+
+
         

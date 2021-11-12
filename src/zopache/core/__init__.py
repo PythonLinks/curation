@@ -66,7 +66,7 @@ def tal_template(name):
 class Page(View):
         responseFactory = Response
         make_response = make_layout_response
-
+        submissionError = ''
         #def url(self):
         #   return get_absolute_url(self.context, self.request)
                         

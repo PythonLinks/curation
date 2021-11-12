@@ -103,7 +103,12 @@ class BaseEditForm(Form,Breadcrumbs):
     def update(self):
         if self.treeSecurity():
             self.addAuthorizedActions()
+        else:
+            self.addUnAuthorizedActions()
             
+    def addUnAuthorizedActions(self):
+        self.actions = Actions()
+        
     def addAuthorizedActions(self):
 
         self.actions = Actions(editactions.Edit(_("Save","Save")),

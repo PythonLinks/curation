@@ -120,7 +120,6 @@ class RSS(Link,UniqueName):
        globalArticles= self.getSiteRoot().globalArticles
        now = time.time()
        importTime = int(now)
-       breakpoint()
        for article in entries:
            theId = article['id']
            if not theId in globalArticles:

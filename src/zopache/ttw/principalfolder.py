@@ -243,16 +243,7 @@ class PrincipalFolder(Container):
 
     def getDescriptionFor(self,view):
         return self.description
-    
-    def convert (self):
-        del self.idByEmail
-        del self.idBySlugifiedHandle
-        self.emailIndex= OOBTree()
-        self.slugifiedHandleIndex = OOBTree()
-        for item in self.values():
-            self.emailIndex[item.email]= item
-            self.slugifiedHandleIndex [item.slugifiedHandle()] = item
-            
+
     def setJson(self):
         pass
 
@@ -263,16 +254,17 @@ class PrincipalFolder(Container):
         all.sort(key=key, reverse = True)
         return all
     
-    def indexPeople(self):
+    def indexTree(self):
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()                
         for item in self.values():
-          try:
-            self.idByEmail[item.email] = item.__name__
-            slug = item.slugifiedHandle()
-            self.idBySlugifiedHandle[slug] = item.__name__
-          except:
-              pass
+           if IInternalPrincipal.providedBy(item):  
+              try:
+                  self.idByEmail[item.email] = item.__name__
+                  slug = item.slugifiedHandle()
+                  self.idBySlugifiedHandle[slug] = item.__name__
+              except Exception as error:
+                  raise Exception (str(error))
           
     def getPrincipalByUserName(self,userName, default = anonymous):
 
@@ -281,13 +273,13 @@ class PrincipalFolder(Container):
                 id = self.getIdByHandle(userName)
             if id != None:    
                principal = self.getPrincipalById(id)
-               return principal
+               if principal != None:   
+                  return principal
             return default
         
     def getPrincipalById(self,id):
-        return self[id]
-        #result = getSiteRoot(self)[id]
-        #return result
+        return self.get(id)
+
     
     def notifyEmailChanged(self, oldEmail,  principal):
         """Notify the Container about changed email or handle of a user.
@@ -315,22 +307,28 @@ class PrincipalFolder(Container):
         handle = principal.slugifiedHandle()
         self.idBySlugifiedHandle[handle] = principal.__name__  
 
-    def registerUser(self,principal):
-        #Editing Email or Handle resets them.
-        #So no need to do anything. 
-        pass
+    def __setitem__(self,key,principal):
+        if IInternalPrincipal.providedBy(principal):        
+           self.idByEmail[principal.email] = principal.__name__
+           slug = principal.slugifiedHandle()
+           self.idBySlugifiedHandle[slug] = principal.__name__        
+        root = getSiteRoot(self)
+        root.addItem(principal)
+        BTreeContainer.__setitem__(self,key,principal)
 
     #REALLY THIS IS DELETE USER    
-    def unRegisterUser(self,principal):	
-        del self.idByEmail[principal.email]
-        del self.idBySlugifiedHandle[principal.slugifiedHandle()]
+    def __delitem__(self,name):
+        principal = self[name]
+        if IInternalPrincipal.providedBy(principal):
+            del self.idByEmail[principal.email]
+            del self.idBySlugifiedHandle[principal.slugifiedHandle()]
         root = getSiteRoot(self)
         root.deleteItem(principal)
-        return
+        BTreeContainer.__delitem__(self,name)        
+
     
         
     def authenticate(self, credentials):
-        breakpoint()
         """Return principal info if credentials can be authenticated
         """
         if not ('email' in credentials and 'password' in credentials):
@@ -346,10 +344,11 @@ class PrincipalFolder(Container):
         return internal
     
 
-    def loginUser(self,user):
+    def loginUser(self,user,form):
         session = getSession()
         session['user'] =getattr(user,'email')
-
+        form.request.principal = user
+        
     def getIdByEmail(self, email):
         return self.idByEmail.get (email,None)
 

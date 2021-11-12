@@ -39,7 +39,6 @@ class GoogleLoginAction(Action,AccessGoogle):
         
         
     def __call__(self, form):
-        breakpoint()
         self.form = form
         data, errors = form.extractData()
         if errors:
@@ -61,7 +60,7 @@ class GoogleLoginAction(Action,AccessGoogle):
             personId = people.idByEmail[email]
             person = people [personId]
 
-            people.loginUser(person)   
+            people.loginUser(person,self.form)   
             self.form.loggedIn = True
 
 #SO BASICALLY IT NEEDS TO GO TO A LOGIN FORM
@@ -98,9 +97,7 @@ class GoogleRegisterAction(GoogleLoginAction):
             
         for key,value in self.data.items():
             obj.__setattr__(key, value)                
-        root = getSiteRoot(form.context)
-        root.addItem(obj)
-        people.loginUser(person)   
+        people.loginUser(person,self.form)   
         send("You are Registered")
         form.postAddProcess()
         newURL = self.form.newURL() 

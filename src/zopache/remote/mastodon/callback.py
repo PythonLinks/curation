@@ -1,11 +1,11 @@
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
-from zopache.pages.interfaces import IPageBase
+from zopache.remote.mastodon.interfaces import IServer
 from zopache.remote.mastodon.actions import CallBackAction
 from zopache.remote.mastodon.basebot import BaseBot
 
 @form_component
-@context(IPageBase)
+@context(IServer)
 @target(IView)
 @name("callback")
 class MastodonOauth(Form, BaseBot):
@@ -14,5 +14,3 @@ class MastodonOauth(Form, BaseBot):
     def update(self):
         CallBackAction("Redirect","redirect")(self)
         
-    def render(self):
-        breakpoint()        

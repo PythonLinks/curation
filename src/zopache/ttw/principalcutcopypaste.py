@@ -24,7 +24,7 @@ class PrincipalCopier(Copier):
 class PrincipalRenamer(Renamer):
     # YOU NEVER WANT TO RENMAE Principals
     def allowed(self,item):
-        return False
+        return True
 
 @crom.adapter
 @crom.sources(IInternalPrincipal)
@@ -37,11 +37,6 @@ class PrincipalDeleter(Deleter):
         name=contained.__name__
         principalFolder = getPrincipalFolder(contained)
         self.describeTransaction("Deleted a principal",contained)
-        
-        # DELETE THE OBJECT
-        # HAVE TO FIRST UNREGISTER
-        # BECAUSE DELETE GETS RID OF THE __NAME__
-        principalFolder.unRegisterUser(contained)
         del container[name]
 
 

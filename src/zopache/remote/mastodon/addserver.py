@@ -1,3 +1,6 @@
+from dolmen.container import IBTreeContainer
+
+
 from zopache.crud.forms import AddByNameForm , EditForm
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPageBase
@@ -6,14 +9,17 @@ from zopache.remote.mastodon.interfaces import IServer
 from zopache.remote.mastodon.server import Server
 
 @form_component
-@name('addMastodonServer')
-@context(IPageBase)
+@name('addServer')
+@context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class AddMastodonServer(AddByNameForm):
     subTitle='Add a Mastodon Host'
     interface = IServer
     ignoreContent = True
     factory=Server
+    
+    def newURL(self,baseURL):
+        return baseURL + "/edit"
 
     #HERE IS THE  EDIT FORM
 @form_component
