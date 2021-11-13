@@ -9,7 +9,7 @@ from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import (ITime,IContent,IPage ,IPageBase, 
-                                      IRootPage, ISiteRootPage, INews,
+                                      ISiteRootPage, INews,
                                       ICategory)
 from zopache.core.getroot import getSiteRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
@@ -245,7 +245,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
 
      
     def blogParents(self):
-         return parentsUpTo(self,IRootPage)
+         return parentsUpTo(self,ISiteRootPage)
 
     def isCategory (self):
         return False
@@ -404,7 +404,7 @@ class News (Page,RecentMixIn):
     webClass = 'NewsItem'
     pass
 
-from zopache.pages.interfaces import ISiteRoot
+from zopache.core.interfaces import ISiteRoot
 from zopache.pages.cache import Cache
 @implementer(ISiteRoot)
 class SiteRoot(Branch,PageBase,PageMixIn):
@@ -428,22 +428,20 @@ class SiteRoot(Branch,PageBase,PageMixIn):
          self.json=self.jsonTree(0)
 
          
-@implementer(IRootPage)         
-class RootPage(SiteRoot):
-    twitterId = ""
-    def getSiteRootFor(self,hostName):
-        return self
 
 #FOR MULTIPLE SITES
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
-    
+    twitterId = ""
+
     def __init__(self):
        from zopache.ttw.principalfolder import PrincipalFolder
        Page.__init__(self)
        Branch.__init__(self)
        self ["person"] = PrincipalFolder()
 
+    def getSiteRootFor(self,hostName):
+        return self
 
     def getSiteRootFor(self,hostName):
         return self    

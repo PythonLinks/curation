@@ -1,12 +1,12 @@
 #THERE IS A COPY OF THIS IN zopache.core  as well       
 from cromlech.browser.interfaces import IPublicationRoot
 from BTrees.OOBTree import OOBTree
+
+from zopache.core.interfaces import ISiteRoot
 from zopache.crud.interfaces import IZodbRoot
 
-
-def getDBRoot(self):
-           return (self.request.environ['zodb.connection'].root()
-                   ['applicationRoot'])
+def getProducts(item):
+        return getZodbRoot(item)["Products"]                        
 
 def getRoot(object,anInterface):
         max = 9999
@@ -25,50 +25,43 @@ def getRoot(object,anInterface):
                 raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
         raise TypeError("Parents needed to  determine location root")
 
-def getSiteRoot(item):
-    root = getRoot(item, IPublicationRoot)
-    return root
-
+def getPublicationRoot(item):
+    return getRoot(item, IPublicationRoot)
+               
 def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
 
 def getPrincipalFolder(item):
-    root = getSiteRoot(item)
+    root = self.getSiteRoot(item)
     if ((root != None) and
        ("person" in root)):
         return root["person"]
     else:
         return root['wiki']["person"]
 
-def getProducts(item):
+def getSiteRoot(self,view):
+    siteRoot =  getPublicationRoot(self)
+    if not ISiteRoot.providedBy(siteRoot):
+        siteRoot = siteRoot.getSiteRootFor(view.getDomain())         
+    return siteRoot
 
-    root = getZodbRoot(item)
-    return root["Products"]
 
 
-#Here is the old version which was in this file.
-"""
-def getRoot(object):
-        max = 9999
-        context=object
-        while context is not None:
-            if IPublicationRoot.providedBy(context):
-                return context
-            context = context.__parent__
-            max -= 1
-            if max < 1:
-                raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
-        raise TypeError("Parents needed to  determine location root")
-"""
 
 
 class Root(object):
+    def getDBRoot(self):
+           return (self.request.environ['zodb.connection'].root()
+                   ['applicationRoot'])
 
+
+    #There is ZODB Root and Site Root, both have to be publication roots.
     def getSiteRoot(self):
         siteRoot= getattr(self,'_siteRoot',None)
-        if (siteRoot == None):
-           self._siteRoot = siteRoot =  getSiteRoot(self.context)
-        return siteRoot
+        if (siteRoot != None):
+           return siteRoot        
+        self._siteRoot = siteRoot = getSiteRoot(self.context,self)
+        return siteRoot        
 
     def getZodbRoot(self):
         return getZodbRoot(self.context)
@@ -82,7 +75,8 @@ class Root(object):
     def getProducts(self):
         products = getattr(self,'_products',None)
         if products == None:
-           self._products = products =  getProducts(self.context)
+            root = getZodbRoot(self.context)
+            self._products = products =  root["Products"]                
         return products
 
     def getLayout(self):

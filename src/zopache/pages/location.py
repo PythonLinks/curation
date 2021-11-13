@@ -4,7 +4,6 @@ from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.pages.page import PageBase
 from zopache.pages.interfaces  import (IPage,
                                        IPin,
-                                       IRootPage,
                                        ILocationContainer,
                                        ILocationOrMap,
                                        ILocationLeaf,

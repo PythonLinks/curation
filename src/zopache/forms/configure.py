@@ -9,7 +9,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
-from zopache.pages.interfaces import IRootPage
+
 
 class IForm(Interface):
 

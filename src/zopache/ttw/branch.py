@@ -13,7 +13,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 from dolmen.container import BTreeContainer, OrderedBTreeContainer
 from dolmen.container import IBTreeContainer
 
-from zopache.pages.interfaces import IPage,IRootPage, IPageBase
+from zopache.pages.interfaces import IPage, IPageBase
 from zopache.ttw.interfaces import ICanonical
 from zopache.core.relatives import parentsWhichImplement
 from zopache.ttw.interfaces import (IBranch,
