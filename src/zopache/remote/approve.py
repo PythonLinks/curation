@@ -2,6 +2,8 @@ from zope import schema
 from zope.schema import Text
 
 from cromlech.browser.exceptions import HTTPFound
+from dolmen.forms.base import DISPLAY
+from dolmen.forms.base.markers import FAILURE, SUCCESS
 
 from zopache.core.viewdecorators import *
 from zopache.remote.rssarticle import IRSSArticle
@@ -50,25 +52,25 @@ class IApprove(Interface):
     
 class Publish(Save):
     def __call__(self,form):
-        result = Save(self).__call__(form)
+        result = Save.__call__(self,form)
         if result != FAILURE:
             self.publish()
         return result
     
     def publish(self):
         context = self.form.context
+        form = self.form
         if getattr(context,'category',''):
             context.publicationApproved = True
-            self.publish()
             context.addImage()
-            category = self.siteRoot[context.category]
+            category = form.getSiteRoot()[context.category]
             if category!= context.__parent__:
-                self.context.moveTo(category)
+                context.moveTo(category)
             HTTPFound('/' + context.name)
             
 class Retract(Save):
     def __call__(self,form):
-        Save(self).__call__(form)
+        result = Save.__call__(self,form)
         if result != FAILURE:
             self.retract()
         return result              
@@ -77,8 +79,8 @@ class Retract(Save):
         context = self.form.context
         context.publicationApproved = False
         rssFeed = context.rssFeed
-        if rssFeed != self.__parent__:
-           self.context.moveTo(rssFeed)
+        if rssFeed != context.__parent__:
+           context.moveTo(rssFeed)
         HTTPFound('/' + context.name)
            
 
