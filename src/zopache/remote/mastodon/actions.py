@@ -116,7 +116,7 @@ class RegisterAction(BaseAction):
         new = form.factory()
         person = form.new=new
         people = form.getPrincipalFolder()
-        siteRoot = form.getSiteRoot(form.request.domain)        
+        siteRoot = form.getSiteRoot()        
         newName = siteRoot.getUniqueNumberString()
         new.name = newName
 
