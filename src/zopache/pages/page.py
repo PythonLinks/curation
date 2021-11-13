@@ -191,12 +191,12 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
         cache.resetCache(self)
 
     def preProcess(self,view=None):
-        siteRoot = view.getSiteRoot(view)
+        siteRoot = view.getSiteRoot()
         if self.webApproved:
             siteRoot.unIndexItem(self)
         
     def postProcess(self,view=None):
-        siteRoot = view.getSiteRoot(view)
+        siteRoot = view.getSiteRoot()
         siteRoot.indexItem(self)        
         self.modificationTime=time.time()        
         self.postProcessCore(view = view)

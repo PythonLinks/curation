@@ -80,10 +80,6 @@ class SaveAndView(Update):
         def newURL(self,baseURL):
                return baseURL
 
-class SaveAndToot(Update):
-        def newURL(self,baseURL):
-               return baseURL + '/toot'
-           
 class SaveAndViewHTML(Update):
         def newURL(self,baseURL):
                return baseURL + '/html'
