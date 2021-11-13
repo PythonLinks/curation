@@ -28,7 +28,7 @@ from cromlech.security import unauthenticated_principal as anonymous
 from zopache.core import Container
 from zopache.crud.interfaces import IImutable, IContainer
 from zopache.ttw.interfaces import IPrincipalFolder, IInternalPrincipal
-from zopache.core.getroot import getPrincipalFolder, getSiteRoot, getProducts
+from zopache.core.getroot import getPrincipalFolder, getPublicationRoot, getProducts
 from zopache.ttw.file import FileBase
 
 class DuplicateIDError(ValidationError):
@@ -312,7 +312,7 @@ class PrincipalFolder(Container):
            self.idByEmail[principal.email] = principal.__name__
            slug = principal.slugifiedHandle()
            self.idBySlugifiedHandle[slug] = principal.__name__        
-        root = getSiteRoot(self)
+        root = getPublicationRoot(self)
         root.addItem(principal)
         BTreeContainer.__setitem__(self,key,principal)
 
