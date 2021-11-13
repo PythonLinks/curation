@@ -119,7 +119,6 @@ class RSS(Link,UniqueName):
        globalArticles= self.getPublicationRoot().globalArticles
        now = time.time()
        importTime = int(now)
-       breakpoint()
        for article in entries:
            
            theId = article['id']

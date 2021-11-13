@@ -19,7 +19,6 @@ async def fetch(session,node,view):
       return node, "Neither Feed Nor RSS Article"
    try:
         async with session.get(url) as response:
-          breakpoint() 
           if response.status == 200:
              result =  await node.processResponse(session,response,view)
              return result
