@@ -25,7 +25,7 @@ class Tests(object):
     
     def isForestWiki(self):
         root = self.getSiteRoot()
-        return root.__class__.__name__ == 'RootPage'
+        return root.name == 'wiki'
         
     def treeSecurity(self):
         tree = TreeSecurity(self)

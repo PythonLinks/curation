@@ -45,19 +45,11 @@ class Session(object):
         self.session = None  # Remove the reference.
         setSession()
 
-def makeWiki(connRoot):
-     from zopache.pages.page  import RootPage
-     new = RootPage()
 
-     root = connRoot['applicationRoot'] 
-     person = root [ 'person']
-     products  = root [ 'Products']
-     new ['person'] = person
-     new ['Products']=products
-     #new.valuesByToken = root.valuesByToken
-     connRoot['applicationRoot'] = new
-     new.__name__ = 'root'
-     
+     # Just leave this here for documentation    
+     #root = connRoot['applicationRoot'] 
+
+
 @secured
 def publish(environ, start_response, principal):
 

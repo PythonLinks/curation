@@ -12,8 +12,9 @@ from zopache.python.interfaces import IDirectory
 from zopache.ttw.interfaces import ISourceLeaf
 from cromlech.file import FileField
 from zopache.ttw.interfaces import IAceHTML
-from zopache.core.interfaces import ICountable
+from zopache.core.interfaces import ICountable, ISiteRoot
 from zopache.crud.interfaces import ILeaf
+from zopache.core.interfaces import ISiteRoot
 
 class ILayoutView(Interface):
     pass
@@ -174,13 +175,8 @@ class INotebook (ISourceLeaf,IDirectory):
 class INews (IPage,IRecent):
     pass
 
-class ISiteRoot(IBranch,IPublicationRoot,IPage):
-    pass
 
-class IRootPage(ISiteRoot,IZodbRoot,IPageBase,IBTreeContainer):
-    pass
-
-class ISiteRootPage(ISiteRoot):
+class ISiteRootPage(ISiteRoot,IBranch,IZodbRoot,IPageBase,IBTreeContainer):
     pass
 
 

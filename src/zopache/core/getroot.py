@@ -3,10 +3,8 @@ from cromlech.browser.interfaces import IPublicationRoot
 from BTrees.OOBTree import OOBTree
 from zopache.crud.interfaces import IZodbRoot
 
-
-def getDBRoot(self):
-           return (self.request.environ['zodb.connection'].root()
-                   ['applicationRoot'])
+def getProducts(item):
+        return getZodbRoot(item)["Products"]                        
 
 def getRoot(object,anInterface):
         max = 9999
@@ -26,9 +24,11 @@ def getRoot(object,anInterface):
         raise TypeError("Parents needed to  determine location root")
 
 def getSiteRoot(item):
-    root = getRoot(item, IPublicationRoot)
-    return root
+    return getRoot(item, ISiteRoot)
 
+def getPublicationRoot(item):
+    return getRoot(item, IPublicationRoot)
+               
 def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
 
@@ -40,34 +40,26 @@ def getPrincipalFolder(item):
     else:
         return root['wiki']["person"]
 
-def getProducts(item):
-
-    root = getZodbRoot(item)
-    return root["Products"]
 
 
-#Here is the old version which was in this file.
-"""
-def getRoot(object):
-        max = 9999
-        context=object
-        while context is not None:
-            if IPublicationRoot.providedBy(context):
-                return context
-            context = context.__parent__
-            max -= 1
-            if max < 1:
-                raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
-        raise TypeError("Parents needed to  determine location root")
-"""
+
 
 
 class Root(object):
+    def getDBRoot(self):
+           return (self.request.environ['zodb.connection'].root()
+                   ['applicationRoot'])
 
+
+    #There is ZODB Root and Site Root, both have to be publication roots.
     def getSiteRoot(self):
         siteRoot= getattr(self,'_siteRoot',None)
-        if (siteRoot == None):
-           self._siteRoot = siteRoot =  getSiteRoot(self.context)
+        if (siteRoot != None):
+           return siteRoot        
+        publicationRoot =  getPublicationRoot(self.context)
+        if not ISiteRoot.providedBy(publicationRoot):
+           siteRoot = publicationRoot.getSiteRootFor(self.getDomain())         
+        self._siteRoot = siteRoot
         return siteRoot
 
     def getZodbRoot(self):
@@ -82,7 +74,8 @@ class Root(object):
     def getProducts(self):
         products = getattr(self,'_products',None)
         if products == None:
-           self._products = products =  getProducts(self.context)
+            root = getZodbRoot(item)
+            self._products = products =  root["Products"]                
         return products
 
     def getLayout(self):

@@ -6,7 +6,6 @@ from dolmen.container import IBTreeContainer
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IBranch
 from zopache.core.baseform import Form
-from zopache.pages.interfaces import IRootPage
 from zopache.pages.page import Link
 from zopache.remote.rss import IRSS
 

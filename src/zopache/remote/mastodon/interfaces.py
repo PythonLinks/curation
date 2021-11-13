@@ -45,12 +45,6 @@ class IServer(IContainer):
         description = 'Who is the user for this account',
         required = True,
     )
-    userId  = schema.Int(
-        title = u'User Id',
-        description = u'The id of the user.',
-        required = True,
-    )
-
     password= schema.TextLine(
         title = 'User Password',
         description = 'The password used to send mail.',

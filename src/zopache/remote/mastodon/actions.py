@@ -116,7 +116,8 @@ class RegisterAction(BaseAction):
         new = form.factory()
         person = form.new=new
         people = form.getPrincipalFolder()
-        newName = form.getSiteRoot().getUniqueNumberString()
+        siteRoot = form.getSiteRootFor(form.request.domain)        
+        newName = siteRoot.getUniqueNumberString()
         new.name = newName
 
         self.updateAccount(accountProxy,userAccount,person)        
@@ -124,7 +125,6 @@ class RegisterAction(BaseAction):
         people[newName]=new
         people.loginUser(person,form)
         new.name = newName
-        siteRoot = form.getSiteRoot()
         siteRoot.addItem(new)
         send("You are Registered")
         form.postAddProcess()
