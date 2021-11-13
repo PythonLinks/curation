@@ -16,7 +16,6 @@ from zopache.remote.rssarticle import RSSArticle
 from bs4 import BeautifulSoup
 from zopache.remote.irss import IRSS, IJustRSS
 from zopache.remote.rssdownload import fetchAll
-from zopache.core.getroot import getSiteRoot
 from zopache.crud.getimage import getImage
 
 @implementer (IRSS)     
@@ -117,10 +116,12 @@ class RSS(Link,UniqueName):
        new.postAddProcess(view )
 
     def createArticles(self,entries,view):
-       globalArticles= self.getSiteRoot().globalArticles
+       globalArticles= self.getPublicationRoot().globalArticles
        now = time.time()
        importTime = int(now)
+       breakpoint()
        for article in entries:
+           
            theId = article['id']
            if not theId in globalArticles:
               self.createOneArticle(article,view,importTime )
