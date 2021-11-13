@@ -22,7 +22,6 @@ class Traverser(object):
         self.zopacheTemplate = None
 
     def __call__(self,context,request,name,publisher):
-
         #A HACK TO FIX AN IURL PROBLEM
         if name == 'root':
             return context, None

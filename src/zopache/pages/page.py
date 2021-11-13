@@ -433,7 +433,7 @@ class SiteRoot(Branch,PageBase,PageMixIn):
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
     twitterId = ""
-    
+
     def __init__(self):
        from zopache.ttw.principalfolder import PrincipalFolder
        Page.__init__(self)

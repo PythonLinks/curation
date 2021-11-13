@@ -6,7 +6,7 @@ import heapq
 import math
 import arrow
 import time
-from zopache.core.getroot import getSiteRoot
+from zopache.core.getroot import getPublicationRoot
 
 """
 So what do we have here?
@@ -56,7 +56,7 @@ class Cache:
         self.siteCaches = {}
 
     def resetCache(self,context):
-        siteName = getSiteRoot(context).__name__
+        siteName = getPublicationRoot(context).__name__
         self.siteCaches[siteName]= SiteCache()
         
     def get(self, name, key, default=None):
@@ -78,7 +78,7 @@ class Cache:
             def caching(func):
                 @wraps(func)
                 def cached(target,*args, **kwargs):
-                    siteName = getSiteRoot(target).__name__
+                    siteName = getPublicationRoot(target).__name__
                     if not siteName in self.siteCaches:
                        self.siteCaches [siteName]= SiteCache()
                     cache = self.siteCaches[siteName]
@@ -129,7 +129,7 @@ class MixIn(object):
         return self.bestObjects('mostRecent',IPage)        
 
     def bestObjects(self,sortKey,whichInterface):
-        root = self.getSiteRoot()
+        root = self.getPublicationRoot()
         aHeap = []
 
         self.bestCategoryObjects(sortKey,root,aHeap, whichInterface)

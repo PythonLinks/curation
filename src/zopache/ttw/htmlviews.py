@@ -176,6 +176,7 @@ class Index(View,Breadcrumbs):
 @context(IAceHTMLClass)
 class AceObjectIndex(Index,Breadcrumbs):           
     def render(self):
+
         content = Index.render(self)
         zopacheTemplate = self.zopacheTemplate
         if not hasattr(zopacheTemplate,'layout'):

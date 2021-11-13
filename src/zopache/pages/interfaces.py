@@ -14,7 +14,6 @@ from cromlech.file import FileField
 from zopache.ttw.interfaces import IAceHTML
 from zopache.core.interfaces import ICountable, ISiteRoot
 from zopache.crud.interfaces import ILeaf
-from zopache.core.interfaces import ISiteRoot
 
 class ILayoutView(Interface):
     pass
@@ -176,7 +175,7 @@ class INews (IPage,IRecent):
     pass
 
 
-class ISiteRootPage(ISiteRoot,IBranch,IZodbRoot,IPageBase,IBTreeContainer):
+class ISiteRootPage(ISiteRoot,IBranch,IPageBase,IBTreeContainer):
     pass
 
 

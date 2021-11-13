@@ -1,6 +1,8 @@
 #THERE IS A COPY OF THIS IN zopache.core  as well       
 from cromlech.browser.interfaces import IPublicationRoot
 from BTrees.OOBTree import OOBTree
+
+from zopache.core.interfaces import ISiteRoot
 from zopache.crud.interfaces import IZodbRoot
 
 def getProducts(item):
@@ -23,9 +25,6 @@ def getRoot(object,anInterface):
                 raise TypeError("Maximum location depth exceeded, "                                "probably due to a a location cycle.")
         raise TypeError("Parents needed to  determine location root")
 
-def getSiteRoot(item):
-    return getRoot(item, ISiteRoot)
-
 def getPublicationRoot(item):
     return getRoot(item, IPublicationRoot)
                
@@ -33,13 +32,18 @@ def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
 
 def getPrincipalFolder(item):
-    root = getSiteRoot(item)
+    root = self.getSiteRoot(item)
     if ((root != None) and
        ("person" in root)):
         return root["person"]
     else:
         return root['wiki']["person"]
 
+def getSiteRoot(self,view):
+    siteRoot =  getPublicationRoot(self)
+    if not ISiteRoot.providedBy(siteRoot):
+        siteRoot = siteRoot.getSiteRootFor(view.getDomain())         
+    return siteRoot
 
 
 
@@ -56,11 +60,8 @@ class Root(object):
         siteRoot= getattr(self,'_siteRoot',None)
         if (siteRoot != None):
            return siteRoot        
-        publicationRoot =  getPublicationRoot(self.context)
-        if not ISiteRoot.providedBy(publicationRoot):
-           siteRoot = publicationRoot.getSiteRootFor(self.getDomain())         
-        self._siteRoot = siteRoot
-        return siteRoot
+        self._siteRoot = siteRoot = getSiteRoot(self.context,self)
+        return siteRoot        
 
     def getZodbRoot(self):
         return getZodbRoot(self.context)
@@ -74,7 +75,7 @@ class Root(object):
     def getProducts(self):
         products = getattr(self,'_products',None)
         if products == None:
-            root = getZodbRoot(item)
+            root = getZodbRoot(self.context)
             self._products = products =  root["Products"]                
         return products
 
