@@ -15,7 +15,7 @@ from zopache.crud.forms import EditForm
 from zopache.core.viewdecorators import *
 from zopache.ttw.treewidget import TreeField
 from zopache.core.interfaces import ITreeSecurity
-from zopache.crud.update import Edit, Save,  SaveAndView, SaveAndToot, Cancel
+from zopache.crud.update import Edit, Save,  SaveAndView,  Cancel
 from zopache.core.breadcrumbs import Breadcrumbs    
 
 class IApprove(Interface):
@@ -38,12 +38,6 @@ class IApprove(Interface):
         required = False,
         default = False)
 
-    publicationApproved = schema.Bool(
-        title =  "Published or not?",
-        description = "Move to its category, or back to its RSS feed.",
-        required = False,
-        default = True)
-
     category=TreeField(
            title="Category Search",
            description= """Choose where to move the articcle. """,
@@ -55,6 +49,7 @@ class Publish(Save):
         result = Save.__call__(self,form)
         if result != FAILURE:
             self.publish()
+            raise HTTPFound('/' + form.context.name)            
         return result
     
     def publish(self):
@@ -66,13 +61,22 @@ class Publish(Save):
             category = form.getSiteRoot()[context.category]
             if category!= context.__parent__:
                 context.moveTo(category)
-            HTTPFound('/' + context.name)
-            
+
+
+class PublishAndToot(Publish):
+    def __call__(self,form):
+        result = Save.__call__(self,form)
+        if result != FAILURE:
+            self.publish()
+            raise HTTPFound('/' + form.context.name + '/toot')
+        return resul
+    
 class Retract(Save):
     def __call__(self,form):
         result = Save.__call__(self,form)
         if result != FAILURE:
             self.retract()
+            raise HTTPFound('/' + self.form.context.name)            
         return result              
         
     def retract(self):
@@ -81,7 +85,7 @@ class Retract(Save):
         rssFeed = context.rssFeed
         if rssFeed != context.__parent__:
            context.moveTo(rssFeed)
-        HTTPFound('/' + context.name)
+
            
 
 @form_component
@@ -96,17 +100,12 @@ class Approve (EditForm,Breadcrumbs):
     def newURL (self,baseURL):
            return baseURL
 
-    def updateWidgets(self):
-        self.fields["publicationApproved"].mode = DISPLAY        
-        EditForm.updateWidgets(self)
-       
     def addAuthorizedActions(self):
         self.actions = Actions(
                     Edit("Save", "save"),        
                     Publish("Publish","publish"),
                     Retract("Retract","retract"),
-                    SaveAndView("Save And View","Save And View"),
-                    SaveAndToot("Save And Toot","saveToot"),
+                    PublishAndToot("Pubilsh And Toot","publishToot"),
                     Cancel("Cancel","Cancel"))
         
     def postProcess(self, view = None):
