@@ -11,7 +11,7 @@ from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 
-from zopache.core.getroot import getPrincipalFolder, getSiteRoot
+from zopache.core.getroot import getPrincipalFolder
 from zopache.forms.validator import AccessGoogle
 from zopache.pages.interfaces import IPage
 from zopache.remote.mastodon.basebot import BaseBot
@@ -116,7 +116,7 @@ class RegisterAction(BaseAction):
         new = form.factory()
         person = form.new=new
         people = form.getPrincipalFolder()
-        siteRoot = form.getSiteRootFor(form.request.domain)        
+        siteRoot = form.getSiteRoot(form.request.domain)        
         newName = siteRoot.getUniqueNumberString()
         new.name = newName
 
