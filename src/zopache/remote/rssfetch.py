@@ -37,6 +37,7 @@ class GetRSS(Form):
     def update(self):
         feeds = []
         leaves = self.context.rssLeaves()
+        breakpoint()
         for  item  in leaves:
                if IRSS.providedBy(item):
                   if item.rssApproved:   
