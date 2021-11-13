@@ -72,9 +72,13 @@ class Update(Action,TransactionNote):
 #JUST TO MAKE IT EASIER TO UNDERSTAND        
 class Edit(Update):
     pass
+
+class Save(Update):
+    pass
     
 class SaveAndView(Update):
         def newURL(self,baseURL):
+               breakpoint()
                return baseURL
 
 class SaveAndToot(Update):

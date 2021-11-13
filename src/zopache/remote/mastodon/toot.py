@@ -1,4 +1,4 @@
-from mastodon import Mastodon
+
 
 from zope.interface import Interface
 from zope.schema import Text
@@ -13,7 +13,7 @@ from zopache.pages.interfaces import IPage
 from zopache.remote.irss import IRSSArticle
 from zopache.crud.update import Cancel, Edit
 from zopache.crud.update import Edit
-
+from zopache.remote.mastodon.basebot import BaseBot
 
 
 class Toot(Edit):
@@ -28,22 +28,33 @@ class TootAndView(Toot):
         if getattr(form.context, 'tootURL',None):
              raise HTTPFound(form.context.tootURL)
 
+
+class OnlyToot(Edit):
+    def __call__(self, form):
+        form.nowToot()
+        
+class OnlyTootAndView(Toot):
+    def __call__(self, form):
+        url = form.nowToot()
+        if url != '':
+           raise HTTPFound(url)
+         
 class Reset(Action):
     def __call__(self, form):
         form.context._toot = ""
+        
+class OnlyReset(Action):
+    def __call__(self, form):
+        raise HTTPFound(".")
 
 class Delete(Action):
     def __call__(self, form):
         #Delete Image not supported.
-        #self.deleteImage(form)
-        self.deleteToot(form)
-        
-    def deleteToot(self,form):
         tootId = getattr(form.context,'tootId',None)
         if not tootId:
             form.submissionError += "No Toot to Delete"            
         try:
-            result = form.mastodon.status_delete(tootId)
+            result = form.getPrincipal().accountProxy.status_delete(tootId)
             del form.context.tootURL 
             del form.context.tootId 
         except Exception as error:
@@ -52,6 +63,7 @@ class Delete(Action):
                  <br><br> Maybe that means that there is no such toot."""
             
     #2021 Looks like the Mastodon API does not support this
+    """
     def deleteImage(self):
         
         image = self.parentalAcquire('Logo')
@@ -60,13 +72,14 @@ class Delete(Action):
             form.submissionError += "No Image to Delete"
             return 
         try:
-            result = form.mastodon.status_delete(tootId)
+            result = form.proxyForUser().status_delete(tootId)
             del form.context.tootURL 
             del form.context.tootId 
         except Exception as error:
             form.report(error)
-            form.submissionError += """
-                 <br><br> Maybe that means that there is no such toot."""            
+            form.submissionError += '''
+                 <br><br> Maybe that means that there is no such toot.'''
+         """  
         
 class IClass(Interface):
 
@@ -77,46 +90,40 @@ class IClass(Interface):
         default = '',
     )         
 
-class Remote(object):
-    @property
-    def mastodon(self):
-        return  Mastodon(
-          access_token = self.getPrincipal().accessToken,
-          api_base_url = 'https://mastodon.social')
-
     
 @form_component
 @name ('toot')
 @context(IPage)
-@permissions('Manage')
-class TootForm (EditForm,Remote):
+class TootForm (EditForm,BaseBot):
     title = 'Toot'
     subTitle = 'Limit 500 characters'
     interface = IClass
     fields = Fields(IClass)
     tootURL = ""
     layoutName = "UserMenu"
-
     
     def nowToot(self):
          if self.context._toot == "":
             self.submissionError = """You submitted an empty toot, so nothing 
                                was posted. <br><br> The toot was reset to 
                               the defult toot."""
-            return False
+            return ''
         
          mediaList = self.mediaIdAsList()
 
          try:
-            tootDict = self.mastodon.status_post(self.context.toot,
+            tootDict = self.proxyForUser().status_post(self.context.toot,
                                                  media_ids=mediaList)
-            self.context.tootURL = tootDict.url
-            self.context.tootId = tootDict['id']
-            
+            if self.isManager():
+                self.context.tootURL = tootDict.url
+                self.context.tootId = tootDict['id']
+            else:
+                self.tootURL = tootDict.url
+                self.tootId = tootDict['id']
+                
             #Otherwise the delete action does not show up. 
-            if self.treeSecurity():
-               self.addAuthorizedActions()            
-            return True
+            self.addAuthorizedActions()            
+            return tootDict ["url"]
          except Exception as error:
             self.report(error)
             self.submissionError += """ <br><br> 
@@ -133,20 +140,34 @@ class TootForm (EditForm,Remote):
         #Ideally should do the next line, but it does nothing extra.
         #EditForm.update(self)
         self.template = self.getTemplates()['toot']
+        self.updateLocalActions()
+        
+    def updateLocalActions(self):    
         if self.treeSecurity():
             self.addAuthorizedActions()
-    
+        else:
+            self.addAuthorizedActions()
+            
     def addAuthorizedActions(self):
         actionList = [Edit("Save",'save'),
                       Toot("Toot","toot"),
-                            TootAndView("Toot And View","tootView"),
-                            Reset("Reset",'reset')
-                            ]
+                      TootAndView("Toot And View","tootView"),
+                      Reset("Reset",'reset')
+                      ]
         if hasattr(self.context,'tootURL'):
               actionList.append(Delete("Delete Toot","deleteToot"))
         actionList.append(Cancel("Cancel","Cancel"))
         actionList = tuple(actionList)                  
         self.actions = Actions(*actionList)
+
+    def addUnAuthorizedActions(self):
+        actionList = [OnlyToot("Toot","toot"),
+                      OnlyTootAndView("Toot And View","tootView"),
+                      OnlyReset("Reset",'reset')
+                      ]
+        actionList.append(Cancel("Cancel","Cancel"))
+        actionList = tuple(actionList)                  
+        self.actions = Actions(*actionList)        
 
         
     def acquireTitle(self):
@@ -168,7 +189,7 @@ class TootForm (EditForm,Remote):
         data , mimeType = image.mastodonImage()
         
         try: 
-           mediaDict =   self.mastodon.media_post(media_file=data,
+           mediaDict =   self.proxyForUser().media_post(media_file=data,
                                           mime_type=mimeType,
                                           description=self.context.title,
                                           focus=None)

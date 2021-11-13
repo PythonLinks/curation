@@ -30,6 +30,7 @@ class Logout(Page):
     title="You are logged out"
     subTitle="Please come back soon!"    
     layoutName = "UserMenu"
+    submissionError = ""
     def update(self):
          principal = self.request.principal
          if principal != anonymous:

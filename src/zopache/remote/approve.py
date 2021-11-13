@@ -1,10 +1,11 @@
 from zope import schema
+from zope.schema import Text
+
+from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.viewdecorators import *
 from zopache.remote.rssarticle import IRSSArticle
-from cromlech.browser.exceptions import HTTPFound
 from zopache.forms.interfaces import IApprove
-from zope.schema import Text
 
 from dolmen.forms.base import Actions
 
@@ -12,8 +13,8 @@ from zopache.crud.forms import EditForm
 from zopache.core.viewdecorators import *
 from zopache.ttw.treewidget import TreeField
 from zopache.core.interfaces import ITreeSecurity
-import zopache.crud.update as editactions
-
+from zopache.crud.update import Edit, Save,  SaveAndView, SaveAndToot, Cancel
+from zopache.core.breadcrumbs import Breadcrumbs    
 
 class IApprove(Interface):
     title = schema.TextLine(
@@ -35,20 +36,52 @@ class IApprove(Interface):
         required = False,
         default = False)
 
+    publicationApproved = schema.Bool(
+        title =  "Published or not?",
+        description = "Move to its category, or back to its RSS feed.",
+        required = False,
+        default = True)
+
     category=TreeField(
            title="Category Search",
            description= """Choose where to move the articcle. """,
            required = False,
             )
     
-    publicationApproved = schema.Bool(
-        title =  "Published or not?",
-        description = "Move to its category, or back to its RSS feed.",
-        required = False,
-        default = True)    
-
+class Publish(Save):
+    def __call__(self,form):
+        result = Save(self).__call__(form)
+        if result != FAILURE:
+            self.publish()
+        return result
     
-from zopache.core.breadcrumbs import Breadcrumbs    
+    def publish(self):
+        context = self.form.context
+        if getattr(context,'category',''):
+            context.publicationApproved = True
+            self.publish()
+            context.addImage()
+            category = self.siteRoot[context.category]
+            if category!= context.__parent__:
+                self.context.moveTo(category)
+            HTTPFound('/' + context.name)
+            
+class Retract(Save):
+    def __call__(self,form):
+        Save(self).__call__(form)
+        if result != FAILURE:
+            self.retract()
+        return result              
+        
+    def retract(self):
+        context = self.form.context
+        context.publicationApproved = False
+        rssFeed = context.rssFeed
+        if rssFeed != self.__parent__:
+           self.context.moveTo(rssFeed)
+        HTTPFound('/' + context.name)
+           
+
 @form_component
 @name ('approve')
 @context(IRSSArticle)
@@ -59,37 +92,26 @@ class Approve (EditForm,Breadcrumbs):
     interface = IApprove
     fields = Fields(IApprove)
     def newURL (self,baseURL):
-           return baseURL 
-    def addAuthorizedActions(self):
+           return baseURL
 
-        self.actions = Actions(editactions.Edit("Save","Save"),
-                    editactions.SaveAndView("Save And View","Save And View"),
-                    editactions.SaveAndToot("Save And Toot","saveToot"),
-                    editactions.Cancel("Cancel","Cancel"))
+    def updateWidgets(self):
+        self.fields["publicationApproved"].mode = DISPLAY        
+        EditForm.updateWidgets(self)
+       
+    def addAuthorizedActions(self):
+        self.actions = Actions(
+                    Edit("Save", "save"),        
+                    Publish("Publish","publish"),
+                    Retract("Retract","retract"),
+                    SaveAndView("Save And View","Save And View"),
+                    SaveAndToot("Save And Toot","saveToot"),
+                    Cancel("Cancel","Cancel"))
         
     def postProcess(self, view = None):
         self.siteRoot = self.getSiteRoot()
         context = self.context
         context.postProcess(view = self)
-        if context.publicationApproved == True:
-           if context.category !="": 
-                self.publish()
-                context.addImage()
-        else:
-           self.retract()
         
-    def publish(self):
-        context = self.context
-        if hasattr(context,'category'):
-           if context.category != "":
-              category = self.siteRoot[context.category]
-              if category!= context.__parent__:
-                self.context.moveTo(category)
-
-    def retract(self):
-        rssFeed = self.context.rssFeed
-        if rssFeed != self.__parent__:
-           self.context.moveTo(rssFeed)
            
 
 

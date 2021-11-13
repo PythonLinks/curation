@@ -135,19 +135,13 @@ class DeleteObjects(BaseAction):
         ids = self.getValues(form,
                     "You did not select any objects to delete")
         container = form.context
+
         for id in ids:
             item= container [id]
             deleter = IObjectDeleter(item)
             deleter.deleteItem(form)
         cache.resetCache(form.context)
         return SuccessMarker('Deleted', True)
-
-
-       
-
-       
-
-
             
          # HINTS ON HOW TO DO ERRORS
          #   form.errors = errors
