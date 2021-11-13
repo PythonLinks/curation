@@ -16,7 +16,7 @@ class BaseValidator(object):
         
     def slugExists(self, data):
         form = self.form
-        siteRoot = self.form.context.getSiteRoot()
+        siteRoot = self.form.getSiteRoot()
         if "title" in data:
            title = data ['title']
         else:
