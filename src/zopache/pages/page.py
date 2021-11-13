@@ -11,7 +11,7 @@ from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import (ITime,IContent,IPage ,IPageBase, 
                                       ISiteRootPage, INews,
                                       ICategory)
-from zopache.core.getroot import getSiteRoot, getZodbRoot
+from zopache.core.getroot import getPublicationRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from cromlech.container.contained import Contained
@@ -191,12 +191,12 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
         cache.resetCache(self)
 
     def preProcess(self,view=None):
-        siteRoot = view.getSiteRoot()
+        siteRoot = view.getSiteRoot(view)
         if self.webApproved:
             siteRoot.unIndexItem(self)
         
     def postProcess(self,view=None):
-        siteRoot = view.getSiteRoot()
+        siteRoot = view.getSiteRoot(view)
         siteRoot.indexItem(self)        
         self.modificationTime=time.time()        
         self.postProcessCore(view = view)
@@ -228,7 +228,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
            view.notifyAdminsNewPage()
         
     def recalculateRootJSON(self):
-         jsonRoot = self.getSiteRoot()
+         jsonRoot = self.getPublicationRoot()
          if jsonRoot:
             jsonRoot.setJson()
     
@@ -237,8 +237,8 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
          self.creationTime=time.time()
          self.modificationTime=self.creationTime
 
-    def getSiteRoot(self):
-        return getSiteRoot(self)
+    def getPublicationRoot(self):
+        return getPublicationRoot(self)
 
     def getZodbRoot(self):
         return getZodbRoot (self)
@@ -262,14 +262,14 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
                 yield item                   
 
     def __delitem__(self,key):
-        siteRoot = self.getSiteRoot()
+        siteRoot = self.getPublicationRoot()
         item = self[key]
         siteRoot.unIndexItem(item)
         OrderedBTreeContainer.__delitem__(self,key)
         
     def __setitem__(self,  key,item):
         OrderedBTreeContainer.__setitem__(self,key,item)
-        siteRoot = self.getSiteRoot()     
+        siteRoot = self.getPublicationRoot()     
         siteRoot.addItem(item)
                   
     def hasContent(self):
@@ -439,9 +439,6 @@ class SiteRootPage(SiteRoot):
        Page.__init__(self)
        Branch.__init__(self)
        self ["person"] = PrincipalFolder()
-
-    def getSiteRootFor(self,hostName):
-        return self
 
     def getSiteRootFor(self,hostName):
         return self    
