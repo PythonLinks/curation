@@ -1,6 +1,6 @@
 from cromlech.security import permissions
 from zopache.core.viewdecorators import *
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zopache.core.baseform import Form
 
 class Base(Form):
@@ -10,7 +10,7 @@ class Base(Form):
             self.template = self.getTemplates()['OauthGoogle']               
 
 @form_component
-@context(IPage)
+@context(IPageBase)
 @target(IView)
 @name("login")
 class GLogin(Base):
@@ -18,7 +18,7 @@ class GLogin(Base):
     loginURL = ""
 
 @form_component
-@context(IPage)
+@context(IPageBase)
 @target(IView)
 @name("loginToSubscribe")
 class LoginToSubscribe(Base):
@@ -26,7 +26,7 @@ class LoginToSubscribe(Base):
     loginURL = "subscribe"
 
 @form_component
-@context(IPage)
+@context(IPageBase)
 @target(IView)
 @name("loginToDonate")
 class LoginToDonate(Base):
@@ -34,7 +34,7 @@ class LoginToDonate(Base):
     loginURL = "donate"
 
 @form_component
-@context(IPage)
+@context(IPageBase)
 @target(IView)
 @name("loginToVolunteer")
 class LoginToVolunteer(Base):
@@ -43,7 +43,7 @@ class LoginToVolunteer(Base):
 
 
 @form_component
-@context(IPage)
+@context(IPageBase)
 @target(IView)
 @name("loginToEndorse")
 class LoginToEbdorse(Base):

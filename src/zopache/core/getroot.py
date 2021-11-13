@@ -32,12 +32,11 @@ def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
 
 def getPrincipalFolder(item):
-    root = self.getSiteRoot(item)
+    root = getPublicationRoot(item)
     if ((root != None) and
        ("person" in root)):
         return root["person"]
-    else:
-        return root['wiki']["person"]
+    raise Exception ("No Prncipal Folder found.  Odd. ")
 
 def getSiteRoot(self,view):
     siteRoot =  getPublicationRoot(self)

@@ -32,6 +32,7 @@ class LoginAction(Action):
         data, errors = form.extractData()
         if errors:
             form.errors = errors
+            form.submissionErrors += str(errors)
             return FAILURE
         success = self.getContext(form).authenticate(data)
         if success == None:
@@ -41,10 +42,7 @@ class LoginAction(Action):
             ))
             return FAILURE
         url = "/" + form.context.name
-        print ("URL = ", url)
         return SuccessMarker('Added', True, url=".",code=307)
-
-        #raise HTTPFound(url)
 
     def getContext(self,form):
         return getPrincipalFolder(form.context)
