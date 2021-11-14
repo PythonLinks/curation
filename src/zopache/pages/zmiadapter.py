@@ -1,6 +1,5 @@
 import crom
 from zopache.crud.interfaces import IRenameable,IDeletable,ICopyable
-from zopache.core.getroot import getSiteRoot
 from zopache.zmi.cutcopypaste import Cutter, Copier, Deleter
 from zopache.zmi.cutcopypaste import Paster, Renamer
 from zopache.pages.interfaces import IPageBase
@@ -16,7 +15,7 @@ from zopache.zmi.interfaces import IObjectCopier
 from zopache.zmi.interfaces import IObjectRenamer
 from zopache.zmi.interfaces import IObjectPaster
 from zopache.core.transactionnote import TransactionNote
-from zopache.core.getroot import getSiteRoot
+from zopache.core.getroot import getPublicationRoot
 from zopache.pages.cache import cache
 
 
@@ -83,7 +82,7 @@ class PageRenamer(Renamer,UniquePageName):
         if obj is None:
             raise ItemNotFoundError(self.container, oldName)
         newName=self.uniqueName(container,newName)
-        siteRoot = obj.getSiteRoot()
+        siteRoot = obj.getPublicationRoot()
         #siteRoot.unIndexItem(obj)
         self.moveFrom(container,oldName, container, newName)
 
@@ -115,7 +114,7 @@ class PageDeleter(Deleter):
         # So even though root is not used till later, 
         #we have to do this before deleting the __parent__ Pointer.
         if IPageBase.providedBy (container):
-           root = getSiteRoot(contained)
+           root = getPublicationRoot(contained)
         if hasattr(contained,'preDeleteProcess'):
              contained.preDeleteProcess(view)
         del container[name]

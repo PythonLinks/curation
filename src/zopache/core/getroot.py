@@ -66,7 +66,9 @@ class Root(object):
         return getZodbRoot(self.context)
 
     def getPrincipalFolder(self):
-        return getPrincipalFolder(self.context)               
+        siteRoot = self.getSiteRoot()
+        return siteRoot["person"]
+
 
     def getPrincipal(self):
            return self.request.principal

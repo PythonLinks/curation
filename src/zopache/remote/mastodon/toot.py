@@ -122,7 +122,7 @@ class TootForm (EditForm,BaseBot):
                 self.tootId = tootDict['id']
                 
             #Otherwise the delete action does not show up. 
-            self.addAuthorizedActions()            
+            self.updateLocalActions()            
             return tootDict ["url"]
          except Exception as error:
             self.report(error)
@@ -142,11 +142,11 @@ class TootForm (EditForm,BaseBot):
         self.template = self.getTemplates()['toot']
         self.updateLocalActions()
         
-    def updateLocalActions(self):    
+    def updateLocalActions(self):
         if self.treeSecurity():
             self.addAuthorizedActions()
         else:
-            self.addAuthorizedActions()
+            self.addUnAuthorizedActions()
             
     def addAuthorizedActions(self):
         actionList = [Edit("Save",'save'),

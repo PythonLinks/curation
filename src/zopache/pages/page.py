@@ -123,12 +123,16 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
         return result
 
     def newsItemsOnly(self):
-        result =[]
+        articles = []
+        categories = []
         for item in self.values():
-            if (item.__class__.__name__ in {'Category','Link','RssArticle'}
-                and item.webApproved):
-                result.append (item)
-        return result    
+            if getattr (item,'webApproved',False):
+               className = item.__class__.__name__
+               if className == 'Category':
+                    categories.append(item)
+               elif className in ['Link','RssArticle']:
+                    articles.append(item)
+        return categories + articles
 
     
     def canView(self,view):

@@ -322,7 +322,7 @@ class PrincipalFolder(Container):
         if IInternalPrincipal.providedBy(principal):
             del self.idByEmail[principal.email]
             del self.idBySlugifiedHandle[principal.slugifiedHandle()]
-        root = getSiteRoot(self)
+        root = getPublicationRoot(self)
         root.deleteItem(principal)
         BTreeContainer.__delitem__(self,name)        
 

@@ -12,6 +12,7 @@ class ReIndex(Form):
     label = 'ReIndex'
     def update(self):
            root = self.getSiteRoot ()
+           root.indexTree()
            products = self.getProducts ()
            products.indexTree()
            people = self.getPrincipalFolder()
