@@ -101,6 +101,33 @@ class TootForm (EditForm,BaseBot):
     fields = Fields(IClass)
     tootURL = ""
     layoutName = "UserMenu"
+    twitterId = ''
+    link = ''
+    accountProxy = False
+    mastadonImageURL = ""
+
+
+    def update(self):
+        self.tootURL =  getattr(self.context,'tootURL','')
+        self.tempTootURL =  getattr(self,'tootURL','')
+        
+        image = self.parentalAcquire('Logo')
+        if image:
+          self.imageURL = getattr(image, 'mastodonURL','')
+ 
+        if hasattr(self.context,'rssFeed'): 
+           rssFeed = self.context.rssFeed
+           if hasattr(rssFeed,'twitterId'):
+              self.twitterId = twitterId = rssFeed.twitterId
+              self.link = ("@" + twitterId + "@twitter.com") if twitterId else ''
+
+        self.canToot =  getattr (self.request.principal,'accountProxy',False)
+        
+        self.template = self.getTemplates()['toot']
+        self.updateLocalActions()
+        EditForm.update(self)
+    
+
     
     def nowToot(self):
          if self.context._toot == "":
@@ -135,12 +162,6 @@ class TootForm (EditForm,BaseBot):
     def report (self,error):
         self.submissionError += (error.args[3] if len(error.args) > 3
                                         else str(error))
-        
-    def update(self):
-        #Ideally should do the next line, but it does nothing extra.
-        #EditForm.update(self)
-        self.template = self.getTemplates()['toot']
-        self.updateLocalActions()
         
     def updateLocalActions(self):
         if self.treeSecurity():
