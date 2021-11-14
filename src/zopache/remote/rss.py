@@ -68,7 +68,20 @@ class RSS(Link,UniqueName):
         except:
            return ""
 
-   
+    def createArticles(self,entries,view):
+       globalArticles= self.getPublicationRoot().globalArticles
+       now = time.time()
+       importTime = int(now)
+       breakpoint()
+       for article in entries:
+           
+           theId = article['id']
+           if not theId in globalArticles:
+              self.createOneArticle(article,view,importTime )
+              importTime -= 3600 
+              
+
+              
     # FOR A NEW RSS FEED       
     def createOneArticle(self,article,view,importTime):
        new = RSSArticle()
@@ -115,17 +128,6 @@ class RSS(Link,UniqueName):
        new.rssFeed = self          
        new.postAddProcess(view )
 
-    def createArticles(self,entries,view):
-       globalArticles= self.getPublicationRoot().globalArticles
-       now = time.time()
-       importTime = int(now)
-       for article in entries:
-           
-           theId = article['id']
-           if not theId in globalArticles:
-              self.createOneArticle(article,view,importTime )
-              importTime -= 3600 
-              
     def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)
         self.fetchAll(view = view)
