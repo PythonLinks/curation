@@ -131,7 +131,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
                if className == 'Category':
                     categories.append(item)
                elif className in ['Link','RssArticle']:
-                    artcles.append(item)
+                    articles.append(item)
         return categories + articles
 
     

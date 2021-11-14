@@ -32,21 +32,21 @@ class BaseBot(object):
         mastodonDomain = context.mastodonDomain
         return self.getProxy(accessToken, clientId, clientSecret, mastodonDomain)
 
+    def baseURL(self):    
+        domain = self.getDomain()
+        url = ("https://"+
+           domain +
+           '/servers/')
+        if domain == "dev.pythonlinks.info":
+            url += domain + '/'
+        url += self.context.name
+        return url
+    
     def redirectURL(self):
-        url = ("https://"+
-           self.getDomain()+
-           '/servers/' +
-           self.context.name +
-           '/callback')
-        return url
-
+        return  self.baseURL() + '/callback'
+    
     def registerURL(self):
-        url = ("https://"+
-           self.getDomain()+
-           '/servers/' +
-           self.context.name +
-           '/register?')
-        return url
-
+        return self.baseURL() + '/register?'
+        
 
         

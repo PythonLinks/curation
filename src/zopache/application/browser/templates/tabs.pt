@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md" tal:define="relativeURL view.absoluteURL();relativeSiteURL view.relativeSiteURL()">
+<nav class="navbar navbar-expand-md" tal:define="relativeURL view.absoluteURL()">
     <ul class="nav navbar-nav">
         <li tal:condition="not view.implements('zopache.ttw.interfaces.IWebClass')"
         class="nav-item">
@@ -65,21 +65,21 @@ Node  <span class="caret"></span></a>
 
 Tree  <span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li class="dropdown-item"><a href="${relativeSiteURL}/manage">Root</a>
+                <li class="dropdown-item"><a href="${view.getSiteRoot().__name__}/manage">Root</a>
                 </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/configure">Configure</a>
+                <li class="dropdown-item"><a href="/configure">Configure</a>
                 </li>
-                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="${relativeSiteURL}/ProductsRoot/manage">Root</a>
+                <li tal:condition="not view.isForestWiki()" class="dropdown-item"><a href="/Products/Root/manage">Root</a>
                 </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/Products/manage">Products</a>
+                <li class="dropdown-item"><a href="/Products/manage">Products</a>
                 </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/pack">Pack</a>
+                <li class="dropdown-item"><a href="/pack">Pack</a>
                 </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/undo">Transactions</a>
+                <li class="dropdown-item"><a href="/undo">Transactions</a>
                 </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/reIndex">ReIndex</a>
+                <li class="dropdown-item"><a href="/reIndex">ReIndex</a>
                 </li>
-                <li class="dropdown-item"><a href="${relativeSiteURL}/person/manage">People</a>
+                <li class="dropdown-item"><a href="/person/manage">People</a>
                 </li>
             </ul>
         </li>
