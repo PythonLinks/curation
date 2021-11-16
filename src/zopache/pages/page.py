@@ -135,7 +135,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
                elif className == 'RssArticle':
                     if item.webApproved:
                          articles.append(item)                    
-        return categories + Links + articles
+        return categories + links + articles
     
     def canView(self,view):
         return True
