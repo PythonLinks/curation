@@ -5,9 +5,8 @@ from zope import interface
 from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
-from BTrees.LOBTree import  LOTreeSet
 from BTrees.OOBTree import OOBTree
-from BTrees.LOBTree import  LOTreeSet
+from BTrees.IOBTree import IOBTree
 
 from cromlech.browser.interfaces import IPublicationRoot
 from dolmen.container import BTreeContainer, OrderedBTreeContainer
@@ -100,6 +99,10 @@ class Branch(SimpleBranch):
         self.politicians = OOBTree()
         self.pagesByTwitterId = OOBTree()
         self.socialNodeByTwitterId = OOBTree()
+        self.globalArticles = OOBTree()
+        self.newestArticles = IOBTree()
+        self.approvedArticles = IOBTree()       
+        self.remoteArticles = OOBTree()
 
     def __delitem__(self, key):
         item = self[key]
@@ -222,8 +225,8 @@ class Branch(SimpleBranch):
                     
     def hasArticle(self,importTime):
         importTime = - importTime
-        return ((importTime in self.newestArticles) or
-        (importTime in self.approvedArticles))
+        return (importTime in self.newestArticles or
+             importTime in self.approvedArticles)
         
     def unIndexItem(self,item, itemType=IPage):
         if not IPageBase.providedBy(item):

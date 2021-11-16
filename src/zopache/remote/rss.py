@@ -73,7 +73,6 @@ class RSS(Link,UniqueName):
        now = time.time()
        importTime = int(now)
        for article in entries:
-           
            theId = article['id']
            if not theId in globalArticles:
               self.createOneArticle(article,view,importTime )
@@ -114,6 +113,7 @@ class RSS(Link,UniqueName):
           new.publishedAt = importTime
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
+
        new.setImportTime(importTime, view.getSiteRoot())
 
        newName = slugify (new.title)

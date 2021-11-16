@@ -104,7 +104,7 @@ class TootForm (EditForm,BaseBot):
     twitterId = ''
     link = ''
     accountProxy = False
-    mastadonImageURL = ""
+    imageURL = ""
 
 
     def update(self):
