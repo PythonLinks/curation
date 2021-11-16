@@ -35,7 +35,8 @@ class GetRSS(Form):
     title = "Download the RSS Feeds"
     subTitle = "To get the newest news."
     def update(self):
-        feeds = []
+          
+        feeds = [] 
         leaves = self.context.rssLeaves()
         for  item  in leaves:
                if IRSS.providedBy(item):
@@ -45,7 +46,7 @@ class GetRSS(Form):
         for item in result:
             if item != None:  
               if len(item) == 2:
-                  print ("ERROR", item[0], item[1])
+                  self.submissionError += "ERROR:" + item[0] +  item[1]
         fetchImages(self,result)
         self.status='RSS Feeds were downloaded.'
         Form.update(self)
