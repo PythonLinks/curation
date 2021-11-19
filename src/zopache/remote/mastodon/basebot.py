@@ -37,13 +37,14 @@ class BaseBot(object):
         url = ("https://"+
            domain +
            '/servers/')
-        if domain == "dev.pythonlinks.info":
-            url += domain + '/'
+        #if domain == "dev.pythonlinks.info":
+        #    url += domain + '/'
         url += self.context.name
         return url
     
     def redirectURL(self):
-        return  self.baseURL() + '/callback'
+        result =   self.baseURL() + '/callback'
+        return result
     
     def registerURL(self):
         return self.baseURL() + '/register?'

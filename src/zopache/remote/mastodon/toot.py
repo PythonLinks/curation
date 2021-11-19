@@ -1,7 +1,8 @@
+from datetime import datetime, timedelta
 
 
 from zope.interface import Interface
-from zope.schema import Text
+from zope.schema import Text, Float
 
 from cromlech.browser.exceptions import HTTPFound
 from dolmen.forms.base import Action,Actions
@@ -42,7 +43,7 @@ class OnlyTootAndView(Toot):
 class Reset(Action):
     def __call__(self, form):
         form.context._toot = ""
-        
+
 class OnlyReset(Action):
     def __call__(self, form):
         raise HTTPFound(".")
@@ -88,6 +89,13 @@ class IClass(Interface):
         description = 'Say something!',
         required = False,
         default = '',
+    )
+    
+    delay= Float(
+        title = 'Delay',
+        description = 'Hours until posted',
+        required = False,
+        default = 0.,
     )         
 
     
@@ -105,8 +113,9 @@ class TootForm (EditForm,BaseBot):
     link = ''
     accountProxy = False
     imageURL = ""
-
-
+    scheduledAt = 0
+    tempScheduledAt = 0
+    
     def update(self):
         self.tootURL =  getattr(self.context,'tootURL','')
         self.tempTootURL =  getattr(self,'tootURL','')
@@ -139,18 +148,42 @@ class TootForm (EditForm,BaseBot):
          mediaList = self.mediaIdAsList()
 
          try:
+            delay = self.context.delay
+            if delay <= 0.1:
+                delay = self.delay = 0
+                scheduledAt = None
+            else:    
+                scheduledAt = datetime.now() + timedelta( hours=delay + 1 )
+     
             tootDict = self.proxyForUser().status_post(self.context.toot,
-                                                 media_ids=mediaList)
+                                            media_ids=mediaList,
+                                            scheduled_at = scheduledAt
+        )
+            if delay != 0:
+                self.sendMessage("Your Toot will show up at:" +
+                                 str(tootDict["scheduled_at"]))
+
+                                 
             if self.isManager():
-                self.context.tootURL = tootDict.url
-                self.context.tootId = tootDict['id']
+                target = self.context
             else:
-                self.tootURL = tootDict.url
-                self.tootId = tootDict['id']
+                target = self
+                
+            if 'url' in tootDict:
+                target.tootURL = tootDict.url
+                   
+            if 'id' in tootDict:
+                target.tootId = tootDict['id']
+
+            if 'schedule_at' in tootDict:
+                   target.scheduledAt = tootDict['scheduledAt']
                 
             #Otherwise the delete action does not show up. 
-            self.updateLocalActions()            
-            return tootDict ["url"]
+            self.updateLocalActions()
+            if 'url' in tootDict:                            
+                return tootDict ["url"]
+            return ""
+        
          except Exception as error:
             self.report(error)
             self.submissionError += """ <br><br> 

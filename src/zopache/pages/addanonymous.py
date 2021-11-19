@@ -6,7 +6,7 @@ from zopache.crud.actions import AddByTitleToTreeAndView
 from zopache.crud.forms import AddByTitleForm, AddByNameForm
 from zopache.pages.addpage import BaseAdd
 from zopache.core.viewdecorators import *
-from zopache.pages.interfaces import IPage, ILink
+from zopache.pages.interfaces import IPage, ILink, IAddLink
 from zopache.pages.page import Link
 from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
@@ -54,4 +54,14 @@ class AddToTree(object):
            self.actions = Actions(
                   AddByTitleToTreeAndView("Add and View", self.factory),
                   formactions.Cancel("Cancel","Cancel"))    
-        
+
+
+@view_component
+@name('addLink')
+@target(IView)
+@context(IPage)
+class AddLink(AddAnonymousPageByTitle):
+    interface = IAddLink
+    title = "Add a Link"
+    subTitle = "Refering to a remote page."
+    factory = Link

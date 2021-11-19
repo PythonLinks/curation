@@ -44,7 +44,7 @@ class Update(Action,TransactionNote):
         baseURL = self.form.absoluteURL()
         url=self.newURL(baseURL)
         self.describeWithView(form.context,form)
-        if url in form.request.url:
+        if url == form.request.url:
            return SuccessMarker('Updated', True)
         else:
            return SuccessMarker('Updated', True, url=url)

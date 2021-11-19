@@ -21,12 +21,13 @@ def htmlClass(self):
    
 class Form(BaseForm,Scripts,Breadcrumbs):
     title=""
-    subTitle=u""
+    subTitle=""
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')
     allowAnonymous = False
-    submissionError = ""    
+    submissionError = ""
+    submissionErrors = []
     #Just copied from dolmen.forms.base.BaseForm
     #Setting the parent makes life easier. 
     def __init__(self, context, request, **kwargs):

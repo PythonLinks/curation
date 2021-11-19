@@ -20,12 +20,10 @@
       <li> <span tal:replace="error.title" /> </li>
     </ul>
   </div>
-
-  <div class="text-danger"
-       tal:condition="view.errors">
-    <ul tal:condition="view.submissionError"
-        tal:repeat="error view.submissionError">
-      <li> <span tal:replace="error.title" /> </li>
+  <div class="text-danger">
+    <ul tal:condition="view.submissionErrors"
+        tal:repeat="error view.submissionErrors">
+      <li> <span tal:replace="error" /> </li>
     </ul>
   </div>
 

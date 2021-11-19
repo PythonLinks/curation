@@ -4,6 +4,8 @@ import ssl
 import time
 import sys
 
+from dolmen.forms.base.markers import FAILURE, SUCCESS
+
 from zopache.remote.irss import IRSSBase, IRSSArticle
 
 async def fetch(session,node,view):
@@ -16,41 +18,39 @@ async def fetch(session,node,view):
       if url == "":
          url = node.articleURL
    else:
-      return node, "Neither Feed Nor RSS Article"
+      return FAILURE, node.__name__, "Neither Feed Nor RSS Article"
    try:
         async with session.get(url) as response:
           if response.status == 200:
              result =  await node.processResponse(session,response,view)
-             return result
+             return SUCCESS, result
           else:
-             return node.name, 'status = ' + str(response.status)
+             return FAILURE, node.name, 'status = ' + str(response.status)
 
    except asyncio.TimeoutError as err:
           duration =  time.time() - startTime 
-          return node.name, "TIME OUT"  + str(duration)
+          return FAILURE, node.__name__, "TIME OUT"  + str(duration)
           
    except aiohttp.client_exceptions.InvalidURL as err:
-          return node.name, str(err)
+          return FAILURE, node.__name__, str(err)
        
    except aiohttp.client_exceptions.ClientConnectorError as err:    
-          return node.name, str(err)          
+          return FAILURE, node.__name__, str(err)          
      
    except aiohttp.client_exceptions.ServerDisconnectedError as err:    
-          return node.name, str(err)          
+          return FAILURE, node.__name__, str(err)          
   
    except ssl.SSLError as err:    
-          return node.name, str(err)
+          return FAILURE, node.__name__, str(err)
        
    except AttributeError as err:
-          return node.name, str(err)                 
+          return FAILURE, node.__name__, str(err)                 
 
    except:
           e = sys.exc_info()[0]
-          return node.name, str(e)
+          return FAILURE, node.__name__, str(e)
 
-   return node.name, "UNEXPlAINED ERROR"
-
-
+   return FAILURE, node.name, "UNEXPlAINED ERROR"
 
 def fetchAll(nodes,view):
     loop = asyncio.new_event_loop()

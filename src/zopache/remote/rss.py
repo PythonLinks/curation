@@ -3,8 +3,9 @@ from zope import schema
 from slugify import slugify
 import feedparser
 from html import unescape
-
 import time
+
+from dolmen.forms.base.markers import FAILURE, SUCCESS
 from zopache.pages.page import Link
 from zopache.core.viewdecorators import *
 from zopache.remote.ivideo import IBasicVideo, IPrincipalVideo
@@ -130,16 +131,17 @@ class RSS(Link,UniqueName):
 
     def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)
-        self.fetchAll(view = view)
         if self.logoURL:
             getImage(self,self.logoURL)
-        
-    def fetchAll(self, view = None):    
-        urls = [self.rssURL]
+        self.fetchArticles([self],view)
 
-        #urls += self.otherFeeds
-        result = fetchAll(urls,view)
-        view.status='RSS Feeds were downloaded.'
+    #COPY OF THIS HERE AND IN RSS.PY    
+    def fetchArticles(self,feeds,view):    
+        result = fetchAll(feeds,view)
+        for item in result:
+            if item[0] ==  FAILURE:  
+              self.submissionErrors.append( "ERROR:" + str(item [1:]))
+        self.status='RSS Feeds were downloaded.'
         
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)
@@ -149,7 +151,7 @@ class RSS(Link,UniqueName):
           feed = feedparser.parse(html)
           entries = feed['entries']
           self.createArticles(entries,view)
-          #print ("RSS WAS CREATED" + self.name)
+
           
 @implementer(IJustRSS)
 class JustRSS(RSS):

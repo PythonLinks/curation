@@ -13,13 +13,13 @@ from zopache.ttw.mail import Notify
 from BTrees.OOBTree import OOBTree
 from dolmen.container import IBTreeContainer
 from zopache.business.exists import Duplicate
+from zopache.pages.addanonymous import AddAnonymousPageByTitle
 
 @view_component
 @name ('addRSS')
 @target(IView)
 @context(IPage)
-@implementer(ITreeSecurity)
-class AddRSS(AddByTitleForm,Notify):
+class AddRSS(AddAnonymousPageByTitle,Notify):
      interface = IAddRSS
      title = "Add an RSS Feed"
      subTitle =""

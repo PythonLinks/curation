@@ -3,7 +3,7 @@ from zopache.crud.actions import Cancel
 from zopache.core.viewdecorators import *
 from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase
-from zopache.crud.forms import AddByTitleForm, AddByNameForm
+from zopache.crud.forms import AddByTitleForm, AddByNameForm, AddForm
 from zopache.crud.addbytitleactions import *
 from dolmen.forms.base import Fields
 from zopache.pages.interfaces import (IMap,
@@ -13,7 +13,6 @@ from zopache.pages.interfaces import (IMap,
                                       IPageBase,
                                       ISiteRootPage,
                                       IProxyPage,
-                                      IAddLink,
                                       IActionNetwork)
 from zopache.pages.page import Page, Link, SiteRootPage, ActionNetwork
 from zopache.pages.location import SimpleMap, Location, Pin
@@ -25,7 +24,7 @@ from zopache.pages.proxypage import ProxyPage
 from zopache.crud.getimage import getImage
 from zopache.ttw.mail import Notify
 
-class BaseAdd(AddCkHTMLBase,AddByTitleForm,Notify):
+class BaseAdd(AddCkHTMLBase,AddForm,Notify):
     count = 0 
     layoutName = "UserMenu"
     actions = Actions()
@@ -65,7 +64,7 @@ class AddAuthorizedPage(BaseAdd):
 @view_component
 @name('addPage')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class AddPage(AddAuthorizedPage):
     title = "Add a Web Page"
@@ -74,6 +73,8 @@ class AddPage(AddAuthorizedPage):
     label=""
     factory = Page
 
+
+    
 from zopache.application.interfaces import IRootContainer
 @view_component
 @name('addRootPage')
@@ -91,7 +92,7 @@ class AddRootPage(AddAuthorizedPage):
 @view_component
 @name('addProxyPage')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class AddProxyPage(AddAuthorizedPage):
     interface = IProxyPage
@@ -103,7 +104,7 @@ class AddProxyPage(AddAuthorizedPage):
 @view_component
 @name('addAction')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class AddAction(AddAuthorizedPage):
     interface = IActionNetwork
@@ -111,17 +112,7 @@ class AddAction(AddAuthorizedPage):
     factory = ActionNetwork
 
 
-@view_component
-@name('addLink')
-@target(IView)
-@context(IPage)
-@implementer(ITreeSecurity)
-class AddLink(AddAuthorizedPage):
-    interface = IAddLink
-    title = "Add a Link"
-    subTitle = "Refering to a remote page."
-    factory = Link
-  
+
 #LOCAION
 @view_component
 @name('addLocation')
@@ -150,7 +141,7 @@ class AddPin(AddAuthorizedPage):
 @view_component
 @name('addSimpleMap')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 @implementer(ITreeSecurity)
 class AddMap(AddAuthorizedPage):
     subTitle = 'Add a map'

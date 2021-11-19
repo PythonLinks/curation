@@ -333,8 +333,8 @@ class CkDemoHTML(BaseCkEdit):
         return Actions()
 
 @view_component
-@name('viewsource')
-@context(IIndexHTML)
+@name('source')
+@context(ISource)
 class ViewSource(Index):
     def render(self):
             top="<html><head></head><body>"

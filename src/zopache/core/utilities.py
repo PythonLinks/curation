@@ -1,17 +1,33 @@
 import json
 from pydoc import locate
 import hashlib
+from html import escape, unescape
+
 from cromlech.security import Unauthorized
-from dolmen.message.utils import send
+from dolmen.message import SessionSource, MessageReceiver
+
 from zopache.core.getroot import getSiteRoot
 from zopache.application.everyobject import EveryObject
 
-from html import escape, unescape
 
 def sortFunction(item):
   return item.__name__
 
-class Utilities (object): 
+class Utilities (object):
+    def sendMessage(self,message):
+        SessionSource().send(message)
+
+    def receiveMessage(self):
+        result = ""
+        receiver = MessageReceiver (SessionSource())
+        result += "<ul>"
+        for item in receiver.receive():
+            result += "<li>"
+            result += item["body"]
+            result += "</li>"
+        result += "</ul>"                        
+        return result
+      
     @property
     def accessToken(self):
         if not hasattr(self,'_accessToken'):
@@ -94,10 +110,9 @@ class Utilities (object):
 
     def contextClassName(self):
         return self.context.__class__.__name__    
-    
-    def message(self,message):
-        send(message)
 
+    def message(self,message):
+        return self.sendMessage(message)
     def raiseUnauthorized(self):
         raise Unauthorized
     

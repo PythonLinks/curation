@@ -1,5 +1,7 @@
 from zope.interface import Interface
 from zope import schema
+from dolmen.container import IBTreeContainer
+
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
 from zope.schema.interfaces import IContextSourceBinder
@@ -31,19 +33,10 @@ class IEditors(Interface):
         required=False,
     )
 
-"""
-class IEditors(Interface):
-     editors = schema.Choice(
-         title=u"Editor",
-         source = possibleEditors,
-        required=False,
-    )
-"""     
-
     
 @form_component
 @name (u'editors')
-@context(Interface)
+@context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class EditEditors(EditForm):
     title = 'Assign Editors2'
