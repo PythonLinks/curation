@@ -27,12 +27,12 @@ class Form(BaseForm,Scripts,Breadcrumbs):
     template = tal_template('form.pt')
     allowAnonymous = False
     submissionError = ""
-    submissionErrors = []
     #Just copied from dolmen.forms.base.BaseForm
     #Setting the parent makes life easier. 
     def __init__(self, context, request, **kwargs):
         BaseForm.__init__(self, context, request, **kwargs)
         self.__parent__ = context
+        self.submissionErrors = []
 
     def breadcrumbs(self):
         return self.breadcrumbsManage()
