@@ -2,7 +2,7 @@ from dolmen.forms.base import Actions
 from zopache.crud.actions import Cancel
 from zopache.core.viewdecorators import *
 from zopache.ttw.htmlviews import CkScripts
-from zopache.ttw.htmlviews import AddHTMLBase
+from zopache.ttw.htmlviews import AddCkHTMLBase
 from zopache.crud.forms import AddByTitleForm, TreeSecurityAddForm
 from zopache.crud.addbytitleactions import *
 from dolmen.forms.base import Fields
@@ -35,15 +35,15 @@ class Base(object):
         return  Fields(self.interface)    
         
 #This is for ones without tree security        
-class BaseAdd(Base,AddHTMLBase,AddByTitleForm,Notify):
+class BaseAdd(Base,AddCkHTMLBase,AddByTitleForm,Notify):
     def __init__(self,context,request):
         #First give it a context, then initialize Notify.
-        AddHTMLBase.__init__(self)
+        AddCkHTMLBase.__init__(self)
         AddByTitleForm.__init__(self,context,request)
         Notify.__init__(self)
 
 #This one is for ones with Tree Security
-class AddAuthorizedPage(BaseAdd, AddHTMLBase,
+class AddAuthorizedPage(BaseAdd, AddCkHTMLBase,
                         TreeSecurityAddForm):
     actions = Actions()
     
