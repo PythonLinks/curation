@@ -198,7 +198,6 @@ class TootForm (EditForm,BaseBot):
                                         else str(error))
         
     def updateLocalActions(self):
-        breakpoint()
         if self.treeSecurity():
             self.addAuthorizedActions()
         else:

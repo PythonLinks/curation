@@ -84,7 +84,8 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
     def headerScripts(self):
           return CkScripts.headerScripts(self)
 
-           
+
+class AddCkHTMLWithActionsBase(AddCkHTMLBase):           
     def addAuthorizedActions(self):           
          self.actions = Actions(
               formactions.AddAndView(_("Add and View","Add -> View"), self.factory),
@@ -97,7 +98,7 @@ class AddCkHTMLBase(AddHTMLBase,CkScripts):
 @name ('addHTML')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
-class AddCkHTML(AddCkHTMLBase,TreeSecurityAddForm):
+class AddCkHTML(AddCkHTMLWithActionsBase,TreeSecurityAddForm):
     pass
 
 

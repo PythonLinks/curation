@@ -48,7 +48,7 @@ class Add(Action, UniqueName, TransactionNote):
         errors = self.setFields()
         if errors:
             form.submissionError = errors
-            return FAILURE        
+            return FAILURE
         return self.callInner(obj,data,form)
     
     def baseURL(self):
