@@ -42,6 +42,12 @@ class IRSS(IRSSBase):
         description ="""Without the "@" sign?""",
         required = False,
         )
+
+    mastodonId=schema.TextLine(
+        title = "Mastodon Id",
+        description ="""@User@Domain""",
+        required = False,
+        )    
     
     remoteURL= schema.URI(
         title = 'URL',

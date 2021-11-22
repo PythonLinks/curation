@@ -25,6 +25,7 @@ class RSS(Link,UniqueName):
     htmlSummary = True
     title = ""
     twitterId = ''
+    msatodonId = ''
     rssApproved = True
     def __init__(self):
          self.localArticles = OOBTree()

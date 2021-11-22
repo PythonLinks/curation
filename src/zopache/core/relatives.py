@@ -108,7 +108,16 @@ class Parents(object):
              if interface.providedBy(item):
                    return item
              item=item.__parent__
-           return None     
+           return None
+
+
+    def parentOfClass(self,className):
+           item=self.context
+           while (item!=None):
+             if item.__class__.__name__ == className:
+                   return item
+             item=item.__parent__
+           return None        
 
 
     def parentCalled(self,name):

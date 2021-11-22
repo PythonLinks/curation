@@ -1,6 +1,6 @@
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
-from BTrees.LOBTree import LOBTree
+from BTrees.IOBTree import IOBTree
 from zopache.pages.interfaces import ICategory
 from BTrees.OOBTree import OOBTree
 
@@ -48,9 +48,10 @@ class Category(Page):
         raise StopIteration            
 
     def reInit(self):
-       self.newestArticles = OOBTree()
-       self.newestLinks = OOBTree()       
-       self.approvedArticles = OOBTree()       
+       self.newestArticles = IOBTree()
+       self.newestVideos = IOBTree()       
+       self.newestLinks = IOBTree()       
+       self.approvedArticles = IOBTree()       
        self.childFeeds = 0
 
     def todaysFeedArticles(self,midnight):

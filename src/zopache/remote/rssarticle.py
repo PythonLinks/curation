@@ -88,7 +88,7 @@ class RSSArticle(Page):
     def setImportTime(self,importTime,root):
         importTime = int(importTime)
         while (True):
-           if not root.hasArticle(importTime):
+           if not root.hasAnythingAt(importTime):
                 break;
                 importTime += 1
         self.importTime = importTime

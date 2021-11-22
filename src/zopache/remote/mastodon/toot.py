@@ -149,7 +149,7 @@ class TootForm (EditForm,BaseBot):
 
          try:
             delay = self.context.delay
-            if delay <= 0.1:
+            if delay < 0.1:
                 delay = self.delay = 0
                 scheduledAt = None
             else:    
@@ -159,24 +159,25 @@ class TootForm (EditForm,BaseBot):
                                             media_ids=mediaList,
                                             scheduled_at = scheduledAt
         )
-            if delay != 0:
-                self.sendMessage("Your Toot will show up at:" +
-                                 str(tootDict["scheduled_at"]))
-
                                  
             if self.isManager():
                 target = self.context
             else:
                 target = self
-                
-            if 'url' in tootDict:
+            if delay != 0:
+                self.sendMessage("Your Toot will show up at: " +
+                                 str(tootDict["scheduled_at"]))
+                self.sendMessage("local Server Time: " +
+                                 str(datetime.now()))                
+
+            if tootDict.get('url',False):
                 target.tootURL = tootDict.url
                    
-            if 'id' in tootDict:
+            if tootDict.get('id',False):
                 target.tootId = tootDict['id']
 
-            if 'schedule_at' in tootDict:
-                   target.scheduledAt = tootDict['scheduledAt']
+            if tootDict.get('schedule_at',False):
+                target.scheduledAt = tootDict['scheduledAt']
                 
             #Otherwise the delete action does not show up. 
             self.updateLocalActions()
@@ -197,6 +198,7 @@ class TootForm (EditForm,BaseBot):
                                         else str(error))
         
     def updateLocalActions(self):
+        breakpoint()
         if self.treeSecurity():
             self.addAuthorizedActions()
         else:

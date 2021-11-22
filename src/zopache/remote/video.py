@@ -12,6 +12,16 @@ class VideoBase(Voteable):
     seconds = 0
     minutes = 0
     hours = 0
+    tags = ''
+    
+    def setImportTime(self,importTime,root):
+        importTime = int(importTime)
+        while (True):
+           if not root.hasAnythingAt(importTime):
+                break;
+                importTime += 1
+        self.importTime = importTime
+    
     def isLightingTalk(self):  
         if self.__class__.__name__ == 'LightningTalk':
            return True
@@ -19,6 +29,21 @@ class VideoBase(Voteable):
             if self.recordingType =='lightning-talk':
                return True
         return False
+
+    #For Legacy compatibility. 
+    def getVideoURL(self):
+        return  "https://youtube.com/embed/" + self.videoId
+
+    def getEmbed(self):
+        embed = self.embed
+        splitOn = "<iframe "
+        split = embed.split(splitOn)
+        if len (split) > 1:
+           result =  splitOn
+           result += 'class = "YouTubeVideo" '
+           result += split[1]
+           return result
+        return "Problem with the embed tag for this video. "
     
     def getDefaultThumbNailURL(self):
         try:

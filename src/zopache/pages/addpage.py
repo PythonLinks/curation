@@ -3,7 +3,7 @@ from zopache.crud.actions import Cancel
 from zopache.core.viewdecorators import *
 from zopache.ttw.htmlviews import CkScripts
 from zopache.ttw.htmlviews import AddCkHTMLBase
-from zopache.crud.forms import AddByTitleForm, AddByNameForm, AddForm
+from zopache.crud.forms import AddByTitleForm, TreeSecurityAddForm
 from zopache.crud.addbytitleactions import *
 from dolmen.forms.base import Fields
 from zopache.pages.interfaces import (IMap,
@@ -24,35 +24,35 @@ from zopache.pages.proxypage import ProxyPage
 from zopache.crud.getimage import getImage
 from zopache.ttw.mail import Notify
 
-class BaseAdd(AddCkHTMLBase,AddForm,Notify):
+class Base(object):
     count = 0 
     layoutName = "UserMenu"
     actions = Actions()
     dataValidators = [Duplicate, DuplicateURLValidator, HTMLValidator]
-    def __init__(self,context,request):
-        #First give it a context, then initialize Notify.
-        AddByTitleForm.__init__(self,context,request)
-        Notify.__init__(self)
     
     @property
     def fields(self):
         return  Fields(self.interface)    
         
-    def addAuthorizedActions(self):           
-        self.actions = Actions(
-              AddByTitleAndView("Add and View", self.factory),
-              AddByTitleAndAceEdit("Add and aceEdit", self.factory),
-              AddByTitleAndCkEdit("Add and ckEdit", self.factory),
-              AddByTitleAndManage("Add and Manage", self.factory),            
-              Cancel("Cancel","Cancel"))
+#This is for ones without tree security        
+class BaseAdd(Base,AddCkHTMLBase,AddByTitleForm,Notify):
+    def __init__(self,context,request):
+        #First give it a context, then initialize Notify.
+        AddCkHTMLBase.__init__(self)
+        AddByTitleForm.__init__(self,context,request)
+        Notify.__init__(self)
 
-#class AddPageBase( BaseAdd):
-#     pass
- 
-class AddAuthorizedPage(BaseAdd):
-
+#This one is for ones with Tree Security
+class AddAuthorizedPage(BaseAdd, AddCkHTMLBase,
+                        TreeSecurityAddForm,Notify):
     actions = Actions()
-
+    
+    def __init__(self,context,request):
+        #First give it a context, then initialize Notify.
+        AddCkHTMLBase.__init__(self)
+        TreeSecurityAddForm.__init__(self,context,request)
+        Notify.__init__(self)
+        
     def getSubTitle(self):
           return (
                 "To a " +  
@@ -60,6 +60,13 @@ class AddAuthorizedPage(BaseAdd):
                 u' called: ' +
                 self.context.getTitle()
                )
+    def addAuthorizedActions(self):           
+        self.actions = Actions(
+              AddByTitleAndView("Add and View", self.factory),
+              AddByTitleAndAceEdit("Add and aceEdit", self.factory),
+              AddByTitleAndCkEdit("Add and ckEdit", self.factory),
+              AddByTitleAndManage("Add and Manage", self.factory),            
+              Cancel("Cancel","Cancel"))
           
 @view_component
 @name('addPage')
@@ -162,7 +169,7 @@ from zopache.pages.interfaces import ICategory,IPageBase
 @target(IView)
 @context(IPageBase)
 @implementer(ITreeSecurity)
-class AddRSSCategory(AddByTitleForm,Notify):
+class AddRSSCategory(AddAuthorizedPage):
      interface = ICategory
      title = "Add a Category"
      subTitle =""

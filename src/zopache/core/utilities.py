@@ -15,7 +15,16 @@ def sortFunction(item):
 
 class Utilities (object):
     def sendMessage(self,message):
-        SessionSource().send(message)
+        source = SessionSource()
+        source.send(message)
+        try:
+            len = len(source)
+            if len > 2:
+              messages = list(source)
+              for msg in messages[2:]:
+                 source.remove(msg)
+        except UnboundLocalError:
+            pass
 
     def receiveMessage(self):
         result = ""

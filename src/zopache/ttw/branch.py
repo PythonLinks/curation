@@ -101,6 +101,7 @@ class Branch(SimpleBranch):
         self.socialNodeByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
         self.newestArticles = IOBTree()
+        self.newestVideos = IOBTree()
         self.approvedArticles = IOBTree()       
         self.remoteArticles = OOBTree()
 
@@ -202,15 +203,16 @@ class Branch(SimpleBranch):
             self.globalArticles [item.permaLink] = item
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):
+                category.newestArticles[-importTime] = item
                 if item.publicationApproved:
-                   category.approvedArticles[-importTime] = item 
-                else:
-                   category.newestArticles[-importTime] = item
+                    category.approvedArticles[-importTime] = item 
 
         elif item.__class__.__name__ == 'Link':
             for category in parentsWhichImplement(item,ICategory):            
                 category.newestLinks [-int(item.creationTime)] = item
-    
+
+
+                
         elif item.__class__.__name__ == "SocialNode":
             for node in item.allNodes():
                 twitterId= node.twitterId
@@ -223,14 +225,16 @@ class Branch(SimpleBranch):
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
                     
-    def hasArticle(self,importTime):
-        importTime = - importTime
+    def hasAnythingAt(self,importTime):
+        importTime = int(-importTime)
         return (importTime in self.newestArticles or
-             importTime in self.approvedArticles)
-        
+                importTime in self.approvedArticles or
+                importTime in self.newestVideos)
+
     def unIndexItem(self,item, itemType=IPage):
         if not IPageBase.providedBy(item):
-            return        
+            return
+        
         if not item.__name__ in self.valuesByToken: 
            return
 
@@ -249,19 +253,24 @@ class Branch(SimpleBranch):
 
             
         if item.__class__.__name__  == "RSSArticle":
-            if item.permaLink in self.globalArticles:
-                del self.globalArticles [item.permaLink]
+            globalAr4ticles = self.globalArticles
+            if item.permaLink in globalArticles:
+                del globalArticles [item.permaLink]
             importTime = - item.importTime
+            #NewestArticles now contains raw and approved Articles
             for category in parentsWhichImplement(item,ICategory):
                 if item.publicationApproved:
-                     approvedArticles = category.approvedArticles  
+                     approvedArticles = category.approvedArticles
                      if importTime in approvedArticles:                    
-                        del category.approvedArticles[importTime] 
-                else:
-                    newestArticles = category.newestArticles
-                    if importTime in newestArticles:
-                        del category.newestArticles[importTime]  
-
+                        del category.approvedArticles[importTime]
+                newestArticles = category.newestArticles
+                if importTime in newestArticles:
+                        del category.newestArticles[importTime]                          
+        elif item.__class__.__name__ == 'BasicVideo':
+            importTime = item.importTime
+            for category in parentsWhichImplement(item,ICategory):            
+                category.newestVideos [-importTime] = item
+                        
         elif item.__class__.__name__  == "RSS":
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds -= 1

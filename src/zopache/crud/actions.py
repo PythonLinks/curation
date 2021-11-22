@@ -58,7 +58,7 @@ class Add(Action, UniqueName, TransactionNote):
         notify(ObjectCreatedEvent(obj))
 
         self.actuallyAdd(obj,data)
-        form.message("Content created")
+        #form.sendMessage("Content created")
         baseURL = self.baseURL()
         self.describeWithView(obj,form)
 

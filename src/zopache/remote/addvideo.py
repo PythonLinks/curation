@@ -1,30 +1,53 @@
+from time import time
 from cromlech.security import Unauthorized
-from zopache.pages.addpage import AddPage
+from zopache.pages.addpage import AddAuthorizedPage
 from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IInternalPrincipal
 from zopache.remote.youtube.getvotes import getVideoDetails
 from zopache.remote.ivideo import IBasicVideo , IPrincipalVideo
 from zopache.remote.video import BasicVideo, PrincipalVideo
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zopache.pages.page import Page
 
-class Base(AddPage):
+class Base(AddAuthorizedPage):
      interface = IPrincipalVideo
      title = "Add a  Video"
      webClass='Video'
      count = 0
-
-
-
-#ADD VIDEO TO A PRINCIPAL
+     def factory(self):
+          new = self.factoryClass()
+          root = self.getSiteRoot()
+          importTime = int(time())
+          new.setImportTime(importTime,root)
+          return new
+     
+#ADD VIDEO ELSEWHERE
 @view_component
 @name('addVideo')
+@target(IView)
+@context(IPageBase)
+@implementer(ITreeSecurity)
+class AddBasicVideo(Base):
+     subTitle ="To this page."
+     interface = IBasicVideo 
+     factoryClass = BasicVideo
+          
+     def postAddProcess(self,view = None):
+         Page.postAddProcess(self.new,view = self)
+         self.context.webApproved = True
+         self.context.publicationApproved = True         
+         self.new.processStartTime()         
+
+         
+#ADD VIDEO TO A PRINCIPAL
+@view_component
+@name('addPrincipalVideo')
 @target(IView)
 @context(IInternalPrincipal)
 @implementer(IUserSecurity)
 class AddPrincipalVideo(Base):
-     factory = PrincipalVideo     
+     factoryClass = PrincipalVideo     
      subTitle ="Until it is approved, you can edit this video."
      layoutName = "UserMenu"     
      preamble = """
@@ -56,18 +79,3 @@ class AddPrincipalVideo(Base):
          self.new.processStartTime()       
 
          
-#ADD VIDEO ELSEWHERE
-@view_component
-@name('addBasicVideo')
-@target(IView)
-@context(IPage)
-@implementer(ITreeSecurity)
-class AddBasicVideo(Base):
-     factory = BasicVideo
-     subTitle ="To this page."
-     interface = IBasicVideo
-     def postAddProcess(self,view = None):
-         Page.postAddProcess(self.new,view = self)
-         getVideoDetails(self.new)     
-         self.context.webApproved = True
-         self.new.processStartTime()         

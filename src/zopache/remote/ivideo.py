@@ -2,7 +2,7 @@ from zope.interface import Interface
 from zope.schema.vocabulary import SimpleVocabulary
 from zope import schema
 import crom
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zopache.zmi.interfaces import IURLSegment
 from zopache.ttw.treewidget import TreeField
 
@@ -25,7 +25,7 @@ from zopache.remote.interfaces import IVoteable
 from zopache.core.interfaces import IVideo
  
 
-class IVideoBase(IPage,IVideo,IVoteable):
+class IVideoBase(IPageBase,IVideo,IVoteable):
     title = schema.TextLine(
         title = u'Video Title',
         description = u'What is the title of this video.?',
@@ -60,11 +60,10 @@ class IVideoBase(IPage,IVideo,IVoteable):
         default = '',
     )
 
-class IVideoId(Interface):
-    videoId=schema.TextLine(
-        title="Video Id",
-        description= """The You Tube ID for this Video.  You can find it in 
-                      the video URL. """,
+class IVideoEmbed(Interface):
+    embed=schema.Text(
+        title="Video Embed string",
+        description= """The You Tube embed string for this Video.""",
          required = True)
     
 class IStartTime(Interface):
@@ -97,10 +96,10 @@ class IStartTime(Interface):
     """
 
 
-class IBasicVideo(IVideoBase,IVideoId, IStartTime):
+class IBasicVideo(IVideoBase,IVideoEmbed, IStartTime):
     pass
 
-class IPrincipalVideo(IVideoBase,IVideoId, IStartTime):
+class IPrincipalVideo(IVideoBase,IVideoEmbed, IStartTime):
     recordingType = schema.Choice(
         vocabulary=recordingTypes(),
         title="Recording Type",
