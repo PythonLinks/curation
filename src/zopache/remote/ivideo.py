@@ -96,10 +96,10 @@ class IStartTime(Interface):
     """
 
 
-class IBasicVideo(IVideoBase,IVideoEmbed, IStartTime):
+class IBasicVideo(IVideoBase,IVideoEmbed):
     pass
 
-class IPrincipalVideo(IVideoBase,IVideoEmbed, IStartTime):
+class IPrincipalVideo(IVideoBase,IVideoEmbed):
     recordingType = schema.Choice(
         vocabulary=recordingTypes(),
         title="Recording Type",

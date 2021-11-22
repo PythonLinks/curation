@@ -211,6 +211,10 @@ class Branch(SimpleBranch):
             for category in parentsWhichImplement(item,ICategory):            
                 category.newestLinks [-int(item.creationTime)] = item
 
+        elif item.__class__.__name__ == 'BasicVideo':
+            importTime = item.importTime
+            for category in parentsWhichImplement(item,ICategory):            
+                category.newestVideos [-importTime] = item                
 
                 
         elif item.__class__.__name__ == "SocialNode":
@@ -269,7 +273,7 @@ class Branch(SimpleBranch):
         elif item.__class__.__name__ == 'BasicVideo':
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):            
-                category.newestVideos [-importTime] = item
+                del category.newestVideos [-importTime] 
                         
         elif item.__class__.__name__  == "RSS":
            for category in parentsWhichImplement(item,ICategory):
