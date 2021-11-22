@@ -257,7 +257,7 @@ class Branch(SimpleBranch):
 
             
         if item.__class__.__name__  == "RSSArticle":
-            globalAr4ticles = self.globalArticles
+            globalArticles = self.globalArticles
             if item.permaLink in globalArticles:
                 del globalArticles [item.permaLink]
             importTime = - item.importTime
