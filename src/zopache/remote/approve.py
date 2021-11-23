@@ -82,7 +82,6 @@ class Retract(Save):
         
     def retract(self):
         context = self.form.context
-        context.webApproved = False
         context.publicationApproved = False
         rssFeed = context.rssFeed
         if rssFeed != context.__parent__:

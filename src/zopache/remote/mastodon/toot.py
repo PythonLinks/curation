@@ -146,10 +146,10 @@ class TootForm (EditForm,BaseBot):
             return ''
         
          mediaList = self.mediaIdAsList()
-
+         minDelay = 0.1 #(hours)
          try:
             delay = self.context.delay
-            if delay < 0.1:
+            if delay < minDelay:
                 delay = self.delay = 0
                 scheduledAt = None
             else:    
@@ -164,7 +164,10 @@ class TootForm (EditForm,BaseBot):
                 target = self.context
             else:
                 target = self
-            if delay != 0:
+
+            #Only need to do this if
+            #There is a future message
+            if delay >= minDelay:
                 self.sendMessage("Your Toot will show up at: " +
                                  str(tootDict["scheduled_at"]))
                 self.sendMessage("local Server Time: " +
