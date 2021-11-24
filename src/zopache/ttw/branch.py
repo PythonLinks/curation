@@ -203,12 +203,14 @@ class Branch(SimpleBranch):
             self.globalArticles [item.permaLink] = item
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):
-                category.newestArticles[-importTime] = item
                 if item.publicationApproved:
-                    category.approvedArticles[-importTime] = item 
+                    category.approvedArticles[-importTime] = item
+                else:    
+                    category.newestArticles[-importTime] = item
 
+                    
         elif item.__class__.__name__ == 'Link':
-            for category in parentsWhichImplement(item,ICategory):            
+            for category in parentsWhichImplement(item,ICategory):
                 category.newestLinks [-int(item.creationTime)] = item
 
         elif item.__class__.__name__ == 'BasicVideo':
@@ -261,7 +263,7 @@ class Branch(SimpleBranch):
             if item.permaLink in globalArticles:
                 del globalArticles [item.permaLink]
             importTime = - item.importTime
-            #NewestArticles now contains raw and approved Articles
+
             for category in parentsWhichImplement(item,ICategory):
                 if item.publicationApproved:
                      approvedArticles = category.approvedArticles

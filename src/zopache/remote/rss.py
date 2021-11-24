@@ -141,7 +141,7 @@ class RSS(Link,UniqueName):
         result = fetchAll(feeds,view)
         for item in result:
             if item[0] ==  FAILURE:  
-              self.submissionErrors.append( "ERROR:" + str(item [1:]))
+               view.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
         
     def postProcess(self,view = None):

@@ -164,12 +164,13 @@ class TootForm (EditForm,BaseBot):
                 target = self.context
             else:
                 target = self
-
             #Only need to do this if
             #There is a future message
             if delay >= minDelay:
-                self.sendMessage("Your Toot will show up at: " +
-                                 str(tootDict["scheduled_at"]))
+                at= tootDict["scheduled_at"]
+                if at:
+                   self.sendMessage("Your Toot will show up at: " +
+                                 str(at))
                 self.sendMessage("local Server Time: " +
                                  str(datetime.now()))                
 
