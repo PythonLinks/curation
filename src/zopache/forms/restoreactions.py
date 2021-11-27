@@ -4,7 +4,6 @@ from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
-from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 from ZODB.ExportImport import ExportImport
 from zopache.core.uniquename import UniqueName
@@ -41,7 +40,7 @@ class RestoreAction(BaseAction):
         name = branch.__name__
         newName = UniqueName().uniqueContainerName(context,name)
         self.form.context [newName] = branch
-        send(newName + " was restored")
+        #send(newName + " was restored")
         
 class ReplaceAction(BaseAction):
     def processImport(self,context,branch):
@@ -54,6 +53,6 @@ class ReplaceAction(BaseAction):
         branch.__name__ = nameInParent
         branch.__parent__ = parent
         self.form.context = branch
-        send(nameInParent + " was replaced")        
+        #send(nameInParent + " was replaced")        
         
         

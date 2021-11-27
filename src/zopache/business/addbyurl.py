@@ -31,6 +31,9 @@ class AddLinkByURL(AddByURLForm):
         errors = Errors()
         try:
             response = requests.get(remoteURL)
+            status = response.status_code
+            if status != 200: 
+                raise Exception ("Status Code " + str())
         except:
             error = Error("Failed to Fetch URL")
             return response, errors.append(error)
@@ -52,16 +55,19 @@ class AddLinkByURL(AddByURLForm):
         return response, errors
 
 
-class ProcessJSON(object):
+class ProcessJSON(AddByURLForm,SocialMediaExtractor):
     def processURL(self,remoteURL):
         response = {}
         errors = Errors()
         try:
             remoteResponse = requests.get(remoteURL)
+            status = remoteResponse.status_code
+            if status != 200: 
+                raise Exception ("Status Code " + str())
             title, description, image= web_preview(
-                remoteURL, content = remoteeesponse.content )
-        except:
-            error = Error("Failed to Fetch and Parse URL")
+                remoteURL, content = remoteResponse.content )
+        except Exception as err:
+            error = Error("Failed to Fetch and Parse URL" + str(err))
             return response, errors.append(error)
         response = self.saveData(remoteURL,title, description, image)
         connect = response ["connect"]
@@ -73,7 +79,7 @@ class ProcessJSON(object):
 @name('addOrganizationByURL')
 @target(IView)
 @context(IPage)
-class AddOrganizationByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
+class AddOrganizationByURL(ProcessJSON):
     errors = Errors()
     allowAnonymous = True
     title = "Add an Organization By URL"
@@ -108,7 +114,7 @@ class AddOnlineOrganizationByURL(AddOrganizationByURL):
 @name('addCandidateByURL')
 @target(IView)
 @context(IPage)
-class AddCandidateByURL(AddByURLForm,ProcessJSON, SocialMediaExtractor):
+class AddCandidateByURL(ProcessJSON ):
     allowAnonymous = True
     title = "Add a Candidate By URL "
     subTitle = "Just submit the URL for the candidate. "

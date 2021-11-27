@@ -36,7 +36,7 @@ class Update(Action,TransactionNote):
            form.applyData(data)
         else:   
            apply_data_event(form.fields, form.getContentData(), data)
-        form.message(_(u"URL updated"))
+        #form.message(_(u"URL updated"))
         if hasattr(form,'postProcess'):        
                form.postProcess(view = form)
         elif hasattr(form.context,'postProcess'):

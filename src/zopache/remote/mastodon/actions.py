@@ -8,7 +8,6 @@ from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
-from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.getroot import getPrincipalFolder
@@ -126,7 +125,7 @@ class RegisterAction(BaseAction):
         people.loginUser(person,form)
         new.name = newName
         siteRoot.addItem(new)
-        send("You are Registered")
+        #send("You are Registered")
         form.postAddProcess()
         self.successPage()
 

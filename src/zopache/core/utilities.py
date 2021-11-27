@@ -120,8 +120,9 @@ class Utilities (object):
     def contextClassName(self):
         return self.context.__class__.__name__    
 
-    def message(self,message):
-        return self.sendMessage(message)
+    #def message(self,message):
+    #    return self.sendMessage(message)
+      
     def raiseUnauthorized(self):
         raise Unauthorized
     

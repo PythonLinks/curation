@@ -7,7 +7,6 @@ from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from zopache.crud import i18n as _
-from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 from zope.event import notify
 from zope.location import ILocation
@@ -16,8 +15,6 @@ from zopache.core.getroot import getPrincipalFolder, getSiteRoot
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from zopache.pages.interfaces import INotPage
 
-def message(message):
-    send(message)
 
 
 class Cancel(Action):
@@ -61,7 +58,7 @@ class Add(Action):
         #You have to add it to the root index
         #before authenticating it.
         principalFolder.authenticate (data)
-        message(_(u"You are Registered and Logged In"))
+        #message(_(u"You are Registered and Logged In"))
         newURL = form.newURL(newPerson)
         form.new=newPerson
         newPerson.postAddProcess(view=form)    

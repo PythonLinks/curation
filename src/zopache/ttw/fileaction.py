@@ -8,7 +8,6 @@ from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from zopache.crud import i18n as _
-from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 from zope.event import notify
 from zope.location import ILocation
@@ -22,8 +21,6 @@ from zopache.ttw.JSON import JSON
 from zopache.ttw.file  import File, Image, BTreeImage
 from ZODB.blob import Blob
 
-def message(message):
-    send(message)
 
 class AddFileAction(Action):
     """Add action for files.
@@ -40,7 +37,7 @@ class AddFileAction(Action):
             form.submissionError = errors
             return FAILURE
         self.upload(formData)
-        self.message()
+        #self.message()
         nextURL = self.nextURL()
         #self.new.postAddProcess(view=form)
         return SuccessMarker('Added', True, url=nextURL ,code=307)
@@ -49,8 +46,8 @@ class AddFileAction(Action):
         baseURL = self.form.absoluteURL()
         return baseURL + "/manage"
 
-    def message(self):    
-        message(u"File Uplaoded")        
+    #def message(self):    
+    #    message(u"File Uplaoded")        
 
     def getName(self,formData):    
         return formData['__name__']
@@ -100,8 +97,8 @@ class AddFileAction(Action):
             return file
 
 class AddImageAction(AddFileAction):
-    def message(self):    
-        message(u"Image Uploaded")
+    #def message(self):    
+    #    message(u"Image Uploaded")
 
     def upload(self, formData):
         if formData['imageURL']:

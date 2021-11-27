@@ -139,7 +139,11 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     html = defaultHTML
     title=u''
     className='Pug'
-
+    sideBySide = False
+    showJavascript = False
+    showIFrame = False
+    showHTML = False
+    
     def postProcess(self,view=None):
         TrustedHTML.postProcess(self,view)
         JavascriptBase.postProcess(self,view = view)

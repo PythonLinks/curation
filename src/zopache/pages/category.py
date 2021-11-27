@@ -65,10 +65,14 @@ class Category(Page):
         lastImportTime = articles [-1].importTime
         return lastImportTime,articles
     
-    def moreFeedArticles(self,lastImportTime,howMany = 6):        
-        return self.feedArticles(lastImportTime,howMany = howMany)
-
-    def feedArticles(self,lastImportTime = None, howMany = 100):
+    def moreFeedArticles(self,lastImportTime,howMany = 6):
+        result = self.feedArticles(lastImportTime,howMany = howMany)
+        all = []
+        for item in result:
+            all.append(item)
+        return all
+    
+    def feedArticles(self,lastImportTime = None, howMany = 6):
         if lastImportTime:
             lastImportTime = - lastImportTime
         articles = self.newestArticles.itervalues(min = lastImportTime,                                                 excludemin = True)
@@ -77,7 +81,6 @@ class Category(Page):
 
     #Check the rss feed does not break.
     def curatedHeadlines(self,count = 6):
-
         articles = self.mergedApproved(howMany = count)
         if len(articles) == 0:
            return 0, [] 
@@ -100,15 +103,22 @@ class Category(Page):
                if item == None:
                    break
                result.append(item)
-        if lastImportTime and len(result) > 0:
-            result = result [1]
+               if len(result) > 5:
+                   break
+               
+        #if lastImportTime and len(result) > 0:
+        #    result = result [1]
         return result
 
     #GET MORE APPROVED ARTICLES AFTER THE LAST IMPORT TIME
     def moreMergedApproved(self,lastImportTime,howMany = 6):
         try:
-           return islice(self.mergedApproved(lastImportTime = lastImportTime),
-                      howMany)
+            
+           result =  self.mergedApproved(lastImportTime = lastImportTime,
+                                         howMany = howMany)
+           return result
+           
         except StopIteration:
            return []
-    
+        except Exception as err:
+            print (err)

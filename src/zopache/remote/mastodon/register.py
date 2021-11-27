@@ -3,7 +3,6 @@
 
 
 from dolmen.forms.base import Actions, Fields
-from dolmen.message.utils import send
 
 from zopache.core.viewdecorators import *
 

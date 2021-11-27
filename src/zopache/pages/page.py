@@ -9,7 +9,9 @@ from operator import methodcaller
 from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
 from zopache.pages.interfaces import (ITime,IContent,IPage ,IPageBase, 
-                                      ISiteRootPage, INews,
+                                      ISiteRootPage,
+                                      IRootPage,
+                                      INews,
                                       ICategory)
 from zopache.core.getroot import getPublicationRoot, getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
@@ -433,7 +435,14 @@ class SiteRoot(Branch,PageBase,PageMixIn):
     def setJson(self):
          self.json=self.jsonTree(0)
 
-         
+
+#USED ON GREEN MAPS         
+@implementer(IRootPage)         
+class RootPage(SiteRoot):
+    twitterId = ""
+    def getSiteRootFor(self,hostName):
+        return self
+ 
 
 #FOR MULTIPLE SITES
 @implementer(ISiteRootPage)         

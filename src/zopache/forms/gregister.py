@@ -2,7 +2,6 @@
 #Subject to the Zope Public License.
 
 from dolmen.forms.base import Actions
-from dolmen.message.utils import send
 
 from zopache.core.viewdecorators import *
 
@@ -78,7 +77,7 @@ class GRegister(BaseRegister):
     def postAddProcess(self):
         self.new.postAddProcess(view = self)
         text = "Thank you for registering."
-        send (text)
+        #send (text)
         
 #SUBSCRIBE    
 @form_component
@@ -94,7 +93,7 @@ class GSubscribe(BaseRegister):
         text = "Thank you for subscribing. "
         text += self.context.title
         text += "We do not yet publish regularly. "
-        send (text)
+        #send (text)
         
     def newURL(self):
         newURL = "/" + self.context.__name__ + "/subscribe"        
@@ -117,7 +116,7 @@ class GDonate(BaseRegister):
         text = "Thank you for offering to donate to: "
         text += self.context.title
         text += ".  You will be contacted shortly."
-        send (text)
+        #send (text)
 
     def newURL(self):
         newURL = self.acquireAttribute('donationsPageURL')
@@ -138,7 +137,7 @@ class GVolunteer(BaseRegister):
         text = "Thank you for volunteerng with "
         text += self.context.title
         text += ".  You will be contacted shortly."
-        send (text)
+        #send (text)
 
     def newURL(self):
         newURL = "/" + self.context.__name__ + "/volunteer"        
@@ -157,7 +156,7 @@ class GEndorse(BaseRegister):
         text =  "Thank you for endorsing "
         text += "self.context.title"
         text += "."
-        send(text)
+        #send(text)
         
     def newURL(self):
         newURL = "/" + self.context.__name__ + "/endorse"        

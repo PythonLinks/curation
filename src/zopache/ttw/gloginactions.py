@@ -12,7 +12,6 @@ from cromlech.browser import IURL
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
-from dolmen.message.utils import send
 from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.getroot import getPrincipalFolder, getSiteRoot
@@ -98,7 +97,7 @@ class GoogleRegisterAction(GoogleLoginAction):
         for key,value in self.data.items():
             obj.__setattr__(key, value)                
         people.loginUser(person,self.form)   
-        send("You are Registered")
+        #send("You are Registered")
         form.postAddProcess()
         newURL = self.form.newURL() 
         raise HTTPFound(newURL)

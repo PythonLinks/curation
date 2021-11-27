@@ -101,7 +101,7 @@ class RegionBase(LocationContainer):
                              isNational = False
                              ):
     
-            siteRoot = self.getSiteRoot()
+            siteRoot = self.getPublicationRoot()
             allPoliticians = siteRoot.politicians.values()
             return self.actuallySearch(                       
                        allPoliticians,

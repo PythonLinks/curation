@@ -46,7 +46,7 @@ class PhoneTree(Page):
         pages = self.remoteNodes.replace("\n"," ")
         pages = pages.replace("\r"," ")        
         pages = pages.split(" ")
-        siteRoot = self.getSiteRoot()
+        siteRoot = self.getPublicationRoot()
         for item in pages:
             if len (item) > 0:
                 if item in siteRoot:

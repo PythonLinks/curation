@@ -174,6 +174,12 @@ class INotebook (ISourceLeaf,IDirectory):
 class INews (IPage,IRecent):
     pass
 
+#USED BY Green Maps
+class IRootPage(ISiteRoot,
+                IZodbRoot,
+                IPage,
+                IBranch):
+    pass
 
 class ISiteRootPage(ISiteRoot,IBranch,IPageBase,IBTreeContainer):
     pass
