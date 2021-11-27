@@ -7,6 +7,7 @@ from dolmen.container import IBTreeContainer, BTreeContainer
 from zope.interface import Interface, implementer
 from dolmen.container import OrderedBTreeContainer
 from zopache.core import Leaf
+from zopache.remote.irss import IRSSArticle
 from zopache.ttw.interfaces import (IFile,
                                     IImage,
                                     IFileBase,
@@ -317,6 +318,26 @@ class LogoAcquire(View):
                    return ''
                return logo.data
 
+
+
+#LOGO FOR ARTICLES        
+@view_component
+@name('Logo')
+@context(IRSSArticle)
+class LogoAcquire(View):
+    responseFactory = Response
+    make_response = make_logo_response
+        
+    def render(self):
+         try:
+            rssFeed = self.contexts.rssFeed
+            logo = rssFeed['Logo']
+         except:   
+             logo = ParentalAcquire(self.context)['Logo']
+             if logo == None:
+                   return ''
+             return logo.data
+          
 
 @view_component
 @name('Logo150W')
