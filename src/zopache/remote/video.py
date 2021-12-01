@@ -132,7 +132,7 @@ class EmbedVideo (VideoBase,Page):
            result += ' class = "YouTubeVideo" '
            result += f' id = "{iFrameId}" '
            result +=  f""" 
-             onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.ame}') """
+             onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.name}') """
            result += split[1]
            return result
         return "Problem with the embed tag for this video. "

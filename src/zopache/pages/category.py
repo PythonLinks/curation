@@ -93,12 +93,14 @@ class Category(Page):
                                       excludemin = True)                              
     def mergedApproved(self, howMany = 6, lastImportTime = None):
         result = []
+        exclude = False
         if lastImportTime:
             lastImportTime = - lastImportTime
+            exclude = True
         articles = self.approvedArticles.itervalues(min = lastImportTime,
-                                                    excludemin = True)
+                                                    excludemin = exclude)
         links = self.newestLinks.itervalues(min = lastImportTime,
-                                            excludemin = True)
+                                            excludemin = exclude)
         for item in mergeiterator(articles,links, cmp = cmp):
                if item == None:
                    break
