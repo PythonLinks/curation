@@ -123,7 +123,6 @@ class EmbedVideo (VideoBase,Page):
     
 
     def getIFrame(self,wide):
-        breakpoint()
         iFrameId = f"{self.name + '-video'}"           
         embed = self.embed
         splitOn = "<iframe "

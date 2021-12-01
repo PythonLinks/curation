@@ -59,7 +59,6 @@ class AddLinkByURL(AddByURLForm):
 
 class ProcessJSON(AddByURLForm,SocialMediaExtractor):
     def processURL(self,remoteURL):
-        breakpoint()
         response = {}
         errors = Errors()
         try:
@@ -125,7 +124,6 @@ class AddCandidateByURL(ProcessJSON ):
     addSlug = 'addCandidate'        
 
     def saveData(self,remoteURL, title,description,image):
-        breakpoint()
         response = {"introduction": {}, 
                     "content":{"english":{}},
                     "connect": {},

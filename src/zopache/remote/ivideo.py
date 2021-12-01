@@ -61,7 +61,7 @@ class IVideo(IPageBase,IVoteable):
     )
 
     
-class IStartTime(object):
+class IStartTime(Interface):
     
     hours = schema.Int(
         title = "Hours",
@@ -90,24 +90,24 @@ class IStartTime(object):
         required = False)        
     """
 
-class IVideoId(object):
+class IVideoId(Interface):
     videoId=schema.TextLine(
         title="Video Id",
         description= """The You Tube ID for this Video.  You can find it in 
                       the video URL. """,
         required = True,)
     
-class IEmbed(object):
+class IEmbed(Interface):
     embed=schema.Text(
         title="Video Embed string",
         description= """The You Tube embed string for this Video.""",
          required = True)
 
 
-class IBasicVideo(IVideo): #,IVideoId, IStartTime):
+class IBasicVideo(IVideo, IVideoId, IStartTime):
     pass
         
-class IEmbedVideo(IVideo):  #,IEmbed, IStartTime):
+class IEmbedVideo(IVideo, IEmbed, IStartTime):
     pass        
 
 class IPrincipalVideo(IEmbedVideo):
