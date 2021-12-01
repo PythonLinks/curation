@@ -20,6 +20,7 @@ from zopache.ttw.interfaces import (IBranch,
                                      IProducts,
                                      IInternalPrincipal)
 
+from zopache.remote.ivideo import IVideo
 from zopache.ttw.interfaces import  ICanonical
 from zopache.pages.interfaces import ICategory, IImaginary
 
@@ -213,7 +214,7 @@ class Branch(SimpleBranch):
             for category in parentsWhichImplement(item,ICategory):
                 category.newestLinks [-int(item.creationTime)] = item
 
-        elif item.__class__.__name__ == 'BasicVideo':
+        elif IVideo.providedBy(item):
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):            
                 category.newestVideos [-importTime] = item                
@@ -272,7 +273,7 @@ class Branch(SimpleBranch):
                 newestArticles = category.newestArticles
                 if importTime in newestArticles:
                         del category.newestArticles[importTime]                          
-        elif item.__class__.__name__ == 'BasicVideo':
+        elif IVideo.providedBy(item):
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):            
                 del category.newestVideos [-importTime] 
