@@ -96,9 +96,9 @@ class Category(Page):
         if lastImportTime:
             lastImportTime = - lastImportTime
         articles = self.approvedArticles.itervalues(min = lastImportTime,
-                                                    excludemin = False)
+                                                    excludemin = True)
         links = self.newestLinks.itervalues(min = lastImportTime,
-                                            excludemin = False)
+                                            excludemin = True)
         for item in mergeiterator(articles,links, cmp = cmp):
                if item == None:
                    break

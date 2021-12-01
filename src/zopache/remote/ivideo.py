@@ -60,6 +60,18 @@ class IVideo(IPageBase,IVoteable):
         default = '',
     )
 
+class IVideoId(Interface):
+    videoId=schema.TextLine(
+        title="Video Id",
+        description= """The You Tube ID for this Video.  You can find it in 
+                      the video URL. """,
+        required = True,)
+    
+class IEmbed(Interface):
+    embed=schema.Text(
+        title="Video Embed string",
+        description= """The You Tube embed string for this Video.""",
+         required = True)
     
 class IStartTime(Interface):
     
@@ -89,20 +101,6 @@ class IStartTime(Interface):
         default = '0',
         required = False)        
     """
-
-class IVideoId(Interface):
-    videoId=schema.TextLine(
-        title="Video Id",
-        description= """The You Tube ID for this Video.  You can find it in 
-                      the video URL. """,
-        required = True,)
-    
-class IEmbed(Interface):
-    embed=schema.Text(
-        title="Video Embed string",
-        description= """The You Tube embed string for this Video.""",
-         required = True)
-
 
 class IBasicVideo(IVideo, IVideoId, IStartTime):
     pass
