@@ -8,7 +8,6 @@ import time
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 from zopache.pages.page import Link
 from zopache.core.viewdecorators import *
-from zopache.remote.ivideo import IBasicVideo, IPrincipalVideo
 from zopache.crud.interfaces import IContainer
 from zopache.core.uniquename import UniqueName
 from BTrees.OOBTree import OOBTree

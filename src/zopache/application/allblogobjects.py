@@ -60,10 +60,7 @@ class RSSLeaves(AllWikiObjects):
                     if (self.interface.providedBy(item)):                   
                        self.stack.append(item)
 
-
-
-
-from zopache.core.interfaces  import IVideo    
+from zopache.remote.ivideo  import IVideo    
 class AllVideoObjects(AllChildObjects):
     def __next__(self):
         while True:

@@ -22,13 +22,14 @@ class AddByURLAction(Action):
             form.submissionError = errors
             return FAILURE
         remoteURL = data["remoteURL"]
+        breakpoint()        
         response, errors = form.processURL(remoteURL)
         if errors:
             for item in errors.keys():
-                form.submissionError += str(errors.get(item))[6: -1] + ' '            
-
+                form.submissionError += str(errors.get(item))[6: -1] + ' '
             return FAILURE
         baseURL = '/' + form.context.__name__
+        breakpoint()
         postingURL = (baseURL + '/' + form.addSlug + 
                       "?" +
                       urlencode(response))

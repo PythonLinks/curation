@@ -7,7 +7,7 @@ import datetime
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
-from zopache.core.interfaces import IVideo
+from zopache.remote.ivideo import IVideo
 from zopache.core.getroot import getPublicationRoot
 
 #There are two copies of this key
@@ -76,7 +76,6 @@ def recordVotes (listOfVideos,context):
           processVotes(votes,byId)
 
 from zopache.core.getroot import getSiteRoot
-from zopache.core.interfaces import IVideo
 
 def recordLocalVotes(context):
       videos =[]

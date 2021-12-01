@@ -22,10 +22,10 @@ def recordingTypes():
     return SimpleVocabulary(terms)
 
 from zopache.remote.interfaces import IVoteable
-from zopache.core.interfaces import IVideo
+
  
 
-class IVideoBase(IPageBase,IVideo,IVoteable):
+class IVideo(IPageBase,IVoteable):
     title = schema.TextLine(
         title = u'Video Title',
         description = u'What is the title of this video.?',
@@ -60,13 +60,8 @@ class IVideoBase(IPageBase,IVideo,IVoteable):
         default = '',
     )
 
-class IVideoEmbed(Interface):
-    embed=schema.Text(
-        title="Video Embed string",
-        description= """The You Tube embed string for this Video.""",
-         required = True)
     
-class IStartTime(Interface):
+class IStartTime(object):
     
     hours = schema.Int(
         title = "Hours",
@@ -95,11 +90,27 @@ class IStartTime(Interface):
         required = False)        
     """
 
+class IVideoId(object):
+    videoId=schema.TextLine(
+        title="Video Id",
+        description= """The You Tube ID for this Video.  You can find it in 
+                      the video URL. """,
+        required = True,)
+    
+class IEmbed(object):
+    embed=schema.Text(
+        title="Video Embed string",
+        description= """The You Tube embed string for this Video.""",
+         required = True)
 
-class IBasicVideo(IVideoBase,IVideoEmbed):
+
+class IBasicVideo(IVideo): #,IVideoId, IStartTime):
     pass
+        
+class IEmbedVideo(IVideo):  #,IEmbed, IStartTime):
+    pass        
 
-class IPrincipalVideo(IVideoBase,IVideoEmbed):
+class IPrincipalVideo(IEmbedVideo):
     recordingType = schema.Choice(
         vocabulary=recordingTypes(),
         title="Recording Type",

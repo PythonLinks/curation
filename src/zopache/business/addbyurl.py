@@ -33,10 +33,12 @@ class AddLinkByURL(AddByURLForm):
             response = requests.get(remoteURL)
             status = response.status_code
             if status != 200: 
-                raise Exception ("Status Code " + str())
-        except:
-            error = Error("Failed to Fetch URL")
-            return response, errors.append(error)
+                raise Exception ("Status Code " + str(status))
+        except Exception as err:
+            error = Error("Failed to Fetch URL" + str(err))
+            response = {}
+            errors.append(error)            
+            return response, errors 
         
         try:
             title, description, image  = web_preview( remoteURL, content = response.content )
@@ -57,6 +59,7 @@ class AddLinkByURL(AddByURLForm):
 
 class ProcessJSON(AddByURLForm,SocialMediaExtractor):
     def processURL(self,remoteURL):
+        breakpoint()
         response = {}
         errors = Errors()
         try:
@@ -68,7 +71,8 @@ class ProcessJSON(AddByURLForm,SocialMediaExtractor):
                 remoteURL, content = remoteResponse.content )
         except Exception as err:
             error = Error("Failed to Fetch and Parse URL" + str(err))
-            return response, errors.append(error)
+            errors.append(error)            
+            return response, errors
         response = self.saveData(remoteURL,title, description, image)
         connect = response ["connect"]
         self.addSocialMedia(connect,remoteResponse)
@@ -121,6 +125,7 @@ class AddCandidateByURL(ProcessJSON ):
     addSlug = 'addCandidate'        
 
     def saveData(self,remoteURL, title,description,image):
+        breakpoint()
         response = {"introduction": {}, 
                     "content":{"english":{}},
                     "connect": {},

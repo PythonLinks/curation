@@ -5,8 +5,8 @@ from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.ttw.interfaces import IInternalPrincipal
 from zopache.remote.youtube.getvotes import getVideoDetails
-from zopache.remote.ivideo import IBasicVideo , IPrincipalVideo
-from zopache.remote.video import BasicVideo, PrincipalVideo
+from zopache.remote.ivideo import IEmbedVideo , IPrincipalVideo
+from zopache.remote.video import EmbedVideo, PrincipalVideo
 from zopache.pages.interfaces import IPageBase
 from zopache.pages.page import Page
 
@@ -28,10 +28,10 @@ class Base(AddAuthorizedPage):
 @target(IView)
 @context(IPageBase)
 @implementer(ITreeSecurity)
-class AddBasicVideo(Base):
+class AddEmbedVideo(Base):
      subTitle ="To this page."
-     interface = IBasicVideo 
-     factoryClass = BasicVideo
+     interface = IEmbedVideo 
+     factoryClass = EmbedVideo
           
      def postAddProcess(self,view = None):
          Page.postAddProcess(self.new,view = self)

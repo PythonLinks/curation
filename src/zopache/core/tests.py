@@ -2,9 +2,10 @@ from cromlech.security.interfaces import IPrincipal ,IUnauthenticatedPrincipal
 from zopache.application.treesecurity import TreeSecurity
 from dolmen.container import IBTreeContainer
 from pydoc import locate
-from zopache.core.interfaces import IVideo
 from zopache.pages.interfaces import IImaginaryBTree
+from zopache.remote.ivideo import IVideo
 
+    
 class Tests(object):
     
     def hasMembers(self):
@@ -12,7 +13,7 @@ class Tests(object):
     
     def isPerson(self):
         return IPrincipal.implementedBy(self.context)
-    
+
     def isVideo(self,*item):
         if item:
            item = item[0]

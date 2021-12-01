@@ -10,9 +10,6 @@ class IUserSecurity(Interface):
 class ICountable(Interface):
       pass
 
-class IVideo (ICountable):
-     pass 
-
 #Anything that can be published is IPublicationRoot
 #This is for the tops of websites, 1 below the root. 
 class ISiteRoot(IPublicationRoot):

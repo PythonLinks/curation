@@ -1,6 +1,6 @@
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
-from zopache.remote.ivideo import IBasicVideo, IPrincipalVideo
+from zopache.remote.ivideo import IBasicVideo, IPrincipalVideo, IEmbedVideo
 from zopache.remote.voteable import Voteable
 from zopache.remote.interfaces import IVoteable
 from zopache.remote.voteable import Voteable
@@ -34,16 +34,6 @@ class VideoBase(Voteable):
     def getVideoURL(self):
         return  "https://youtube.com/embed/" + self.videoId
 
-    def getEmbed(self):
-        embed = self.embed
-        splitOn = "<iframe "
-        split = embed.split(splitOn)
-        if len (split) > 1:
-           result =  splitOn
-           result += 'class = "YouTubeVideo" '
-           result += split[1]
-           return result
-        return "Problem with the embed tag for this video. "
     
     def getDefaultThumbNailURL(self):
         try:
@@ -100,9 +90,56 @@ class VideoBase(Voteable):
         
 @implementer (IBasicVideo)     
 class BasicVideo (VideoBase,Page):
-    pass
+    videoId = ""
+    def getWideFrame(self):
+        return self.getIFrame(True)
+    
+    def getFlexFrame(self):
+        return self.getIFrame(False)               
+        
+    def getIFrame(self,wide):
+      if self.videoId == "":
+             return "No Video Id"
+      iFrameId = f"{self.name + '-video'}"   
+      result = f"""  
+        <iframe width="560" 
+                id = "{iFrameId}"
+                onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.name}')"
+                class = "YouTubeVideo"
+                height="315"
+     src="https://www.youtube.com/embed/{self.videoId}?start={self.startTime}
+                frameborder="0" 
+                allow = "encrypted-media" 
+                allowfullscreen=""></iframe>"""
+      return result
+
+@implementer (IEmbedVideo)     
+class EmbedVideo (VideoBase,Page):
+    def getWideFrame(self):
+        return self.getIFrame(True)
+    
+    def getFlexFrame(self):
+        return self.getIFrame(False)               
+    
+
+    def getIFrame(self,wide):
+        breakpoint()
+        iFrameId = f"{self.name + '-video'}"           
+        embed = self.embed
+        splitOn = "<iframe "
+        split = embed.split(splitOn)
+        if len (split) > 1:
+           result =  splitOn
+           result += ' class = "YouTubeVideo" '
+           result += f' id = "{iFrameId}" '
+           result +=  f""" 
+             onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.ame}') """
+           result += split[1]
+           return result
+        return "Problem with the embed tag for this video. "
+
 
 @implementer (IPrincipalVideo)     
-class PrincipalVideo (VideoBase,Page):
+class PrincipalVideo (VideoBase):
     pass
 
