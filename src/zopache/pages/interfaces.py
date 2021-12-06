@@ -238,6 +238,10 @@ class IMap(ILocationOrMap,ILatLng):
         required = True,
     )
 
+class ISimpleMap(IPage,IMap):
+    pass
+
+    
 from zopache.pages.address import Address
 class IAddress(Interface):
     pass

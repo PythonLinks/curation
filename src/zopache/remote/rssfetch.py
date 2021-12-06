@@ -12,6 +12,7 @@ from zopache.crud.getimage import createImageInFrom
 from zopache.core.interfaces import ITreeSecurity
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
 from itertools import islice
+from cromlech.browser.exceptions import HTTPFound
 
 
 @form_component
@@ -32,6 +33,7 @@ class GetRSS(Form):
                       feeds.append(item)
         self.fetchArticles(feeds)
         Form.update(self)
+        #raise HTTPFound('/categories/newest')
 
     #COPY OF THIS HERE AND IN RSS.PY    
     def fetchArticles(self, feeds):    

@@ -10,6 +10,7 @@ from zopache.pages.interfaces  import (IPage,
                                        ILocation,
                                        IMap
                                        )
+from zopache.business.interfaces import IOrganizationBase
 
 class MapOrLocation (PageBase):
     webClass = 'Location'
@@ -197,6 +198,7 @@ class MapBase(LocationContainer):
         return mapPoints
      
     def getLocationsJSONCore(self,firstItem,result,view):
+        breakpoint()
         for item in self.mapPoints():
             result, firstItem= item.getOneMarker(firstItem,result)
         return result , firstItem
@@ -226,8 +228,11 @@ class MapBase(LocationContainer):
 #Which was also their Marker
 @implementer (IMap)
 class SimpleMap(MapBase):        
-    pass
-
+    webClass = "SimpleMap"
+    def mapPoints(self):
+        for item in self.allBlogObjects():
+            if IOrganizationBase.providedBy(item):
+                yield item
 
 @implementer(IPin)
 class Pin(LocationContainer):

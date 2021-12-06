@@ -121,7 +121,6 @@ class RegionBase(LocationContainer):
                              isNational = False
     ):
         politicians = [] 
-        parents = self.parentsWhichImplement(IOrganizationBase)
         
         #THE STATE PAGES
         if self.webClass == 'SmallParty':
@@ -133,7 +132,8 @@ class RegionBase(LocationContainer):
                              politicians.append(item)
             return politicians
         
-        #FOR LOCAL PAGES 
+        #FOR LOCAL PAGES
+        parents = self.parentsWhichImplement(IOrganizationBase)
         if self.webClass not in ['NationalMap', 'SmallParty']:
             politicians = []
             for parent in parents:

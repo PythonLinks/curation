@@ -128,7 +128,7 @@ class TootForm (EditForm,BaseBot):
            rssFeed = self.context.rssFeed
            if hasattr(rssFeed,'twitterId'):
               self.twitterId = twitterId = rssFeed.twitterId
-              self.link = ("@" + twitterId + "@twitter.com") if twitterId else ''
+              self.link = ("https://twitter.com/" + twitterId) if twitterId else ''
 
         self.canToot =  getattr (self.request.principal,'accountProxy',False)
         

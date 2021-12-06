@@ -132,12 +132,12 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
                className = item.__class__.__name__
                if className == 'Category':
                     categories.append(item)
-               elif className == 'Link':
-                    links.append(item)
-               elif className == 'RssArticle':
-                    if item.webApproved:
-                         articles.append(item)                    
-        return categories + links + articles
+               #elif className == 'Link':
+               #     links.append(item)
+               #elif className == 'RssArticle':
+               #     if item.webApproved:
+               #          articles.append(item)                    
+        return categories #+ links + articles
     
     def canView(self,view):
         return True

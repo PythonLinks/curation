@@ -6,7 +6,8 @@ from zopache.ttw.htmlviews import AddCkHTMLBase
 from zopache.crud.forms import AddByTitleForm, TreeSecurityAddForm
 from zopache.crud.addbytitleactions import *
 from dolmen.forms.base import Fields
-from zopache.pages.interfaces import (IMap,
+from zopache.pages.interfaces import (
+                                      ISimpleMap,
                                       ILocation,
                                       IPage,
                                       IPin,
@@ -153,7 +154,7 @@ class AddPin(AddAuthorizedPage):
 class AddMap(AddAuthorizedPage):
     subTitle = 'Add a map'
     subTitile = 'Remember to enable map tokens.'
-    interface = IMap
+    interface = ISimpleMap
     label="Add a Map"
     factory = SimpleMap
     

@@ -125,7 +125,12 @@ class EmbedVideo (VideoBase,Page):
     def getIFrame(self,wide):
         iFrameId = f"{self.name + '-video'}"           
         embed = self.embed
-        splitOn = "<iframe "
+        if "<iframe " in self.embed:
+          splitOn = "<iframe "
+        elif "<video " in self.embed:            
+          splitOn = "<video "
+        else:
+            return "PROBLEM WITH THE EMBED TAG NOT iframe nor video"
         split = embed.split(splitOn)
         if len (split) > 1:
            result =  splitOn
