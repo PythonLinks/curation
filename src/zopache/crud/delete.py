@@ -2,7 +2,7 @@ from dolmen.forms.base import Action, SuccessMarker
 from zopache.core.transactionnote import TransactionNote
 from dolmen.forms.base.markers import FAILURE
 from cromlech.browser import IURL
-from zopache.core.getroot import getSiteRoot
+from zopache.core.getroot import getPublicationRoot
 from zope.location import ILocation
 
 class DeleteAction(Action):
@@ -28,7 +28,7 @@ class DeleteAction(Action):
             if name in container:
                 try:
                     item = container[name]
-                    root = getSiteRoot(item)
+                    root = getPublicationRoot(item)
                     products = form.getProducts()
                     del container[name]
                     try:
@@ -37,7 +37,7 @@ class DeleteAction(Action):
                         pass
                     products.indexTree()
                     form.status = self.successMessage
-                    form.message(form.status)
+                    #form.message(form.status)
                     url = str(IURL(container, form.request))
                     url = url + '/manage'
                     return SuccessMarker('Deleted', True, url=url)

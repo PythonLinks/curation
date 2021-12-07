@@ -131,7 +131,7 @@ class Branch(SimpleBranch):
            return
 
        if link in self.remoteURLs:
-          message = f"""The object called {anObject.__name__} with url: {link} is already in the database. """ 
+          message = f"""The object called {anObject.__name__} with url: {link} is already in the database. """
           raise Exception (message)
        else:
           self.remoteURLs[link] = anObject 
@@ -176,6 +176,7 @@ class Branch(SimpleBranch):
                    self.indexBranch(tree,item)
 
     def indexItem(self,item, itemType=ICanonical):
+
         if not IPageBase.providedBy(item):
             return
 

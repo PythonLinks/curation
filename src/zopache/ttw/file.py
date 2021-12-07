@@ -324,7 +324,7 @@ class LogoAcquire(View):
 @view_component
 @name('Logo')
 @context(IRSSArticle)
-class LogoAcquire(View):
+class LogoAcquire2(View):
     responseFactory = Response
     make_response = make_logo_response
         

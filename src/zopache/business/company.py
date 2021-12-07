@@ -17,9 +17,9 @@ from zopache.business.imaginarypage import ImaginaryPage
 from zopache.business.subscribe import HasMembers
 from zopache.business.map import Map
 from zopache.pages.location import MapBase
-from zopache.business.moveattr import Convert
 from zopache.pages.jsonproperties import (OnlineOrganizationProperties,
                                           LocalOrganizationProperties)
+
 
 class Base(Page):    
     hidden = False
@@ -43,7 +43,8 @@ class Company  (GeoBase,LocationContainer):
     clientClass = "category"
 
 @implementer (IOnlineOrganization)
-class OnlineOrganization  (OnlineOrganizationProperties,Base,HasMembers):   
+class OnlineOrganization  (OnlineOrganizationProperties,Base,
+                           HasMembers):   
     webClass = "Organization"
     clientClass = "Category"
     webApproved = True

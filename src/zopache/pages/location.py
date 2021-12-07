@@ -8,7 +8,8 @@ from zopache.pages.interfaces  import (IPage,
                                        ILocationOrMap,
                                        ILocationLeaf,
                                        ILocation,
-                                       IMap
+                                       IMap,
+                                       ISimpleMap
                                        )
 from zopache.business.interfaces import IOrganizationBase
 
@@ -19,17 +20,8 @@ class MapOrLocation (PageBase):
         return self.title
 
     def getMarkerLatLng (self):
-           #OOPS AN ANCIENT TYPO
-           if hasattr(self,'lattitude'):
-               if  self.lattitude != 0:
-                   self.latitude = self.lattitude
-               #del self.lattitude
-
-           if hasattr(self,'longintude'):
-               if  self.longintude != 0:
-                   self.longitude = self.longintude
-               #del self.longintude
            return self.latitude, self.longitude
+
            
 
            
@@ -198,7 +190,6 @@ class MapBase(LocationContainer):
         return mapPoints
      
     def getLocationsJSONCore(self,firstItem,result,view):
-        breakpoint()
         for item in self.mapPoints():
             result, firstItem= item.getOneMarker(firstItem,result)
         return result , firstItem
@@ -226,7 +217,7 @@ class MapBase(LocationContainer):
 
 #So the old maps had a center
 #Which was also their Marker
-@implementer (IMap)
+@implementer (ISimpleMap)
 class SimpleMap(MapBase):        
     webClass = "SimpleMap"
     def mapPoints(self):
