@@ -91,10 +91,11 @@ class RSS(Link,UniqueName):
        unescaped = unescape (article.title)
        result  = self.parseHTML(unescaped)
        new.title = result
-       
-       unescaped = unescape( article.summary)
-       result  = self.parseHTML(unescaped)
-       new.description = result
+
+       if hasattr(article,'summary'):
+           unescaped = unescape( article.summary)
+           result  = self.parseHTML(unescaped)
+           new.description = result or unescaped or ''
        
        if hasattr(article, 'updated_parsed'):
           new.updated = article.updated_parsed

@@ -22,6 +22,7 @@ class RSSArticle(Page):
     importTime = 0
     imageURL = ""
     webClass = "RSSLink"
+    description = ""
     emailApproved = True
     publicationApproved = False
     tags = {}
