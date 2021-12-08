@@ -20,7 +20,7 @@ from zopache.forms.interfaces import IRegister, IGRegister, IGSubscribe
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.ttw import tal_template
 from zopache.forms.validator import GoogleValidator
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase,IPage
 
 from zopache.crud.actions import Cancel
 from zopache.ttw.mail import Notify
@@ -65,7 +65,7 @@ class BaseRegister(AddForm,Notify):
         
 @form_component
 @name (u'gregister')
-@context(IPage)
+@context(IPageBase)
 class GRegister(BaseRegister):
     title='Site Registration'
     subTitle='Please enter your user id and GDPR permissions.'

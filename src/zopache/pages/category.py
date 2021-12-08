@@ -22,6 +22,31 @@ class Category(Page):
     source = ""
     tags = ""
     childFeeds = 0
+
+    def getVideos(self,view):
+        lastImportTime = None        
+        request = view.request
+        form = request.get('form', None)
+        if form:
+           lastImportTime = form.get('lastImportTime',None)
+        if lastImportTime == None:
+           lastImportTime = int(time()) 
+        result = []
+        values = self.newestVideos.values(min = -lastImportTime,
+                                            excludemin = True)
+        for item in islice(values,6):
+            result.append(
+            {"title":item.title,
+             "slug": item.name,
+             "parentSlug": item.parent.name,
+             "parentTitle":item.parent.title,
+             "description": item.description,
+             "importTime": item.importTime,
+             "iFrame": item.getWideFrame()
+             }
+            )
+        return json.dumps(result)
+
     def __init__(self):
        Page.__init__(self)
        self.reInit()
