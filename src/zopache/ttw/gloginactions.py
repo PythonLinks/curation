@@ -46,7 +46,6 @@ class GoogleLoginAction(Action,AccessGoogle):
         token = data ['idtoken']
         del data ['idtoken']
         self.data = data
-                
         self.getTokenData(token)
         people = getPrincipalFolder(form.context)
 

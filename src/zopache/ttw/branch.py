@@ -176,7 +176,6 @@ class Branch(SimpleBranch):
                    self.indexBranch(tree,item)
 
     def indexItem(self,item, itemType=ICanonical):
-
         if not IPageBase.providedBy(item):
             return
 

@@ -104,7 +104,7 @@ class BasicVideo (VideoBase,Page):
       result = f"""  
         <iframe width="560" 
                 id = "{iFrameId}"
-                onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.name}')"
+                #onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.name}')"
                 class = "YouTubeVideo"
                 height="315"
      src="https://www.youtube.com/embed/{self.videoId}?start={self.startTime}
@@ -136,8 +136,8 @@ class EmbedVideo (VideoBase,Page):
            result =  splitOn
            result += ' class = "YouTubeVideo" '
            result += f' id = "{iFrameId}" '
-           result +=  f""" 
-             onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.name}') """
+           #result +=  f""" 
+           #onload = "{'resizeOneWide' if wide else 'resizeOneFlex'}('{self.name}') """
            result += split[1]
            return result
         return "Problem with the embed tag for this video. "

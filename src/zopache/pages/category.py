@@ -1,3 +1,4 @@
+import json
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from BTrees.IOBTree import IOBTree
@@ -26,15 +27,27 @@ class Category(Page):
     def getVideos(self,view):
         lastImportTime = None        
         request = view.request
-        form = request.get('form', None)
+        form = getattr(request,'form', None)
         if form:
            lastImportTime = form.get('lastImportTime',None)
+           lastImportTime = int(lastImportTime)
         if lastImportTime == None:
            lastImportTime = int(time()) 
         result = []
         values = self.newestVideos.values(min = -lastImportTime,
                                             excludemin = True)
         for item in islice(values,6):
+            result.append(item)
+        if len (result) > 0:
+            lastImportTime = result [-1].importTime
+        else:
+            lastImortTime = 0
+        return result, lastImportTime
+    
+    def getVideosJson(self,view,indent = 2):
+        result = []
+        result, lastImportTime = self.getVideos(view)
+        for item in result:
             result.append(
             {"title":item.title,
              "slug": item.name,
@@ -45,7 +58,7 @@ class Category(Page):
              "iFrame": item.getWideFrame()
              }
             )
-        return json.dumps(result)
+        return json.dumps(result, indent = indent)
 
     def __init__(self):
        Page.__init__(self)

@@ -59,8 +59,9 @@ class AccessGoogle(object):
     def validateToken(self,token,form,clientId):
         try:
           idinfo = id_token.verify_oauth2_token(token,Request(),clientId)
-        except:
-               raise ValueError('Trouble')            
+        except Exception as err:
+
+               raise ValueError('Trouble' + str(err))            
         legit =['accounts.google.com', 'https://accounts.google.com']
         if  not (idinfo['iss'] in legit):
                raise ValueError('Wrong issuer.')
@@ -82,7 +83,7 @@ class AccessGoogle(object):
                 token = token [0]
             tokenData = self.validateToken(token,self.form,clientId)
             self.tokenData = tokenData            
-        except ValueError:
+        except ValueError as err:
             # Invalid token
             return "Invalide Token"
 
