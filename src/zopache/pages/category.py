@@ -26,13 +26,14 @@ class Category(Page):
 
     def getVideos(self,view):
         lastImportTime = None        
-        request = view.request
-        form = getattr(request,'form', None)
-        if form:
-           lastImportTime = form.get('lastImportTime',None)
-           lastImportTime = int(lastImportTime)
-        if lastImportTime == None:
-           lastImportTime = int(time()) 
+        url = view.url()
+        parts = url.split('videos')
+        lastImportTime = int(time())         
+        if ((len(parts) >= 2) and
+            (len(parts[1]) >0)):
+               #Drop the / 
+               lastImportTime = parts[1][1:]
+               lastImportTime = int(lastImportTime)
         result = []
         values = self.newestVideos.values(min = -lastImportTime,
                                             excludemin = True)
