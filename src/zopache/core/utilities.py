@@ -133,8 +133,10 @@ class Utilities (object):
          else:
            return ""
   
-    def getDefaultImage(self):
+    def getDefaultImage(self, target  = None):
         context = self.context
+        if target != None:
+           context = target
         socialMediaImage = context.get('SocialMediaImage',None)
         if socialMediaImage != None:
             return socialMediaImage
