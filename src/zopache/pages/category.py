@@ -28,10 +28,9 @@ class Category(Page):
         lastImportTime = None        
         url = view.url()
         parts = url.split('videos')
-        lastImportTime = int(time())         
+        lastImportTime = int(time())
         if ((len(parts) >= 2) and
             (len(parts[1]) >0)):
-               #Drop the / 
                lastImportTime = parts[1][1:]
                lastImportTime = int(lastImportTime)
         result = []
