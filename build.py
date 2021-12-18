@@ -19,8 +19,14 @@ extensions =[
     Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
     Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
     Extension("zopache.remote/*", ["src/zopache/remote/*.py"]),
-    Extension("zopache.teaching/*", ["src/zopache/teaching/*.py"]),    
-    Extension("zopache.remote/youtube/*", ["src/zopache/remote/youtube/*.py"]),        
+    Extension("zopache.teaching/*", ["src/zopache/teaching/*.py"]),
+    
+    Extension("zopache.remote/mastodon/*",
+              ["src/zopache/remote/mastodon/*.py"]),
+    
+    Extension("zopache.remote/youtube/*",
+              ["src/zopache/remote/youtube/*.py"]),
+    
     Extension("zopache.forms/*",
                  ["src/zopache/forms/*.py"]),
     Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
