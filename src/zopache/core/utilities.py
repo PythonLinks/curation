@@ -18,8 +18,8 @@ class Utilities (object):
         source = SessionSource()
         source.send(message)
         try:
-            len = len(source)
-            if len > 2:
+            len1 = len(source)
+            if len1 > 2:
               messages = list(source)
               for msg in messages[2:]:
                  source.remove(msg)

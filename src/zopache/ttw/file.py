@@ -220,7 +220,7 @@ class BTreeImage(ImageBase,Container):
          byteImgIO = io.BytesIO()
          pilImage.save(byteImgIO,'PNG')
          byteImgIO.seek(0)
-         return bytesImgIO.read(), "image/png"
+         return byteImgIO.read(), "image/png"
 
     #THE FOLLOWING METHOD I THINK CUTS A PORTRAIT MODE PICTURE SQUARE
     #I THINK IT BREAKS ON LANDSCAPE MODE
