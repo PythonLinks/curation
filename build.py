@@ -18,8 +18,8 @@ extensions =[
     Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
     Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
     Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
-    Extension("zopache.remote/*", ["src/zopache/remote/*.py"]),
     Extension("zopache.teaching/*", ["src/zopache/teaching/*.py"]),
+    Extension("zopache.remote/*", ["src/zopache/remote/*.py"]),
     
     Extension("zopache.remote/mastodon/*",
               ["src/zopache/remote/mastodon/*.py"]),

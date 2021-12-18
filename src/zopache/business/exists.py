@@ -34,7 +34,7 @@ class DuplicatePerson(Duplicate):
     def slugExists(self, data):
         principalFolder = self.form.getPrincipalFolder()
         title = data ['title']
-        return getIdByHandle(self, title) != None            
+        return principalFolder.getIdByHandle(self, title) != None            
 
 
 
