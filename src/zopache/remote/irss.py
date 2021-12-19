@@ -20,8 +20,7 @@ class IJustRSS(IRSSBase):
         required = False,
         default = False,
         )
-
-
+    
 
 class IRSS(IRSSBase):
     title=schema.TextLine(
@@ -63,18 +62,19 @@ class IRSS(IRSSBase):
         required = True,
         )
 
-    htmlSummary=schema.Bool(
-        title = "Is the Summary HTML?",
-        description ="For those sources where the summary contains html tags",
-        required = False,
-        default = False,
-        )        
 
     rssApproved=schema.Bool(
         title = "Is this feed approved for downloading",
         description ="We can block some feeds without deleting them.",
         required = False,
         default = True,
+        )
+    
+    keepAllArticles=schema.Bool(
+        title = "Keep all of their articles?",
+        description ="Or clear out the old ones to save space?",
+        required = False,
+        default = False,
         )    
 
 class IAddRSS(IRSS):

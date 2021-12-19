@@ -195,7 +195,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
        
     def postProcessCore(self,view=None):
         self.partialPostProcess(view=view)
-        self.recalculateRootJSON()
         cache.resetCache(self)
 
     def preProcess(self,view=None):

@@ -26,12 +26,16 @@ class RSS(Link,UniqueName):
     twitterId = ''
     msatodonId = ''
     rssApproved = True
+    keepAllArticles = False
+    
     def __init__(self):
          self.localArticles = OOBTree()
          Link.__init__(self)
 
     def removeOldArticles(self):
            articles = []
+           if self.keepAllArticles:
+               return
            for value in self.values():
                if value.__class__.__name__ == "RSSArticle":               
                    articles.append(value)

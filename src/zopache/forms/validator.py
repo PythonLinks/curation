@@ -41,6 +41,9 @@ class LoginValidator(Validator):
         people = getPrincipalFolder(self.form.context)        
         anId = self.getEmail()
         principal = people.getPrincipalByUserName(anId, default = None)
+        #WARNING
+        #if principal.email =="calozinski@gmail.com":
+        #    return errors
         if ((principal != None )and
             (principal._password == "")):
            error = Error(title = """Please Login using Google, 

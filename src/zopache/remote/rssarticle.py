@@ -115,14 +115,8 @@ class RSSArticle(Page):
     #AND NOW RESET  A UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
 
     def postAddProcess (self, view = None):
-        Page.postAddProcess(self,view = view)
         if "exclusive for subscribers" in self.title.lower():
            self.webApproved = False
-
-        #categories = parentsWhichImplement(self,IRSSCategory)
-        #for item in categories:
-        #     item.articlesByTime[-self.importTime] = self
-
         
     def addImage(self):
            if  'Logo' in self:

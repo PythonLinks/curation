@@ -20,10 +20,7 @@ class Clean(Form):
     subTitle = "Leave 100 most recent articles for each feed."
     def update(self):
         for rssFeed in self.context.rssLeaves():
-           print (rssFeed.name, len(rssFeed))
-
            rssFeed.removeOldArticles()
-           print (len(rssFeed))
            self.status='The Older Articles Were Removed'
            Form.update(self)
 
