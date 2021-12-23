@@ -60,6 +60,16 @@ class ILinkTop(Interface):
         required = False,
     )
     
+class IAddLinkTop(ILinkTop):    
+    imageURL= schema.URI(
+        title = 'Image URL',
+        description = """A URL That this highlights this link. 
+             Please include 'https://
+             The image will be automatically downloaded'""",
+        missing_value = '',
+        required = False,
+    )
+    
 class IPageBottom(Interface):
 
     description= schema.Text(
@@ -117,15 +127,8 @@ class IAddPage(IPage):
 class ILink(IPage,ILinkTop,ICountable):
     pass
 
-class IAddLink(ILink):
-    imageURL= schema.URI(
-        title = 'Image URL',
-        description = """A URL That this highlights this link. 
-             Please include 'https://
-             The image will be automatically downloaded'""",
-        missing_value = '',
-        required = False,
-    )        
+class IAddLink(IPage, IAddLinkTop):
+     pass
     
 class IMarkdown (IAceHTML,ISourceLeaf):
     pass

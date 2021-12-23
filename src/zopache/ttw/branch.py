@@ -234,10 +234,11 @@ class Branch(SimpleBranch):
                     
     def hasAnythingAt(self,importTime):
         importTime = int(-importTime)
-        return (importTime in self.newestArticles or
+        result =  (importTime in self.newestArticles or
                 importTime in self.approvedArticles or
                 importTime in self.newestVideos)
-
+        return result
+    
     def unIndexItem(self,item, itemType=IPage):
         if not IPageBase.providedBy(item):
             return
@@ -269,9 +270,10 @@ class Branch(SimpleBranch):
                 if item.publicationApproved:
                      approvedArticles = category.approvedArticles
                      if importTime in approvedArticles:                    
-                        del category.approvedArticles[importTime]
-                newestArticles = category.newestArticles
-                if importTime in newestArticles:
+                         del category.approvedArticles[importTime]
+                else:        
+                     newestArticles = category.newestArticles
+                     if importTime in newestArticles:
                         del category.newestArticles[importTime]                          
         elif IVideo.providedBy(item):
             importTime = item.importTime

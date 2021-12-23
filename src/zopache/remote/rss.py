@@ -1,9 +1,9 @@
+import time
 from zope.interface import Interface
 from zope import schema
 from slugify import slugify
 import feedparser
 from html import unescape
-import time
 
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 from zopache.pages.page import Link
@@ -74,17 +74,13 @@ class RSS(Link,UniqueName):
         except:
            return ""
 
-    def createArticles(self,entries,view):
+    async def createArticles(self,entries,view):
        globalArticles= self.getPublicationRoot().globalArticles
-       now = time.time()
-       importTime = int(now)
        for article in entries:
            theId = article['id']
            if not theId in globalArticles:
-              self.createOneArticle(article,view,importTime )
-              importTime -= 3600 
-              
-
+              importTime = await view.getTime()
+              self.createOneArticle(article,view,importTime)
               
     # FOR A NEW RSS FEED       
     def createOneArticle(self,article,view,importTime):
@@ -118,11 +114,12 @@ class RSS(Link,UniqueName):
                             importTime)
        else:
           new.publishedAt = importTime
+          
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
-
-       new.setImportTime(importTime, view.getSiteRoot())
-
+       #new.setImportTime(importTime, view.getSiteRoot())
+       new.importTime = importTime
+       
        newName = slugify (new.title)
        newName = self.uniqueBothName (self,newName)
        print ("CREATING", newName)
@@ -155,7 +152,7 @@ class RSS(Link,UniqueName):
           html  =  await response.text()
           feed = feedparser.parse(html)
           entries = feed['entries']
-          self.createArticles(entries,view)
+          await self.createArticles(entries,view)
 
           
 @implementer(IJustRSS)

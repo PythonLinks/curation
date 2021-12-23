@@ -1,3 +1,5 @@
+import time
+import asyncio
 import feedparser
 
 from dolmen.forms.base.markers import FAILURE, SUCCESS
@@ -24,10 +26,22 @@ from cromlech.browser.exceptions import HTTPFound
 class GetRSS(Form):
     title = "Download the RSS Feeds"
     subTitle = "To get the newest news."
+
+    def __init__(self, context, request, **kwargs):
+        Form.__init__(self, context, request, **kwargs)
+        self.time = int(time.time())
+        self.lock = asyncio.Lock()
+
+    async def getTime(self):
+        async with self.lock:
+              self.time -= 1
+              return self.time
+        
     def update(self):
-        feeds = [] 
+        feeds = []
+        self.time = int(time.time())
         leaves = self.context.rssLeaves()
-        for  item  in leaves:
+        for item in leaves:
                if IRSS.providedBy(item):
                   if item.rssApproved:   
                       feeds.append(item)
