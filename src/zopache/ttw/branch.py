@@ -179,11 +179,12 @@ class Branch(SimpleBranch):
         if not IPageBase.providedBy(item):
             return
 
+        self.valuesByToken[item.__name__] = item
+        
         #Unless WebApproved, return.
         if not getattr(item,'webApproved',True):
                    return
         
-        self.valuesByToken[item.__name__] = item
         
         if hasattr(item,'remoteURL'):
             self.addRemoteURL(item)
@@ -247,10 +248,10 @@ class Branch(SimpleBranch):
            return
 
         del self.valuesByToken[item.__name__]
-        
+       
         if not getattr(item,'webApproved',True): 
                    return
-       
+
         if hasattr(item,'remoteURL'):
             remoteURL = item.remoteURL
             if remoteURL:

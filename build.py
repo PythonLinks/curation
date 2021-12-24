@@ -35,9 +35,6 @@ extensions =[
     Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
 
-#extensions =[]
-
-
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()

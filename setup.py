@@ -9,29 +9,7 @@ from setuptools.extension import Extension
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 
-extensions =[
-    Extension("zopache.application/*",
-                           ["src/zopache/application/*.py"]),
-    Extension("zopache.application/browser/*",
-                           ["src/zopache/application/browser/*.py"]),    
-    Extension("zopache.business/*", ["src/zopache/business/*.py"]),
-    Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
-    Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
-    Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
-    Extension("zopache.teaching/*", ["src/zopache/teaching/*.py"]),
-    Extension("zopache.remote/*", ["src/zopache/remote/*.py"]), 
-    Extension("zopache.remote/mastodon/*", ["src/zopache/remote/mastodon/*.py"]),           
-    Extension("zopache.remote/youtube/*", ["src/zopache/remote/youtube/*.py"]),        
-    Extension("zopache.forms/*",
-                 ["src/zopache/forms/*.py"]),
-    Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
-    Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
-    Extension("zopache.python/*", ["src/zopache/python/*.py"]),    
-    Extension("zopache.core/*", ["src/zopache/core/*.py"])
-                 ]
-
 extensions =[]
-
 
 name = 'zopache'
 version = '0.1'

@@ -44,6 +44,7 @@ class LoginValidator(Validator):
         #WARNING
         #if principal.email =="calozinski@gmail.com":
         #    return errors
+        
         if ((principal != None )and
             (principal._password == "")):
            error = Error(title = """Please Login using Google, 

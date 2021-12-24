@@ -63,7 +63,7 @@ class Organization  (
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
-    webApproved = True
+    webApproved = False
     
     def getOneMarkerCore(self):
         focus = self.focus
