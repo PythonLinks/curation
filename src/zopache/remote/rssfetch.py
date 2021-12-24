@@ -30,12 +30,14 @@ class GetRSS(Form):
     def __init__(self, context, request, **kwargs):
         Form.__init__(self, context, request, **kwargs)
         self.time = int(time.time())
-        self.lock = asyncio.Lock()
+        self.lock = None
 
     async def getTime(self):
+        if self.lock == None:
+            self.lock = asyncio.Lock()        
         async with self.lock:
-              self.time -= 1
-              return self.time
+            self.time -= 1
+            return self.time
         
     def update(self):
         feeds = []
