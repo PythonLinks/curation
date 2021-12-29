@@ -24,8 +24,9 @@ def createObjects(dataClass):
         new.remoteURL = theItem.findAll("div", {"class": "views-field-website"})
         title = theItem.findAll("div", {"class": "views-field-title"})
         new.title = title.extract()
-        new.phone = theItem.findAll("div", {"class": "views-field-phone"})        
-        new.email = theItem.findAll("div", {"class": "views-field-email"})             data.title = strong.text
+        new.phone = theItem.findAll("div", {"class": "views-field-phone"})
+        new.email = theItem.findAll("div", {"class": "views-field-email"})
+        data.title = strong.text
         links = party.find_all('a')
         allData.append(new)
     return allData

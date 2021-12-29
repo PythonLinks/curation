@@ -447,6 +447,7 @@ class RootPage(SiteRoot):
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
     twitterId = ""
+    localLogin = False
 
     def __init__(self):
        from zopache.ttw.principalfolder import PrincipalFolder

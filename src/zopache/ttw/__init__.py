@@ -3,7 +3,8 @@
 
 from zope.i18nmessageid import MessageFactory
 i18n = MessageFactory("zopache.ttw")
-from zopache.ttw.file import File, Image
+
+#from zopache.ttw.file import File, Image
 
 from dolmen.template import TALTemplate
 from os import path

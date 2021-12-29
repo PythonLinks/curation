@@ -162,3 +162,38 @@ class Category(Page):
            return []
         except Exception as err:
             print (err)
+
+from zopache.pages.interfaces import (IGeographicalCategory,
+                                      ILocationCategory,
+                                      IRegionCategory,
+                                      IMapCategory)
+
+from zopache.pages.location import LocationContainer, MapBase
+
+@implementer(ILocationCategory)
+class LocationCategory(Category,LocationContainer):
+    webClass = "LocationCategory"
+    def mapPoints(self):
+        return []
+    
+@implementer(IMapCategory)
+class MapCategory(Category,MapBase):
+    webClass = "MapCategory"
+    def mapPoints(self):
+        for child in self.values():
+            if ILocationCategory.providedBy(child):
+                yield child
+            elif IRegionCategory.providedBy(item):                
+                for grandChild in child.mapPoints():
+                    yield grandChild
+                yield child    
+
+@implementer(IRegionCategory)
+class RegionCategory(Category,MapBase):
+    webClass = "RegionCategory"    
+    def mapPoints(self):
+        for child in self.values():
+            if ILocationCategory.providedBy(child):
+                yield child
+
+    

@@ -138,11 +138,11 @@ class IMapOrganizationBase (Interface):
 
 
 from zopache.business.interfaces import  ISocialMedia,IOrganizationBase
-from zopache.pages.interfaces import ILocationOrMap
+from zopache.pages.interfaces import IGeography
     
 class IMapOrganization(IOrganizationBase,
             IMapBase,ILocationContainer,
-            IMapOrganizationBase,ISocialMedia,ILocationOrMap):    
+            IMapOrganizationBase,ISocialMedia,IGeography):    
       pass
 
 class IEndorsingOrganization(IMapOrganization,IMap):

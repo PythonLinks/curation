@@ -1,13 +1,5 @@
+
 #-*- coding: utf-8 -*-
-
-#BASED ON
-# https://stackoverflow.com/questions/39499453/package-only-binary-compiled-so-files-of-a-python-library-compiled-with-cython/56043918#56043918
-
-#For Onlybuilding some. 
-import fnmatch
-from setuptools.command.build_py import build_py as build_py_orig
-
-
 import os
 from os.path import join
 
@@ -37,15 +29,13 @@ extensions =[
     
     Extension("zopache.forms/*",
                  ["src/zopache/forms/*.py"]),
-    #Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
+    Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
     Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
     Extension("zopache.python/*", ["src/zopache/python/*.py"]),    
     Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
-class build_py(build_py_orig):
-    def build_packages(self):
-        pass
-                                                                                                                                                                                                                                                                      
+extensions = []
+
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()
@@ -121,15 +111,13 @@ setup(
 
       ext_modules=cythonize(
                 extensions,
-                build_dir='build/c-files',          
                 compiler_directives=dict(
                     language_level = "3",
                     always_allow_keywords=True)
                 ),
-      cmdclass={
-            'build_py' : build_py,
-            'build_ext':build_ext
-        },
+      cmdclass=dict(
+            build_ext=build_ext
+        ),
 
       version=version,
       description="Zopache the core of the JSON Wikie",
@@ -143,13 +131,6 @@ setup(
       package_dir={'': 'src'},
       namespace_packages=['zopache'],
       include_package_data=True,
-      package_data={
-        "zopache": ["*.zcml",
-             "*.pt",
-             "*.png",
-             "*.js",                    
-             "*.svg"]
-      } ,       
       zip_safe=False,
       tests_require=tests_require,
       install_requires=install_requires,

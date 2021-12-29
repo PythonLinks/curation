@@ -5,7 +5,7 @@ from zopache.pages.page import PageBase
 from zopache.pages.interfaces  import (IPage,
                                        IPin,
                                        ILocationContainer,
-                                       ILocationOrMap,
+                                       IGeography,
                                        ILocationLeaf,
                                        ILocation,
                                        IMap,
@@ -22,9 +22,6 @@ class MapOrLocation (PageBase):
     def getMarkerLatLng (self):
            return self.latitude, self.longitude
 
-           
-
-           
     def setMarkerLatLng(self, lat,lng):
         self.latitude = lat
         self.longitude = lng
@@ -92,7 +89,7 @@ class LocationContainer (MapOrLocation):
         for item in values:
             #FOR APPROVED ORGANIZATIONS
             #FOR POLITICIANS, DO IT FIRST
-            if not ILocationOrMap.providedBy(item):
+            if not IGeography.providedBy(item):
                 continue
 
             if not item.webApproved:
@@ -122,8 +119,6 @@ class LocationContainer (MapOrLocation):
 @implementer(ILocation)
 class Location(LocationContainer):
     pass
-
-    
 
 import googlemaps
 class MapBase(LocationContainer):
@@ -173,7 +168,7 @@ class MapBase(LocationContainer):
         #    mapPoints = self.filter(mapPoints,view)
 
         for item in mapPoints:
-             if not ILocationOrMap.providedBy(item):
+             if not IGeography.providedBy(item):
                    continue
                
              if not item.webApproved:
@@ -185,7 +180,7 @@ class MapBase(LocationContainer):
                  continue
              
              # IF LOCATION GET THE JSON
-             if ( ILocationOrMap.providedBy(item)):
+             if ( IGeography.providedBy(item)):
                 mapPoints.append(item)
         return mapPoints
      
@@ -210,7 +205,7 @@ class MapBase(LocationContainer):
         values=self.values()
         result=[]
         for item in values:
-            if (ILocationOrMap.providedBy(item) and 
+            if (IGeography.providedBy(item) and 
                 item.webApproved):
                 result.append(item)
         return result

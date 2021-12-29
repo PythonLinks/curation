@@ -192,7 +192,7 @@ class ISiteRootPage(ISiteRoot,IBranch,IPageBase,IBTreeContainer):
 class INotPage (Interface):
      pass
 
-class ILocationOrMap(Interface):    
+class IGeography(Interface):    
     pass
 
 class ILatLng(Interface):
@@ -217,7 +217,7 @@ class ILatLng(Interface):
 #This is the legacy Location,
 #Used in pages.location.Location
 #So it has to stay
-class ILocation(ILocationOrMap,IRecent,ICanonical,IPage):
+class ILocation(IGeography,ILatLng):
     pass
 
 #For Politicians
@@ -228,10 +228,10 @@ class ILocationLeaf(ILocation):
 class ILocationContainer(ILocation):
     pass
 
-class IPin(ILocationLeaf,ILatLng,ILocationOrMap):
+class IPin(ILocationLeaf,ILatLng,IGeography):
     pass
 
-class IMap(ILocationOrMap,ILatLng):
+class IMap(IGeography,ILatLng):
     zoomLevel = schema.Float(
         title = u'Google Maps Zoom Level',
         description = u'Google Maps Zoom Level',
@@ -243,7 +243,6 @@ class IMap(ILocationOrMap,ILatLng):
 
 class ISimpleMap(IPage,IMap):
     pass
-
     
 from zopache.pages.address import Address
 class IAddress(Interface):
@@ -256,14 +255,37 @@ class IAddress(Interface):
         default = u'',
     )
     """
-
     
 class IAddressMap(IMap,IAddress):
     pass
 
-class ICategory(IPage):
+class ICategory(IPageBase):
     tags = schema.TextLine(
         title = 'Tags',
         description = 'For this Cateogry.',
         required = False,
     )
+
+class IGeographicalCategory(ICategory, IGeography):
+    title = schema.TextLine(
+        title = 'Geographical Category Name',
+        description = u'Describe this page.',
+        required = True,
+    )
+
+    description= schema.Text(
+        title = 'Description',
+        description = """A brief introduction of this geographical category..  
+                        This is used by the search functions.""",
+        required = False,
+        default = '',
+    )
+
+class ILocationCategory (IGeographicalCategory, ILatLng):
+    pass
+
+class IRegionCategory(IGeographicalCategory):
+    pass
+
+class IMapCategory(IGeographicalCategory,ILatLng):
+    pass

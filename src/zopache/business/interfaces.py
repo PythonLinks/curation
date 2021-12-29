@@ -5,7 +5,7 @@ from zopache.pages.interfaces import IMap as IMapBase
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
-from zopache.pages.interfaces import ILocationOrMap
+from zopache.pages.interfaces import IGeography
 from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.core.interfaces import ICountable

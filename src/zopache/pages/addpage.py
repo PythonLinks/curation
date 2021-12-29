@@ -1,4 +1,7 @@
 from dolmen.forms.base import Actions
+
+
+from zopache.ttw.interfaces import ICanonical
 from zopache.crud.actions import Cancel
 from zopache.core.viewdecorators import *
 from zopache.ttw.htmlviews import CkScripts
@@ -14,7 +17,9 @@ from zopache.pages.interfaces import (
                                       IPageBase,
                                       ISiteRootPage,
                                       IProxyPage,
-                                      IActionNetwork)
+                                      IActionNetwork,
+                                      ILocationCategory,
+                                      IMapCategory )
 from zopache.pages.page import Page, Link, SiteRootPage, ActionNetwork
 from zopache.pages.location import SimpleMap, Location, Pin
 from zopache.core.interfaces import ITreeSecurity
@@ -133,6 +138,20 @@ class AddLocation(AddAuthorizedPage):
     subTitle = 'These points show up on parent maps. '
     factory = Location
 
+#LOCAION CATEGORY
+from zopache.pages.interfaces import ILocationCategory
+from zopache.pages.category import LocationCategory
+@view_component
+@name('addLocationCategory')
+@target(IView)
+@context(ICanonical)
+@implementer(ITreeSecurity)
+class AddLocationCategory(AddAuthorizedPage):
+    interface = ILocationCategory
+    label="Add a Location Category"
+    subTitle = 'These points show up on parent maps. '
+    factory = LocationCategory    
+
 # PIN
 @view_component
 @name('addPin')
@@ -145,7 +164,7 @@ class AddPin(AddAuthorizedPage):
     subTitle = 'These points show up on parent maps. '
     factory = Pin
 
-#MAP
+
 @view_component
 @name('addSimpleMap')
 @target(IView)
@@ -157,9 +176,21 @@ class AddMap(AddAuthorizedPage):
     interface = ISimpleMap
     label="Add a Map"
     factory = SimpleMap
-    
 
-
+#REGION CATEGORY
+from zopache.pages.interfaces import IMapCategory
+from zopache.pages.category import MapCategory
+@view_component
+@name('addMapCategory')
+@target(IView)
+@context(IPageBase)    
+@implementer(ITreeSecurity)
+class AddMapCategory(AddAuthorizedPage):
+    subTitle = 'Add a Map Category'
+    subTitile = 'Both a map and a category.  Remember to enable map tokens.'
+    interface = IMapCategory
+    label="Add a Map"
+    factory = SimpleMap    
     
 
 from zopache.pages.category import Category
