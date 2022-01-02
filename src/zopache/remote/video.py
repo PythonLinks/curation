@@ -14,6 +14,7 @@ class VideoBase(Voteable):
     hours = 0
     tags = ''
     _toot = ''
+    importTime = 0
     
     def setImportTime(self,importTime,root):
         importTime = int(importTime)
