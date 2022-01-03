@@ -32,11 +32,11 @@ def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
 
 def getPrincipalFolderNoView(item):
-    root = item.getPublicationRoot(item)
-    if ((root != None) and
+    root = getPublicationRoot(item)
+    if ((root != None) and not
        ("person" in root)):
-        return root["person"]
-    raise Exception ("No Prncipal Folder found.  Odd. ")
+        root = root ['syndicate']    
+    return root["person"]
 
 def getPrincipalFolder(item,view):
     root = view.getSiteRoot()

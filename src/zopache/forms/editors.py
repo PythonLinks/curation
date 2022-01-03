@@ -7,7 +7,7 @@ from zopache.crud.forms import EditForm
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.interface import directlyProvides
-from zopache.core.getroot import getPrincipalFolder
+from zopache.core.getroot import getPrincipalFolderNoView
 from zopache.core.interfaces import ITreeSecurity
 
 def possibleEditors(context):
