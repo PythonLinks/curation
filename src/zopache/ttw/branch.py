@@ -99,7 +99,7 @@ class Branch(SimpleBranch):
         self.remoteURLs = OOBTree()
         self.politicians = OOBTree()
         self.pagesByTwitterId = OOBTree()
-        self.socialNodeByTwitterId = OOBTree()
+        #self.socialNodeByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
         self.newestArticles = IOBTree()
         self.newestVideos = IOBTree()
@@ -221,11 +221,11 @@ class Branch(SimpleBranch):
                 category.newestVideos [-importTime] = item                
 
                 
-        elif item.__class__.__name__ == "SocialNode":
-            for node in item.allNodes():
-                twitterId= node.twitterId
-                if twitterId:
-                    self.socialNodeByTwitterId[twitterId] = item
+        #elif item.__class__.__name__ == "SocialNode":
+        #    for node in item.allNodes():
+        #        twitterId= node.twitterId
+        #        if twitterId:
+        #            self.socialNodeByTwitterId[twitterId] = item
                     
         elif item.__class__.__name__ =='Politician':
             if (hasattr(item, 'candidateInfo') or
@@ -289,12 +289,12 @@ class Branch(SimpleBranch):
             for category in parentsWhichImplement(item,ICategory):            
                 del category.newestLinks [-int(item.creationTime)]  
             
-        elif item.__class__.__name__ == "SocialNode":
-            for node in item.allNodes():
-                twitterId = node.twitterId
-                if twitterId:
-                   if twitterId in self.socialNodeByTwitterId:  
-                       del self.socialNodeByTwitterId[node.twitterId] 
+        #elif item.__class__.__name__ == "SocialNode":
+        #    for node in item.allNodes():
+        #        twitterId = node.twitterId
+        #        if twitterId:
+        #           if twitterId in self.socialNodeByTwitterId:  
+        #               del self.socialNodeByTwitterId[node.twitterId] 
                                                      
         elif item.__class__.__name__=='Politician':
             if (hasattr(item, 'candidateInfo') or

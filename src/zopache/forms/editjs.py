@@ -22,6 +22,11 @@ class IForm(Interface):
         default = '{}',
     )
     
+    articleApproved = schema.Bool(
+        title = "Can this article be published?",
+        required = False,
+        default = False)
+    
 @form_component
 @name ('editjs')
 @context(ICategory)

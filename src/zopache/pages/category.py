@@ -22,9 +22,10 @@ class Category(Page):
     source = ""
     tags = ""
     childFeeds = 0
-    json = ""
+    json = "[]"
     html = ""
-    
+    articleApproved = False
+        
     def getHTML(self):
         return self.html
     

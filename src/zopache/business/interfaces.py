@@ -16,7 +16,7 @@ from z3c.schema.email import RFC822MailAddress as Email
 
 from zopache.pages.interfaces import IPage, IPageBase, ITime, ILocation
 from zopache.business.ifollow import IFollow
-
+from zopache.pages.interfaces import IPageBase
 
 class IClass(Interface):
     json= schema.Text(
@@ -25,7 +25,7 @@ class IClass(Interface):
         default = '{}',
     )
     
-class IPolitician(IClass):
+class IPolitician(IClass,IPageBase):
     pass
 
 
