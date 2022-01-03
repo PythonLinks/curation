@@ -108,6 +108,9 @@ class IBasicVideo(IVideo, IVideoId, IStartTime):
 class IEmbedVideo(IVideo, IEmbed, IStartTime):
     pass        
 
+class IJSVideo(IVideo, IEmbed, IStartTime):
+      pass
+               
 class IPrincipalVideo(IEmbedVideo):
     recordingType = schema.Choice(
         vocabulary=recordingTypes(),

@@ -11,7 +11,6 @@
         <grok:grok package="zopache.pages" />
         <grok:grok package="zopache.business" />	
 	        <grok:grok package="zopache.python" />
-        <grok:grok package="zopache.climate" />
         <grok:grok package="zopache.remote" />
     <grok:grok package="zopache.application" />
     <grok:grok package="zopache.copy" />

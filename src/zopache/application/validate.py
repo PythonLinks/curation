@@ -1,6 +1,5 @@
 import re
 from dolmen.forms.base.errors import Error,Errors
-from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 from slugify import slugify
 import json

@@ -11,7 +11,7 @@ from zopache.core.getroot import getPrincipalFolder
 from zopache.core.interfaces import ITreeSecurity
 
 def possibleEditors(context):
-    people = getPrincipalFolder(context)
+    people = getPrincipalFolderNoView(context)
     terms = []
     term = SimpleVocabulary.createTerm('None','None','None')
     terms.append(term)    
@@ -37,7 +37,7 @@ class IEditors(Interface):
 @form_component
 @name (u'editors')
 @context(IBTreeContainer)
-@implementer(ITreeSecurity)
+#@implementer(ITreeSecurity)
 class EditEditors(EditForm):
     title = 'Assign Editors2'
     interface = IEditors

@@ -45,7 +45,7 @@ class LoginAction(Action):
         return SuccessMarker('Added', True, url=".",code=307)
 
     def getContext(self,form):
-        return getPrincipalFolder(form.context)
+        return getPrincipalFolder(form.context,form)
 
 @form_component
 @name (u'login2')

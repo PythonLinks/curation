@@ -260,6 +260,19 @@ class IAddressMap(IMap,IAddress):
     pass
 
 class ICategory(IPageBase):
+    title = schema.TextLine(
+        title = 'Category Name',
+        description = 'Name this category..',
+        required = True,
+    )
+
+    description= schema.Text(
+        title = 'Description',
+        description = "A brief description of this category",
+        required = False,
+        default = '',
+    )
+
     tags = schema.TextLine(
         title = 'Tags',
         description = 'For this Cateogry.',

@@ -15,7 +15,7 @@ class Validator(object):
     def validate(self, data):
         self.data = data
         errors = Errors()
-        people = getPrincipalFolder(self.form.context)        
+        people = getPrincipalFolder(self.form.context,self)        
 
         # MAKE SURE THE EMAIL DOES NOT EXIST
         email = self.getEmail()
@@ -38,7 +38,7 @@ class LoginValidator(Validator):
     def validate(self, data):
         self.data = data
         errors = Errors()
-        people = getPrincipalFolder(self.form.context)        
+        people = getPrincipalFolder(self.form.context,self.form)        
         anId = self.getEmail()
         principal = people.getPrincipalByUserName(anId, default = None)
         #WARNING

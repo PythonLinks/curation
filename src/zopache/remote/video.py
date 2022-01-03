@@ -1,6 +1,9 @@
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
-from zopache.remote.ivideo import IBasicVideo, IPrincipalVideo, IEmbedVideo
+from zopache.remote.ivideo import (IBasicVideo,
+                                   IPrincipalVideo,
+                                   IEmbedVideo,
+                                   IJSVideo)
 from zopache.remote.voteable import Voteable
 from zopache.remote.interfaces import IVoteable
 from zopache.remote.voteable import Voteable
@@ -144,6 +147,19 @@ class EmbedVideo (VideoBase,Page):
         return "Problem with the embed tag for this video. "
 
 
+#NOT YET USED, FOR EMBEDDING JAVASCRIPT.    
+@implementer(IJSVideo)    
+class JSVideo(VideoBase,Page):
+    videoId = ""
+    def getWideFrame(self):
+        return self.getIFrame(True)
+    
+    def getFlexFrame(self):
+        return self.getIFrame(False)               
+        
+    def getIFrame(self,wide):
+        return self.embed
+        
 @implementer (IPrincipalVideo)     
 class PrincipalVideo (VideoBase):
     pass

@@ -31,8 +31,15 @@ def getPublicationRoot(item):
 def getZodbRoot(item):
     return  getRoot(item, IZodbRoot)
 
-def getPrincipalFolder(item):
-    root = getPublicationRoot(item)
+def getPrincipalFolderNoView(item):
+    root = item.getPublicationRoot(item)
+    if ((root != None) and
+       ("person" in root)):
+        return root["person"]
+    raise Exception ("No Prncipal Folder found.  Odd. ")
+
+def getPrincipalFolder(item,view):
+    root = view.getSiteRoot()
     if ((root != None) and
        ("person" in root)):
         return root["person"]
@@ -43,10 +50,6 @@ def getSiteRoot(self,view):
     if not ISiteRoot.providedBy(siteRoot):
         siteRoot = siteRoot.getSiteRootFor(view.getDomain())         
     return siteRoot
-
-
-
-
 
 class Root(object):
     def getDBRoot(self):

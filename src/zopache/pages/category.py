@@ -5,7 +5,6 @@ from BTrees.IOBTree import IOBTree
 from zopache.pages.interfaces import ICategory
 from BTrees.OOBTree import OOBTree
 
-
 from time import time
 from datetime import datetime
 from itertools import islice
@@ -23,7 +22,12 @@ class Category(Page):
     source = ""
     tags = ""
     childFeeds = 0
-
+    json = ""
+    html = ""
+    
+    def getHTML(self):
+        return self.html
+    
     def getVideos(self,view):
         lastImportTime = None        
         url = view.url()

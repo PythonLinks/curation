@@ -1,10 +1,5 @@
-import googlemaps
-
 from zope.interface import Interface
-from zope.schema._field import Choice
 from zope.schema import TextLine
-
-from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
@@ -28,7 +23,6 @@ class EditWebClass (EditForm):
     subTitle = 'This is used to change the layout of this object.'
     interface = IClass
     fields = Fields(IClass)
-    
     
     def acquireTitle(self):
         return 'Edit' + self.context.title + "'s Web Class "

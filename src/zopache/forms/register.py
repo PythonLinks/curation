@@ -22,6 +22,7 @@ from zopache.ttw.interfaces import IName, IContainer, ILeaf
 
 from zopache.crud.utilities import title_or_name    
 from zopache.core.baseform import Form
+from zopache.core.breadcrumbs import Breadcrumbs
 
 from zopache.forms.interfaces import IRegister
 from zopache.ttw.principalfolder import InternalPrincipal
@@ -33,7 +34,7 @@ from zopache.ttw.mail import Notify
 @form_component
 @name ('signup')
 @context(Interface)
-class Register(Form,Notify):
+class Register(Form,Notify,Breadcrumbs):
     dataValidators = [Validator]
     layoutName = "UserMenu"
     fields = Fields(IRegister)
@@ -50,7 +51,9 @@ class Register(Form,Notify):
         Notify.__init__(self)
         
     def update(self):
-        if not self.getSiteRoot().locallogin:
+        #if self.getDomain() == "dev.pythonlinks.info":
+        #    return 
+        if not self.getSiteRoot().localLogin:
             self.raiseUnauthorized()
             
     def acquireTitle(self):
@@ -73,7 +76,8 @@ class Register(Form,Notify):
         newURL = "."
         return newURL
 
-"""    
+"""
+EROR: IRegisterShort Not Defined
 @form_component
 @name (u'register')
 @context(Interface)

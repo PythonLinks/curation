@@ -44,7 +44,7 @@ class Add(Action):
         context = form.context
         newPerson= form.factory()
         newPerson.__parent__ = context
-        root = getSiteRoot(context)
+        root = getSiteRoot(context,form)
         newName = root.getUniqueNumberString()
         newPerson.__name__= newName
         root.addItem(newPerson)
@@ -53,7 +53,7 @@ class Add(Action):
         set_fields_data(form.fields, newPerson, data)
         
         #REGISTER AND LOG THE PERSON IN
-        principalFolder = getPrincipalFolder (form.context)
+        principalFolder = getPrincipalFolder (form.context,form)
         principalFolder [newName]=newPerson
         #You have to add it to the root index
         #before authenticating it.

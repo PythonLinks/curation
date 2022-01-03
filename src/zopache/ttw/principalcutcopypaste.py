@@ -35,7 +35,7 @@ class PrincipalDeleter(Deleter):
         contained=self.context
         container=contained.__parent__
         name=contained.__name__
-        principalFolder = getPrincipalFolder(contained)
+        principalFolder = getPrincipalFolder(contained,self)
         self.describeTransaction("Deleted a principal",contained)
         del container[name]
 
