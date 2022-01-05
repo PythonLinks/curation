@@ -37,7 +37,7 @@ class IEditors(Interface):
 @form_component
 @name (u'editors')
 @context(IBTreeContainer)
-#@implementer(ITreeSecurity)
+@implementer(ITreeSecurity)
 class EditEditors(EditForm):
     title = 'Assign Editors2'
     interface = IEditors

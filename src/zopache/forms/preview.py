@@ -22,6 +22,7 @@ class Index(View):
             title, description, image = web_preview(url)
             result ={"success": 1,
                      "meta": {'title':title,
+                              'url':url,
                       'description':description,
                       'image':{
                           'url':image}

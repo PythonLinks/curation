@@ -179,7 +179,7 @@ class AddJavascriptFolder(AceAddForm):
 def makeJavascriptResponse(view, result, *args, **kwargs):
         response = view.responseFactory()
         response.write(result or u'')
-        response.content_type=u'application/javascript' 
+        response.content_type='text/javascript' 
         return response
 
 @view_component

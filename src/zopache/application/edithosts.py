@@ -20,5 +20,4 @@ class AceEditJSON(AceEditJSON):
     @property
     def fields(self):
         return  Fields(self.interface)
-
-
+    

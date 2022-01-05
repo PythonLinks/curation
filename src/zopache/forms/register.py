@@ -31,8 +31,8 @@ from zopache.crud.actions import Cancel
 from zopache.forms.validator import Validator
 from zopache.ttw.mail import Notify
 
-@form_component
-@name ('signup')
+#@form_component
+#@name ('signup')
 @context(Interface)
 class Register(Form,Notify,Breadcrumbs):
     dataValidators = [Validator]
@@ -51,8 +51,10 @@ class Register(Form,Notify,Breadcrumbs):
         Notify.__init__(self)
         
     def update(self):
-        #if self.getDomain() == "dev.pythonlinks.info":
-        #    return 
+        if self.getDomain() in [ "dev.pythonlinks.info",
+            "news.uncensorednews.us"]:
+             return
+         
         if not self.getSiteRoot().localLogin:
             self.raiseUnauthorized()
             

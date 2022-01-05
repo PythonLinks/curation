@@ -115,6 +115,7 @@ class ManageBase(Form,Contents):
 @form_component
 @name('manage')
 @context(IDirectory)
+@permissions('Manage')
 class ManageDirectory (ManageBase): 
      pass
  

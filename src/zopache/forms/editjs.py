@@ -12,7 +12,7 @@ from zopache.core.interfaces import ITreeSecurity
 class IForm(Interface):
     html= schema.Text(
         title = 'HTML code',
-        required = True,
+        required = False,
         default = '',
     )
     
@@ -37,6 +37,12 @@ class EditorJS(EditForm):
     interface = IForm
     fields = Fields(IForm)
 
+    def preProcess(self,view = None):
+        pass
+    
+    def postProcess(self, view = None):
+        pass
+    
     def update (self):
         self.template = self.getProducts()['Templates']['EditorJS']['template']
         EditForm.update(self)

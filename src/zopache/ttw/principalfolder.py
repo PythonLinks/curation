@@ -28,7 +28,10 @@ from cromlech.security import unauthenticated_principal as anonymous
 from zopache.core import Container
 from zopache.crud.interfaces import IImutable, IContainer
 from zopache.ttw.interfaces import IPrincipalFolder, IInternalPrincipal
-from zopache.core.getroot import getPrincipalFolder, getPublicationRoot, getProducts
+from zopache.core.getroot import (getPrincipalFolder,
+                                  getPrincipalFolderNoView,
+                                  getPublicationRoot,
+                                  getProducts)
 from zopache.ttw.file import FileBase
 
 class DuplicateIDError(ValidationError):
@@ -177,7 +180,7 @@ class InternalPrincipal(FileBase,Page):
         self._email = email
         if self.__parent__ is not None:
             try:
-                getPrincipalFolder(self).notifyEmailChanged(oldEmail,   self)
+                getPrincipalFolderNoView(self).notifyEmailChanged(oldEmail,   self)
             except ValueError:
                 self._email = oldEmail
                 raise
@@ -190,7 +193,7 @@ class InternalPrincipal(FileBase,Page):
         self._handle = handle
         if self.__parent__ is not None:
             try:
-                getPrincipalFolder(self).notifyHandleChanged(oldHandle,  self)
+                getPrincipalFolderNoView(self).notifyHandleChanged(oldHandle,  self)
             except ValueError:
                 self._handle = oldHandle
                 raise
