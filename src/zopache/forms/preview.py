@@ -37,8 +37,7 @@ class Index(View,Breadcrumbs):
             result = json.dumps(result)
             return result
 
-    def remotePreview(self,url):
-            title, description, image = web_preview(url)
+    def notUsedPreview(self):
             result ={"success": 1,
                      "meta": {'title':title,
                               'url':url,
@@ -46,20 +45,35 @@ class Index(View,Breadcrumbs):
                       'image':{
                           'url':image}
             }}
-            try:
-               if image != None:
-                  response  = requests.get(image)
-                  image = result['meta']['image']
-                  if response.status_code == 200:
-                      mime = response.headers['Content-Type']
-                      data = response.content
-                      data = base64.b64encode(data).decode('utf-8')
-                      image['mime-type'] = mime
-                      image['image-data'] = data 
-            except:
-                pass
-            result = json.dumps(result)
-            return result
+            
+    def remotePreview(self,url):
+        #title, description, image = web_preview(url)
+        title = """ERROR: Only Curated (Local) Links can be added"""
+        description = "The problem has to do with caching the images, "
+        description += "as accessing images across domains " 
+        description += "is genrally not allowed."
+        image = None
+        result ={"success": 1,
+                     "meta": {'title':title,
+                              'url':url,
+                      'description':description,
+                      'image':{
+                          'url':image}
+            }}
+        try:
+            if image != None:
+                response  = requests.get(image)
+                image = result['meta']['image']
+                if response.status_code == 200:
+                    mime = response.headers['Content-Type']
+                    data = response.content
+                    data = base64.b64encode(data).decode('utf-8')
+                    image['mime-type'] = mime
+                    image['image-data'] = data 
+        except:
+            pass
+        result = json.dumps(result)
+        return result
         
     def localPreview(self,url):
          siteRoot = self.getSiteRoot()

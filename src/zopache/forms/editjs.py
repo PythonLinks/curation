@@ -34,10 +34,10 @@ class EditorJS(EditForm):
     interface = IForm
     fields = Fields(IForm)
 
-    def preProcess(self,view = None):
+    def preProcess(self):
         pass
     
-    def postProcess(self, view = None):
+    def postProcess(self):
         pass
     
     def update (self):
