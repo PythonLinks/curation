@@ -1,9 +1,6 @@
 from zope.interface import Interface
 from zope import schema
 
-
-from dolmen.forms.base.markers import HIDDEN
-
 from zopache.core.viewdecorators import *
 from zopache.crud.forms  import EditForm
 from zopache.pages.interfaces import ICategory
@@ -16,11 +13,11 @@ class IForm(Interface):
         default = '',
     )
     
-    json= schema.Text(
+    source= schema.Text(
         title = 'Json Data',
         required = True,
         default = '{}',
-    )
+    )    
     
     articleApproved = schema.Bool(
         title = "Can this article be published?",
@@ -46,8 +43,9 @@ class EditorJS(EditForm):
     def update (self):
         self.template = self.getProducts()['Templates']['EditorJS']['template']
         EditForm.update(self)
-        self.fields["html"].mode = HIDDEN
-        self.fields["json"].mode = HIDDEN    
+        #NOT NEEDED, USING A TEMPLATE
+        #self.fields["html"].mode = HIDDEN
+        #self.fields["source"].mode = HIDDEN    
     
     #def acquireTitle(self):
     #    return "Configure Server"

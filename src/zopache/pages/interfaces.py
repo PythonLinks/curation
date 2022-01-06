@@ -14,6 +14,7 @@ from cromlech.file import FileField
 from zopache.ttw.interfaces import IAceHTML
 from zopache.core.interfaces import ICountable, ISiteRoot
 from zopache.crud.interfaces import ILeaf
+from zopache.ttw.interfaces import IJSON
 
 class ILayoutView(Interface):
     pass
@@ -259,7 +260,7 @@ class IAddress(Interface):
 class IAddressMap(IMap,IAddress):
     pass
 
-class ICategory(IPageBase):
+class ICategory(IJSON,IPageBase):
     title = schema.TextLine(
         title = 'Category Name',
         description = 'Name this category..',

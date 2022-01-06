@@ -19,7 +19,7 @@ class Category(Page):
     webClass = "Category"
     title = ""
     description = ""
-    source = ""
+    source = "{}"
     tags = ""
     childFeeds = 0
     json = "[]"
