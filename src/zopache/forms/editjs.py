@@ -37,7 +37,7 @@ class EditorJS(EditForm):
     def preProcess(self):
         pass
     
-    def postProcess(self):
+    def postProcess(self, view = None):
         pass
     
     def update (self):
