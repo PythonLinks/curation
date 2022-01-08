@@ -267,12 +267,20 @@ class ICategory(IJSON,IPageBase):
         required = True,
     )
 
+    twitterIds = schema.TextLine(
+        title = 'Twitter Ids',
+        description = "Accounts to Notify",
+        required = False,
+        default = '',
+    )
+    
     description= schema.Text(
         title = 'Description',
         description = "A brief description of this category",
         required = False,
         default = '',
     )
+    
 
     tags = schema.TextLine(
         title = 'Tags',

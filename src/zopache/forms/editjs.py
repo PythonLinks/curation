@@ -1,3 +1,4 @@
+import json
 from zope.interface import Interface
 from zope import schema
 
@@ -37,8 +38,10 @@ class EditorJS(EditForm):
     def preProcess(self):
         pass
     
-    def postProcess(self):
-        pass
+    def postProcess(self, view = None):
+        return
+        source = json.loads(self.context.source)
+        self.context.source = json.dumps(source,indent = 2)
     
     def update (self):
         self.template = self.getProducts()['Templates']['EditorJS']['template']

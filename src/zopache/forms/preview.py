@@ -76,21 +76,34 @@ class Index(View,Breadcrumbs):
         return result
         
     def localPreview(self,url):
+
          siteRoot = self.getSiteRoot()
          slug = url.split('/')[-1]
          item = siteRoot[slug]
          parent = item.parent
-         
+         logo = self.parentalAcquire('Logo')
+         remoteURL  = (getattr(context,'articleURL','')
+                       or getattr(context,'remoteURL','') or
+                       url)
+         try:
+             twitterId = item.rssFeed.twitterId
+         except:
+             twitterId = ""
          result ={"success": 1,
                      "meta": {'title':item.title,
                               'url':url,
                               'description':item.description,
                               'parentSlug' : parent.name,
-                              'parentTitle': parent.title,       
+                              'parentTitle': parent.title,
+                              'remoteURL': remoteURL,
+                              'twitterId': twitterId,
                               'image':{
-                                  'url':url + '/Logo150W'}
-                              
-            }}
+                                  'url':url + '/Logo150W',
+                                  'attributionText': logo.attributionText,
+                                  'attributionURL': logo.attributionURL
+                                  }
+                              }
+                }
             
          result = json.dumps(result)
          return result
