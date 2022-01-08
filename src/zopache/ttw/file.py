@@ -57,7 +57,8 @@ class File(Leaf,FileBase):
 import base64 
 class ImageBase(FileBase): 
     icon="ttwicons/Image.svg"
-
+    attributionText = ""
+    attributionURL = ""
         
     #JUST A QUICK BUG FIX AVOIDANCE
     def get(self,arg):

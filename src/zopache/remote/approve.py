@@ -49,7 +49,8 @@ class Publish(Save):
         result = Save.__call__(self,form)
         if result != FAILURE:
             self.publish()
-            raise HTTPFound('/' + form.context.name)            
+            raise HTTPFound('/' + form.context.parent.name +'/manage')
+        
         return result
     
     def publish(self):

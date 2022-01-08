@@ -1,31 +1,63 @@
 import json
-from zopache.pages.page import Page
-from zopache.core.viewdecorators import *
-from BTrees.IOBTree import IOBTree
-from zopache.pages.interfaces import ICategory
-from BTrees.OOBTree import OOBTree
-
 from time import time
 from datetime import datetime
 from itertools import islice
+
+from BTrees.IOBTree import IOBTree
+from BTrees.OOBTree import OOBTree
+from ZODB.blob import Blob, BlobFile
+from ZODB.POSException import POSKeyError
+
 from zopache.application.mergeiterator import mergeiterator
+from zopache.pages.page import Page
+from zopache.core.viewdecorators import *
+from zopache.pages.interfaces import ICategory
+from zopache.ttw.file import FileBase
 
 secondsInADay = 24*60*60
 def cmp(arg1,arg2):
     return - arg1.importTime + arg2.importTime
+
+
+class Base(object):    
+        
+    @property
+    def size(self):
+        return len(self.source)
+
+    def setSource(self, data):
+        if len(data) == 0:
+            return
+        if not hasattr(self,'blob'):
+            self.blob = Blob()
+        with self.blob.open(mode ="w") as blobFile:
+           blobFile.write(data)
+           
+    def getSource(self):
+        breakpoint()
+        if not hasattr(self,'blob'):
+            return self.default
+        try:
+            with  self.blob.open(mode='r') as f:
+               return f.read()
+        except POSKeyError as error:
+            return error.args[0]
+
+    source = property(getSource,setSource)
+
 
 @implementer (ICategory)     
 class Category(Page):
     webClass = "Category"
     title = ""
     description = ""
-    source = "{}"
+    source = """{"time":1641561523293,"blocks":[{"id":"2dz3jTLAim","type":"header","data":{"text":"Title (It has to be first and use H1)","level":1}},{"id":"xCIIjcsAVQ","type":"layout","data":{"itemContent":{"1":{"blocks":[{"id":"l_k1euDW-S","type":"paragraph","data":{"text":"item content 1"}}]}},"layout":{"type":"container","id":"demo-data-container","className":"demo-data-container","style":"border: 1px solid #000000; padding: 16px; ","children":[{"type":"item","id":"demo-data-item-1","className":"demo-data-item-1","style":"border: 1px solid #000000; display: inline-block; padding: 8px; ","itemContentId":"1"}]}}}],"version":"2.22.2"} """
     tags = ""
     childFeeds = 0
     json = "[]"
     html = ""
     articleApproved = False
-        
+
     def getHTML(self):
         return self.html
     

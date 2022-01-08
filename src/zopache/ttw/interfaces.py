@@ -88,6 +88,19 @@ class IImageBase(Interface):
         description = u'Describe this Image, so that the user has some idea what they are looking at. ',
         required = True,
     )
+
+    attributionText = TextLine(
+        title = 'Attribution text',
+        description = "Who made the image",
+        required = False,
+    )
+
+    attributionURL = TextLine(
+        title = 'Url for the image creator',
+        description = 'We have to give credit.',
+        required = False,
+    )
+    
     data = FileField(title=u'Upload an Image',
                      required = False,)         
 
