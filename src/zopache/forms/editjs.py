@@ -8,11 +8,16 @@ from zopache.pages.interfaces import ICategory
 from zopache.core.interfaces import ITreeSecurity
 
 class IForm(Interface):
+    title= schema.TextLine(
+        title = 'Article Title',
+        required = True,
+    )
+
     html= schema.Text(
         title = 'HTML code',
         required = False,
         default = '',
-    )
+    )    
     
     source= schema.Text(
         title = 'Json Data',

@@ -1,3 +1,4 @@
+import json
 import itertools
 import time
 import os
@@ -43,6 +44,53 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     createdBy = None
     editedBy = None
     toot = ""
+
+
+    def myDict(self,view):
+                
+        myDict = {
+            "name" : self.name,
+            "title" : self.title,
+            "description" : self.description,
+            "parentName" : self.parent.name,
+            "parentTitle" : self.parent.title,
+            
+            "articleURL" : (getattr(self,'articleURL',False) or
+                           getattr(self,'remoteURL',False) or
+                           ""),
+            
+            "tagsAsString" : (self.tagsAsString() if
+                             (self.className()=='RSSArticle') else ''),
+
+            "parentalTags" : ( self.parentalTags()
+                             if (self.className()=='RSSArticle')
+                             else ''),
+                            
+            "myURL" : view.secureShortURL(context = self),
+            "parentalURL" : view.secureShortURL(context = self.parent)
+        }
+            
+        if hasattr(self,"rssFeed"):
+            rssFeed = self.rssFeed
+            if hasattr(rssFeed,"twitterId"):
+               myDict["twitterId"] =rssFeed.twitterId
+        return myDict
+
+    def myJSON(self,view):
+        return json.dumps(self.myDict(view))
+
+    #NORMALLY THIS WOULD BE IN THE TEMPLATE
+    #BUT IT WAS NOT WORKING, SO I MOVED IT TO PYTHON. 
+    def getScript(self,view):
+        result = "<script>   var "
+        result += self.noDashName()
+        result += ' = '
+        result += self.myJSON(view)
+        result += "; </script>"
+        return result
+    
+    def noDashName(self):
+        return self.name.replace('-','')
     
     def getToot(self):
         if self._toot != "":
