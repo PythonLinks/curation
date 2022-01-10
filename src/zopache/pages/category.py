@@ -34,7 +34,6 @@ class Base(object):
            blobFile.write(data)
            
     def getSource(self):
-        breakpoint()
         if not hasattr(self,'blob'):
             return self.default
         try:
