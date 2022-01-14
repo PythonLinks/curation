@@ -82,11 +82,11 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     #NORMALLY THIS WOULD BE IN THE TEMPLATE
     #BUT IT WAS NOT WORKING, SO I MOVED IT TO PYTHON. 
     def getScript(self,view):
-        result = "<script>   var "
-        result += self.noDashName()
-        result += ' = '
-        result += self.myJSON(view)
-        result += "; </script>"
+        result = "<script>    "
+        result += "var data = JSON.parse(" 
+        result += self.myJSON(view) + ");"
+        result += "register(data);"
+        result += "</script>"
         return result
     
     def noDashName(self):

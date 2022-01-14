@@ -41,13 +41,13 @@ class GetRSS(Form):
         
     def update(self):
         feeds = []
-        self.time = int(time.time())
         leaves = self.context.rssLeaves()
         for item in leaves:
                if IRSS.providedBy(item):
                   if item.rssApproved:   
                       feeds.append(item)
         self.fetchArticles(feeds)
+        self.getSiteRoot().lastFetchTime = time.time()
         Form.update(self)
         #raise HTTPFound('/categories/newest')
 

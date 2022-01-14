@@ -1,13 +1,7 @@
-from itertools import islice
-from BTrees.OOBTree import OOBTree
 from cromlech.security import permissions
 from dolmen.container import IBTreeContainer
-
 from zopache.core.viewdecorators import *
-from zopache.ttw.interfaces import IBranch
 from zopache.core.baseform import Form
-from zopache.pages.page import Link
-from zopache.remote.rss import IRSS
 
 
 @form_component

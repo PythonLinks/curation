@@ -232,4 +232,13 @@ class RegionCategory(Category,MapBase):
             if ILocationCategory.providedBy(child):
                 yield child
 
-    
+from zopache.zmi.interfaces import IURLSegment
+import crom
+@crom.adapter
+@crom.sources(ICategory)
+@crom.target(IURLSegment)
+class ICategoryAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'manage'        
