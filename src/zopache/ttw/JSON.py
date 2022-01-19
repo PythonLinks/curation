@@ -15,7 +15,7 @@ from zopache.core import Leaf
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw.acescripts import AceScripts
 
-from zopache.ttw.interfaces import IJSON, IJSONContainer
+from zopache.ttw.interfaces import IJSON, IJSONBase, IJSONContainer
 from zopache.ttw.javascript import JavascriptBase
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
@@ -141,7 +141,7 @@ class Index(View):
         
 
 @form_component
-@context(IJSON)
+@context(IJSONBase)
 @name("aceedit")
 @implementer(ITreeSecurity)
 class AceEditJSON(AceScripts,AceEditForm):

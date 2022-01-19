@@ -57,6 +57,18 @@ class Category(Page):
     html = ""
     articleApproved = False
 
+    # Only invoke index and unindex when the web approved status is changed.
+    # Maybe Predelete Also.
+    
+    def preProcess(self,view = None):
+        view.oldWebApproved = self.webapproved
+
+    def postProcess(self,view = None):
+        if (self.webApproved == True) and (view.oldWebApproved == False):
+           self.getSiteRoot().indexItem(self)
+        elif (self.webApproved == False) and (view.oldWebApproved == True): 
+           self.getsiteRoot().unIndexItem(self)
+           
     def getHTML(self):
         return self.html
     

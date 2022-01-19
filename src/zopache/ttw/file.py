@@ -354,6 +354,20 @@ class Logo150WAcquire(View):
                return logo.get('150W').data                                 
 
 
+@view_component
+@name('Logo200H')
+@context(IBTreeContainer)
+class Logo200HAcquire(View):
+    responseFactory = Response
+    make_response = make_logo_response
+        
+    def render(self):
+               logo = ParentalAcquire(self.context)['Logo']
+               if logo == None:
+                   return ''
+               return logo.get('200H').data                                 
+           
+
 from zopache.ttw.interfaces import IInternalPrincipal           
 @view_component
 @name('index')

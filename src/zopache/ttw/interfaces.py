@@ -258,8 +258,13 @@ class IJinjaJS(IJavascript,ITemplate):
 class ISearchable(Interface):
       pass
 
-  
-class IJSON(IJavascript):
+class IJSONBase(Interface):
+    pass
+
+class ICanonicalJSON( IJSONBase,IJSONBase):
+    pass
+
+class IJSON(IJSONBase):
     """Basic JSON CRUD """
 
     title = schema.TextLine(

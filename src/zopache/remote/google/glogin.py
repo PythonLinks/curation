@@ -29,7 +29,6 @@ from zopache.ttw import tal_template
 @form_component
 @name (u'glogin')
 @context(Interface)
-@title("Google Login")
 class GoogleLogin(Form):
     factory = InternalPrincipal
     title="Login Form"
@@ -52,5 +51,3 @@ class GoogleLogin(Form):
            return "Success"
         else:
            return "Failed To Login."
-
-    

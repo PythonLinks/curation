@@ -11,7 +11,6 @@ from dolmen.forms.base.utils import set_fields_data, apply_data_event
 from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.getroot import getPrincipalFolder
-from zopache.forms.validator import AccessGoogle
 from zopache.pages.interfaces import IPage
 from zopache.remote.mastodon.basebot import BaseBot
 ['write_media', 'write_statuses', 'read:accpimts']
@@ -63,7 +62,7 @@ class BaseAction(Action,BaseBot):
                 person.userAccountDict = userAccount
                 userAccount["mastodonDomain"] = self.form.context.mastodonDomain
     
-class CallBackAction(BaseAction):
+class MastodonCallBackAction(BaseAction):
     def __call__(self, form):
         self.form = form
         
@@ -96,7 +95,7 @@ class CallBackAction(BaseAction):
             url = form.registerURL() + values
             raise HTTPFound(url)
 
-class RegisterAction(BaseAction):            
+class MastodonRegisterAction(BaseAction):            
     def __call__(self,form):
         self.form = form
 

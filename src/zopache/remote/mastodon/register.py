@@ -17,7 +17,7 @@ from zopache.business.exists import DuplicatePerson
 
 from zopache.remote.mastodon.interfaces import IServer
 from zopache.remote.mastodon.account import Account
-from zopache.remote.mastodon.actions import RegisterAction
+from zopache.remote.mastodon.actions import MastodonRegisterAction
 from zopache.remote.mastodon.basebot import BaseBot
 
 @form_component
@@ -49,7 +49,7 @@ class MastodonRegister(AddForm,Notify,BaseBot):
         return 'GDPR Permissions'
     
     actions = Actions(
-            RegisterAction("Please Register Me", "register"),
+            MastodonRegisterAction("Please Register Me", "register"),
             Cancel("Cancel","Cancel")
             
         )
