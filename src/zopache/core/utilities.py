@@ -1,4 +1,6 @@
 import json
+import arrow
+
 from pydoc import locate
 import hashlib
 from html import escape, unescape
@@ -14,6 +16,9 @@ def sortFunction(item):
   return item.__name__
 
 class Utilities (object):
+    def ago (self,time):
+        return arrow.get(time).humanize()[:-3]
+      
     def sendMessage(self,message):
         source = SessionSource()
         source.send(message)

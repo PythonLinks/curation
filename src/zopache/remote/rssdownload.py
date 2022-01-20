@@ -61,7 +61,9 @@ async def fetchCore(nodes,view):
     tasks = []
     allowedTime = 120
     timeout = aiohttp.ClientTimeout(total=allowedTime)
-    async with aiohttp.ClientSession(timeout = timeout) as session:    
+    user_agent = {'User-agent': 'Mozilla/5.0'}
+    async with aiohttp.ClientSession(timeout = timeout,
+                       headers = user_agent                                                                ) as session:    
       for node in nodes:
          if view.className(node) not in ['RSS','RSSArticle']:
             continue
