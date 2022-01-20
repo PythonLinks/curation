@@ -61,7 +61,7 @@ class Category(Page):
     # Maybe Predelete Also.
     
     def preProcess(self,view = None):
-        view.oldWebApproved = self.webapproved
+        view.oldWebApproved = self.webApproved
 
     def postProcess(self,view = None):
         if (self.webApproved == True) and (view.oldWebApproved == False):
