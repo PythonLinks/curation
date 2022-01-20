@@ -144,8 +144,8 @@ class Category(Page):
         return self.newestArticles.itervalues(min = - midnight,
                                               max = -midnight + secondsInADay,
                                                   excludemin = True)
-    def rawHeadlines(self):
-        articles = list (self.feedArticles())
+    def rawHeadlines(self, howMany = 6):
+        articles = list (self.feedArticles(howMany = howMany))
         if len(articles) ==0:
                return 0, [] 
         lastImportTime = articles [-1].importTime
