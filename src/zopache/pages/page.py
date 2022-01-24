@@ -23,7 +23,6 @@ from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
 from zopache.core.relatives import parentWhichImplements
 from zopache.core.relatives import parentsUpTo
-from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
 from zopache.application.allblogobjects import ProcessTree, AllBlogObjects
@@ -360,7 +359,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def allValues(self):
         return self.values()
 
-class PageBase(PageVeryBase,JsonObject,PageMixIn):
+class PageBase(PageVeryBase,PageMixIn):
     title = ''
     description = ''
     source = ''

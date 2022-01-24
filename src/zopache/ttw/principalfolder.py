@@ -7,11 +7,11 @@
 
 # This software is subject to the provisions of the Zope Public License,
 # Version 2.1 (ZPL).
-#And to the CV License agreement. 
 
 
 # THIS File WAS EXTRACTED FROM zope.pluggableauth
 # AND SIMPLIFIED
+import time
 from slugify import slugify
 import time
 from jinja2.sandbox import SecurityError
@@ -50,14 +50,16 @@ class InternalPrincipal(FileBase,Page):
     title = ""
     source = ""
     description = ""
-    permissions = ['Vote','Develop']
+    permissions = ['Vote']
     chatPermission = False
     newsPermission = False
-    pugPermission = False
-    pyodidePermission = False
-    helpPermission = False
-    hirePermission = False
-    recruitPermission = False
+    lastAuthenticationTime = 0
+    #pugPermission = False
+    #pyodidePermission = False
+    #helpPermission = False
+    #hirePermission = False
+    #recruitPermission = False
+    
     contentType = "text/plain"
     webClass = 'Person'
     branchSize = 1
@@ -84,14 +86,6 @@ class InternalPrincipal(FileBase,Page):
         self.groups.remove(name)
         self._p_changed
     
-    """
-    From persistent.list import PersistentList
-    def makeOrdered(self):
-        self._order = PersistentList()
-        for item in self:
-               self._order.append(item)
-    """           
-        
     def __init__(self):
         self.creationTime=time.time()
         self.modificationTime=time.time()
@@ -270,7 +264,6 @@ class PrincipalFolder(Container):
                   raise Exception (str(error))
           
     def getPrincipalByUserName(self,userName, default = anonymous):
-
             id = self.getIdByEmail(userName)
             if id == None:
                 id = self.getIdByHandle(userName)
@@ -329,23 +322,25 @@ class PrincipalFolder(Container):
         root.deleteItem(principal)
         BTreeContainer.__delitem__(self,name)        
 
-    
-        
-    def authenticate(self, credentials):
-        """Return principal info if credentials can be authenticated
-        """
+    def authenticate(self, credentials,form):
         if not ('email' in credentials and 'password' in credentials):
             return None
         userName = credentials['email']
         internal = self.getPrincipalByUserName(userName,default = None)
         if internal is None:            
             return None
+        previousAuthenticationTime = internal.lastAuthenticationTime
+        now = time.time()
+        internal.lastAuthenticationTime = now
+        if now  - previousAuthenticationTime < 5:
+            form.submissionErrors += (
+                "You have to wait 5 second before trying again.")
+            return None
         if not internal.checkPassword(credentials["password"]):
             return None
         session = getSession()
         session['user'] = internal.email
         return internal
-    
 
     def loginUser(self,user,form):
         session = getSession()

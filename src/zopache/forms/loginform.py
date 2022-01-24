@@ -34,7 +34,7 @@ class LoginAction(Action):
             form.errors = errors
             form.submissionErrors += str(errors)
             return FAILURE
-        success = self.getContext(form).authenticate(data)
+        success = self.getContext(form).authenticate(data,form)
         if success == None:
             form.errors.append(Error(
                 title='Login failed',

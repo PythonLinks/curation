@@ -1,213 +1,13 @@
-#JSON VIEWS ON OBJECTS
 import json
-import datetime
-
-from zopache.pages.interfaces import IJSONInclude, IPageBase
-from zopache.core.viewdecorators import *
-
 from dolmen.container import IBTreeContainer
-from zope.interface.interface import Attribute
+
 from dolmen.view import View
-from dolmen.view import name, context, view_component
-from cromlech.browser.directives import title
-from crom import target, order
-from cromlech.container.interfaces import IOrderedContainer
-
-
-
-try:
-    from zopache.categories.interfaces import IConference, IConferenceContainer
-except:
-    pass
-
-class JsonObject(object):
-    
-    #FUNCTION TO GET JSON TREE OF CATEGORIES
-    #JUST CATEGORIES, NO DATA
-    def categoryVariables(self,spacing):
-         result=''
-         result+=',\n'
-         result+=spacing
-
-         #PROVIDE THE TEXT LINE
-         name='title'
-         text='\"'+name+'\":'
-         text += json.dumps(self.title) 
-
-         text += self.descriptionUrlAndWebClass()         
-         return text
-
-    def descriptionUrlAndWebClass(self):
-         data = ""
-         
-         #PROVIDE THE webCLASS
-         data+= ',\n   '
-         name='class'
-         data += '\"'+name+'\": \"'
-         data += self.webClass
-         data += '\"'
-
-         #PROVIDE THE URL
-         if (hasattr(self,'remoteURL') and (self.remoteURL != "")):
-             data+= ',\n   '
-             name='url'
-             data += '\"'+name+'\": \"'
-             data += self.remoteURL
-             data += '\"'          
-
-         #PROVIDE THE DESCRIPTION
-         #data+= ',\n   '
-         #name='description'
-         #data += '\"'+name+'\": ' 
-         #data += json.dumps(self.description)
-
-
-         #PROVIDE THE BRANCH SIZE
-         data+= ',\n   '
-         name='branchSize'
-         data += '\"'+name+'\": \"'
-         data += str(self.branchSize)
-         data += '\"'
-         return data
-     
-    #FUNCTION TO GET VARIABLE FOR A PAGE TREE
-    def treeVariables(self,spacing):
-         theURL='/'+self.__name__
-         result=''
-         result+=',\n'
-         result+=spacing
-
-         #PROVIDE THE TITLE
-         name='title'
-         text='\"'+name+'\":' 
-         text += json.dumps(self.title) 
-
-         #AND NOW THE DATA
-         data= ',\n\"data\":{'
-
-         #PROVIDE THE SHORT URL
-         data+= '\n   '
-         name='shortURL'
-         data += '\"'+name+'\": \"'
-         data += theURL 
-         data += '\"' 
-
-         #PROVIDE THE CREATION TIME
-         data+= ',\n   '
-         name='creationTime'
-         data += '\"'+name+'\": \"'
-         data += str(self.creationTime)
-         data += '\"' 
-
-         #PROVIDE THE TITLE
-         data+= ',\n   '
-         name='title'
-         data += '\"'+name+'\": '
-         data += json.dumps(self.title)
-
-         data += self.descriptionUrlAndWebClass()
-
-         if hasattr(self,'conference') and (self.conference != None):
-              data+= ',\n   '
-              name='conference'
-              data += '\"'+name+'\": \"'
-              try:
-                 data += self.conference.__name__
-              except:
-                 data +="pycon-us-2018" 
-              data += '\"'
-
-         # END THE DATA SECTION
-         data+='}'         
-         
-         return text+data
-
-    def jsonTree(self,indent):
-        return '[' +  self.getJSON(indent,'treeVariables') + ']'
-    
-    def jsonCategories(self,indent):
-        return '[' +  self.getJSONCategories(indent,'categoryVariables') + ']'    
-#AND HERE FOR JUST THE CATEOGIRES
-    def getJSONCategories(self,indent,aFunction):
-        result=''
-        spacing=' '*indent*2
-        shortSpacing = ' '*(2*indent-1)
-        result += '\n'+shortSpacing
-        result += '{'
-        result+= '\"key\": \"'+ getattr(self,'__name__')+'\"'
-        result+=',\n'
-        
-        #NOW GET THE VARIBLgES
-        result+=getattr(self,aFunction)(spacing)
-        #NOW GET THE CONTAINED OBJECTS
-        newsItemsOnly = self.newsItemsOnly()
-
-        if newsItemsOnly:
-                  result+=',\n \"folder\":true'
-                  result+=',\n'
-                  result += spacing + '\"children\":'
-                  result += '['
-        firstLine=True
-        for item in newsItemsOnly:
-                   if not firstLine:
-                      result+=',' 
-                   else:
-                      firstLine=False
-                   result+=item.getJSONCategories(indent+1,aFunction)
-        if newsItemsOnly:
-             result+=']'
-        result+='}'
-        return result
-
-    
-#AND HERE YOU HAVE THE GENERIC ONE
-    def getJSON(self,indent,aFunction):
-        result=''
-        spacing=' '*indent*2
-        shortSpacing = ' '*(2*indent-1)
-        result += '\n'+shortSpacing
-        result += '{'
-        result+= '\"key\": \"'+ getattr(self,'__name__')+'\"'
-        result+=',\n'
-        
-        #NOW GET THE VARIBLgES
-        result+=getattr(self,aFunction)(spacing)
-
-        #NOW GET THE CONTAINED OBJECTS
-        valuesLength=len(list(self.values()))
-
-        if (IJSONInclude.providedBy(self)):
-             if (valuesLength> 0):
-                 result+=',\n \"folder\":true'
-
-        if valuesLength> 0:
-                  result+=',\n'
-                  result += spacing + '\"children\":'
-                  result += '['
-
-        if IOrderedContainer.providedBy(self):
-            firstLine=True
-            for item in self.values():
-                if (IJSONInclude.providedBy(item) and
-                   item.webApproved):
-                   if not firstLine:
-                      result+=',' 
-                   else:
-                      firstLine=False
-                   result+=item.getJSON(indent+1,aFunction)
-        if valuesLength> 0:
-             result+=']'
-        result+='}'
-        return result
-
-
-
-from crom import target, order
-from cromlech.browser.directives import title
-from cromlech.security import permissions
-from dolmen.view import name, context, view_component
-from dolmen.view import View
+#from dolmen.view import name, context, view_component
 from cromlech.webob.response import Response
+
+from zopache.core.viewdecorators import *
+from zopache.pages.interfaces import ICategory
+
 
 def make_json_response(view, result, *args, **kwargs):
         response = view.responseFactory()
@@ -222,7 +22,7 @@ def make_json_response(view, result, *args, **kwargs):
 @name('json')
 @title("JSON")
 @target(IView)
-@context(IJSONInclude)
+@context(ICategory)
 class MYJSON(View):
     responseFactory = Response
     make_response = make_json_response
@@ -231,7 +31,7 @@ class MYJSON(View):
         #if self.context.__name__ in
         #   ['cloud-native','python','climate-change']:
         #return 'JSON is not available for that object.'
-        return self.context.getCachedJson()
+        return "NOT YET IMPLEMENTED"
 
        
 
@@ -240,17 +40,17 @@ class MYJSON(View):
 @view_component
 @name('categories.json')
 @target(IView)
-@context(IPageBase)
+@context(ICategory)
 class JSONCategories(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
-            return self.context.jsonCategories(2)
+            return json.dumps(self.context.asDict(), indent = 2)
 
 @view_component
 @name('allCategories')
 @target(IView)
-@context(IPageBase)
+@context(ICategory)
 class AllCategories(View):
     responseFactory = Response
     make_response = make_json_response
