@@ -65,15 +65,16 @@ class ImageBase(FileBase):
         print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
         return self
 
-    def getImageTag(self,alt = "", style = "", height =""):
+    def getImageTag(self,alt = "", style = "", height ="", sizes = True):
         result = ""
         result += '<img src="data:' 
         result += self.contentType      
         result += ';base64,' 
         result += str(base64.b64encode(self.data).decode('utf-8'))
-        result += '" ' 
-        result += f'width = "{self.width}" ' 
-        result += f'height = "{self.height}" ' 
+        result += '" '
+        if sizes:
+           result += f'width = "{self.width}" ' 
+           result += f'height = "{self.height}" ' 
         result +=f'style = "{style}" '                              
         result +=f'alt="{alt}" />'
         return result
