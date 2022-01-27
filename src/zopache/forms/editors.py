@@ -39,7 +39,7 @@ class IEditors(Interface):
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class EditEditors(EditForm):
-    title = 'Assign Editors2'
+    title = 'Assign Editors'
     interface = IEditors
     fields = Fields(IEditors)
     ignoreContent = False

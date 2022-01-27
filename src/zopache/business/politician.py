@@ -83,6 +83,10 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
 
     def getTwitterId(self):
         return self.getConnect("twitterId")
+
+    @property
+    def facebookPage(self):
+        return self.getConnect("facebookPage")
     
     def getDonationsPageURL(self):
         return self.getCandidateInfo("donationsPageURL")    
