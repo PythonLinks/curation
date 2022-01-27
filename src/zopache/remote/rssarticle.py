@@ -34,6 +34,9 @@ class RSSArticle(Page):
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
 
+    def creationDateForHumans(self):
+         return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
+     
     def defaultToot(self):        
             twitterId = self.rssFeed.twitterId
             return   (

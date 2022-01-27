@@ -16,6 +16,43 @@ from zopache.core.interfaces import ICountable, ISiteRoot
 from zopache.crud.interfaces import ILeaf
 from zopache.ttw.interfaces import IJSON
 
+
+class ICategoryBase(Interface):
+    title = schema.TextLine(
+        title = 'Category Name',
+        description = 'Name this category..',
+        required = True,
+    )
+
+    description= schema.Text(
+        title = 'Description',
+        description = "A brief description of this category",
+        required = False,
+        default = '',
+    )
+
+    twitterIds = schema.TextLine(
+        title = 'Twitter Ids',
+        description = "Accounts to Notify",
+        required = False,
+        default = '',
+    )
+    
+    
+    source= schema.Text(
+        title = u'Content',
+        description = u'This is the main content for this page',
+        required = False,
+        default = u'',
+    )    
+    
+
+    tags = schema.TextLine(
+        title = 'Tags',
+        description = 'For this Cateogry.',
+        required = False,
+    )
+
 class ILayoutView(Interface):
     pass
 
@@ -260,35 +297,14 @@ class IAddress(Interface):
 class IAddressMap(IMap,IAddress):
     pass
 
-class ICategory(IJSON,IPageBase):
-    title = schema.TextLine(
-        title = 'Category Name',
-        description = 'Name this category..',
-        required = True,
-    )
-
-    twitterIds = schema.TextLine(
-        title = 'Twitter Ids',
-        description = "Accounts to Notify",
-        required = False,
-        default = '',
-    )
-    
-    description= schema.Text(
-        title = 'Description',
-        description = "A brief description of this category",
-        required = False,
-        default = '',
-    )
-    
-
-    tags = schema.TextLine(
-        title = 'Tags',
-        description = 'For this Cateogry.',
-        required = False,
-    )
+from zopache.ttw.interfaces import ICanonicalJSON
+class ICategory(ICategoryBase,
+                ICanonicalJSON,
+                IPageBase):
+    pass
 
 class IGeographicalCategory(ICategory, IGeography):
+    """
     title = schema.TextLine(
         title = 'Geographical Category Name',
         description = u'Describe this page.',
@@ -297,12 +313,12 @@ class IGeographicalCategory(ICategory, IGeography):
 
     description= schema.Text(
         title = 'Description',
-        description = """A brief introduction of this geographical category..  
-                        This is used by the search functions.""",
+        description = ""A brief introduction of this geographical category..  
+                        This is used by the search functions."",
         required = False,
         default = '',
     )
-
+    """
 class ILocationCategory (IGeographicalCategory, ILatLng):
     pass
 

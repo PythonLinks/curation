@@ -177,20 +177,6 @@ class AddMap(AddAuthorizedPage):
     label="Add a Map"
     factory = SimpleMap
 
-#REGION CATEGORY
-from zopache.pages.interfaces import IMapCategory
-from zopache.pages.category import MapCategory
-@view_component
-@name('addMapCategory')
-@target(IView)
-@context(IPageBase)    
-@implementer(ITreeSecurity)
-class AddMapCategory(AddAuthorizedPage):
-    subTitle = 'Add a Map Category'
-    subTitile = 'Both a map and a category.  Remember to enable map tokens.'
-    interface = IMapCategory
-    label="Add a Map"
-    factory = SimpleMap    
     
 
 from zopache.pages.category import Category
@@ -210,3 +196,45 @@ class AddRSSCategory(AddAuthorizedPage):
      layoutName = "UserMenu"
      dataValidators = [Duplicate]
         
+#MAP CATEGORY
+from zopache.pages.interfaces import IMapCategory
+from zopache.pages.category import MapCategory
+@view_component
+@name('addMapCategory')
+@target(IView)
+@context(IPageBase)    
+@implementer(ITreeSecurity)
+class AddMapCategory(AddAuthorizedPage):
+    title = 'Add a Map Category'
+    subTitle = 'Both a map and a category.  Remember to enable map tokens.'
+    interface = IMapCategory
+    label="Add a Map Category"
+    factory = MapCategory  
+
+#REGION CATEGORY
+from zopache.pages.interfaces import IRegionCategory
+from zopache.pages.category import RegionCategory
+@view_component
+@name('addRegionCategory')
+@target(IView)
+@context(IPageBase)    
+@implementer(ITreeSecurity)
+class AddRegionCategory(AddAuthorizedPage):
+    title = 'Add a Region Category'
+    subTitle = 'Both a region and a category.  '
+    interface = IRegionCategory
+    factory = RegionCategory  
+
+#LOCATION CATEGORY
+from zopache.pages.interfaces import ILocationCategory
+from zopache.pages.category import LocationCategory
+@view_component
+@name('addLocationCategory')
+@target(IView)
+@context(IPageBase)    
+@implementer(ITreeSecurity)
+class AddLocationCategory(AddAuthorizedPage):
+    title = 'Add a Location Category'
+    subTitle = 'Both a location and a category.'
+    interface = ILocationCategory
+    factory = LocationCategory  

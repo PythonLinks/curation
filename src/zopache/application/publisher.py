@@ -42,7 +42,8 @@ class Publisher (DawnlightPublisher):
              aType, name=crumbs.popleft()
              if  name in context:
                  pass
-             elif  name in ['manage',
+             elif  name in ['backup',
+                            'manage',
                             'addRootPage',
                             'editjson',
                           'fix',

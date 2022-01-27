@@ -57,6 +57,20 @@ class Category(Page):
     html = ""
     articleApproved = False
 
+
+    
+    # Only invoke index and unindex when the web approved status is changed.
+    # Maybe Predelete Also.
+    
+    def preProcess(self,view = None):
+        view.oldWebApproved = self.webApproved
+
+    def postProcess(self,view = None):
+        if (self.webApproved == True) and (view.oldWebApproved == False):
+           self.getSiteRoot().indexItem(self)
+        elif (self.webApproved == False) and (view.oldWebApproved == True): 
+           self.getsiteRoot().unIndexItem(self)
+           
     def getHTML(self):
         return self.html
     
@@ -132,8 +146,8 @@ class Category(Page):
         return self.newestArticles.itervalues(min = - midnight,
                                               max = -midnight + secondsInADay,
                                                   excludemin = True)
-    def rawHeadlines(self):
-        articles = list (self.feedArticles())
+    def rawHeadlines(self, howMany = 6):
+        articles = list (self.feedArticles(howMany = howMany))
         if len(articles) ==0:
                return 0, [] 
         lastImportTime = articles [-1].importTime
@@ -232,4 +246,13 @@ class RegionCategory(Category,MapBase):
             if ILocationCategory.providedBy(child):
                 yield child
 
-    
+from zopache.zmi.interfaces import IURLSegment
+import crom
+@crom.adapter
+@crom.sources(ICategory)
+@crom.target(IURLSegment)
+class ICategoryAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'manage'        

@@ -76,7 +76,7 @@ class RSS(Link,UniqueName):
 
     async def createArticles(self,entries,view):
        globalArticles= self.getPublicationRoot().globalArticles
-       for article in entries:
+       for article in entries[:20]:
            theId = article['id']
            if not theId in globalArticles:
               importTime = await view.getTime()

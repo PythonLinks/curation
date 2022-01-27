@@ -38,19 +38,6 @@ class ILogin(Interface):
         title='Password', required=True)
 
 
-class IGLogin(Interface):
-        idtoken= schema.Text(
-        title="Token",
-        description= "",
-        required = True)
-        
-class IGReg(Interface):
-        idtoken= schema.ASCII(
-        title="Token",
-        description= "",
-        required = True)        
-
-        
 
 class IHandle(Interface):
 
@@ -77,29 +64,15 @@ class IPermissions(Interface):
         title = """To register me, manage logins using cookies, and to send me email notifications(not news) as required.""",
         required = True,
         default = False)
+
+    newsPermission = schema.Bool(
+        title = """To send me the news.""",
+        required = False,
+        default = False)    
     
     chatPermission.text = """ <p> I give permission 
-to process my professional information for the following  
+to process my personal information for the following  
 purposes:</p>"""
-    
-class IGRegister (IGReg,IHandle,IPermissions):        
-    newsPermission = schema.Bool(
-        title = """ To email me the news. """,
-        required = False,
-        default = False)
-
-    
-   
-
-class IGSubscribe (IGRegister):
-    frequencyPermission = schema.Choice(
-        vocabulary=SimpleVocabulary.fromValues(
-                  ['Daily','Weekly','Monthly','Seldom','Never',''],
-                  ),
-        title = "To send me the news:",
-        required = False,
-        default = '',
-    )  
 
 class IRegister(IHandle, IEmail, IPermissions):
    pass

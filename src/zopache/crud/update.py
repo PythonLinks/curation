@@ -1,3 +1,4 @@
+from time import time
 from dolmen.forms.base import Action, SuccessMarker
 from zopache.core.transactionnote import TransactionNote
 from dolmen.forms.base.markers import FAILURE
@@ -40,6 +41,7 @@ class Update(Action,TransactionNote):
            form.applyData(data)
         else:   
            apply_data_event(form.fields, form.getContentData(), data)
+           
         #form.message(_(u"URL updated"))
         if hasattr(form,'postProcess'):        
                form.postProcess(view = form)
@@ -48,6 +50,7 @@ class Update(Action,TransactionNote):
         baseURL = self.form.absoluteURL()
         url=self.newURL(baseURL)
         self.describeWithView(form.context,form)
+        
         if url == form.request.url:
            return SuccessMarker('Updated', True)
         else:

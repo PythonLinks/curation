@@ -1,0 +1,9 @@
+Here is the software for logging into google.
+Sadly google disables it, so itis not being used.
+Maybe have a bug or two, since I moved the files here from
+zopache/forms
+and
+zopache/ttw
+
+You will need to add an __init__.py method to make it work.
+

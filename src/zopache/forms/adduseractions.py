@@ -11,28 +11,14 @@ from cromlech.browser.exceptions import HTTPFound
 from zope.event import notify
 from zope.location import ILocation
 from zope.lifecycleevent import ObjectCreatedEvent
-from zopache.core.getroot import getPrincipalFolder, getSiteRoot
+
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
+
+from zopache.core.getroot import getPrincipalFolder, getSiteRoot
 from zopache.pages.interfaces import INotPage
-
-
-
-class Cancel(Action):
-    """Cancel the current form and return on the default content view.
-    """
-
-    def __call__(self, form):
-        content = form.getContentData().getContent()
-        url = str(IURL(content, form.request))
-        return SuccessMarker('Aborted', True, url=url)
-
+from zopache.crud.actions import Cancel
 
 class Add(Action):
-
-    def __init__(self, title, view):
-        super(Add, self).__init__(title)
-        self.factory = view.factory
-        self.view = view
 
     def __call__(self, form):
         data, errors = form.extractData()
@@ -57,7 +43,7 @@ class Add(Action):
         principalFolder [newName]=newPerson
         #You have to add it to the root index
         #before authenticating it.
-        principalFolder.authenticate (data)
+        principalFolder.authenticate (data,form)
         #message(_(u"You are Registered and Logged In"))
         newURL = form.newURL(newPerson)
         form.new=newPerson
@@ -65,17 +51,3 @@ class Add(Action):
         raise HTTPFound(newURL)
 
     
-        """
-        CODE I MIGHT NEED IN THE FUTURE
-        newPerson.__parent__ = context
-        self.form = form
-
-
-        if INotPage.providedBy(self.form.context):
-            newURL = self.form.url(newPerson) + '/speakerregistration'
-        else:
-        """
-
-
-
-        

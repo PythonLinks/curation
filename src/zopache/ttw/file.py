@@ -65,19 +65,18 @@ class ImageBase(FileBase):
         print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
         return self
 
-    def getImageTag(self,alt = "", style = ""):
+    def getImageTag(self,alt = "", style = "", height ="", sizes = True):
         result = ""
-
         result += '<img src="data:' 
         result += self.contentType      
         result += ';base64,' 
         result += str(base64.b64encode(self.data).decode('utf-8'))
-        result += '" ' 
-        result += f'width = "{self.width}"' 
-        #result += f'height = "{self.height}"' 
-        result +=f'style = "{style}"'                              
+        result += '" '
+        if sizes:
+           result += f'width = "{self.width}" ' 
+           result += f'height = "{self.height}" ' 
+        result +=f'style = "{style}" '                              
         result +=f'alt="{alt}" />'
-
         return result
 
     
@@ -188,8 +187,8 @@ class BTreeImage(ImageBase,Container):
          new.height = pilImage.height
 
          #new.data = self.data
-         new.width = self.width
-         new.height = self.height
+         new.width = newWidth
+         new.height = newHeight
          
          self._setitemf(name,new)
          new.__name__ = name
@@ -353,6 +352,20 @@ class Logo150WAcquire(View):
                    return ''
                return logo.get('150W').data                                 
 
+
+@view_component
+@name('Logo200H')
+@context(IBTreeContainer)
+class Logo200HAcquire(View):
+    responseFactory = Response
+    make_response = make_logo_response
+        
+    def render(self):
+               logo = ParentalAcquire(self.context)['Logo']
+               if logo == None:
+                   return ''
+               return logo.get('200H').data                                 
+           
 
 from zopache.ttw.interfaces import IInternalPrincipal           
 @view_component

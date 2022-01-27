@@ -5,7 +5,7 @@ from dolmen.forms.base import Actions
 
 from zopache.core.viewdecorators import *
 
-from zopache.ttw.gloginactions  import GoogleRegisterAction
+from zopache.remote.google.gloginactions  import GoogleRegisterAction
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.pages.interfaces import INotPage
 
@@ -18,7 +18,6 @@ from dolmen.forms.base.markers import HIDDEN
 from dolmen.forms.base.errors import Errors, Error
 from zopache.forms.interfaces import IRegister, IGRegister, IGSubscribe
 from zopache.ttw.principalfolder import InternalPrincipal
-from zopache.ttw import tal_template
 from zopache.forms.validator import GoogleValidator
 from zopache.pages.interfaces import IPageBase,IPage
 

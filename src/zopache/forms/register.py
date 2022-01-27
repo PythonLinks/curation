@@ -14,7 +14,7 @@ from dolmen.forms.base import action, name, context, form_component
 from cromlech.browser.directives import title
 
 
-from zopache.ttw.adduseractions  import Add
+from zopache.forms.adduseractions  import Add
 from zopache.crud.utils import getFactoryFields, getAllFields
 
 from zopache.ttw.interfaces import IName, IContainer, ILeaf
@@ -31,7 +31,7 @@ from zopache.crud.actions import Cancel
 from zopache.forms.validator import Validator
 from zopache.ttw.mail import Notify
 
-#@form_component
+@form_component
 @name ('signup')
 @context(Interface)
 class Register(Form,Notify,Breadcrumbs):
@@ -39,7 +39,7 @@ class Register(Form,Notify,Breadcrumbs):
     layoutName = "UserMenu"
     fields = Fields(IRegister)
     factory = InternalPrincipal
-    title='ForestWiki.com'
+    title='Register'
     subTitle='Register Locally'
     ignoreContent = True
     igrnoreRequest = False
@@ -49,7 +49,8 @@ class Register(Form,Notify,Breadcrumbs):
     def __init__(self,context,request):
         Form.__init__(self,context,request)
         Notify.__init__(self)
-        
+
+    """    
     def update(self):
         if self.getDomain() in [ "dev.pythonlinks.info",
             "news.uncensorednews.us"]:
@@ -57,7 +58,8 @@ class Register(Form,Notify,Breadcrumbs):
          
         if not self.getSiteRoot().localLogin:
             self.raiseUnauthorized()
-            
+    """
+    
     def acquireTitle(self):
        return 'Sign Up'
     
@@ -78,16 +80,3 @@ class Register(Form,Notify,Breadcrumbs):
         newURL = "."
         return newURL
 
-"""
-EROR: IRegisterShort Not Defined
-@form_component
-@name (u'register')
-@context(Interface)
-@title("Register")
-class RegisterShort(Register):
-    fields = Fields(IRegisterShort)
-    
-    def nextUrl(self,new):
-        newURL = '/'
-        return newURL
-"""

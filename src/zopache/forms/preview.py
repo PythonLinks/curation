@@ -85,6 +85,7 @@ class Index(View,Breadcrumbs):
          item = siteRoot[slug]
          parent = item.parent
          logo = self.parentalAcquire('Logo')
+         time  = int(getattr(item,'publishedAt','') or item.creationTime)
          remoteURL  = (getattr(item,'articleURL','')
                        or getattr(item,'remoteURL','') or
                        url)
@@ -95,10 +96,12 @@ class Index(View,Breadcrumbs):
          imageURL = ("https://" + self.getDomain() + '/' +
                       slug + "/Logo150W"
          )
+
          result ={"success": 1,
                      "meta": {'title':item.title,
                               'url':url,
                               'slug':slug,
+                              'time': time, 
                               'description':item.description,
                               'parentSlug' : parent.name,
                               'parentTitle': parent.title,

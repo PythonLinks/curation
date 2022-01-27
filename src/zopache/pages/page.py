@@ -23,7 +23,6 @@ from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
 from zopache.core.relatives import parentWhichImplements
 from zopache.core.relatives import parentsUpTo
-from zopache.pages.jsonobject import JsonObject
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
 from zopache.application.allblogobjects import ProcessTree, AllBlogObjects
@@ -82,11 +81,11 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     #NORMALLY THIS WOULD BE IN THE TEMPLATE
     #BUT IT WAS NOT WORKING, SO I MOVED IT TO PYTHON. 
     def getScript(self,view):
-        result = "<script>   var "
-        result += self.noDashName()
-        result += ' = '
-        result += self.myJSON(view)
-        result += "; </script>"
+        result = "<script>    "
+        result += "var data = JSON.parse(" 
+        result += self.myJSON(view) + ");"
+        result += "register(data);"
+        result += "</script>"
         return result
     
     def noDashName(self):
@@ -360,7 +359,21 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def allValues(self):
         return self.values()
 
-class PageBase(PageVeryBase,JsonObject,PageMixIn):
+    def asDict(self,classes = ['Category']):
+        new = dict()
+        new["key"] = self.name
+        new["title"] = self.title
+        if len (self) > 0:
+           children = []
+           new["children"] = children
+           #new["folder"] = true           
+           for item in self.values():
+               if item.__class__.__name__ in classes:
+                  children.append(item.asDict(classes = classes))
+        return new                           
+
+    
+class PageBase(PageVeryBase,PageMixIn):
     title = ''
     description = ''
     source = ''
