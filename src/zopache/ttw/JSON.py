@@ -131,7 +131,7 @@ class GEOIndex(View):
 @view_component
 @name('index')
 @context(IJSONContainer)
-class Index(View):
+class ContainerIndex(View):
     responseFactory = Response
     make_response = makeJsonResponse
         
