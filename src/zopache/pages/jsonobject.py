@@ -15,25 +15,20 @@ def make_json_response(view, result, *args, **kwargs):
         response.content_type=u'application/json'
         return response    
 
-
-#THIS ONE IS THE WORKHORSE
-# FOR FANCYTREE AND DESKTOP VIEW
+#GETS ALL THE ARTICLES
 @view_component
 @name('json')
-@title("JSON")
 @target(IView)
 @context(ICategory)
 class MYJSON(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
-        # USED TO HAVE TIGHER SECURITY       
-        #if self.context.__name__ in
-        #   ['cloud-native','python','climate-change']:
-        #return 'JSON is not available for that object.'
-        return "NOT YET IMPLEMENTED"
-
-       
+        if self.context.__name__ not in ['categories']:
+           return 'JSON is not available for that object.'
+        asDict = self.context.asDict(classes =['Category','RSS','RSSArticle'])
+        return json.dumps(asDict, indent = 2)
+                                     
 
 #THIS ONE JUST GETS THE TREE OF CATEGORIES
 
@@ -45,7 +40,10 @@ class JSONCategories(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
-            return json.dumps(self.context.asDict(), indent = 2)
+        if self.context.__name__ not in ['categories']:
+           return 'JSON is not available for that object.'
+        asDict =  self.context.asDict()
+        return json.dumps(asDict,  indent = 2)               
 
 @view_component
 @name('allCategories')

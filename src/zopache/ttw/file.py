@@ -65,19 +65,17 @@ class ImageBase(FileBase):
         print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
         return self
 
-    def getImageTag(self,alt = "", style = ""):
+    def getImageTag(self,alt = "", style = "", height =""):
         result = ""
-
         result += '<img src="data:' 
         result += self.contentType      
         result += ';base64,' 
         result += str(base64.b64encode(self.data).decode('utf-8'))
         result += '" ' 
-        result += f'width = "{self.width}"' 
-        #result += f'height = "{self.height}"' 
-        result +=f'style = "{style}"'                              
+        result += f'width = "{self.width}" ' 
+        result += f'height = "{self.height}" ' 
+        result +=f'style = "{style}" '                              
         result +=f'alt="{alt}" />'
-
         return result
 
     
@@ -188,8 +186,8 @@ class BTreeImage(ImageBase,Container):
          new.height = pilImage.height
 
          #new.data = self.data
-         new.width = self.width
-         new.height = self.height
+         new.width = newWidth
+         new.height = newHeight
          
          self._setitemf(name,new)
          new.__name__ = name

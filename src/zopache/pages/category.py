@@ -57,18 +57,6 @@ class Category(Page):
     html = ""
     articleApproved = False
 
-    def asDict(self):
-        new = dict()
-        new["key"] = self.name
-        new["title"] = self.title
-        if len (self) > 0:
-           children = []
-           new["children"] = children
-           #new["folder"] = true           
-           for item in self.values():
-               if item.__class__.__name__ == 'Category':
-                  children.append(item.asDict())
-        return new                           
 
     
     # Only invoke index and unindex when the web approved status is changed.

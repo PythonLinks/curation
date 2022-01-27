@@ -359,6 +359,20 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def allValues(self):
         return self.values()
 
+    def asDict(self,classes = ['Category']):
+        new = dict()
+        new["key"] = self.name
+        new["title"] = self.title
+        if len (self) > 0:
+           children = []
+           new["children"] = children
+           #new["folder"] = true           
+           for item in self.values():
+               if item.__class__.__name__ in classes:
+                  children.append(item.asDict(classes = classes))
+        return new                           
+
+    
 class PageBase(PageVeryBase,PageMixIn):
     title = ''
     description = ''
