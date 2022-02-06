@@ -224,7 +224,7 @@ class IAceEdit(Interface):
 class IAceDiff(Interface):
           pass      
 
-#NO DISPLAYALE, IT RETURNS SOME VERSION OF SOURCE
+#NO DISPLAY, IT RETURNS SOME VERSION OF SOURCE
 class ISourceLeaf(ISource,ILeaf,IAceEdit):
       pass
 

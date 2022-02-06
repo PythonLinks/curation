@@ -12,6 +12,8 @@
 # THIS File WAS EXTRACTED FROM zope.pluggableauth
 # AND SIMPLIFIED
 import time
+import json
+
 from slugify import slugify
 import time
 from jinja2.sandbox import SecurityError
@@ -69,19 +71,29 @@ class InternalPrincipal(FileBase,Page):
         raise SecurityError('''You are not allowed to access attribute "secureParent" on %r %r ''' % (self.name,self.__class__.__name__))
     
     secureParent = property(secureParent)
+
+    def isPage(self):
+        return False
+
+    def getCategory(self):
+        return json.dumps(self.groups)
+
+    def setCategory(self,value):
+        self._grups = set(json.load(value))
+        
+    category = property (getCategory,setCategory)
     
     def getGroups(self):
          if not hasattr(self,'_groups'):
             self._groups =  set()
          return self._groups
 
-    def isPage(self):
-        return False
-        
     groups = property (getGroups)
+    
     def addGroup(self,name):
         self.groups.add(name)
         self._p_changed
+        
     def removeGroup(self,name):
         self.groups.remove(name)
         self._p_changed

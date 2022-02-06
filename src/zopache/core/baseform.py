@@ -22,6 +22,7 @@ def htmlClass(self):
 class Form(BaseForm,Scripts,Breadcrumbs):
     title=""
     subTitle=""
+    status = ""
     responseFactory = Response
     make_response = make_layout_response
     template = tal_template('form.pt')

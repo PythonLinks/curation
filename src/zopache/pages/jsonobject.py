@@ -17,10 +17,10 @@ def make_json_response(view, result, *args, **kwargs):
 
 #GETS ALL THE ARTICLES
 @view_component
-@name('json')
+@name('articles.json')
 @target(IView)
 @context(ICategory)
-class MYJSON(View):
+class Articles(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
@@ -31,12 +31,11 @@ class MYJSON(View):
                                      
 
 #THIS ONE JUST GETS THE TREE OF CATEGORIES
-
 @view_component
 @name('categories.json')
 @target(IView)
 @context(ICategory)
-class JSONCategories(View):
+class Categories(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
@@ -45,16 +44,21 @@ class JSONCategories(View):
         asDict =  self.context.asDict()
         return json.dumps(asDict,  indent = 2)               
 
+from zope.interface import Interface
+#ALL THE PARTIES
 @view_component
-@name('allCategories')
+@name('parties.json')
 @target(IView)
-@context(ICategory)
-class AllCategories(View):
+@context(Interface)
+class Parties(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
-            return self.context.allChildrenOfClass('Category')
-        
+        if self.context.__name__ not in ['usa']:
+           return 'JSON is not available for that object.'
+        asDict =  self.context.asDict()
+        return json.dumps(asDict,  indent = 2)               
+
 
 
 

@@ -1,6 +1,3 @@
-
-
-
 from cromlech.webob.response import Response
 from dolmen.view import  make_view_response
 from zopache.core import View
@@ -338,15 +335,15 @@ class CkDemoHTML(BaseCkEdit):
 @context(ISource)
 class ViewSource(Index):
     def render(self):
-            top="<html><head></head><body>"
+            top="<html><head></head><body><code>"
             middle=self.context.source
-            bottom="</body></html>"
+            bottom="</code></body></html>"
             return top+middle+bottom
 
 @view_component
 @name('index')
 @context(IUntrustedHTML)
-class ViewSource(Index):
+class ViewSource2(Index):
     def render(self):
         return self.context.source
 

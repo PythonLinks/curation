@@ -18,7 +18,9 @@ import zopache.crud
 #from zopache.crud import actions
 #from zopache.crud import actions as formactions
 from dolmen.forms.base import Fields
+from zope import schema
+
 
 __all__ =['order','target','implementer','crom','name','context','Interface',
           'form_component','view_component','permissions','title','Fields',
-          'action','IView','HTTPFound']
+          'action','IView','HTTPFound', 'schema']

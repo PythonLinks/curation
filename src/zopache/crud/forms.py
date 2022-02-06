@@ -21,6 +21,16 @@ from zopache.core.uniquename import UniqueName
 from zopache.crud.actions import AddByName, AddByTitle
 from zopache.ttw.mail import Notify
 
+
+class BasicForm(Form,Breadcrumbs,Notify):
+    ignoreContent = True
+    igrnoreRequest = False
+    count = 0
+    def __init__(self,context,request):
+        Form.__init__(self,context,request)
+        Notify.__init__(self)
+
+
 class AddFormBase(Form, Breadcrumbs):    
     """The add form itself is not protected. The security is checked on
     'update'. It checks if the 'require' directive of the factored item

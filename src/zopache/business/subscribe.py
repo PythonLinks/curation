@@ -86,7 +86,8 @@ class HasMembers(object):
             pass
         total += len(self.listFutureEvents())
         return total
-        
+
+#THE REST IS NO LONGER USED.  SO SAD    
     """
     def getTitle(self):
          if self.hidden:
@@ -97,7 +98,9 @@ class HasMembers(object):
          self.title = title
          return self.title
     """
-    
+
+
+
 class MemberForms(Form, Notify):
     def __init__(self,context,request):
         Form.__init__(self,context,request)
@@ -115,7 +118,7 @@ class MemberForms(Form, Notify):
     def setMember(self,theMember):
         self.context.members[theMember.__name__] = theMember
         
-         
+"""
 class Connect(MemberForms):
     def update(self):
          principal = self.request.principal
@@ -166,6 +169,7 @@ class UnVolunteer(Disconnect):
     
     def updateMember(self,member):
        member.volunteer = False
+
 
 #SUBSCRIBE
 @view_component
@@ -220,7 +224,7 @@ class Unendorse(Disconnect):
         member.endorser = False
       
 
-"""        
+
 #NOT USED    
 @view_component
 @name('cms-resign')

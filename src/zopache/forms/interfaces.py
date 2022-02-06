@@ -50,9 +50,9 @@ class IEmail(Interface):
     email = Email(
         title="Your Email Address",
         description ="",
-
         required = True)
     
+class IPassword(Interface):    
     password = schema.Password(
         title="Password",
         description = "Be Strong",
@@ -74,5 +74,8 @@ class IPermissions(Interface):
 to process my personal information for the following  
 purposes:</p>"""
 
-class IRegister(IHandle, IEmail, IPermissions):
-   pass
+class IRegister(IHandle, IEmail, IPassword,  IPermissions):
+    pass   
+
+class ISubscribe(IEmail, IPermissions):
+    pass
