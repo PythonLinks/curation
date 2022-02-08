@@ -60,14 +60,14 @@ class Category(Page):
     html = ""
     articleApproved = False
 
-    def get(self, name, arg):
-        if name == "@webhooks":
+    def get(self, name,default=None):
+        if name == "webhooks":
             if not hasattr(self,'webhooks'):
                 self.webhooks = AdminContainer()
                 self.webhooks.__parent__ = self
                 self.webhooks.__name__ = "@webhooks"
             return self.webhooks
-        return Page.get(self,name,arg)
+        return Page.get(self,name,default = default)
     
     # Only invoke index and unindex when the web approved status is changed.
     # Maybe Predelete Also.
