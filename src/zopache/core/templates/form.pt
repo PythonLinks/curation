@@ -10,8 +10,8 @@
      tal:content="view.description">Description</p>
   
   <p class="form-status"
-     tal:condition="view.status"
-     tal:content="view.status">Status</p>
+     tal:condition="view.status">
+     ${structure: view.status}</p>
   
   <div class="text-danger"
        tal:condition="view.errors">

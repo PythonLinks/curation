@@ -22,6 +22,13 @@ from zopache.ttw.interfaces import IWeb
 from zopache.core.interfaces import ITreeSecurity
 from zopache.ttw.addeditforms import AceAddForm
 
+from zopache.application.interfaces import IAdminContainer
+
+@implementer(IAdminContainer)
+class AdminContainer(Container):
+    pass
+
+
 @implementer(IHTMLContainer)
 class HTMLContainer(TrustedHTML,Container):
     icon="ttwicons/Container.svg"

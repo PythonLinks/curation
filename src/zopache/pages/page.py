@@ -23,6 +23,7 @@ from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
 from zopache.core.relatives import parentWhichImplements
 from zopache.core.relatives import parentsUpTo
+from zopache.core.ancestors import Ancestors
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
 from zopache.core import AllObjects
 from zopache.application.allblogobjects import ProcessTree, AllBlogObjects
@@ -32,7 +33,7 @@ from cromlech.security import unauthenticated_principal as Anonymous
 from zopache.pages.interfaces import ILink,IActionNetwork
 from zopache.ttw.branch import Branch
 from zopache.core.relatives import parentsWhichImplement
-
+from zopache.core.relatives import Parents
 
 class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,ProcessTree):
     private = False
@@ -373,7 +374,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
         return new                           
 
     
-class PageBase(PageVeryBase,PageMixIn):
+class PageBase(PageVeryBase,PageMixIn,Ancestors):
     title = ''
     description = ''
     source = ''
@@ -428,6 +429,14 @@ class PageBase(PageVeryBase,PageMixIn):
     def getDescriptionForDomain(self,domain):
         return self.description
 
+    def getAuthor(self):
+        topic = self.parent
+        topicName = topic.name
+        topicName = "UncensoredNews.US" + "/" + topicName
+        topicURL = self.secureShortURL(context = topic) 
+        imageURL = self.secureShortURL(context = article) + "/Logo"
+        return topicName,topicURL, imageURL
+    
 @implementer (IActionNetwork)
 class ActionNetwork(PageBase, PageMixIn):
     webClass='Action'
@@ -445,7 +454,7 @@ class Link(PageBase, PageMixIn):
     icon="ttwicons/WikiPage.png"
     tags = {}
     _toot = ""
-    
+
         
     def defaultToot(self):                
         return ( Page.defaultToot(self) +

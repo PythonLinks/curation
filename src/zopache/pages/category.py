@@ -8,11 +8,15 @@ from BTrees.OOBTree import OOBTree
 from ZODB.blob import Blob, BlobFile
 from ZODB.POSException import POSKeyError
 
+from dolmen.container import BTreeContainer
+
 from zopache.application.mergeiterator import mergeiterator
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import ICategory
 from zopache.ttw.file import FileBase
+from zopache.ttw.container import AdminContainer
+
 
 secondsInADay = 24*60*60
 def cmp(arg1,arg2):
@@ -44,7 +48,6 @@ class Base(object):
 
     source = property(getSource,setSource)
 
-
 @implementer (ICategory)     
 class Category(Page):
     webClass = "Category"
@@ -57,7 +60,14 @@ class Category(Page):
     html = ""
     articleApproved = False
 
-
+    def get(self, name, arg):
+        if name == "@webhooks":
+            if not hasattr(self,'webhooks'):
+                self.webhooks = AdminContainer()
+                self.webhooks.__parent__ = self
+                self.webhooks.__name__ = "@webhooks"
+            return self.webhooks
+        return Page.get(self,name,arg)
     
     # Only invoke index and unindex when the web approved status is changed.
     # Maybe Predelete Also.
@@ -193,7 +203,7 @@ class Category(Page):
                if item == None:
                    break
                result.append(item)
-               if len(result) > 5:
+               if len(result) > howMany:
                    break
                
         #if lastImportTime and len(result) > 0:

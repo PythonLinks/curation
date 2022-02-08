@@ -24,6 +24,9 @@ class IRootContainer(IPublicationRoot,IImutable,IZMI,IZodbRoot):
 class IEditableRootContainer(IRootContainer, IEditable):
       pass
 
+class IAdminContainer(IBTreeContainer):
+     pass
+
 class IMenuBar(ILeaf):
      pass
 

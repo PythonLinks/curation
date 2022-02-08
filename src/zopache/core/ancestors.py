@@ -1,0 +1,16 @@
+from cromlech.browser import IPublicationRoot
+
+class Ancestors(object):
+    def ancestors(self):
+        result  = self.ancestorsUpTo(IPublicationRoot)
+        return result
+
+    def ancestorsUpTo(self, anInterface):
+        ancestors=[]
+        item = self
+        while (item!=None):
+           ancestors.append(item)
+           if anInterface.providedBy(item):
+              break
+           item=item.__parent__      
+        return ancestors

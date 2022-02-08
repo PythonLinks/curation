@@ -34,6 +34,17 @@ class RSSArticle(Page):
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
 
+    def getAuthor(self,view ):
+        author = self.rssFeed
+        authorName = author.title
+        authorURL = author.remoteURL
+        if 'Logo' in author:
+            imageURL = view.secureShortURL(context = author) + "/Logo"
+        else:    
+            topic = self.parent
+            imageURL = view.secureShortURL(context = self) + "/Logo"
+        return authorName, authorURL, imageURL
+        
     def creationDateForHumans(self):
          return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
      
