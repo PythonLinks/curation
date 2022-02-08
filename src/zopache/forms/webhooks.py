@@ -43,10 +43,11 @@ class WebHook(Form):
                             icon_url = authorLogo )
            
            webHook.add_embed(embed)
-           imageURL = self.secureShortURL(context = article) + "/Logo"
-           embed.set_image(url=imageURL)
+           if 'Logo' in article:
+               imageURL = self.secureShortURL(context = article) + "/Logo"
+               embed.set_image(url=imageURL)
            try:
-              response = webHook.execute()
+               response = webHook.execute()
            except :
               err = sys.exc_info()[0]
               self.status += str(err)

@@ -429,12 +429,12 @@ class PageBase(PageVeryBase,PageMixIn,Ancestors):
     def getDescriptionForDomain(self,domain):
         return self.description
 
-    def getAuthor(self):
+    def getAuthor(self,view):
         topic = self.parent
         topicName = topic.name
         topicName = "UncensoredNews.US" + "/" + topicName
-        topicURL = self.secureShortURL(context = topic) 
-        imageURL = self.secureShortURL(context = article) + "/Logo"
+        topicURL = view.secureShortURL(context = topic) 
+        imageURL = topicURL + "/Logo"
         return topicName,topicURL, imageURL
     
 @implementer (IActionNetwork)

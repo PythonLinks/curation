@@ -17,7 +17,7 @@ def sortFunction(item):
 
 class Utilities (object):
     def ago (self,time):
-        return arrow.get(time).humanize()[:-3]
+        return arrow.get(time).humanize()
       
     def sendMessage(self,message):
         source = SessionSource()
