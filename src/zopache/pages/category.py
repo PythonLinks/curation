@@ -61,7 +61,7 @@ class Category(Page):
     articleApproved = False
 
     def get(self, name,default=None):
-        if name == "webhooks":
+        if name == "@webhooks":
             if not hasattr(self,'webhooks'):
                 self.webhooks = AdminContainer()
                 self.webhooks.__parent__ = self
