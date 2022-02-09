@@ -185,10 +185,7 @@ class Category(Page):
         lastImportTime = articles [-1].importTime
         return lastImportTime, articles
 
-    def todaysApprovedArticles(self,midnight):     
-        return  self.approvedArticles.itervalues(min = -midnight,
-                                      max = -midnight + secondsInADay,
-                                      excludemin = True)                              
+
     def mergedApproved(self, howMany = 6, lastImportTime = None):
         result = []
         exclude = False
@@ -210,6 +207,26 @@ class Category(Page):
         #    result = result [1]
         return result
 
+    def todaysApprovedArticles(self,midnight):     
+        return  self.approvedArticles.itervalues(min = -midnight,
+                                      max = -midnight + secondsInADay,
+                                      excludemin = True)                              
+    
+    def hours24ApprovedArticles(self, unixNow, discordServerId):
+        todaysArticles = []
+        yesterday = unixNow - (24 *3600)
+        articles = self.approvedArticles.itervalues()
+        links = self.newestLinks.itervalues()
+        for article in mergeiterator(articles,links, cmp = cmp):
+               if article == None:
+                   break
+               if article.importTime < yesterday:
+                   break
+               todaysArticles.append(article)
+        return todaysArticles
+
+
+    
     #GET MORE APPROVED ARTICLES AFTER THE LAST IMPORT TIME
     def moreMergedApproved(self,lastImportTime,howMany = 6):
         try:
