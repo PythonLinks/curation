@@ -212,7 +212,7 @@ class Category(Page):
                                       max = -midnight + secondsInADay,
                                       excludemin = True)                              
     
-    def hours24ApprovedArticles(self, unixNow, discordServerId):
+    def hours24ApprovedArticles(self, unixNow):
         todaysArticles = []
         yesterday = unixNow - (24 *3600)
         articles = self.approvedArticles.itervalues()
@@ -224,8 +224,6 @@ class Category(Page):
                    break
                todaysArticles.append(article)
         return todaysArticles
-
-
     
     #GET MORE APPROVED ARTICLES AFTER THE LAST IMPORT TIME
     def moreMergedApproved(self,lastImportTime,howMany = 6):

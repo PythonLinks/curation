@@ -15,6 +15,7 @@ class Base(object):
     def processOne(self,unixTime,article,node):
       for aHook in node.webhooks.values():
            if self.wasSent(article, aHook.serverId ):
+               print ("***WA SENT***", article.title)
                continue
            webHook = DiscordWebhook(url = aHook.webHookURL)
            remoteURL = (getattr(article,'articleURL','') or
@@ -65,7 +66,6 @@ class WebHook(Form,Base):
 @context(ICategory)
 @target(IView)
 @name("once")
-@permissions('Manage')
 class Once(Form,Base):
     title = "Post One Article"
     subTitle = "Generate some motion"
@@ -83,9 +83,12 @@ class Once(Form,Base):
       if hasattr(context, 'webhooks'):
          for hook in context.webhooks.values():
              serverId = hook.serverId 
-             articles  = context.hours24ApprovedArticles(unixNow,serverId)
-             oldestArticle = articles [-1]
-             if self.publishOrNot(unixNow,articles, serverId):
+             articles  = context.hours24ApprovedArticles(unixNow)
+             publish, oldestArticle =  self.publishOrNot(unixNow,
+                                                         articles,
+                                                         serverId)
+             if publish: 
+                  print ("*** PUBLISHING ***", oldestArticle.title)
                   self.processOne(unixNow,oldestArticle, self.context)
 
     def publishOrNot(self,unixNow, articles,serverId):
@@ -96,23 +99,27 @@ class Once(Form,Base):
             if self.wasSent(item,serverId):
                publishedArticles.append(item)
             else:
-               availableArticles.append(item)
-            if len(publishedArticles) == 0:
-                return True
-            #Frequency in Hours   
-            frequency = (24-10) / len(availableArticles)
-            publishedAt = publishedArticles[-1].sentTo[serverId] 
-            if (unixNow - publishedAt) > frequency :
-                return True
-        return False    
+               availableArticles.append(item) 
+        print (len(availableArticles), len (publishedArticles))
+        if len(availableArticles) == 0:
+                print ("NO AVAILALBE ARTICLES")
+                return False,None
+        if len(publishedArticles) == 0:
+                print ("No Published Articles")
+                return True , availableArticles [-1]           
+        #Frequency in Hours   
+        frequency =   (24-10) / len(availableArticles)
+        publishedAt = publishedArticles[-1].sentTo[serverId] 
+        if (unixNow - publishedAt) > frequency :
+                print ("TIME TO PUBLISH")
+                return True, availableArticles [-1]           
+        print ("***NOT TIME TO PUBLISH")    
+        return False, None    
 
     def wasSent(self,article, to):
         if hasattr(article,'sentTo'):
            sentTo = article.sentTo 
            if to in sentTo:
-               if sentTo[to] == True:
-                  del sentTo[to]
-                  return False
                return True
         return False
 
