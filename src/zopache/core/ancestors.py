@@ -1,6 +1,9 @@
 from cromlech.browser import IPublicationRoot
 
 class Ancestors(object):
+    def ancestorsExcludingSelf(self):
+        return self.ancestors()[1:]
+    
     def ancestors(self):
         result  = self.ancestorsUpTo(IPublicationRoot)
         return result

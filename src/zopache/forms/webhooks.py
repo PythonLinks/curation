@@ -15,7 +15,6 @@ class Base(object):
     def processOne(self,unixTime,article,node):
       for aHook in node.webhooks.values():
            if self.wasSent(article, aHook.serverId ):
-               print ("***WA SENT***", article.title)
                continue
            webHook = DiscordWebhook(url = aHook.webHookURL)
            remoteURL = (getattr(article,'articleURL','') or
@@ -67,7 +66,7 @@ class WebHook(Form,Base):
 @target(IView)
 @name("once")
 class Once(Form,Base):
-    title = "Post One Article"
+    title = "Post One Article Per Hook"
     subTitle = "Generate some motion"
 
     def update(self):
@@ -78,18 +77,24 @@ class Once(Form,Base):
 
       #Do Nothing in the middle of the night              
       if  0 < dateTimeNow.hour < 10:
-          return          
-                    
-      if hasattr(context, 'webhooks'):
-         for hook in context.webhooks.values():
-             serverId = hook.serverId 
-             articles  = context.hours24ApprovedArticles(unixNow)
-             publish, oldestArticle =  self.publishOrNot(unixNow,
+          return
+      
+      for category in self.context.allCategoryObjects():
+          if not hasattr(category, "webhooks"):
+             continue 
+          for hook in category.webhooks.values():
+              serverId = hook.serverId 
+              articles  = category.hours24ApprovedArticles(unixNow)
+              publish, relevantArticle =  self.publishOrNot(unixNow,
                                                          articles,
                                                          serverId)
-             if publish: 
-                  print ("*** PUBLISHING ***", oldestArticle.title)
-                  self.processOne(unixNow,oldestArticle, self.context)
+              print (category.title)
+              breakpoint()
+              if publish:
+                  self.processOne(unixNow,relevantArticle, self.context) 
+              else:
+                  self.status += category.title +  " NO ARTICLES" +"<br>"
+
 
     def publishOrNot(self,unixNow, articles,serverId):
         yesterday = unixNow - 24 *3600
@@ -100,25 +105,42 @@ class Once(Form,Base):
                publishedArticles.append(item)
             else:
                availableArticles.append(item) 
-        print (len(availableArticles), len (publishedArticles))
         if len(availableArticles) == 0:
-                print ("NO AVAILALBE ARTICLES")
                 return False,None
         if len(publishedArticles) == 0:
-                print ("No Published Articles")
-                return True , availableArticles [-1]           
+                return self.findArticleOnlyInThisCategory(availableArticles,
+                                                          serverId)
         #Frequency in Hours   
         frequency =   (24-10) / len(availableArticles)
         publishedAt = publishedArticles[-1].sentTo[serverId] 
         if (unixNow - publishedAt) > frequency :
-                print ("TIME TO PUBLISH")
-                return True, availableArticles [-1]           
-        print ("***NOT TIME TO PUBLISH")    
+               return self.findArticleOnlyInThisCategory(availableArticles,
+                                                         serverId)     
         return False, None    
 
+    def findArticleOnlyInThisCategory (self,availableArticles,serverId):
+        context = self.context
+        for article in availableArticles:
+            for category in article.ancestorsExcludingSelf():
+                if category.__class__.__name__ != "Category":
+                    continue
+                if category == context:
+                    return True, article
+                if hasattr(category, "webHooks"):
+                   for hook in category.webHooks.values():
+                       if hook.serverId == serverId:
+                          return False, None
+        return False, None       
+       
+        
+    
     def wasSent(self,article, to):
         if hasattr(article,'sentTo'):
-           sentTo = article.sentTo 
+           sentTo = article.sentTo
+           for item in sentTo:
+               if type(item) == str:
+                  del article.sentTo
+                  return False
            if to in sentTo:
                return True
         return False
@@ -126,7 +148,7 @@ class Once(Form,Base):
     def recordSending (self,unixTime,article,to):
         if not hasattr(article, 'sentTo'):
            article.sentTo = OOBTree()
-           article.sentTo[to] = unixTime
+        article.sentTo[to] = unixTime
 
 
 

@@ -46,6 +46,10 @@ class AllWikiObjects(AllChildObjects):
 class AllBlogObjects(AllWikiObjects):
     pass
 
+from zopache.pages.interfaces import ICategory
+class AllCategoryObjects(AllChildObjects):
+    interface = ICategory
+
 #GET ALL OF THE RSS LEAVES
 class RSSLeaves(AllWikiObjects):
     def __next__(self):
@@ -79,6 +83,9 @@ class ProcessTree(object):
     
     def allBlogObjects(self):
         return AllBlogObjects(self)
+
+    def allCategoryObjects(self):
+        return AllCategoryObjects(self)
 
     def allWikiObjects(self):
         return AllWikiObjects(self)        
