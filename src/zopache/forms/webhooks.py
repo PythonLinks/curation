@@ -51,6 +51,10 @@ class Base(object):
            embed.set_image(url=imageURL)
            try:
                response = webHook.execute()
+               self.status += (str(response.status_code) +
+                               " " +
+                               node.title + " " +
+                               article.title + "<br>")                  
            except :
               err = sys.exc_info()[0]
               self.status += str(err)
@@ -73,7 +77,6 @@ class PostOne(Form,Base):
         for ancestor in article.ancestors():
           if hasattr(ancestor, 'webhooks'):
             self.processOne(unixNow,article, ancestor)
-            self.status += ancestor.title + " " + article.title + "<br>"
             return
         self.status += "Nothing Was Done"
             
@@ -125,7 +128,7 @@ class PostRepeat(Form,Base):
                                                          articles,
                                                          serverId)
               if publish:
-                  self.processOne(unixNow,relevantArticle, category) 
+                  self.processOne(unixNow,relevantArticle, category)
               else:
                   self.status += category.title +  " NO ARTICLES" +"<br>"
 
