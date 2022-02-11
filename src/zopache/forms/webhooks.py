@@ -1,17 +1,33 @@
 import sys
-from datetime import datetime
- 
-timestamp = datetime.now().timestamp()
+import time
+from datetime import datetime 
+from discord_webhook import DiscordWebhook, DiscordEmbed
+
 from BTrees.OOBTree import OOBTree
 
 from cromlech.security import permissions
 
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
-from zopache.pages.interfaces import ICategory
-from discord_webhook import DiscordWebhook, DiscordEmbed
+from zopache.pages.interfaces import ICategory, ILinkBase
 
 class Base(object):
+    def wasSent(self,article, to):
+        if hasattr(article,'sentTo'):
+           sentTo = article.sentTo
+           for item in sentTo:
+               if type(item) == str:
+                  del article.sentTo
+                  return False
+           if to in sentTo:
+               return True
+        return False
+
+    def recordSending (self,unixTime,article,to):
+        if not hasattr(article, 'sentTo'):
+           article.sentTo = OOBTree()
+        article.sentTo[to] = unixTime
+
     def processOne(self,unixTime,article,node):
       for aHook in node.webhooks.values():
            if self.wasSent(article, aHook.serverId ):
@@ -39,33 +55,53 @@ class Base(object):
               err = sys.exc_info()[0]
               self.status += str(err)
            self.recordSending(unixTime,article, aHook.serverId)
-           self.status += (" " + aHook.channelName + " " +
-                         article.title + "<br>" )
            Form.update(self)
 
+
+@form_component
+@context(ILinkBase)
+@target(IView)
+@name("postone")
+@permissions('Manage')
+class PostOne(Form,Base):
+    title = "Send One Article By  Webhook"
+    subTitle = ""
+             
+    def update(self):
+        article = self.context
+        unixNow = time.time()
+        for ancestor in article.ancestors():
+          if hasattr(ancestor, 'webhooks'):
+            self.processOne(unixNow,article, ancestor)
+            self.status += ancestor.title + " " + article.title + "<br>"
+            return
+        self.status += "Nothing Was Done"
+            
+           
 @form_component
 @context(ICategory)
 @target(IView)
-@name("webhooks")
+@name("postmany")
 @permissions('Manage')
-class WebHook(Form,Base):
+class PostMany(Form,Base):
     title = "Send By Webhook"
     subTitle = "For the newest approved articles publishes them."
              
     def update(self):
+      unixNow = time.time()
       context = self.context
-
-      for article in values:
+      articles  = context.hours24ApprovedArticles(unixNow)
+      for article in articles:
         for ancestor in article.ancestors():
           if hasattr(ancestor, 'webhooks'):
-            self.processOne(article, ancestor)
+            self.processOne(unixNow,article, ancestor)
 
 
 @form_component
 @context(ICategory)
 @target(IView)
-@name("once")
-class Once(Form,Base):
+@name("postrepeat")
+class PostRepeat(Form,Base):
     title = "Post One Article Per Hook"
     subTitle = "Generate some motion"
 
@@ -88,8 +124,6 @@ class Once(Form,Base):
               publish, relevantArticle =  self.publishOrNot(unixNow,
                                                          articles,
                                                          serverId)
-              print (category.title)
-              breakpoint()
               if publish:
                   self.processOne(unixNow,relevantArticle, self.context) 
               else:
@@ -134,22 +168,4 @@ class Once(Form,Base):
        
         
     
-    def wasSent(self,article, to):
-        if hasattr(article,'sentTo'):
-           sentTo = article.sentTo
-           for item in sentTo:
-               if type(item) == str:
-                  del article.sentTo
-                  return False
-           if to in sentTo:
-               return True
-        return False
-
-    def recordSending (self,unixTime,article,to):
-        if not hasattr(article, 'sentTo'):
-           article.sentTo = OOBTree()
-        article.sentTo[to] = unixTime
-
-
-
 

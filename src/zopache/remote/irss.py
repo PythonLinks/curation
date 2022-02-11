@@ -1,6 +1,6 @@
 from zope.interface import Interface
 from zope import schema
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage, ILinkBase
 from zopache.remote.interfaces import IVoteable
 
 class IRSSBase(Interface):
@@ -88,7 +88,7 @@ class IAddRSS(IRSS):
 class IRSSPage (IRSS):
       pass
 
-class IRSSArticle(IPage,IVoteable):
+class IRSSArticle(IPage,ILinkBase,IVoteable):
 
     title = schema.TextLine(
         title = 'Remote Article Name',

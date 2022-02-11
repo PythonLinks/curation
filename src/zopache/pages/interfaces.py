@@ -83,6 +83,8 @@ class IPageTop(Interface):
         description = u'Describe this page.',
         required = True,
     )
+class ILinkBase(Interface):
+    pass
 
 class ILinkTop(Interface):
     title = schema.TextLine(
@@ -162,7 +164,7 @@ class IAddPage(IPage):
         required = False,
     )        
       
-class ILink(IPage,ILinkTop,ICountable):
+class ILink(IPage,ILinkTop,ILinkBase,ICountable):
     pass
 
 class IAddLink(IPage, IAddLinkTop):
