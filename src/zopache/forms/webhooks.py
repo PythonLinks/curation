@@ -125,7 +125,7 @@ class PostRepeat(Form,Base):
                                                          articles,
                                                          serverId)
               if publish:
-                  self.processOne(unixNow,relevantArticle, self.context) 
+                  self.processOne(unixNow,relevantArticle, category) 
               else:
                   self.status += category.title +  " NO ARTICLES" +"<br>"
 
