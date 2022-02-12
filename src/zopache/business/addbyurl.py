@@ -134,10 +134,11 @@ class AddCandidateByURL(ProcessJSON ):
         response ['connect']['remoteURL'] = remoteURL
 
         if title:
-            response ['content']['english']['title']= title
+            response ['introduction']['title']= title
         
         if description:
             response['content']['english']['description']= description
+            
         if image:
             response ['introduction']['logoURL'] = image
         return response
