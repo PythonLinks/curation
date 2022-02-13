@@ -68,7 +68,7 @@ class Organization  (
     def getOneMarkerCore(self):
         focus = self.focus
         focus = focus [:4]
-        return  ',"' + focus + '"'
+        return  [ focus ]
     
     #Since organizations are now multilingual,
     #The defaul Post Process Core does not work. 

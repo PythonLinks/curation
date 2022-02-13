@@ -1,3 +1,5 @@
+import json
+
 from zope.interface import implementer
 from zopache.pages.geo import geoCache
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
@@ -26,43 +28,26 @@ class MapOrLocation (PageBase):
         self.latitude = lat
         self.longitude = lng
         
-    def getOneMarker(self, firstItem, result):
-                  if not hasattr(self, 'longitude'):
-                      return result,firstItem
-                  if not firstItem:
-                     result +=','
-                  firstItem=False      
-                  result+='\n'
-                  result += '['
-                  result +='"' +  self.__name__ + '"'
-                  result += ','
-                  result +='"' +  self.title + '"'
-                  result += ','
+    def getOneMarker(self):
                   lat,lng = self.getMarkerLatLng()
-                  result +=  str(lat)  
-                  result += ","                   
-                  result += str(lng)
-                  aClass = self.__class__.__name__[0]
-                  result += self.getArg(aClass)
+                  aClass = self.__class__.__name__[0]                  
                   hasFutureEvent =  str(self.hasFutureEvent())
-                  result += self.getArg(hasFutureEvent)
+                  result = [
+                      self.__name__,
+                      self.title,
+                      lat ,
+                      lng,
+                      aClass,
+                      hasFutureEvent]
+                  
                   result += self.getOneMarkerCore()
-                  result += ',"' + self.remoteURL  + '"'                  
-                  result += "]"
-                  return result, firstItem
+                  result += [ self.remoteURL]
+                  return result
               
     #MAY BE OVERRIDDEN BY SUBCLASSES TO GET MORE INFO          
     def getOneMarkerCore(self):
-        return ""
+        return []
  
-    def getArg(self,aString,comma = True):
-          result = ""
-          if comma:
-              result += ","
-          result += '"'
-          result += aString
-          result += '"'
-          return result
 
 #At least used by events. 
 @implementer (ILocationLeaf)
@@ -129,17 +114,6 @@ class MapBase(LocationContainer):
     #clientClass = 'Category'
     icon="ttwicons/Map.svg"
     
-      
-    # GET THE JSON FOR CHILD LOCATIONS
-    def getLocationsJSON(self, view = None):
-        firstItem=True
-        result=""   
-        begin= "["
-        end="\n]"
-        result, firstItem= self.getLocationsJSONCore(
-                                firstItem,result,view)
-        return begin + result + end
-
     def filter(self,mapPoints,view):
         request = view.request
         if not hasattr(request,'form'):
@@ -184,10 +158,11 @@ class MapBase(LocationContainer):
                 mapPoints.append(item)
         return mapPoints
      
-    def getLocationsJSONCore(self,firstItem,result,view):
+    def getLocationsJSON(self):
+        result = []
         for item in self.mapPoints():
-            result, firstItem= item.getOneMarker(firstItem,result)
-        return result , firstItem
+            result.append(item.getOneMarker())
+        return json.dumps (result) 
 
     #ITERATE THROUGH THE CHILDREN
     # IF ONLY ONE COMPANY RETURN IT, ELSE RETURN NONE

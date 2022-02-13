@@ -1,3 +1,4 @@
+2
 from zope.interface import implementer
 
 from dolmen.container import IBTreeContainer
@@ -35,21 +36,30 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
         pass
         
     def getOneMarkerCore(self):
+        outcome = self.getCandidateInfo("result")
+        if len(outcome) > 0:
+            outcome = outcome [0]
 
-                     result = ""   
-                     result += self.getArg(str(hasattr(
-                                        self,'candidateInfo'))[0])
-                     result += self.getArg(str(hasattr(
-                                        self,'electedOfficial'))[0])
-                     result += self.getArg(
-                          str(hasattr(self,'partyOfficer'))[0])
-                     result += self.getArg(
-                          str(hasattr(self,'history'))[0])                     
-                     outcome = self.getCandidateInfo("result")
-                     if len(outcome) > 0:
-                         outcome = outcome [0]
-                     result += ',"' + outcome +' "'
-                     return result              
+        party = ""
+        if hasattr(self,'candidateInfo'):
+          if  "ballotStatus" in self.candidateInfo:
+              party = self.candidateInfo["ballotStatus"][0]
+              
+        onBallot = "F"
+        if hasattr(self,'candidateInfo'):
+          if  "onBallot" in self.candidateInfo:
+               onBallot = self.candidateInfo["onBallot"][0]
+
+            
+        result = [
+            str(hasattr(self,'candidateInfo'))[0],
+            str(hasattr(self,'electedOfficial'))[0],
+            str(hasattr(self,'history'))[0],
+            party,
+            onBallot,
+            outcome
+            ]
+        return result            
 
 
     def isElectedOfficial(self):
