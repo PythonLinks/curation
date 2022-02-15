@@ -144,6 +144,7 @@ class Index(View,Breadcrumbs):
     def setDisplayObject(self,item):
         self.zopacheTemplate=item
 
+
     def isCMS(self):
         return False
 
@@ -157,7 +158,7 @@ class Index(View,Breadcrumbs):
     def page(self,name):
         url =  name 
         return url        
-        
+    
     def render(self):
         #In the case of /index/index
         if not hasattr(self,'zopacheTemplate'):
@@ -187,7 +188,16 @@ class AceObjectIndex(Index,Breadcrumbs):
             return content  
         view = self
         return template.__call__(view,content=content)
-    
+
+from zopache.pages.interfaces import ILayoutView  
+@view_component
+@name('index')
+@context(ILayoutView)
+class PageIndex(AceObjectIndex):
+    def update(self):
+        self.zopacheTemplate = self.layoutAcquire('index')
+        
+"""  
 @view_component
 @name('index')
 @context(IAceCMSClass)
@@ -205,6 +215,7 @@ class CMSIndex(Index):
     def page(self,name):
         url =  name +"/wp-content"
         return url
+"""
 
 #INDEX IFRAME CLASS
 @view_component

@@ -502,8 +502,8 @@ class SiteRoot(Branch,PageBase,PageMixIn):
        cache = Cache()
 
     def setJson(self):
-         self.json=self.jsonTree(0)
-
+         #self.json=self.jsonTree(0)
+         pass
 
 #USED ON GREEN MAPS         
 @implementer(IRootPage)         
