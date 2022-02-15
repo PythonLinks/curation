@@ -21,7 +21,8 @@ class RegisterAction(Action):
         context = form.context
         newPerson= form.factory()
         newPerson.__parent__ = context
-
+        form.new = newPerson
+        
         #You have to set the name before setting the email.
         #Because it updates the email->name index.        
         root = getSiteRoot(context,form)
@@ -46,11 +47,11 @@ class RegisterAction(Action):
         newPerson.postAddProcess(view=form)    
         raise HTTPFound(newURL)
     
-    def possiblyExtend(data):
+    def possiblyExtend(self,data):
         pass
     
 class SubscribeAction(RegisterAction):
-    def possiblyExtend(data):
+    def possiblyExtend(self,data):
         letters = string.ascii_letters + string.punctuation
         data["password"] = ''.join(random.choice(letters) for i in range(length))
         data["handle"] = data["email"]
