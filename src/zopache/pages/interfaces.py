@@ -141,15 +141,15 @@ class IActionNetwork(ILinkTop,
         default = u'',
     )       
 
-class IPageBase(ICanonical):
+class IPageBase(ILayoutView,ICanonical):
     pass
 
-class IPage(ILayoutView,IPageTop,IPageBottom,IPageBase,
+class IPage(IPageTop,IPageBottom,IPageBase,
             IContent, IOrderedContainer,
             IJSONInclude, IUntrustedHTML,IAceHTML):
     pass
 
-class IMultilingual(IPageBase,ILayoutView,IContent,IOrderedContainer):
+class IMultilingual(IPageBase,IContent,IOrderedContainer):
     pass
 
 class IProxyPage(IPage):

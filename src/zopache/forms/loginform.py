@@ -66,10 +66,10 @@ class LoginForm(Form):
     allowAnonymous = True
     
     def update(self):
-        if self.getDomain() in [
-                "dev.pythonlinks.info",
-                "uncensorednews.us"]:
-            return
+        #if self.getDomain() in [
+        #        "dev.pythonlinks.info",
+        #        "uncensorednews.us"]:
+        #    return
         if not self.getSiteRoot().localLogin:
             self.raiseUnauthorized()
                         

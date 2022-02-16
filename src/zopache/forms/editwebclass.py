@@ -3,7 +3,7 @@ from zope.schema import TextLine
 
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 
 class IClass(Interface):
 
@@ -16,7 +16,7 @@ class IClass(Interface):
 
 @form_component
 @name ('editWebClass')
-@context(IPage)
+@context(IPageBase)
 @permissions('Manage')
 class EditWebClass (EditForm):
     title = 'Edit the WebClass.'
