@@ -8,7 +8,7 @@ from dolmen.view import View
 from zopache.remote.vote import make_text_response
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zopache.forms.interfaces import IApprove
 from zopache.core.interfaces import ITreeSecurity
 from zopache.remote.rssarticle import IRSSArticle
@@ -17,7 +17,7 @@ from zopache.core.breadcrumbs import Breadcrumbs
 
 @form_component
 @name ('approve')
-@context(IPage)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class Approve (EditForm):
     title = 'Aprove this posting'
