@@ -50,6 +50,10 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
           if  "onBallot" in self.candidateInfo:
                onBallot = self.candidateInfo["onBallot"][0]
 
+        endorsed = "U"
+        if hasattr(self,'candidateInfo'):
+            if  "endorsed" in self.candidateInfo:
+                endorsed = self.candidateInfo["endorsed"][0]               
             
         result = [
             str(hasattr(self,'candidateInfo'))[0],
@@ -57,6 +61,7 @@ class Politician (ImaginaryPage,LocationLeaf,HasMembers):
             str(hasattr(self,'history'))[0],
             party,
             onBallot,
+            endorsed,
             outcome
             ]
         return result            
