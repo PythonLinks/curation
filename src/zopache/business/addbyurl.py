@@ -17,16 +17,7 @@ from zopache.business.company import Organization
 from zopache.pages.page import Link
 from zopache.pages.interfaces import IPage
 
-
-@view_component
-@name('addByURL')
-@target(IView)
-@context(IPage)
-@implementer(ITreeSecurity)
-class AddLinkByURL(AddByURLForm):
-    title = "Add a Link By URL"
-    addSlug = "addLink"
-    
+class ProcessURL(object):
     def processURL(self,remoteURL):
         errors = Errors()
         try:
@@ -38,8 +29,21 @@ class AddLinkByURL(AddByURLForm):
             error = Error("Failed to Fetch URL" + str(err))
             response = {}
             errors.append(error)            
-            return response, errors 
+            return response, errors
+        return self.processContent(remoteURL, response)
+    
+
+@view_component
+@name('addByURL')
+@target(IView)
+@context(IPage)
+@implementer(ITreeSecurity)
+class AddLinkByURL(AddByURLForm, ProcessURL):
+    title = "Add a Link By URL"
+    addSlug = "addLink"
+    
         
+    def processContent(self,remoteURL,content):        
         try:
             title, description, image  = web_preview( remoteURL, content = response.content )
         except:
