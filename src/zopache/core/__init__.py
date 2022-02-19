@@ -51,7 +51,9 @@ class Leaf(Contained, Persistent,AllObjects):
     
 class Container(BTreeContainer,AllObjects):
       pass
-    
+
+#Is this still used?
+#This is not used, but removing it causes a crash. 
 class RootContainer (BTreeContainer):
     def __init__(self):
        BTreeContainer.__init__(self)

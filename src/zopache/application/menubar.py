@@ -42,7 +42,7 @@ class MenuBar(Leaf):
 import json
 from dolmen.forms.base.errors import Error, Errors
 from zopache.core.viewdecorators import *
-from zopache.business.editjsonschema import AddJson, EditJson
+from zopache.json.editjsonschema import AddJson, EditJson
 from zopache.core.interfaces import ITreeSecurity
 class MultilingualBase(object):
     def applyData(self,data):

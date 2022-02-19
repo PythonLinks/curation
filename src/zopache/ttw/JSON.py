@@ -155,6 +155,7 @@ class AceEditJSON(AceScripts,AceEditForm):
 @implementer(ITreeSecurity)
 class ManageJSON(AceEditJSON):    
    pass
+
 """
 from zopache.pages.interfaces import INotebook
 @view_component

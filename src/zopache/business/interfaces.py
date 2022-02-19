@@ -17,17 +17,10 @@ from z3c.schema.email import RFC822MailAddress as Email
 from zopache.pages.interfaces import IPage, IPageBase, ITime, ILocation
 from zopache.business.ifollow import IFollow
 from zopache.pages.interfaces import IPageBase
+from zopache.json.interfaces import IClass
 
-class IClass(Interface):
-    json= schema.Text(
-        title = 'Json Data',
-        required = True,
-        default = '{}',
-    )
-    
 class IPolitician(IClass,IPageBase):
     pass
-
 
 class ICity (ILocationContainer):
     address= schema.Text(

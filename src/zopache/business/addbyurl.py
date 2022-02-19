@@ -43,7 +43,7 @@ class AddLinkByURL(AddByURLForm, ProcessURL):
     addSlug = "addLink"
     
         
-    def processContent(self,remoteURL,content):        
+    def processContent(self,remoteURL,response):        
         try:
             title, description, image  = web_preview( remoteURL, content = response.content )
         except:

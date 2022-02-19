@@ -1,11 +1,6 @@
 from zopache.crud.addbytitleactions import *
 from zopache.core.viewdecorators import *
-from zopache.ttw.htmlviews import CkScripts
-from zopache.ttw.htmlviews import AddCkHTMLBase
 
-from zopache.core.uniquename import UniqueName
-from zopache.crud.addbyurl import  AddByURLForm
-from zopache.crud.forms import AddByTitleForm
 from zopache.business.interfaces import (IMap,
                                          IMapBase,
                                          ICompany,
@@ -13,7 +8,6 @@ from zopache.business.interfaces import (IMap,
 from zopache.business.imaporganization import IMapOrganization
 from zopache.business.company import MapOrganization
 
-from zopache.business.interfaces import  IOnlineEvent, IEvent
 from zopache.business.company import Company
 from zopache.business.map import Map
 from zopache.pages.addpage import AddAuthorizedPage, AddPage
@@ -21,23 +15,10 @@ from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.pages.interfaces import IPage,IPageBase
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
-from zopache.pages.interfaces import  INews
-from zopache.pages.page import  News
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.driver import IAddDriver, Driver
 from zopache.business.map import City
 
-#ADD NEWS
-@view_component
-@name('addNews')
-@target(IView)
-@context(IPage)
-class AddNews(AddAuthorizedPage):
-    interface = INews
-    emailApparoved = True
-    title = "Add a News Item"
-    subtitle = "Because the MSM does not cover it."
-    factory = News
 
 class AddAll(AddAnonymousPage,GeoCodeForm):
     def update(self):

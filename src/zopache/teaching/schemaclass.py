@@ -9,11 +9,12 @@ from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions, i18n as _
 from zopache.ttw import actions as ttwactions
 from zopache.core.viewdecorators import *
-from zopache.business.editjsonschema import AddJson, EditJson
+from zopache.json.editjsonschema import AddJson, EditJson
+from zopache.json.editjsonschema import IClass
 from zopache.crud.forms import AddForm
 from zopache.core.interfaces import ITreeSecurity
 from zopache.ttw.JSON import JSONFolder
-from zopache.business.editjsonschema import IClass
+
 from zopache.core import Container
 
 class ISchemaClass(IClass):

@@ -17,7 +17,7 @@ from zopache.business.imaginarypage import ImaginaryPage
 from zopache.business.subscribe import HasMembers
 from zopache.business.map import Map
 from zopache.pages.location import MapBase
-from zopache.pages.jsonproperties import (OnlineOrganizationProperties,
+from zopache.json.jsonproperties import (OnlineOrganizationProperties,
                                           LocalOrganizationProperties)
 
 

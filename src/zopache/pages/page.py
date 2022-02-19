@@ -476,11 +476,6 @@ class Link(PageBase, PageMixIn):
     def tagsAsHTML(self):
         return ""
     
-@implementer (INews)     
-class News (Page,RecentMixIn):
-    webClass = 'NewsItem'
-    pass
-
 from zopache.core.interfaces import ISiteRoot
 from zopache.pages.cache import Cache
 @implementer(ISiteRoot)

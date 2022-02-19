@@ -7,6 +7,7 @@
     <grok:grok package="zopache.zmi" />
         <grok:grok package="zopache.core" />
         <grok:grok package="zopache.forms" />
+        <grok:grok package="zopache.json" />	
         <grok:grok package="zopache.teaching" />    		
         <grok:grok package="zopache.pages" />
         <grok:grok package="zopache.business" />	

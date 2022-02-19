@@ -29,6 +29,7 @@ from zopache.forms.validator import LoginValidator
 class LoginAction(Action):
 
     def __call__(self,form):
+        breakpoint()
         data, errors = form.extractData()
         if errors:
             form.errors = errors

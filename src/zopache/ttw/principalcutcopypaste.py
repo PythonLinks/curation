@@ -1,5 +1,5 @@
 import crom
-from zopache.core.getroot import getPrincipalFolder
+from zopache.core.getroot import getPrincipalFolderNoView
 from zopache.zmi.cutcopypaste import Renamer, Deleter , Copier
 from zopache.ttw.interfaces import IInternalPrincipal 
 
@@ -35,7 +35,7 @@ class PrincipalDeleter(Deleter):
         contained=self.context
         container=contained.__parent__
         name=contained.__name__
-        principalFolder = getPrincipalFolder(contained,self)
+        principalFolder = getPrincipalFolderNoView(container)
         self.describeTransaction("Deleted a principal",contained)
         del container[name]
 

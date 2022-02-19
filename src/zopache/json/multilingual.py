@@ -8,7 +8,7 @@ from zopache.pages.interfaces import IMultilingual
 
 
 from zopache.core.viewdecorators import *
-from zopache.business.editjsonschema import AddJson, EditJson
+from zopache.json.editjsonschema import AddJson, EditJson
 from zopache.core.interfaces import ITreeSecurity
 
 @implementer(IMultilingual)

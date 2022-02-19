@@ -1,5 +1,5 @@
 from zopache.core.viewdecorators import *
-from zopache.business.editjsonschema import AddJson, EditJson
+from zopache.json.editjsonschema import AddJson, EditJson
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.company import Organization,OnlineOrganization
 from zopache.business.interfaces import IOrganization, IOnlineOrganization
