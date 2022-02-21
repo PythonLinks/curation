@@ -58,13 +58,7 @@ class Base(object):
         target.json =  self.requestJsonDict
         target._p_changed = True
         return Errors()
-    
-class AddJson (Base, AddAnonymousPage):
-    dataValidators = [JSONSchemaValidator, Duplicate]
 
-    def update(self):
-        AddAnonymousPage.update(self)
-        self.template = self.getTemplates()['json-editor']    
 
     #IF THERE IS A DATA VALIDATION ERROR
     #RETURN THE SUBMITTED JSON
@@ -78,6 +72,14 @@ class AddJson (Base, AddAnonymousPage):
         except:
             pass
         return self.dataModel()
+    
+class AddJson (Base, AddAnonymousPage):
+    dataValidators = [JSONSchemaValidator, Duplicate]
+
+    def update(self):
+        AddAnonymousPage.update(self)
+        self.template = self.getTemplates()['json-editor']    
+
 
     def addUnauthorizedActions(self):    
            self.actions = Actions(

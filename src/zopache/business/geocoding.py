@@ -14,10 +14,10 @@ class GeoCodeForm(object):
 class GeoCodeObject(Base):
     address = ''
     
-    def postProcess(self,view=None):
-        super().postProcess(view = view)
-        if self.address:
-            self.setLatLong()        
+#    def postProcess(self,view=None):
+#        super().postProcess(view = view)
+#        if self.address:
+#            self.setLatLong()        
         
     def postAddProcess(self,view=None):
         self.hidden = False

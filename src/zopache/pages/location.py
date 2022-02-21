@@ -162,7 +162,7 @@ class MapBase(LocationContainer):
         result = []
         for item in self.mapPoints():
             result.append(item.getOneMarker())
-        return json.dumps (result) 
+        return json.dumps (result, indent = 2) 
 
     #ITERATE THROUGH THE CHILDREN
     # IF ONLY ONE COMPANY RETURN IT, ELSE RETURN NONE

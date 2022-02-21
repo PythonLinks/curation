@@ -29,7 +29,6 @@ from zopache.forms.validator import LoginValidator
 class LoginAction(Action):
 
     def __call__(self,form):
-        breakpoint()
         data, errors = form.extractData()
         if errors:
             form.errors = errors
@@ -59,7 +58,7 @@ class LoginForm(Form):
     dataValidators = [LoginValidator]    
     #layoutName = "UserMenu"
     title='Log in '
-    subTitle='Please Login'
+    subTitle='You have to be registered before you can login.'
     fields = Fields(ILogin)
     ignoreContent = True
     submissionError = []

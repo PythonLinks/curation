@@ -14,26 +14,27 @@ from zopache.forms.urlvalidator import DuplicateURLValidator
 class AddByURLAction(Action):
     """Do not create, just crawl and redirect
     """
-    
     def __call__(self, form):
         self.form=form
         data, errors = form.extractData()
         if errors:
             form.submissionError = errors
             return FAILURE
-        remoteURL = data["remoteURL"]
-        response, errors = form.processURL(remoteURL)
+        errors, myDict  = form.processData(data)
         if errors:
             for item in errors.keys():
                 form.submissionError += str(errors.get(item))[6: -1] + ' '
             return FAILURE
-        baseURL = '/' + form.context.__name__
-        postingURL = (baseURL + '/' + form.addSlug + 
+        return self.newURL(myDict)
+    
+    def newURL(self,myDict):
+        baseURL = '/' + self.form.context.__name__
+        postingURL = (baseURL + '/' + self.form.addSlug + 
                       "?" +
-                      urlencode(response))
+                      urlencode(myDict))
         return SuccessMarker('Updated', True, url=postingURL)
         
-    
+
 class AddByURLForm(AddFormBase):
     count = 0
     layoutName = "UserMenu"    

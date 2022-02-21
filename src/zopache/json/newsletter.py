@@ -35,7 +35,6 @@ class NewsLetter(BasicProperties,Link,ProcessURL):
         soup = BeautifulSoup(response.content, 'html.parser')
         content =  soup.find(class_="available-content")
         uls = content.find_all ("ul")
-        breakpoint()
         
         jVideos= []
         videos = uls [0]
@@ -46,11 +45,9 @@ class NewsLetter(BasicProperties,Link,ProcessURL):
                   "description": str(item.p.contents[-1:]),   
               "embed": str(item.find("iframe"))
               })
-        breakpoint()      
         self.json["videos"] = jVideos
     
     def getTitleFor(self,view):
-        breakpoint()
         try:
           return self.json["content"]["title"]
         except:
@@ -63,7 +60,6 @@ class NewsLetter(BasicProperties,Link,ProcessURL):
            return "Error: Please define at least one language."
 
     def getHtmlFor(self,view):
-       breakpoint() 
        try:
           return self.json[0]["content"]
        except:

@@ -180,6 +180,7 @@ class RegionBase(LocationContainer):
     def getOrganizations(self):
         result = []
         showChildren = self.showChildren
+
         for item in self.values():
             if IEvent.providedBy(item) and item.webApproved:
                 result.append(item)
