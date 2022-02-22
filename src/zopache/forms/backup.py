@@ -43,7 +43,6 @@ class Base(object):
 @view_component
 @name('forest-wiki-backup')
 @context(Interface)
-@permissions('Manage')
 class Index(Base,View):
     responseFactory = Response
     make_response = make_file_response
