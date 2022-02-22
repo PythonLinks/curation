@@ -19,7 +19,10 @@ class EventBase(Page,HasMembers):
 
     #This method provides spelling error in the data.     
     def getMarkerLatLng (self):
-           return self.lattitude, self.longitude
+           if hasattr(self,'lattitude'):
+               return self.lattitude, self.longitude
+           else:
+               return self.latitude, self.longitude           
         
     def hasFutureEvents(self):
         return True
