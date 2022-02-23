@@ -99,6 +99,23 @@ class PostMany(Form,Base):
           if hasattr(ancestor, 'webhooks'):
             self.processOne(unixNow,article, ancestor)
 
+@form_component
+@context(ICategory)
+@target(IView)
+@name("posttopic")
+@permissions('Manage')
+class PostMany(Form,Base):
+    title = "Send Topic By Webhook"
+    subTitle = "Post 20 most recent articles from this topic."
+             
+    def update(self):
+      unixNow = time.time()
+      context = self.context
+      articles  =  self.context.rawHeadlines(self, howMany = 20)
+      if hasattr(context, 'webhooks'):
+          for article in articles:
+              self.processOne(unixNow,article, context)            
+
 
 @form_component
 @context(ICategory)
