@@ -214,7 +214,7 @@ class Category(Page):
     
     def hours24ApprovedArticles(self, unixNow):
         todaysArticles = []
-        yesterday =  unixNow - (35 * 24 *3600)
+        yesterday =  unixNow - (24 *3600)
         articles = self.approvedArticles.itervalues()
         links = self.newestLinks.itervalues()
         for article in mergeiterator(articles,links, cmp = cmp):
