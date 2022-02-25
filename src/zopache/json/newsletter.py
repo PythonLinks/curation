@@ -19,7 +19,7 @@ from zopache.json.interfaces import INewsLetter
 
 @implementer (INewsLetter)     
 class NewsLetter(BasicProperties,Link,ProcessURL):
-    webClass = "NewsLetter"
+    webClass = "Newsletter"
     title = ""
     description = ""
     def __init__(self):
@@ -28,10 +28,13 @@ class NewsLetter(BasicProperties,Link,ProcessURL):
         Link.__init__(self)
         
     def postAddProcess(self, view = None):
-        self.processURL(self.originalURL)
-
-    def processContent(self,remoteURL,response):
-
+        errors = Errors()
+        errors, response = self.fetchURL(self.originalURL,errors)
+        if errors:
+            return errors, {}
+        self.processContent(self.originalURL,errors, response)
+        
+    def processContent(self,remoteURL,errors, response):
         soup = BeautifulSoup(response.content, 'html.parser')
         content =  soup.find(class_="available-content")
         uls = content.find_all ("ul")
@@ -40,9 +43,9 @@ class NewsLetter(BasicProperties,Link,ProcessURL):
         videos = uls [0]
         for item in videos:
               jVideos.append({
-                  "title": str (item.p.contents[0]),
-                  "url":str(item.p.a.href),
-                  "description": str(item.p.contents[-1:]),   
+                  "title": str (item.p.a.contents[0]),
+                  "url":str(item.p.a['href']),
+                  "description": str(item.p.contents[-1:][0]),   
               "embed": str(item.find("iframe"))
               })
         self.json["videos"] = jVideos
