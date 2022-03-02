@@ -207,14 +207,20 @@ class Branch(SimpleBranch):
             for category in parentsWhichImplement(item,ICategory):
                 if item.publicationApproved:
                     category.approvedArticles[-importTime] = item
+                    if item.bestApproved:
+                        category.bestArticles[-importTime] = item
                 else:    
                     category.newestArticles[-importTime] = item
-
                     
         elif item.__class__.__name__ == 'Link':
+            importTime = int(item.importTime)
             for category in parentsWhichImplement(item,ICategory):
-                category.newestLinks [-int(item.creationTime)] = item
+                if item.publicationApproved:
+                    category.approvedArticles[-importTime] = item
+                    if item.bestApproved: 
+                       category.bestArticles[-importTime] = item
 
+                    
         elif IVideo.providedBy(item):
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):            

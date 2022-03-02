@@ -25,6 +25,7 @@ class RSSArticle(Page):
     description = ""
     emailApproved = True
     publicationApproved = False
+    bestApproved = False
     tags = {}
     _toot = ""    
     def __init__(self):

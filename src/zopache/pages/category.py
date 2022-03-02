@@ -17,14 +17,9 @@ from zopache.pages.interfaces import ICategory
 from zopache.ttw.file import FileBase
 from zopache.ttw.container import AdminContainer
 
-
 secondsInADay = 24*60*60
-def cmp(arg1,arg2):
-    return - arg1.importTime + arg2.importTime
-
 
 class Base(object):    
-        
     @property
     def size(self):
         return len(self.source)
@@ -60,6 +55,19 @@ class Category(Page):
     html = ""
     articleApproved = False
 
+    def __init__(self):
+       Page.__init__(self)
+       self.reInit()
+
+    def reInit(self):
+       self.newestArticles = IOBTree()
+       self.approvedArticles = IOBTree()
+       self.bestArticles = IOBTree()
+       self.newestVideos = IOBTree()       
+       if hasattr(self,'newestLinks'):
+           del self.newestLinks
+       self.childFeeds = 0
+    
     def get(self, name,default=None):
         if name == "@webhooks":
             if not hasattr(self,'webhooks'):
@@ -120,9 +128,6 @@ class Category(Page):
             )
         return json.dumps(result, indent = indent)
 
-    def __init__(self):
-       Page.__init__(self)
-       self.reInit()
 
     def descendants(self):
         yield self
@@ -145,13 +150,6 @@ class Category(Page):
                 yield item
         raise StopIteration            
 
-    def reInit(self):
-       self.newestArticles = IOBTree()
-       self.newestVideos = IOBTree()       
-       self.newestLinks = IOBTree()       
-       self.approvedArticles = IOBTree()       
-       self.childFeeds = 0
-
     def todaysFeedArticles(self,midnight):
         return self.newestArticles.itervalues(min = - midnight,
                                               max = -midnight + secondsInADay,
@@ -165,10 +163,7 @@ class Category(Page):
     
     def moreFeedArticles(self,lastImportTime,howMany = 6):
         result = self.feedArticles(lastImportTime,howMany = howMany)
-        all = []
-        for item in result:
-            all.append(item)
-        return all
+        return list(result)
     
     def feedArticles(self,lastImportTime = None, howMany = 6):
         if lastImportTime:
@@ -179,64 +174,38 @@ class Category(Page):
 
     #Check the rss feed does not break.
     def curatedHeadlines(self,count = 6):
-        articles = self.mergedApproved(howMany = count)
+        articles = list(self.mergedApproved(howMany = count))
         if len(articles) == 0:
            return 0, [] 
         lastImportTime = articles [-1].importTime
         return lastImportTime, articles
 
-
     def mergedApproved(self, howMany = 6, lastImportTime = None):
-        result = []
         exclude = False
         if lastImportTime:
             lastImportTime = - lastImportTime
             exclude = True
         articles = self.approvedArticles.itervalues(min = lastImportTime,
                                                     excludemin = exclude)
-        links = self.newestLinks.itervalues(min = lastImportTime,
-                                            excludemin = exclude)
-        for item in mergeiterator(articles,links, cmp = cmp):
-               if item == None:
-                   break
-               result.append(item)
-               if len(result) > howMany:
-                   break
-               
-        #if lastImportTime and len(result) > 0:
-        #    result = result [1]
+        result = islice(articles, howMany)
         return result
 
     def todaysApprovedArticles(self,midnight):     
         return  self.approvedArticles.itervalues(min = -midnight,
                                       max = -midnight + secondsInADay,
-                                      excludemin = True)                              
-    
+                                      excludemin = True)                           
     def hours24ApprovedArticles(self, unixNow):
-        todaysArticles = []
         yesterday =  unixNow - (24 *3600)
-        articles = self.approvedArticles.itervalues()
-        links = self.newestLinks.itervalues()
-        for article in mergeiterator(articles,links, cmp = cmp):
-               if article == None:
-                   break
-               if article.importTime < yesterday:
-                   break
-               todaysArticles.append(article)
-        return todaysArticles
+        return  self.approvedArticles.itervalues(min = -unixNow,
+                                      max = -yesterDay,
+                                            excludemin = False)
     
     #GET MORE APPROVED ARTICLES AFTER THE LAST IMPORT TIME
     def moreMergedApproved(self,lastImportTime,howMany = 6):
-        try:
-            
-           result =  self.mergedApproved(lastImportTime = lastImportTime,
+         return  self.mergedApproved(lastImportTime = lastImportTime,
                                          howMany = howMany)
-           return result
-           
-        except StopIteration:
-           return []
-        except Exception as err:
-            print (err)
+
+
 
 from zopache.pages.interfaces import (IGeographicalCategory,
                                       ILocationCategory,

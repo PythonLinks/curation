@@ -454,8 +454,9 @@ class Link(PageBase, PageMixIn):
     icon="ttwicons/WikiPage.png"
     tags = {}
     _toot = ""
-
-        
+    bestApproved = False
+    publicationApproved = True
+    
     def defaultToot(self):                
         return ( Page.defaultToot(self) +
                 self.remoteURL +
