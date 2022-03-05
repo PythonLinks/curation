@@ -42,11 +42,15 @@ class NewsLetter(BasicProperties,Link,ProcessURL):
         jVideos= []
         videos = uls [0]
         for item in videos:
+              embed = str(item.find("iframe"))
+              embed = embed.strip()
+              embed = embed [:-10]
+              embed = embed + ' class = "YouTubeVideo"></iframe>'
               jVideos.append({
                   "title": str (item.p.a.contents[0]),
                   "url":str(item.p.a['href']),
                   "description": str(item.p.contents[-1:][0]),   
-              "embed": str(item.find("iframe"))
+                  "embed": embed
               })
         self.json["videos"] = jVideos
     
