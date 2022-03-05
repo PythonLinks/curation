@@ -75,9 +75,9 @@ class ImageBase(FileBase):
         result += ';base64,' 
         result += str(base64.b64encode(self.data).decode('utf-8'))
         result += '" '
-        if sizes:
-           result += f'width = "{self.width}" ' 
-           result += f'height = "{self.height}" '
+        #if sizes:
+        #   result += f'width = "{self.width}" ' 
+        #   result += f'height = "{self.height}" '
         if style:   
            result +=f'style = "{style}" '
         if alt:   

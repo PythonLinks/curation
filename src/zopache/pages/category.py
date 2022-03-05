@@ -195,9 +195,10 @@ class Category(Page):
                                       max = -midnight + secondsInADay,
                                       excludemin = True)                           
     def hours24ApprovedArticles(self, unixNow):
+        unixNow = int(unixNow)
         yesterday =  unixNow - (24 *3600)
         return  self.approvedArticles.itervalues(min = -unixNow,
-                                      max = -yesterDay,
+                                      max = -yesterday,
                                             excludemin = False)
     
     #GET MORE APPROVED ARTICLES AFTER THE LAST IMPORT TIME
