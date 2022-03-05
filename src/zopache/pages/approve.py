@@ -26,14 +26,14 @@ class Approve (EditForm):
     fields = Fields(IApprove)
 
 @form_component
-@name ('approve')
+@name ('approveLink')
 @context(ILinkBase)
 @implementer(ITreeSecurity)
 class ApproveLink (EditForm):
     title = 'Approve this posting'
     subTitle = ''
     interface = IApproveBest
-    fields = Fields(IApprove)    
+    fields = Fields(IApproveBest)    
 
 
 @form_component

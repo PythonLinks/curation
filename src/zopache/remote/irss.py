@@ -88,7 +88,7 @@ class IAddRSS(IRSS):
 class IRSSPage (IRSS):
       pass
 
-class IRSSArticle(IPage,ILinkBase,IVoteable):
+class IRSSArticle(ILinkBase):
 
     title = schema.TextLine(
         title = 'Remote Article Name',

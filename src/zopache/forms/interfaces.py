@@ -11,6 +11,11 @@ class IApprove(Interface):
         default = False)
 
 class IApproveBest(IApprove):
+    webApproved = schema.Bool(
+        title = "Approved for publication on the web.",
+        required = False,
+        default = False)
+    
     bestApproved = schema.Bool(
         title = "Approved for Best.",
         required = False,

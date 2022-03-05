@@ -180,6 +180,23 @@ class Category(Page):
         lastImportTime = articles [-1].importTime
         return lastImportTime, articles
 
+    def bestHeadlines(self,count = 6):
+        articles = list(self.best(howMany = count))
+        if len(articles) == 0:
+           return 0, [] 
+        lastImportTime = articles [-1].importTime
+        return lastImportTime, articles    
+
+    def best(self, howMany = 6, lastImportTime = None):
+        exclude = False
+        if lastImportTime:
+            lastImportTime = - lastImportTime
+            exclude = True
+        articles = self.bestArticles.itervalues(min = lastImportTime,
+                                                    excludemin = exclude)
+        result = islice(articles, howMany)
+        return result
+    
     def mergedApproved(self, howMany = 6, lastImportTime = None):
         exclude = False
         if lastImportTime:
