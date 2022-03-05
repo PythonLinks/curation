@@ -10,15 +10,21 @@ class IApprove(Interface):
         required = False,
         default = False)
 
-    emailApproved = schema.Bool(
-        title = "Approved for publication in Emails.",
-        required = False,
-        default = False)
-
-    private = schema.Bool(
-        title = "Should this page be private?",
+class IApproveBest(IApprove):
+    bestApproved = schema.Bool(
+        title = "Approved for Best.",
         required = False,
         default = False)    
+
+    #emailApproved = schema.Bool(
+    #    title = "Approved for publication in Emails.",
+    #    required = False,
+    #    default = False)
+
+    #private = schema.Bool(
+    #    title = "Should this page be private?",
+    #    required = False,
+    #    default = False)    
     
     """
     hidden = schema.Bool(

@@ -21,7 +21,8 @@ class AddRssByURLForm(AddByURLForm):
     subTitle = "Please enter the RSS feed URL."
     datavalidators = []
 
-    def processURL(self,rssURL):
+    def processData(self,data):
+        rssURL = data['remoteURL']
         response = {}
         errors = Errors()
         try:
@@ -66,4 +67,4 @@ class AddRssByURLForm(AddByURLForm):
                               connect,remoteResponse)
             if 'twitterId' in connect:
                 response['form.field.twitterId'] = connect ['twitterId']
-        return response, errors
+        return errors, response

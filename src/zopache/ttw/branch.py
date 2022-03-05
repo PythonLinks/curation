@@ -271,17 +271,33 @@ class Branch(SimpleBranch):
             globalArticles = self.globalArticles
             if item.permaLink in globalArticles:
                 del globalArticles [item.permaLink]
-            importTime = - item.importTime
+            importTime = - int(item.importTime)
 
             for category in parentsWhichImplement(item,ICategory):
                 if item.publicationApproved:
                      approvedArticles = category.approvedArticles
                      if importTime in approvedArticles:                    
                          del category.approvedArticles[importTime]
+                     if item.bestApproved:
+                         bestApproved = category.bestArticles
+                         if importTime in bestArticles:                    
+                             del category.bestArticles[importTime]                         
                 else:        
                      newestArticles = category.newestArticles
                      if importTime in newestArticles:
-                        del category.newestArticles[importTime]                          
+                        del category.newestArticles[importTime]
+
+        elif item.__class__.__name__ == 'Link':
+            importTime = - int(item.importTime)
+            for category in parentsWhichImplement(item,ICategory):
+                if item.publicationApproved:
+                     approvedArticles = category.approvedArticles
+                     if importTime in approvedArticles:                    
+                         del category.approvedArticles[importTime]
+                     if item.bestApproved:
+                         bestApproved = category.bestArticles
+                         if importTime in bestArticles:                    
+                             del category.bestArticles[importTime]                                   
         elif IVideo.providedBy(item):
             importTime = item.importTime
             for category in parentsWhichImplement(item,ICategory):            
@@ -291,9 +307,6 @@ class Branch(SimpleBranch):
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds -= 1
                
-        elif item.__class__.__name__ == 'Link':
-            for category in parentsWhichImplement(item,ICategory):            
-                del category.newestLinks [-int(item.creationTime)]  
             
         #elif item.__class__.__name__ == "SocialNode":
         #    for node in item.allNodes():
