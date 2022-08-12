@@ -19,6 +19,6 @@ class Ancestors(object):
         return ancestors
     
     @property
-    def ancestorNames(self,item):
-        return  [x.name for x in self.ancestors]
+    def ancestorNames(self):
+        return  [x.name for x in self.ancestors()]
         
