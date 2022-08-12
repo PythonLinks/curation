@@ -279,7 +279,7 @@ class Branch(SimpleBranch):
                      if importTime in approvedArticles:                    
                          del category.approvedArticles[importTime]
                      if item.bestApproved:
-                         bestApproved = category.bestArticles
+                         bestArticles = category.bestArticles
                          if importTime in bestArticles:                    
                              del category.bestArticles[importTime]                         
                 else:        

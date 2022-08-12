@@ -12,5 +12,5 @@ class MastodonOauth(Form, BaseBot):
     title = "Respond to the Oauth Callback "
     subTitle = "You should never see his. ."
     def update(self):
-        CallBackAction("Redirect","redirect")(self)
+        MastodonCallBackAction("Redirect","redirect")(self)
         

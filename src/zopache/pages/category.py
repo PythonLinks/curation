@@ -222,8 +222,9 @@ class Category(Page):
     def moreMergedApproved(self,lastImportTime,howMany = 6):
          return  self.mergedApproved(lastImportTime = lastImportTime,
                                          howMany = howMany)
-
-
+    def moreBest(self,lastImportTime,howMany = 6):
+         return  self.best(lastImportTime = lastImportTime,
+                                         howMany = howMany)     
 
 from zopache.pages.interfaces import (IGeographicalCategory,
                                       ILocationCategory,
