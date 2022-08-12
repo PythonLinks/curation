@@ -22,6 +22,7 @@ class Imaginary(object):
     
     def html(self):
         return self.realObject.html()
+    
     def childCategories(self):
         return []
     

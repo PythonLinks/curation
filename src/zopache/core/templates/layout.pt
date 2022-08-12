@@ -34,8 +34,7 @@
     </style>
   </head>
   <body class="bg-light">
-    <div style = "float:right; padding: 20px;">
-    </div>
+    <div tal:replace="structure slot:contextualactions" />
     
     <div class="container">
       <div class="img-fluid" style="float:left; margin:20px">
@@ -54,7 +53,6 @@
 	  <div id="content">
 	    <div tal:condition="hasattr(view,'error')"
 		 style="color:red;">${view.error} </div>
-	    <div tal:replace="structure slot:contextualactions" />
 	    ${structure: view.breadcrumbs()}
 <br><br>
 <noscript >

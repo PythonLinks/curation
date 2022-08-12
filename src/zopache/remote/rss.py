@@ -40,7 +40,7 @@ class RSS(Link,UniqueName):
                if value.__class__.__name__ == "RSSArticle":               
                    articles.append(value)
 
-           for article in articles[0:-50]:    
+           for article in articles[0:-4]:    
                article.preDeleteProcess(self)
                del article.parent [article.name]
                

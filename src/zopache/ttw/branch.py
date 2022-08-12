@@ -2,6 +2,10 @@ import random
 import sys
 from zope import schema
 from zope import interface
+from hypatia.catalog import Catalog
+from hypatia.field import FieldIndex
+from hypatia.text import TextIndex
+from hypatia.keyword import KeywordIndex
 from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
@@ -99,13 +103,24 @@ class Branch(SimpleBranch):
         self.remoteURLs = OOBTree()
         self.politicians = OOBTree()
         self.pagesByTwitterId = OOBTree()
-        #self.socialNodeByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
-        self.newestArticles = IOBTree()
-        self.newestVideos = IOBTree()
-        self.approvedArticles = IOBTree()       
-        self.remoteArticles = OOBTree()
-
+        self.categoryIndex = IOBTree()
+        self.contentByTime = IOBTree()        
+        
+        contentCatalog = Catalog()
+        contentCatalog['importTime'] = FieldIndex('importTime')
+        contentCatalog['isVideo']=FieldIndex('isVideo')
+        contentCatalog['recommended']=FieldIndex('recommended')
+        contentCatalog['titlePlusDescription']=TextIndex(
+                                  'titlePlusDescription')
+        contentCatalog['ancestorNames']=KeywordIndex('ancestorNames')
+        self.contentCatalog = contentCatalog
+        
+        categoryCatalog = Catalog()
+        categoryCatalog['titlePlusDescription']=TextIndex(
+                               'titlePlusDescription')
+        self.categoryCatalog = categoryCatalog
+        
     def __delitem__(self, key):
         item = self[key]
         self.unIndexItem(item)
@@ -164,18 +179,21 @@ class Branch(SimpleBranch):
         self.reInit()
         self.indexBranch(self,self)
         
-    def indexBranch(self,tree,branch,itemType=ICanonical):
+    def indexBranch(self,tree,branch,itemType=ICanonical, ancestorNames = tuple()):
+        ancestorNames = ancestorNames + (branch.name,)
         
         if IImaginary.providedBy(branch):
             return
 
         for item in branch.values():
             if itemType.providedBy(item):
-                self.indexItem(item, itemType = itemType)           
+                self.indexItem(item,
+                               itemType = itemType,
+                               ancestorNames = ancestorNames)           
                 if IBTreeContainer.providedBy(item):    
-                   self.indexBranch(tree,item)
+                   self.indexBranch(tree,item,ancestorNames = ancestorNames )
 
-    def indexItem(self,item, itemType=ICanonical):
+    def indexItem(self,item, itemType=ICanonical,ancestorNames = []):
         if not IPageBase.providedBy(item):
             return
 
@@ -185,7 +203,6 @@ class Branch(SimpleBranch):
         if not getattr(item,'webApproved',True):
                    return
         
-        
         if hasattr(item,'remoteURL'):
             self.addRemoteURL(item)
             
@@ -194,44 +211,38 @@ class Branch(SimpleBranch):
             if twitterId != "":
                 self.pagesByTwitterId[twitterId] = item
 
-        if item.__class__.__name__  == "Category":
-           item.reInit()
+        if ancestorNames == []:
+           ancestorNames = item.parent.ancestorNames 
 
+        if item.__class__.__name__  == "Category":
+           #item.reInit()
+           #creationTime = int (item.creationTime)
+           #assert not creationTime in self.categoryIndex
+           #self.categoryIndex[creationTime] = item
+           #self.categoryCatalog.index_doc(
+           #        creationTime,
+           #        item)
+           pass
+       
         elif item.__class__.__name__  == "RSS":
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds += 1
-               
+           #self.categoryCatalog.index_doc(
+           #        self.recordCategory(item),
+           #        item)               
+           
         elif item.__class__.__name__  == "RSSArticle":
+            self.contentByTime[int(item.importTime)] = item
+            self.catalogContent(item,ancestorNames)
             self.globalArticles [item.permaLink] = item
-            importTime = item.importTime
-            for category in parentsWhichImplement(item,ICategory):
-                if item.publicationApproved:
-                    category.approvedArticles[-importTime] = item
-                    if item.bestApproved:
-                        category.bestArticles[-importTime] = item
-                else:    
-                    category.newestArticles[-importTime] = item
                     
-        elif item.__class__.__name__ == 'Link':
-            importTime = int(item.importTime)
-            for category in parentsWhichImplement(item,ICategory):
-                if item.publicationApproved:
-                    category.approvedArticles[-importTime] = item
-                    if item.bestApproved: 
-                       category.bestArticles[-importTime] = item
-
+        elif item.__class__.__name__ == 'Link': 
+            self.contentByTime[int(item.importTime)] = item
+            self.catalogContent(item,ancestorNames)
                     
         elif IVideo.providedBy(item):
-            importTime = item.importTime
-            for category in parentsWhichImplement(item,ICategory):            
-                category.newestVideos [-importTime] = item                
-
-                
-        #elif item.__class__.__name__ == "SocialNode":
-        #    for node in item.allNodes():
-        #        twitterId= node.twitterId
-        #        if twitterId:
-        #            self.socialNodeByTwitterId[twitterId] = item
+            self.contentByTime[int(item.importTime)] = item
+            self.catalogContent(item,ancestorNames)            
                     
         elif item.__class__.__name__ =='Politician':
             if (hasattr(item, 'candidateInfo') or
@@ -239,12 +250,16 @@ class Branch(SimpleBranch):
                     hasattr(item, 'partyOfficer')):
                     self.politicians[item.__name__]=item
                     
+    def catalogContent(self,item,ancestorNames):
+        proxy = Proxy(item,ancestorNames)
+        self.contentCatalog.index_doc(proxy.importTime,proxy)
+
+    def unCatalogContent(self,item):
+        self.contentCatalog.unindex_doc(item.importTime)
+
     def hasAnythingAt(self,importTime):
-        importTime = int(-importTime)
-        result =  (importTime in self.newestArticles or
-                importTime in self.approvedArticles or
-                importTime in self.newestVideos)
-        return result
+        result = self.contentCatalog['importTime'].apply((importtime,importtime))
+        return len(result) 
     
     def unIndexItem(self,item, itemType=IPage):
         if not IPageBase.providedBy(item):
@@ -266,66 +281,43 @@ class Branch(SimpleBranch):
         if getattr(item,'twitterId',''):
             del self.pagesByTwitterId [item.twitterId]
 
-            
-        if item.__class__.__name__  == "RSSArticle":
-            globalArticles = self.globalArticles
-            if item.permaLink in globalArticles:
-                del globalArticles [item.permaLink]
-            importTime = - int(item.importTime)
-
-            for category in parentsWhichImplement(item,ICategory):
-                if item.publicationApproved:
-                     approvedArticles = category.approvedArticles
-                     if importTime in approvedArticles:                    
-                         del category.approvedArticles[importTime]
-                     if item.bestApproved:
-                         bestArticles = category.bestArticles
-                         if importTime in bestArticles:                    
-                             del category.bestArticles[importTime]                         
-                else:        
-                     newestArticles = category.newestArticles
-                     if importTime in newestArticles:
-                        del category.newestArticles[importTime]
-
-        elif item.__class__.__name__ == 'Link':
-            importTime = - int(item.importTime)
-            for category in parentsWhichImplement(item,ICategory):
-                if item.publicationApproved:
-                     approvedArticles = category.approvedArticles
-                     if importTime in approvedArticles:                    
-                         del category.approvedArticles[importTime]
-                     if item.bestApproved:
-                         bestApproved = category.bestArticles
-                         if importTime in bestArticles:                    
-                             del category.bestArticles[importTime]                                   
-        elif IVideo.providedBy(item):
-            importTime = item.importTime
-            for category in parentsWhichImplement(item,ICategory):            
-                del category.newestVideos [-importTime] 
-                        
+        if item.__class__.__name__  == "Category":
+           creationTime = int (item.creationTime)
+           del self.categoryIndex[item.creationTime] 
+           self.categoryCatalog.unindex_doc(creationTime)
+       
         elif item.__class__.__name__  == "RSS":
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds -= 1
-               
+           #self.categoryCatalog.unindex_doc(item.importTime)           
+           #ERROR
+           
+        elif item.__class__.__name__  == "RSSArticle":
+            globalArticles = self.globalArticles
+            importTime = int(item.importTime)             
+            if importTime in self.contentByTime:
+               del self.contentByTime[importTime]
+            if item.permaLink in globalArticles:
+                del globalArticles [item.permaLink]
+            self.unCatalogContent(item)
+           
+        elif item.__class__.__name__ == 'Link':
+            del self.contentByTime[int(item.importTime)]
+            self.unCatalogContent(item)
             
-        #elif item.__class__.__name__ == "SocialNode":
-        #    for node in item.allNodes():
-        #        twitterId = node.twitterId
-        #        if twitterId:
-        #           if twitterId in self.socialNodeByTwitterId:  
-        #               del self.socialNodeByTwitterId[node.twitterId] 
-                                                     
+        elif IVideo.providedBy(item):
+            del self.contentByTime[int(item.importTime)]
+            self.unCatalogContent(item)
+                        
         elif item.__class__.__name__=='Politician':
             if (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial') or                    
                     hasattr(item, 'partyOfficer')):
                     del self.politicians[item.__name__]
-                    
 
     def checkName(self, name, object):
         """See zope.container.interfaces.INameChooser
         """
-
         if not name:
             raise ValueError(
                 _("An empty name was provided. Names cannot be empty.")
@@ -377,8 +369,38 @@ class Branch(SimpleBranch):
 
         return nm
 
+#USED TO NOT RECALCULATE ancestorNames EACH TIME.    
 
+from zopache.remote.ivideo import IVideo
+class Proxy(object):
+    def __init__(self,target,ancestorNames):
+        self.target = target
+        self.ancestorNames = ancestorNames
+    
+    @property
+    def isArticle(self):
+       return self.target.__class__.__name__ in [ "RSSArticle","Link"]
 
+    @property
+    def importTime(self):
+        importTime = self.target.importTime
+        return int(importTime)        
+
+    @property
+    def isVideo(self):
+       return IVideo.providedBy(self.target)
+   
+    @property
+    def recommended(self):
+        return (IVideo.providedBy(self.target) or
+                getattr(self.target,'bestApproved', False))
+                
+    def __getattribute__ (self,name):
+       if name in {'titlePlusDescription'}:
+           return object.__getattribute__(self.target,name)
+       else:
+          return object.__getattribute__(self,name)
+     
 @implementer(IPublicationRoot)       
 class Root (Branch):
    pass

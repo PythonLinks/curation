@@ -60,14 +60,21 @@ class Category(Page):
        self.reInit()
 
     def reInit(self):
-       self.newestArticles = IOBTree()
-       self.approvedArticles = IOBTree()
-       self.bestArticles = IOBTree()
-       self.newestVideos = IOBTree()       
+       self.childFeeds = 0
+
+       #Soon the following can be removed. 
+       if hasattr(self,'newestArticles'):
+           del self.newestArticles        
+       if hasattr(self,'approvedArticles'):
+           del self.approvedArticles       
+       if hasattr(self,'bestArticles'):
+           del self.bestArticles       
+       if hasattr(self,'newestVideos'):
+           del self.newestVideos       
        if hasattr(self,'newestLinks'):
            del self.newestLinks
-       self.childFeeds = 0
-    
+
+
     def get(self, name,default=None):
         if name == "@webhooks":
             if not hasattr(self,'webhooks'):

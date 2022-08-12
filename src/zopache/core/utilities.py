@@ -16,6 +16,13 @@ def sortFunction(item):
   return item.__name__
 
 class Utilities (object):
+    def getOption(self,value,title,selected):
+        result = f'<option value= "{value}"'
+        if selected:
+          result += " selected "
+        result += f'> {title} </option>'
+        return result
+      
     def ago (self,time):
         return arrow.get(time).humanize()
       

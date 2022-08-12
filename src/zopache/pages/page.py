@@ -371,8 +371,16 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
            for item in self.values():
                if item.__class__.__name__ in classes:
                   children.append(item.asDict(classes = classes))
-        return new                           
+        return new
+    
+    @property
+    def titlePlusDescription(self):
+        if self.description == None:
+           print (self.name)            
+           return self.title
 
+        return self.title + " " + self.description
+    
     
 class PageBase(PageVeryBase,PageMixIn,Ancestors):
     title = ''
@@ -454,6 +462,7 @@ class Link(PageBase, PageMixIn):
     icon="ttwicons/WikiPage.png"
     tags = {}
     _toot = ""
+    isArticle = True
     bestApproved = False
     publicationApproved = True
     

@@ -17,3 +17,8 @@ class Ancestors(object):
               break
            item=item.__parent__      
         return ancestors
+    
+    @property
+    def ancestorNames(self,item):
+        return  [x.name for x in self.ancestors]
+        
