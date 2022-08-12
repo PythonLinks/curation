@@ -3,7 +3,7 @@ import hypatia
 from hypatia.query import Contains
 from more_itertools import take
 
-def search(view):
+def searchCore(view):
  
     root = view.getSiteRoot()
     contentCatalog = root.contentCatalog
@@ -12,7 +12,7 @@ def search(view):
     type = view.request.form.get("type","video")
     page = int(view.request.form.get("page",0))
     recommended = view.request.form.get("recommended","recommended")
-    category = view.request.form.get("category","climate-change")
+    category = view.request.form.get("category",view.context.name)
     fields = [] 
     
     #NOW FOR RECOMMENDED
@@ -56,15 +56,21 @@ def search(view):
             sort_index='importTime',
             limit=500
             )
-    
+    return numdocs, docIds
+
+def search  (view):
+    numdocs, docIds = searchCore(view)
     index = view.getSiteRoot().contentByTime
     values = [index[x] for x in take(6,docIds)]
 
-    if len (values)> 0:
-        lastImportTime = int(values [-1].importTime)
-    else:
-       lastImportTime = 0
+    #NOTE DOCIDS IS NOW 6 SMALLER   
+    return values, docIds
+
+def searchObjects(self):
+    numdocs, docIds = searchCore(view)
+    index = view.getSiteRoot().contentByTime
+    values = [index[x] for x in docIds]
 
     #NOTE DOCIDS IS NOW 6 SMALLER   
-    return lastImportTime,values, docIds
+    return values
 
