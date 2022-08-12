@@ -1,0 +1,5 @@
+for key in index._fwd_index: print (key)
+
+for key in self._fwd_index: print (key)
+
+for key in self.contentCatalog['ancestorNames']._fwd_index: print (key)
