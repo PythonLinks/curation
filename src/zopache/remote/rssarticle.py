@@ -20,6 +20,7 @@ from zopache.pages.page import Page
 class RSSArticle(Page):
     _category = ""
     importTime = 0
+    isArticle = True
     imageURL = ""
     webClass = "RSSLink"
     description = ""
