@@ -215,14 +215,13 @@ class Branch(SimpleBranch):
            ancestorNames = item.parent.ancestorNames 
 
         if item.__class__.__name__  == "Category":
-           #item.reInit()
+           item.reInit()
            #creationTime = int (item.creationTime)
            #assert not creationTime in self.categoryIndex
            #self.categoryIndex[creationTime] = item
            #self.categoryCatalog.index_doc(
            #        creationTime,
            #        item)
-           pass
        
         elif item.__class__.__name__  == "RSS":
            for category in parentsWhichImplement(item,ICategory):
@@ -393,7 +392,7 @@ class Proxy(object):
     @property
     def recommended(self):
         return (IVideo.providedBy(self.target) or
-                getattr(self.target,'bestApproved', False))
+                getattr(self.target,'publicationApproved', False))
                 
     def __getattribute__ (self,name):
        if name in {'titlePlusDescription'}:
