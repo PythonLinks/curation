@@ -3,16 +3,15 @@ import hypatia
 from hypatia.query import Contains
 from more_itertools import take
 
-def searchCore(view):
- 
+def searchADictionary(view, aDict, defaultCategory = 'categories'):
+    searchTerm = aDict.get("query","")
+    type = aDict.get("type","video")
+    recommended = aDict.get("recommended","recommended")
+    category = aDict.get("category",defaultCategory)
+
     root = view.getSiteRoot()
     contentCatalog = root.contentCatalog
     q = CatalogQuery (contentCatalog)
-    searchTerm = view.request.form.get("query","")
-    type = view.request.form.get("type","video")
-    page = int(view.request.form.get("page",0))
-    recommended = view.request.form.get("recommended","recommended")
-    category = view.request.form.get("category",view.context.name)
     fields = [] 
     
     #NOW FOR RECOMMENDED
@@ -58,19 +57,14 @@ def searchCore(view):
             )
     return numdocs, docIds
 
-def search  (view):
-    numdocs, docIds = searchCore(view)
+def valuesPlusRemainder(view,docIds):
     index = view.getSiteRoot().contentByTime
     values = [index[x] for x in take(6,docIds)]
-
     #NOTE DOCIDS IS NOW 6 SMALLER   
     return values, docIds
 
-def searchObjects(self):
-    numdocs, docIds = searchCore(view)
+def justValues(view,docIds):
     index = view.getSiteRoot().contentByTime
-    values = [index[x] for x in docIds]
+    return  [index[x] for x in docIds]
 
-    #NOTE DOCIDS IS NOW 6 SMALLER   
-    return values
 
