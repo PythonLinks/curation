@@ -258,7 +258,7 @@ class Branch(SimpleBranch):
         self.contentCatalog.unindex_doc(item.importTime)
 
     def hasAnythingAt(self,importTime):
-        result = self.contentCatalog['importTime'].apply((importtime,importtime))
+        result = self.contentCatalog['importTime'].apply((importTime,importTime))
         return len(result) 
     
     def unIndexItem(self,item, itemType=IPage):
