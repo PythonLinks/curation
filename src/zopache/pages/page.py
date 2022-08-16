@@ -83,7 +83,7 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     #BUT IT WAS NOT WORKING, SO I MOVED IT TO PYTHON. 
     def getScript(self,view):
         result = "<script>    "
-        result += "var data = JSON.parse(" 
+        result += "data = JSON.parse(" 
         result += self.myJSON(view) + ");"
         result += "register(data);"
         result += "</script>"
