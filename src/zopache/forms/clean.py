@@ -7,7 +7,7 @@ from zopache.core.baseform import Form
 @form_component
 @context(IBTreeContainer)
 @target(IView)
-@name("clean")
+#@name("clean")
 @permissions('Manage')
 class Clean(Form):
     title = "Remove OLD Unused RSS Articles"

@@ -17,6 +17,7 @@ class RootContainer(Container,ProcessTree):
     webClass = "Container"
     __name__ = "applicationRoot"
     branchSize = 0
+    ancestorNames = []
     
     #THE IDEA HERE IS THAT THE END USER
     #CAN SPECIFY THE ROOT

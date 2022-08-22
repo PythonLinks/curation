@@ -3,9 +3,11 @@ import hypatia
 from hypatia.query import Contains
 from more_itertools import take
 
-def searchADictionary(view, aDict, defaultCategory = 'categories'):
+def searchADictionary(view, aDict, defaultCategory = None):
+    if defaultCategory == None:
+        defaultCategory = view.context.name
     searchTerm = aDict.get("query","")
-    type = aDict.get("type","video")
+    type = aDict.get("type","both")
     recommended = aDict.get("recommended","recommended")
     category = aDict.get("category",defaultCategory)
 
@@ -52,8 +54,8 @@ def searchADictionary(view, aDict, defaultCategory = 'categories'):
     numdocs, docIds = q.query(
             myQuery,
             reverse=True,
-            sort_index='importTime',
-            limit=500
+            sort_index='importTime'
+            #,limit=500
             )
     return numdocs, docIds
 
