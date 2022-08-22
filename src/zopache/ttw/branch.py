@@ -231,7 +231,7 @@ class Branch(SimpleBranch):
            #        item)               
            
         elif item.__class__.__name__  == "RSSArticle":
-            self.contentByTime[int(item.importTime)] = item
+            self.contentByTime[ int(item.importTime)] = item
             self.catalogContent(item,ancestorNames)
             self.globalArticles [item.permaLink] = item
                     
@@ -240,7 +240,7 @@ class Branch(SimpleBranch):
             self.catalogContent(item,ancestorNames)
                     
         elif IVideo.providedBy(item):
-            self.contentByTime[int(item.importTime)] = item
+            self.contentByTime[ int(item.importTime)] = item
             self.catalogContent(item,ancestorNames)            
                     
         elif item.__class__.__name__ =='Politician':
@@ -251,13 +251,14 @@ class Branch(SimpleBranch):
                     
     def catalogContent(self,item,ancestorNames):
         proxy = Proxy(item,ancestorNames)
-        self.contentCatalog.index_doc(proxy.importTime,proxy)
+        
+        self.contentCatalog.index_doc(int(item.importTime),proxy)
 
     def unCatalogContent(self,item):
-        self.contentCatalog.unindex_doc(item.importTime)
+        self.contentCatalog.unindex_doc(-int(item.importTime))
 
     def hasAnythingAt(self,importTime):
-        result = self.contentCatalog['importTime'].apply((importTime,importTime))
+        result = self.contentCatalog['importTime'].apply((-importTime,-importTime))
         return len(result) 
     
     def unIndexItem(self,item, itemType=IPage):
@@ -383,7 +384,7 @@ class Proxy(object):
     @property
     def importTime(self):
         importTime = self.target.importTime
-        return int(importTime)        
+        return - int(importTime)        
 
     @property
     def isVideo(self):
