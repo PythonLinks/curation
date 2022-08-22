@@ -53,9 +53,7 @@ def searchADictionary(view, aDict, defaultCategory = None):
 
     numdocs, docIds = q.query(
             myQuery,
-            reverse=True,
             sort_index='importTime'
-            #,limit=500
             )
     return numdocs, docIds
 

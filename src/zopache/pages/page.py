@@ -376,10 +376,9 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     @property
     def titlePlusDescription(self):
         if self.description == None:
-           print (self.name)            
            return self.title
 
-        return self.title + " " + self.description
+        return self.title + " " + self.description + " " + self.parent.title
     
     
 class PageBase(PageVeryBase,PageMixIn,Ancestors):
