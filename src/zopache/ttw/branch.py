@@ -282,9 +282,10 @@ class Branch(SimpleBranch):
             del self.pagesByTwitterId [item.twitterId]
 
         if item.__class__.__name__  == "Category":
-           creationTime = int (item.creationTime)
-           del self.categoryIndex[item.creationTime] 
-           self.categoryCatalog.unindex_doc(creationTime)
+           pass 
+           #creationTime = int (item.creationTime)
+           #del self.categoryIndex[item.creationTime] 
+           #self.categoryCatalog.unindex_doc(creationTime)
        
         elif item.__class__.__name__  == "RSS":
            for category in parentsWhichImplement(item,ICategory):
