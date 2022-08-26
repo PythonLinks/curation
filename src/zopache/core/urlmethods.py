@@ -10,6 +10,7 @@ from zopache.zmi.interfaces import IURLSegment
 from zopache.zmi.interfaces import IURLSegment
 from zopache.crud.interfaces import IZodbRoot
 from cromlech.browser.exceptions import HTTPTemporaryRedirect
+from zopache.ttw.interfaces import  ICanonical
 
 """
 The problem is that there is a site root, and a zodb root.  They may or may 
@@ -28,6 +29,31 @@ I wonder if this will all work?
 """
 
 class URLMethods(object):
+    def contextPath(self,*args):
+        item = self.context if len(args)==0 else args [0]
+        if ICanonical.providedBy(item):
+            return '/' + item.name
+        else:
+            return self.longPathFor(item)
+
+    def longPathFor(self,item):     
+        isRootContainer = item.__class__.__name__ == "RootContainer"
+        if isRootContainer:
+           return ""
+       
+        isSiteRoot =IPublicationRoot.providedBy(item)
+        if isSiteRoot:
+           return "/" + item.__name__
+       
+        if not hasattr(item, '__parent__'):
+               return 'BROKEN-NO-PARENT'
+        else:
+           container = item.__parent__
+           basePath= self.longPathFor(container)
+           basePath += "/"
+           basePath += item.__name__
+           return basePath
+
     def possiblyRedirect(self):
         domain = self.acquireAttribute("domain")
         if domain == "":
@@ -62,10 +88,6 @@ class URLMethods(object):
     
     def getShortPath(self):
         return self.context.__name__
-        #all = []
-        #for item in self.publisher.shortPath:
-        #    all.append(item.__name__)
-        #return "/".join(all)
 
     def getLongPath(self):    
         all = []
@@ -109,24 +131,8 @@ class URLMethods(object):
     
     def absoluteURL(self,*args):
         item = self.context if len(args)==0 else args [0]
-        isSiteRoot =IPublicationRoot.providedBy(item)
-        isZodbRoot = IZodbRoot.providedBy (item)
-        isRootContainer = item.__class__.__name__ == "RootContainer"
-        if isRootContainer:
-           return ""
-        elif isSiteRoot:
-           return "/" + item.__name__
-        else:
-           if not hasattr(item, '__parent__'):
-               return 'BROKEN-NO-PARENT'
-           container = item.__parent__
-             
-           base_url= self.absoluteURL(container)
-           if not base_url or base_url[-1] != "/":
-               base_url += "/"
-           base_url += item.__name__
-           return base_url
-
+        return self.longPathFor(item)
+    
     def relativeURL(self,*args):        
         item = self.context if len(args)==0 else args [0]        
         isSiteRoot =IPublicationRoot.providedBy(item)

@@ -4,9 +4,12 @@ from dolmen.container import IBTreeContainer
 from pydoc import locate
 from zopache.pages.interfaces import IImaginaryBTree
 from zopache.remote.ivideo import IVideo
+from zopache.ttw.interfaces import  ICanonical
 
     
 class Tests(object):
+    def isCanonical (self):
+        return ICanonical.providedBy(view.context)
     
     def hasMembers(self):
         return hasattr(self.context,'isMember')

@@ -42,9 +42,8 @@ class AceContainer(TrustedHTML,Container):
     def __init__(self):
         Container.__init__(self)        
 
-
 @form_component
-@name (u'addContainer')
+@name (u'addHTMLFolder')
 @context(IBTreeContainer)
 @implementer(ITreeSecurity)
 class ContainerAddForm(TreeSecurityAddForm):

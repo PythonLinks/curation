@@ -26,7 +26,8 @@ class ProcessURL(object):
                 raise Exception ("Status Code " + str(status))
         except Exception as err:
             error = Error("Failed to Fetch URL" + str(err))
-            errors.append(error)            
+            errors.append(error)
+            response = {}                        
         return errors,response
 
 @view_component

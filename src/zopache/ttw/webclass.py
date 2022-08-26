@@ -58,3 +58,13 @@ class AddWebClass(ContainerAddForm):
     interface = IWebClass
     ignoreContent = True
     factory=WebClass
+
+from dolmen.view import name, context, view_component
+from zopache.core.breadcrumbs import Breadcrumbs
+from zopache.ttw.htmlviews import Index
+@view_component
+@name('index')
+@context(IWebClass)
+class WebClassIndex(Index,Breadcrumbs):           
+    def render(self):
+        return "This is the boring index view of a web class"
