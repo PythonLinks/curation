@@ -8,13 +8,14 @@ from zopache.ttw.interfaces import  ICanonical
 
     
 class Tests(object):
-    def isCanonical (self):
+    def isCanonical (self,view):
         return ICanonical.providedBy(view.context)
     
     def hasMembers(self):
         return hasattr(self.context,'isMember')
     
     def isPerson(self):
+        breakpoint()
         return IPrincipal.implementedBy(self.context)
 
     def isVideo(self,*item):

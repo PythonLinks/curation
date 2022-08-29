@@ -212,7 +212,8 @@ class Branch(SimpleBranch):
                 self.pagesByTwitterId[twitterId] = item
 
         if ancestorNames == []:
-           ancestorNames = item.parent.ancestorNames 
+           if item.parent:
+               ancestorNames = item.parent.ancestorNames 
 
         if item.__class__.__name__  == "Category":
            item.reInit()

@@ -2,6 +2,8 @@
 #This software is subject to the CV and Zope Public Licenses.
 
 import sys
+import random
+import string
 from dolmen.forms.base import Action, SuccessMarker
 from dolmen.forms.base.markers import FAILURE
 from dolmen.forms.base.utils import set_fields_data, apply_data_event
@@ -53,5 +55,7 @@ class RegisterAction(Action):
 class SubscribeAction(RegisterAction):
     def possiblyExtend(self,data):
         letters = string.ascii_letters + string.punctuation
-        data["password"] = ''.join(random.choice(letters) for i in range(length))
+        length = 20
+        data["password"] = ''.join(random.choice(letters) for i in range(
+            length))
         data["handle"] = data["email"]

@@ -20,7 +20,7 @@
         <div class="dropdown-menu" aria-labelledby="dropdown05"><span><a class="dropdown-item" href="${contextPath}/addContainer">HTML Folder</a><a class="dropdown-item" href="${contextPath}/addAceFolder">Ace HTML Folder</a><a class="dropdown-item" href="${contextPath}/CSSFolder"> CSS Folder</a><a class="dropdown-item" href="${contextPath}/addJavascriptFolder">JS Folder</a><a class="dropdown-item" href="${contextPath}/JSONFolder">JSON Folder</a><a class="dropdown-item" href="${contextPath/"> </a></span></div>
       </li><!-- ADD ADVANCED-->
       <li class="nav-item dropdown" tal:condition="view.treeSecurity()"><a class="nav-link dropdown-toggle" id="dropdown05" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Advanced</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown05"><span><a class="dropdown-item" href="${contextPath}/addPug">PUG </a><a class="dropdown-item" href="${contextPath}/addCoffeeScript">CoffeeScript</a><a class="dropdown-item" href="${contextPath}/addPythonScript">PythonScript </a><a class="dropdown-item" href="${contextPath}/addYAML">YAML</a><a class="dropdown-item" href="${contextPath}/addJinjaHTML">Jinja HTML </a><a class="dropdown-item" href="${contextPath}/addJinjaCSS"> Jinja CSS</a><a class="dropdown-item" href="${contextPath}/addJinjaJSON">JINJA JSON</a></span></div>
+        <div class="dropdown-menu" aria-labelledby="dropdown05"><span><a class="dropdown-item" href="${contextPath}/addPug">PUG </a><a class="dropdown-item" href="${contextPath}/addSkuplt">Skuplpt</a><a class="dropdown-item" href="${contextPath}/addPyodide">Pyodide </a><a class="dropdown-item" href="${contextPath}/addCoffeeScript">CoffeeScript</a><a class="dropdown-item" href="${contextPath}/addPythonScript">PythonScript </a><a class="dropdown-item" href="${contextPath}/addJinjaHTML">Jinja HTML </a><a class="dropdown-item" href="${contextPath}/addJinjaCSS"> Jinja CSS</a><a class="dropdown-item" href="${contextPath}/addJinjaJSON">JINJA JSON</a></span></div>
       </li>
       <!--PER USER      -->
       <li class="nav-item dropdown" tal:condition="view.isAuthenticated()"><a class="nav-link dropdown-toggle" id="dropdown04" href="https://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Content</a>
@@ -28,18 +28,21 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
+      <li class="nav-item" tal:condition="not view.isAuthenticated() and view.getSiteRoot().localLogin">
+        <form class="form-inline" action="${context.__name__}/register"><button class="btn btn-primary my-2 my-sm-0" type="submit">Register</button></form>
+      </li>
       <li class="nav-item" tal:condition="False and not view.isAuthenticated() and view.getSiteRoot().localLogin">
-        <form class="form-inline" action="/${contextPath}/signup"><button class="btn btn-primary my-2 my-sm-0" type="submit">Register</button></form>
+        <form class="form-inline" action="${contextPath}/register"><button class="btn btn-primary my-2 my-sm-0" type="submit">G. Register</button></form>
       </li>
       <li class="nav-item"> <a class="nav-link" href="/contact">Contact</a></li>
       <li class="nav-item" tal:condition="not view.isAuthenticated() and view.getSiteRoot().localLogin">
-        <form class="form-inline" action="/${contextPath}/login2"><button class="btn btn-primary my-2 my-sm-0" type="submit">Log In</button></form>
+        <form class="form-inline" action="${contextPath}/login2"><button class="btn btn-primary my-2 my-sm-0" type="submit">Log In</button></form>
       </li>
       <li class="nav-item" tal:condition="not view.isAuthenticated() and view.getSiteRoot().googleClientId">
-        <form class="form-inline" action="/${contextPath}/login"><button class="btn btn-primary my-2 my-sm-0" type="submit">G. Log In</button></form>
+        <form class="form-inline" action="${contextPath}/login"><button class="btn btn-primary my-2 my-sm-0" type="submit">G. Log In</button></form>
       </li>
       <li class="nav-item ml-auto mr-2" tal:condition="view.isAuthenticated()">
-        <form class="form-inline" action="/${contextPath}/logout"><button class="btn btn-secondary my-2 my-sm-0" type="submit">Log Out</button></form>
+        <form class="form-inline" action="${contextPath}/logout"><button class="btn btn-secondary my-2 my-sm-0" type="submit">Log Out</button></form>
       </li>
     </ul>
   </div>
