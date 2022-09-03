@@ -15,7 +15,6 @@ class Tests(object):
         return hasattr(self.context,'isMember')
     
     def isPerson(self):
-        breakpoint()
         return IPrincipal.implementedBy(self.context)
 
     def isVideo(self,*item):

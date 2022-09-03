@@ -1,0 +1,6 @@
+cd ../..
+source bin/activate
+cd src/zopache
+python setup.py build_ext bdist_wheel
+cd ../..
+#./build

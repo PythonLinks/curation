@@ -52,6 +52,13 @@ class AceEdit(AceScripts,AceEditForm):
         AceEditForm.update(self)
 
 @form_component
+@context(IPyodide)
+@target(IView)
+@name("index")
+class Index (AceEdit):
+    pass
+        
+@form_component
 @name('addPyodide')
 @context(IBTreeContainer)
 @implementer(IPython)
