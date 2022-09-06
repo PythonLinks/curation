@@ -121,8 +121,9 @@ class PageDeleter(Deleter):
         
         # IF IT IS A VIDEO DELETE IT FROM THE CONFERENCE
         if contained.isVideo():
-           self.describeTransactionWithText("It was a Video")           
-           del contained.conference.talks[name]
+           self.describeTransactionWithText("It was a Video")
+           if hasattr(contained,'conference'):
+               del contained.conference.talks[name]
            
         # UNLESS IT IS THE ROOT CATEGORY, RECALCULATE THE JSON   
         # THIS SHOULD ALWAYS BE TRUE

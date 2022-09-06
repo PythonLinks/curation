@@ -1,24 +1,22 @@
-Zopache.Crud
-=============
+Setup.py.local was the version when I came back to this in fall 2022
+after almost a year away.
 
-Here we have forms for creating, updating, deleting (and soon) renaming basic
-ZODB Objects.  
+Setup.py.build is what I am now trying out.
 
-AddForm, DeleteForm, EditForm DisplayForm are what you should look for.
+BuildWheel, builds a wheel, so the .c and .cython files are not cluttering these directories.  Very nice.
 
-And then there are the interfaces.  If an object implements IAdding,
-then subclasses of AddForm will work on it.  If an object implements
-IDeleting, then the DeleteForm will work on those objects.  If an object
-implements IDisplaying, then the display Form will work on it.  If an object
-implements IEditing, then the Edit form will work on it. 
+buldInPlace, builds the files in place, easier for develoment. 
 
-In practice you will want to subclass your interface off of IContainer, ILeaf, and
-IRootContainer. Root containers cannot be deleted, and they cannot be renamed. 
+There is a problem with ttw/html.py
+When cythonizing it gets confuseed.
+cython -e html.py
+then move it to html.pyx.
 
-To get all of this CRUD for free, what you have to do is define an interface object
-for the class, and an add form.  You have to tell the class the interface it supports,
-and you have to tell the add form the class to add (The factory variable), and the
-context interfaces it can operate on. 
+Then all is maybe well.
+It gets confused with some other html.py file.
 
-It is really very few lines of code to create new classes. 
-Best to read the file models.py and views.py in the ZodbDemo. 
+setup.py.local setes extensions = []
+Meaning nothing gets cythonized.
+
+The inplace command just builds the extensions in place.
+Then they have to be copied.  I guess that is old stuff.

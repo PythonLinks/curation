@@ -52,13 +52,20 @@ class AceEdit(AceScripts,AceEditForm):
         AceEditForm.update(self)
 
 @form_component
-@name('addPython')
+@context(IPyodide)
+@target(IView)
+@name("index")
+class Index (AceEdit):
+    pass
+        
+@form_component
+@name('addPyodide')
 @context(IBTreeContainer)
 @implementer(IPython)
 @implementer(ITreeSecurity)
 class AddPython(AceAddForm):
     aceMode = "python"
-    subTitle = "Add  a Python (Pyodide)Object"
+    subTitle = "Add a cPython (Pyodide) Object"
     interface = IPyodide
     ignoreContent = True
     factory=Pyodide

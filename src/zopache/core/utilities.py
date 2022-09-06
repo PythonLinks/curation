@@ -192,7 +192,7 @@ class Utilities (object):
         parameters ["banner"] = (self.parentalAcquire("Banner.png")
                                      != None)
         parameters ["logo"] = (self.parentalAcquire("Logo") != None)
-        parameters ["homePage"]= getSiteRoot(self.context).homePage
+        parameters ["homePage"]= getSiteRoot(self.context,self).homePage
         
         if self.isAuthenticated():
             parameters["isAuthenticated"] = True

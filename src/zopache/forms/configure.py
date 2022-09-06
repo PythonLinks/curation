@@ -19,6 +19,13 @@ class IForm(Interface):
         required = False,
         missing_value = "",
     )
+
+    mqttServer= TextLine(
+        title = "MQTT Server URL",
+        description = "For real time notifications.",
+        required = False,
+        default = '',
+    )
     
     googleClientId= TextLine(
         title = "Google Oauth Client Id",

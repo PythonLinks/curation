@@ -12,13 +12,15 @@ class VideoBase(Voteable):
     webClass='Video'
     startTime = ''
     publishedAt = 0
-    isVideo = True
     seconds = 0
     minutes = 0
     hours = 0
     tags = ''
     _toot = ''
     importTime = 0
+
+    def isVideo(self):
+        return True
     
     def setImportTime(self,importTime,root):
         importTime = int(importTime)
