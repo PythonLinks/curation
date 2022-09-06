@@ -229,6 +229,7 @@ def key(item):
 class PrincipalFolder(Container):
     """ A Container of Principals.
     """
+    ancestorNames = []
     title = "Principal Folder"
     description = "The user objects are stored here. "
     branchSize = 1

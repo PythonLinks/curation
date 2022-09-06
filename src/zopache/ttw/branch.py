@@ -202,7 +202,7 @@ class Branch(SimpleBranch):
         #Unless WebApproved, return.
         if not getattr(item,'webApproved',True):
                    return
-        
+
         if hasattr(item,'remoteURL'):
             self.addRemoteURL(item)
             

@@ -513,6 +513,7 @@ class SiteRoot(Branch,PageBase,PageMixIn):
 @implementer(IRootPage)         
 class RootPage(SiteRoot):
     twitterId = ""
+    mqttServer = ""
     def getSiteRootFor(self,hostName):
         return self
  

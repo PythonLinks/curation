@@ -25,7 +25,21 @@ class  AceScripts(object):
         result =  Scripts.headerScripts(self) 
         result += createEditorDiv() +   f"""
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
-<script  src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-{self.aceMode}.js" type="text/javascript" charset="utf-8"></script>"""
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-{self.aceMode}.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js" integrity="sha512-Y5n0fbohPllOQ21fTwM/h9sQQ/1a1h5KhweGhu2zwD8lAoJnTgVa7NIrFa1bRDIMQHixtyuRV2ubIx+qWbGdDA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+"""
+        if self.getSiteRoot().mqttServer:
+            result +=" <script> var parameters = "
+            result += self.parameters()
+            result += ";</script>"
+            result += """
+       <script src = "/Products/Templates/MQTT/javascript"></script>
+"""
+       else:
+               result += """<script >
+function update() {return;}
+</script>"""            
         result += """
 <script >
 var aceEditors = {};
@@ -62,12 +76,23 @@ function createAce(fieldName,mode){
     textarea.value=editor.getSession().getValue();
     }    
   }  
- 
+
  function createAndSave(fieldName,mode){
      editor = createAce(fieldName,mode);
      const form = document.getElementById('form');
      form.addEventListener('submit', saveThenSubmit);
- }
+
+     //THIS IS USED FOR MQTT NOTIFICATIONS
+     editor.getSession().on('change', function() {
+       update();
+     });
+}
+
+
+
+
+
+
 </script>
 
     """ 
