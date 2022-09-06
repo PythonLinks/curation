@@ -522,6 +522,7 @@ class RootPage(SiteRoot):
 @implementer(ISiteRootPage)         
 class SiteRootPage(SiteRoot):
     twitterId = ""
+    mqttServer = ""
     localLogin = False
 
     def __init__(self):
