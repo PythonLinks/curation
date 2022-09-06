@@ -36,7 +36,7 @@ class  AceScripts(object):
             result += """
        <script src = "/Products/Templates/MQTT/javascript"></script>
 """
-       else:
+        else:
                result += """<script >
 function update() {return;}
 </script>"""            
