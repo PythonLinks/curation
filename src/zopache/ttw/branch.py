@@ -255,7 +255,7 @@ class Branch(SimpleBranch):
         self.contentCatalog.index_doc(int(item.importTime),proxy)
 
     def unCatalogContent(self,item):
-        self.contentCatalog.unindex_doc(-int(item.importTime))
+        self.contentCatalog.unindex_doc(int(item.importTime))
 
     def hasAnythingAt(self,importTime):
         result = self.contentCatalog['importTime'].apply((-importTime,-importTime))
