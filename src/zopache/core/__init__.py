@@ -73,9 +73,6 @@ class Page(View):
         #   return get_absolute_url(self.context, self.request)
                         
 
-
-    
-
 class ErrorPage(Page):
     code = 400
 

@@ -5,9 +5,10 @@ import mistune
 from zopache.pages.page import Page
 from zopache.pages.interfaces import IPage
 from zopache.pages.interfaces import IMarkdown
+from zopache.core.ancestors import Ancestors
 
 @implementer (IMarkdown)
-class Markdown (Page):
+class Markdown (Page,Ancestors):
 
     def postProcess(self, view = None):        
         self._html = mistune.markdown(self.source)

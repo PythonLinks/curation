@@ -15,7 +15,7 @@ from zopache.crud import actions as formactions, i18n as _
 from zopache.ttw.acescripts import AceScripts
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.pages.markdown import Markdown
-from zopache.pages.interfaces import IMarkdown, IPage
+from zopache.pages.interfaces import IMarkdown, IPageBase
 from zopache.core import View
 from zopache.ttw.mail import Notify
 
@@ -46,7 +46,7 @@ class EditAndView (Edit):
     
 @form_component
 @name('addMarkdown')
-@context(IPage)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class AddMarkdown(AceScripts,AceAddForm, Notify):
     subTitle = "Add a Markdown Page"

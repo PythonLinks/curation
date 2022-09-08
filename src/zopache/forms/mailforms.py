@@ -22,7 +22,7 @@ class AddMailHost(AddByNameForm):
     #HERE IS THE  EDIT FORM
 @form_component
 @context(IMailHost)
-@name("edit")
+@name("aceedit")
 @implementer(ITreeSecurity)
 class EditMailHost(EditForm):
     subTitle='Edit the MailHost Object'    
@@ -35,3 +35,10 @@ class EditMailHost(EditForm):
         self.sendTheMail()
     """
 
+@form_component
+@context(IMailHost)
+@name("index")
+@implementer(ITreeSecurity)
+class EditMailHost(EditForm):
+    def render(self):
+        return "This is a Mail Host object."

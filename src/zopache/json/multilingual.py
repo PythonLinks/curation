@@ -10,9 +10,10 @@ from zopache.pages.interfaces import IMultilingual
 from zopache.core.viewdecorators import *
 from zopache.json.editjsonschema import AddJson, EditJson
 from zopache.core.interfaces import ITreeSecurity
+from zopache.core.ancestors import Ancestors
 
 @implementer(IMultilingual)
-class Multilingual(PageVeryBase):
+class Multilingual(PageVeryBase,Ancestors):
     webClass = "Multilingual"    
     
     def getTitleFor(self,view):
@@ -20,12 +21,24 @@ class Multilingual(PageVeryBase):
           return self.json[0]["title"]
        else:
            return "Error: Please define at least one language."
+
+    def getTitleForDomain(self,view):
+       if len(self.json) > 0: 
+          return self.json[0]["title"]
+       else:
+           return "Error: Please define at least one language."       
        
     def getDescriptionFor(self,view):
        if len(self.json) > 0: 
           return self.json[0]["description"]
        else:
            return "Error: Please define at least one language."
+
+    def getDescriptionForDomain(self,view):
+       if len(self.json) > 0: 
+          return self.json[0]["description"]
+       else:
+           return "Error: Please define at least one language."       
 
     def getHtmlFor(self,view):
        if len(self.json) > 0: 
