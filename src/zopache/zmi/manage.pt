@@ -108,9 +108,9 @@ if view.isAuthenticated():
 ?>
   <div   tal:condition = "showCuts">
    Pastable Items:
-     <span  tal:repeat="item cutItems" style = "color:red">
-        ${item.name}
-    </span>
+     <div  tal:repeat="item cutItems" style = "color:red">
+        ${item.title if hasattr(item,'title') else item.name}
+    </div>
   </div>
 
 

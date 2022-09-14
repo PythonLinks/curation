@@ -53,7 +53,11 @@ class Add(Action, UniqueName, TransactionNote):
     
     def baseURL(self):
         return self.form.absoluteURL (self.new)
-        
+
+    #THERE CAN BE ERRORS IN CALL INNER,
+    #PARTICULARLY WITH COMPINLING THE TEMPLATE
+    #SO THIS SHOULD ALSO BE WRAPPED IN ERROR
+    #CATCHING AND REPORTING
     def callInner(self,obj,data,form):     
         notify(ObjectCreatedEvent(obj))
 

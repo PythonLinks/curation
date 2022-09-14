@@ -76,15 +76,13 @@ class TrustedHTML(Trusted,HTMLBase):
 
 
     def compileTemplate(self):
-                 if self.trusted == False:
-                    return     
-                 theSource=self.getHTML()
-                 fileName = self.parent.name + "/" + self.name
-                 template = PageTemplate(theSource,filename = fileName)
-                 template.filename = self.__name__
-                 self._v_compiledTemplate = template
-                 return self._v_compiledTemplate
-
+        if self.trusted == False:
+            return     
+        theSource=self.getHTML()
+        fileName = self.parent.name + "/" + self.name
+        template = PageTemplate(theSource,filename = fileName)
+        self._v_compiledTemplate = template
+        return self._v_compiledTemplate
             
     #So here we pass the context into the template    
     def __call__(self,view,**args):

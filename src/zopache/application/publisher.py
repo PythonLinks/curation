@@ -98,13 +98,12 @@ class Publisher (DawnlightPublisher):
             view.publisher = publisher
             factory = IResponseFactory(view)
             response = factory()
-            if request.principal == anonymous:
-                response.headers['cache-control'] = "public"
+            if  'image' in response.headers['content-type']:
+                response.headers['cache-control'] = "public, max-age=86400"
+            elif request.principal == anonymous:
+                response.headers['cache-control'] = "public, max-age=3600"
             else:
-                if  'image' in response.headers['content-type']:
-                    response.headers['cache-control'] = "public"
-                else:
-                    response.headers['cache-control'] = "no-store"
+                response.headers['cache-control'] = "no-store"
             return response
 
         raise PublicationError('%r can not be rendered.' % context)                
