@@ -4,6 +4,12 @@ from cromlech.security.principal import UnauthenticatedPrincipal
 class CutFolder (BTreeContainer):
     def getFromWebClass(self, name, marker=None):
         return marker
+
+    def valuesAsList(self):
+        result = []
+        for item in self.values():
+               result.append (item)
+        return result
     
 def cutFolder(view):
         principal = view.request.principal

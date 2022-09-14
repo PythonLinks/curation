@@ -101,17 +101,17 @@ table-hover table-condensed" summary="Content listing"
 	      </table>
 <?python
 cutItems = []
-showCuts = False
 if view.isAuthenticated():
-   cutItems  = list(view.request.principal['cutFolder'].values())
-   showCuts = True
+   cutItems  = view.request.principal['cutFolder'].valuesAsList()
 ?>
-  <div   tal:condition = "showCuts">
+  <div tal:condition = "cutItems">
    Pastable Items:
-     <div  tal:repeat="item cutItems" style = "color:red">
+   <ol>
+     <li  tal:repeat="item cutItems" style = "color:red">
         ${item.title if hasattr(item,'title') else item.name}
-    </div>
-  </div>
+     </li>	
+  </ol>	
+ </div>
 
 
 <span>
