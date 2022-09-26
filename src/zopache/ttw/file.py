@@ -336,14 +336,20 @@ class LogoAcquire2(View):
     make_response = make_logo_response
         
     def render(self):
-         try:
-            rssFeed = self.contexts.rssFeed
-            logo = rssFeed['Logo']
-         except:   
-             logo = ParentalAcquire(self.context)['Logo']
-             if logo == None:
-                   return ''
-             return logo.data
+         context = self.context
+         if 'Logo' in context:
+             logo = context['Logo']
+             return logo['200W'].data
+         
+         rssFeed = getattr(context,'rssFeed',context)
+         if 'Logo' in rssFeed:
+             logo = rssFeed['Logo']
+             return logo['200W'].data
+         
+         logo = ParentalAcquire(rssFeed)['Logo']
+         if logo == None:
+             return ''
+         return logo['200W'].data
           
 
 @view_component
