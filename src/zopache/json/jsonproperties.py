@@ -103,7 +103,7 @@ class SocialProperties(BasicProperties):
         return self.getConnect("discordURL")
     
 class OnlineOrganizationProperties(SocialProperties):
-    def getOrganizaiton(self,arg):
+    def getOrganization(self,arg):
         return self.getJsonValue('organization',arg)    
 
     @property
