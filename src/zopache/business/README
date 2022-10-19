@@ -1,0 +1,31 @@
+iT SHOULD BE
+
+ImaginaryPage
+Page
+
+PageBase
+   MapOrLocation
+      LocationLeaf
+      LocationContainer
+	 Location
+	 SimpleMap
+	 RegionBase
+	     Region
+             MapOrganization
+             Organization
+Base
+   GeoBase
+      Company
+      MapOrganization
+   OnlineOrganization
+
+Organization  (GeoBase, HasMembers, RegionBase)
+    
+MapOrganization(ImaginaryPage,GeoBase,Page, MapBase, RegionBase):
+                      
+                      
+                      
+                      
+                      
+                     
+                    
