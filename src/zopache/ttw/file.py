@@ -344,7 +344,7 @@ class LogoAcquire2(View):
          rssFeed = getattr(context,'rssFeed',context)
          if 'Logo' in rssFeed:
              logo = rssFeed['Logo']
-             return logo['200W'].data
+             return logo.get('200W').data
          
          logo = ParentalAcquire(rssFeed)['Logo']
          if logo == None:
