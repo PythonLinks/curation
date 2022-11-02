@@ -19,7 +19,7 @@ from zopache.business.map import Map
 from zopache.pages.location import MapBase
 from zopache.json.jsonproperties import (OnlineOrganizationProperties,
                                           LocalOrganizationProperties)
-
+from zopache.crud.getimage import getImage
 
 class Base(Page):    
     hidden = False
@@ -74,6 +74,12 @@ class Organization  (
     #The defaul Post Process Core does not work. 
     def partialPostProcess(self, view=None):
         return ""
+
+    def postAddProcess(self,view = None):
+        LocationLeaf.postAddProcess(self,view = view)
+        imageURL = view.requestJsonDict['introduction']['logoURL']
+        breakpoint()
+        getImage(self, imageURL)
     
 #SO maps have Lattitude and Longitude.
 #Companies now use getMarketLngLtd
