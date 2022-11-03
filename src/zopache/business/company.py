@@ -78,7 +78,6 @@ class Organization  (
     def postAddProcess(self,view = None):
         LocationLeaf.postAddProcess(self,view = view)
         imageURL = view.requestJsonDict['introduction']['logoURL']
-        breakpoint()
         getImage(self, imageURL)
     
 #SO maps have Lattitude and Longitude.
