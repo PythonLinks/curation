@@ -19,6 +19,7 @@ from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.crud.actions import AddByJSON, AddByJsonAndEdit,Cancel
 from zopache.business.exists import Duplicate
 from zopache.business.interfaces import IClass
+from zopache.forms.urlvalidator import DuplicateURLValidator
     
 class Base(object):
     interface = IClass
@@ -74,7 +75,8 @@ class Base(object):
         return self.dataModel()
     
 class AddJson (Base, AddAnonymousPage):
-    dataValidators = [JSONSchemaValidator, Duplicate]
+    dataValidators = [JSONSchemaValidator, Duplicate,
+                      DuplicateURLValidator]
 
     def update(self):
         AddAnonymousPage.update(self)

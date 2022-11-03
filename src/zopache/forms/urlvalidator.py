@@ -3,6 +3,8 @@ from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 from slugify import slugify
 from json import loads
+import json
+
 #NEEDED FOR SOME STRANGENESS IN DOLMEN.FORMS.BASE.VALIDATE
 class ArgsError(Error):
      @property
@@ -30,14 +32,25 @@ class BaseValidator(object):
         slug = slugify(title,lower=True)
         return siteRoot.get(slug,None)
 
+    def getURL(self,data):
+       if 'remoteURL' in data:
+             return data['remoteURL']
+       if 'rssURL' in data:
+             return data['rssURL']        
+       if 'articleURL' in data:
+             return data['articleURL']        
+       try:
+            data  = json.loads(data['json'])
+            return data['connect']['remoteURL']
+       except:
+            pass
+       return None
+
     def urlExists(self, data):
         self.data = data
-        if not 'remoteURL' in data:
-             return None
-        
-        remoteURL = data['remoteURL']
-        if remoteURL == "":
-             return None        
+        remoteURL = self.getURL(data)
+        if not remoteURL:
+           return None  
         form = self.form
         siteRoot = form.getSiteRoot()
         urlObject = siteRoot.existsRemoteURL(remoteURL)
@@ -52,6 +65,7 @@ class BaseValidator(object):
 class DuplicateURLValidator(BaseValidator):             
     def validate(self, data):
         errors = Errors()
+        
         theItem = self.urlExists(data) 
         if theItem != None:
            form = self.form
