@@ -38,7 +38,7 @@ class AddByURLAction(Action):
 class AddByURLForm(AddFormBase):
     count = 0
     layoutName = "UserMenu"    
-    datavalidators = [DuplicateURLValidator]
+    dataValidators = [DuplicateURLValidator]
     
     preamble = """This form may take a few moments  to process. 
     The software will download that webpage, capture the title, 

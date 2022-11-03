@@ -19,7 +19,6 @@ class AddRssByURLForm(AddByURLForm):
     addSlug = "addRSS"
     title = "Add an RSS Feed"
     subTitle = "Please enter the RSS feed URL."
-    datavalidators = []
 
     def processData(self,data):
         rssURL = data['remoteURL']

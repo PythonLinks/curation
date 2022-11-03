@@ -14,7 +14,7 @@ from zopache.ttw.interfaces import IJSON
 @implementer(ITreeSecurity)
 class AceEditJSON(AceEditJSON):
     subTitle='Edit the Virtual Hosts'    
-    datavalidators = [VirtualHostValidator]
+    dataValidators = [VirtualHostValidator]
     interface = IJSON
 
     @property
