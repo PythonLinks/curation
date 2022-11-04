@@ -116,8 +116,8 @@ class  AceScriptPug(AceScripts):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.0-beta3/beautify-html.min.js"></script>
         """     
         result += """
-<script  src="https://pythonlinks.info/static/pug/pug.js" ></script>
-<script  src="/fanstatic/ttwicons/pug-runtime.js"></script>    
+<script  src="/fanstatic/ttwicons/pug.js"></script>
+<script  src="/fanstatic/ttwicons/pug-runtime.js"></script>            
 <script src="/Products/Templates/PugScripts"> </script>"""
         return result
 
