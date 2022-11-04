@@ -26,7 +26,7 @@ class Register(BasicForm):
     fields = Fields(IRegister)
     factory = InternalPrincipal
     title='Register'
-    subTitle='Then you can edit conent.'
+    subTitle='To stay in touch, or to become an editor.'
     allowAnonymous = True
         
     def acquireTitle(self):
