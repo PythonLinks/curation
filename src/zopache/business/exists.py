@@ -4,7 +4,7 @@ from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 from slugify import slugify, SLUG_OK
 from zopache.forms.urlvalidator import BaseValidator,ArgsError
-
+from json import loads
 
 class Duplicate(BaseValidator):
     def validate(self, data):
@@ -20,12 +20,11 @@ class Duplicate(BaseValidator):
             url = form.secureShortURL(theItem)
             url = form.shortenURL (url)
             errorMessage += "<" + url +   ">"
-            errorMessage += """ This software is organized as a taxonomy, a tree, but every page
-also gets a unique short canonical url.  So this error message
-prevents duplicates.  If you still want to add this page, just give it
-a slightly different title.  After it has been created, you can edit
-the page title back to whatever you want.  The page titles can be duplicates, 
-it is the URL's which have to be unique. """
+            errorMessage += """ 
+            If you still want to add this page,
+            just give it a slightly different title and a different
+            unique pdurl will be generated.
+            """
             error = ArgsError(errorMessage)
             errors.append(error)
         return errors
@@ -33,8 +32,26 @@ it is the URL's which have to be unique. """
 class DuplicatePerson(Duplicate):
     def slugExists(self, data):
         principalFolder = self.form.getPrincipalFolder()
-        title = data ['title']
-        return principalFolder.getIdByHandle(self, title) != None            
+        title = data ['title'].strip()
+        return  principalFolder.getIdByHandle(self, title)
+
+import json    
+class DuplicatePolitician(Duplicate):
+    def getTitle(self,data):
+      try:
+          data = loads(data["json"])
+          return data["introduction"]["title"].strip()
+      except:
+         return None
+             
+class DuplicateOrganization(Duplicate):
+    def getTitle(self,data):
+        try:
+            data = loads(data["json"])
+            return data ["content"][0]["title"].strip()
+        except:
+            return None
+             
 
 
 

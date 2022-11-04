@@ -15,20 +15,16 @@ class BaseValidator(object):
 
     def __init__(self, fields, form):
         self.form = form
-        
+
+    def getTitle(self,data):
+        if "title" in data:
+           return  data ['title'].strip()
+        return None
+  
     def slugExists(self, data):
         form = self.form
         siteRoot = self.form.getSiteRoot()
-        if "title" in data:
-           title = data ['title']
-        else:
-           try:
-              json = loads(data["json"])
-              baseTab = self.jsonSchemaDict["baseTab"]
-              title = json[baseTab]["title"]
-           except:
-                return None
-             
+        title = self.getTitle(data)
         slug = slugify(title,lower=True)
         return siteRoot.get(slug,None)
 

@@ -4,6 +4,10 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.business.company import Organization,OnlineOrganization
 from zopache.business.interfaces import IOrganization, IOnlineOrganization
 from zopache.pages.interfaces import IPage,IPageBase
+from zopache.business.jsonschemavalidator import JSONSchemaValidator
+from zopache.business.exists import DuplicateOrganization
+from zopache.forms.urlvalidator import DuplicateURLValidator
+from zopache.business.exists import Duplicate
 
 @form_component
 @name ('ckedit')
@@ -24,7 +28,10 @@ class AddOrganization(AddJson):
     subTitle = ""
     factory = Organization
     schemaName = "OrganizationSchema"
-
+    dataValidators = [JSONSchemaValidator,
+                      DuplicateOrganization,
+                      DuplicateURLValidator]
+    
     def newName(self,data):
         newName =  self.requestJsonDict["content"][0]['title']
         return newName

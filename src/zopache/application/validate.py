@@ -44,8 +44,8 @@ class VirtualHostValidator(object):
         for key in theDict.keys():
            if not _isDotted(key):
                 msg = key + " is not a Valide domain name."
-           error =ArgsError(title=msg, identifier= key)
-           errors.append(error)
+                error =ArgsError(title=msg, identifier= key)
+                errors.append(error)
 
 
         #NOW CHECK THAT THE VALUES EXITS   

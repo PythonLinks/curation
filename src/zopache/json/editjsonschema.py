@@ -14,13 +14,16 @@ from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
 from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
+
 from zopache.business.jsonschemavalidator import JSONSchemaValidator
 from zopache.pages.addanonymous import AddAnonymousPage
 from zopache.crud.actions import AddByJSON, AddByJsonAndEdit,Cancel
-from zopache.business.exists import Duplicate
+
 from zopache.business.interfaces import IClass
+from zopache.business.exists import Duplicate
 from zopache.forms.urlvalidator import DuplicateURLValidator
-    
+from zopache.business.exists import Duplicate
+
 class Base(object):
     interface = IClass
     fields = Fields(IClass)
