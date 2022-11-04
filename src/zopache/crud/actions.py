@@ -42,8 +42,6 @@ class Add(Action, UniqueName, TransactionNote):
         self.new=form.new=obj
         data, errors = self.form.extractData()
         if errors:
-            if type(errors)!=str:
-                errors = "A VERY STRANGE ERROR OCCURED. Please report it"
             form.submissionError = errors
             return FAILURE
         self.data = data

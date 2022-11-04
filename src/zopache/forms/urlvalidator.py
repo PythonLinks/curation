@@ -74,6 +74,3 @@ class DuplicateURLValidator(BaseValidator):
                 
            errors.append(error)
         return errors        
-
-
-   
