@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
-from dolmen.forms.base.errors import Error,Errors
-from zopache.core.getroot import getPrincipalFolder
-from zope.schema import ValidationError
-from slugify import slugify, SLUG_OK
-from zopache.forms.urlvalidator import BaseValidator,ArgsError
 from json import loads
+from slugify import slugify, SLUG_OK
+
+from zope.schema import ValidationError
+from dolmen.forms.base.errors import Error,Errors
+
+from zopache.core.getroot import getPrincipalFolder
+from zopache.forms.urlvalidator import BaseValidator
+from zopache.application.validate import ArgsError
 
 class Duplicate(BaseValidator):
     def validate(self, data):
@@ -25,7 +28,7 @@ class Duplicate(BaseValidator):
             just give it a slightly different title and a different
             unique pdurl will be generated.
             """
-            error = ArgsError(errorMessage)
+            error = ArgsError(title=errorMessage, identifier ="In Duplicat")
             errors.append(error)
         return errors
 
@@ -39,16 +42,16 @@ import json
 class DuplicatePolitician(Duplicate):
     def getTitle(self,data):
       try:
-          data = loads(data["json"])
-          return data["introduction"]["title"].strip()
+            requestJsonDict = self.form.requestJsonDict
+            return requestJsonDict ["content"]['english']["title"].strip()
       except:
          return None
              
 class DuplicateOrganization(Duplicate):
     def getTitle(self,data):
         try:
-            data = loads(data["json"])
-            return data ["content"][0]["title"].strip()
+            requestJsonDict = self.form.requestJsonDict
+            return requestJsonDict ["content"][0]["title"].strip()
         except:
             return None
              

@@ -4,11 +4,11 @@ from zope.schema import ValidationError
 from slugify import slugify
 import json
 
-#NEEDED FOR SOME STRANGENESS IN DOLMEN.FORMS.BASE.VALIDATE
+#Needed to add a missing args method to Dolmen.Forms.Base.Errors.
 class ArgsError(Error):
      @property
      def args(self):
-          return [self.title]
+          return [self.title,self.identifier]
 
 #From Zope.schema.DottedName
 # An identifier is a letter or underscore, followed by

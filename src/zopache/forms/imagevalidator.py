@@ -1,13 +1,10 @@
-from dolmen.forms.base.errors import Error,Errors
-from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 from slugify import slugify
 
-#NEEDED FOR SOME STRANGENESS IN DOLMEN.FORMS.BASE.VALIDATE
-class ArgsError(Error):
-     @property
-     def args(self):
-          return [self.title]
+from dolmen.forms.base.errors import Error,Errors
+from zopache.application.validate import ArgsError
+from zopache.core.getroot import getPrincipalFolder
+from zopache.application.validate import ArgsError
 
 class BaseValidator(object):
 
@@ -30,8 +27,7 @@ class ImageValidator(BaseValidator):
         errors = Errors()
         if data['data'] == b'' and data['imageURL'] == '':
             msg = "Please link to an image, or upload an image." 
-            error =Error(title=msg, identifier = "image.validator")
-            error.args = [msg]
+            error =ArgsError(title=msg, identifier = "image.validator")
             errors.append(error)
         return errors        
         
@@ -42,8 +38,7 @@ class LogoValidator(BaseValidator):
            msg = "There is already a Logo in this folder.  "
            msg += "Please delete it before adding a new one. "
            msg += "Use the Manage -> Manage menu to delete it. "
-           error =Error(title=msg, identifier = "logo.validator")
-           error.args = [msg]
+           error =ArgsError(title=msg, identifier = "logo.validator")
            errors.append(error)
         return errors        
 
@@ -54,8 +49,7 @@ class BannerValidator(BaseValidator):
            msg = "There is already a Banner in this folder.  "
            msg += "Please delete it before adding a new one. "
            msg += "Use the Manage -> Manage menu to delete it. "
-           error =Error(title=msg, identifier = "Banner.validator")
-           error.args = [msg]
+           error =ArgsError(title=msg, identifier = "Banner.validator")
            errors.append(error)
         return errors        
 
@@ -72,8 +66,7 @@ class SocialMediaImageValidator(BaseValidator):
            msg = "There is already a Social Media in this folder.  "
            msg += "Please delete it before adding a new one. "
            msg += "Use the Manage -> Manage menu to delete it. "
-           error =Error(title=msg, identifier = "Banner.validator")
-           error.args = [msg]
+           error =ArgsError(title=msg, identifier = "Banner.validator")
            errors.append(error)
         return errors        
 

@@ -1,18 +1,16 @@
-from dolmen.forms.base.errors import Error,Errors
-from zopache.core.getroot import getPrincipalFolder
-from zope.schema import ValidationError
 from slugify import slugify
 from bs4 import BeautifulSoup
-from zopache.pages.interfaces import IPage
-from chameleon import PageTemplate
 from jsonschema import validate
 import json
+from chameleon import PageTemplate
 
-#NEEDED FOR SOME STRANGENESS IN DOLMEN.FORMS.BASE.VALIDATE
-class ArgsError(Error):
-     @property
-     def args(self):
-          return [self.title]
+from dolmen.forms.base.errors import Error,Errors
+from zopache.core.getroot import getPrincipalFolder
+from zopache.application.validate import ArgsError
+
+from zopache.pages.interfaces import IPage
+
+
 
 class JSONSchemaValidator(object):
 
@@ -20,9 +18,9 @@ class JSONSchemaValidator(object):
         self.form = form
         
     def validJSON(self, data):
-        form = self.form 
+        form = self.form
         try:
-             source=data['json']
+             source=data['jsonData']
              form.requestJsonString = source
              result = json.loads(source)
              form.requestJsonDict = result
@@ -47,8 +45,7 @@ class JSONSchemaValidator(object):
         if not success:
               msg = "That is not valid json. "
               msg += result.args[0]  #NUL RESULT
-              error = Error(title=msg, identifier="json.validator")
-              error.args = [msg]
+              error = ArgsError(title=msg, identifier="json.validator")
               errors.append(error)
               return errors
          
@@ -56,8 +53,7 @@ class JSONSchemaValidator(object):
         if not success:
               msg = "Your Data is invalid according to the Schema."
               msg += result.message
-              error = Error(title = msg, identifier = "json-schema.validator")
-              error.args = [msg]
+              error = ArgsError(title = msg, identifier = "json-schema.validator")
               errors.append(error)
               
         return errors        
