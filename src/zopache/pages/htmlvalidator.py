@@ -1,16 +1,12 @@
-from dolmen.forms.base.errors import Error,Errors
-from zopache.core.getroot import getPrincipalFolder
-from zope.schema import ValidationError
 from slugify import slugify
 from bs4 import BeautifulSoup
-from zopache.pages.interfaces import IPage
 from chameleon import PageTemplate
 
-#NEEDED FOR SOME STRANGENESS IN DOLMEN.FORMS.BASE.VALIDATE
-class ArgsError(Error):
-     @property
-     def args(self):
-          return [self.title]
+from dolmen.forms.base.errors import Errors
+from zopache.core.getroot import getPrincipalFolder
+from zopache.application.validate import ArgsError
+from zopache.pages.interfaces import IPage
+
 
 class HTMLValidator(object):
 
@@ -40,15 +36,13 @@ class HTMLValidator(object):
            success, result  = self.validTemplate(data)
            if not success:
               msg = result
-              error =Error(title=msg, identifier="chameleon.validator")
-              error.args = [msg]
+              error =ArgsError(title=msg, identifier="chameleon.validator")
               errors.append(error)              
         else:
           if self.hasJavascript(data):  
               msg = "It is a security violation to include Javascript "
               msg += "in your html."
-              error =Error(title=msg, identifier="javascript.validator")
-              error.args = [msg]
+              error =ArgsError(title=msg, identifier="javascript.validator")
               errors.append(error)
         return errors        
 

@@ -3,7 +3,7 @@ from zope import schema
 from zopache.pages.interfaces import IPageBase
 
 class IClass(Interface):
-    json= schema.Text(
+    jsonData= schema.Text(
         title = 'Json Data',
         required = True,
         default = '{}',

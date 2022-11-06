@@ -72,7 +72,7 @@ class Base(object):
            return self.requestJsonString
         # IF A JSON STRING WAS PROVIDED, RETURN IT
         try:
-            return self.request.form['json']   
+            return self.request.form['jsonData']   
         except:
             pass
         return self.dataModel()

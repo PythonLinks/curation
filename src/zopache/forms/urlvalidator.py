@@ -1,15 +1,14 @@
-from dolmen.forms.base.errors import Error,Errors
-from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 from slugify import slugify
 from json import loads
 import json
 
-#NEEDED FOR SOME STRANGENESS IN DOLMEN.FORMS.BASE.VALIDATE
-class ArgsError(Error):
-     @property
-     def args(self):
-          return [self.title]
+from dolmen.forms.base.errors import Error,Errors
+
+from zopache.application.validate import ArgsError
+from zopache.core.getroot import getPrincipalFolder
+
+
 
 class BaseValidator(object):
 
@@ -36,8 +35,8 @@ class BaseValidator(object):
        if 'articleURL' in data:
              return data['articleURL']        
        try:
-            data  = json.loads(data['json'])
-            return data['connect']['remoteURL']
+            result  = json.loads(data['jsonData'])
+            return result['connect']['remoteURL']
        except:
             pass
        return None
@@ -65,12 +64,11 @@ class DuplicateURLValidator(BaseValidator):
         theItem = self.urlExists(data) 
         if theItem != None:
            form = self.form
-           msg = "That url is already in the database "
+           msg = "That url is already in the database at: "
            url=  form.secureShortURL(theItem)
            url = form.shortenURL(url)
            msg +=  url
-           error =Error(title=msg, identifier="url.validator")
-           error.args = [msg]
-                
+           error =ArgsError(title=msg, identifier="url.validator")
            errors.append(error)
         return errors        
+

@@ -3,7 +3,7 @@ from dolmen.forms.base.errors import Error
 from zopache.core.getroot import getPrincipalFolder
 from zope.schema import ValidationError
 from slugify import slugify, SLUG_OK
-from zopache.forms.urlvalidator import BaseValidator,ArgsError
+from zopache.forms.urlvalidator import BaseValidator
 from dolmen.forms.base.errors import Error,Errors
 
 class InvalidCategoryError (ValidationError):
@@ -42,7 +42,7 @@ class ValidateDiscord(BaseValidator):
             url = self.form.secureShortURL(theItem)
             url = self.form.shortenURL(url)
             errorMessage += f" You can see the object at <{url}>"
-            error = ArgsError(title = errorMessage,
+            error = Error(title = errorMessage,
                           identifier = "slug-or-url")
             errors.append(error)
         return errors
