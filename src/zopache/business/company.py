@@ -20,8 +20,9 @@ from zopache.pages.location import MapBase
 from zopache.json.jsonproperties import (OnlineOrganizationProperties,
                                           LocalOrganizationProperties)
 from zopache.crud.getimage import getImage
+from zopache.business.redundant import RedundantNotifications
 
-class Base(Page):    
+class Base(Page, RedundantNotifications):    
     hidden = False
     eventsPageURL = ""
     hasScheduledEvents = False  

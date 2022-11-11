@@ -280,7 +280,7 @@ class IJSON(IJSONBase):
         default = '{}',
     )
 
-class IYAML (IJSON, IDeletable):
+class IYAML (IJSON, ISourceLeaf):
     title = schema.TextLine(
         title = u'Title',
         description = u'Please Describe this YAML.',
