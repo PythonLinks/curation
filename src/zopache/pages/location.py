@@ -53,53 +53,10 @@ class MapOrLocation (PageBase):
 @implementer (ILocationLeaf)
 class LocationLeaf (MapOrLocation):
     icon="ttwicons/Location.svg"
-    def getCompanies(self):
-        return self
     
-    def getCompaniesRecursively(self,result,showChildren = False):
-        return result.append(self)
-    #JUST ADD ONE MARKER TO THE LIST                        
-
-             
-        
 @implementer (ILocationContainer)
 class LocationContainer (MapOrLocation):
     icon="ttwicons/Location.svg"    
-    def getCompanies(self):
-        result=[]
-        return self.getCompaniesRecursively(result,showChildren=False)
-
-    def getCompaniesRecursively(self,result, showChildren = None):
-        values = self.values()
-        for item in values:
-            #FOR APPROVED ORGANIZATIONS
-            #FOR POLITICIANS, DO IT FIRST
-            if not IGeography.providedBy(item):
-                continue
-
-            if not item.webApproved:
-                continue
-
-            if item.__class__.__name__ in ['OnlineEvent']:
-                continue
-
-            if ILocationLeaf.providedBy(item):
-                result.append(item)
-
-            elif ILocationContainer.providedBy(item):
-                item.getCompaniesRecursively(result,showChildren = True)
-                
-                #IF ONLY SHOWING CHILDREN
-                if item.hasFutureEvent() or showChildren :
-                    result.append(item)
-            
-            elif (IMap.providedBy(item)):
-                item.getCompaniesRecursively(result,showChildren = showChildren)
-            #FOR A CITY, JUST SHOW ONE ICON    
-            elif (ILocation.providedBy(item)):
-                result.append(item)
-
-        return result
 
 @implementer(ILocation)
 class Location(LocationContainer):
@@ -133,67 +90,18 @@ class MapBase(LocationContainer):
                   result.append(item)
         return result          
 
-    def getPoints(self):
-        if self.showChildren == True:
-             mapPoints = self.values()
-        else:
-             mapPoints = self.getCompanies()
-        #if view != None:
-        #    mapPoints = self.filter(mapPoints,view)
-
-        for item in mapPoints:
-             if not IGeography.providedBy(item):
-                   continue
-               
-             if not item.webApproved:
-                    continue
-                               
-             lat, lng = item.getMarkerLatLng()  
-             if ((lat == 0) or
-                 lng == 0):
-                 continue
-             
-             # IF LOCATION GET THE JSON
-             if ( IGeography.providedBy(item)):
-                mapPoints.append(item)
-        return mapPoints
      
     def getLocationsJSON(self):
         result = []
-        for item in self.mapPoints():
+        for item in self.mapPoints.values():
             result.append(item.getOneMarker())
         return json.dumps (result, indent = 2) 
-
-    #ITERATE THROUGH THE CHILDREN
-    # IF ONLY ONE COMPANY RETURN IT, ELSE RETURN NONE
-    def onlyOneLocationIn(self):
-         company=None
-         for item in self.values():
-             if ILocation.providedBy(item):
-                    if (company!=None):
-                          return None
-                    company=item
-         return company          
-    
-
-    def getLocations(self):
-        values=self.values()
-        result=[]
-        for item in values:
-            if (IGeography.providedBy(item) and 
-                item.webApproved):
-                result.append(item)
-        return result
 
 #So the old maps had a center
 #Which was also their Marker
 @implementer (ISimpleMap)
 class SimpleMap(MapBase):        
     webClass = "SimpleMap"
-    def mapPoints(self):
-        for item in self.allBlogObjects():
-            if IOrganizationBase.providedBy(item):
-                yield item
 
 @implementer(IPin)
 class Pin(LocationContainer):

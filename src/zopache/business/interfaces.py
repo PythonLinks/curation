@@ -14,7 +14,7 @@ from zopache.pages.interfaces  import (
                                        ILocationLeaf)
 from z3c.schema.email import RFC822MailAddress as Email
 
-from zopache.pages.interfaces import IPage, IPageBase, ITime, ILocation
+from zopache.pages.interfaces import IPage, IPageBase, ITime
 from zopache.business.ifollow import IFollow
 from zopache.pages.interfaces import IPageBase
 from zopache.json.interfaces import IClass

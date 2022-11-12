@@ -13,8 +13,10 @@ from zopache.business.imaginarypage import ImaginaryPage
 from zopache.pages.page import Page
 from zopache.pages.location import LocationLeaf
 from zopache.crud.getimage import getImage
+from zopache.core.relatives import Parents
+
 @implementer (IPolitician)
-class Politician (ImaginaryPage,LocationLeaf,HasMembers):
+class Politician (ImaginaryPage,LocationLeaf,HasMembers,Parents):
     hidden = False
     localOrNational = ""
     webClass = "Politician"
