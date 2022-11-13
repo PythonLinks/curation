@@ -1,3 +1,4 @@
+import urllib
 import json
 import arrow
 
@@ -16,6 +17,9 @@ def sortFunction(item):
   return item.__name__
 
 class Utilities (object):
+    def urlEscape(self,text):
+        return urllib.parse.quote(text)
+
     def getOption(self,value,title,selected):
         result = f'<option value= "{value}"'
         if selected:

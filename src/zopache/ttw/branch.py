@@ -18,7 +18,6 @@ from dolmen.container import IBTreeContainer
 
 from zopache.pages.interfaces import IPage, IPageBase
 from zopache.ttw.interfaces import ICanonical
-from zopache.core.relatives import parentsWhichImplement
 from zopache.ttw.interfaces import (IBranch,
                                     IWebClass,
                                      IProducts,
@@ -27,6 +26,9 @@ from zopache.ttw.interfaces import (IBranch,
 from zopache.remote.ivideo import IVideo
 from zopache.ttw.interfaces import  ICanonical
 from zopache.pages.interfaces import ICategory, IImaginary
+from zopache.business.interfaces import IOrganization, IOnlineOrganization
+from zopache.pages.interfaces import ILocationContainer
+from zopache.core.relatives import parentsWhichImplement
 
 #THIS ONE SUBCLASSES OFF OF BTREE CONTAINER
 @implementer(IBranch)
@@ -101,12 +103,11 @@ class Branch(SimpleBranch):
     def reInit(self):        
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
-        self.politicians = OOBTree()
         self.pagesByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
         self.categoryIndex = IOBTree()
         self.contentByTime = IOBTree()        
-        
+
         contentCatalog = Catalog()
         contentCatalog['importTime'] = FieldIndex('importTime')
         contentCatalog['isVideo']=FieldIndex('isVideo')
@@ -170,10 +171,10 @@ class Branch(SimpleBranch):
                 return newName
             
        
-    def test(self,item):
-        if IBTreeContainer.providedBy(item):
-           return True
-        return False
+    #def test(self,item):
+    #    if IBTreeContainer.providedBy(item):
+    #       return True
+    #    return False
 
     def indexTree(self):
         self.reInit()
@@ -215,15 +216,12 @@ class Branch(SimpleBranch):
            if item.parent:
                ancestorNames = item.parent.ancestorNames 
 
+        if ILocationContainer.providedBy(item):
+           item.mapPoints =  OOBTree()
+           
         if item.__class__.__name__  == "Category":
            item.reInit()
-           #creationTime = int (item.creationTime)
-           #assert not creationTime in self.categoryIndex
-           #self.categoryIndex[creationTime] = item
-           #self.categoryCatalog.index_doc(
-           #        creationTime,
-           #        item)
-       
+
         elif item.__class__.__name__  == "RSS":
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds += 1
@@ -246,13 +244,19 @@ class Branch(SimpleBranch):
                     
         elif item.__class__.__name__ =='Politician':
             if (hasattr(item, 'candidateInfo') or
-                    hasattr(item, 'electedOfficial') or                    
-                    hasattr(item, 'partyOfficer')):
-                    self.politicians[item.__name__]=item
-                    
+                    hasattr(item, 'electedOfficial')):
+               for organization in (
+                       parentsWhichImplement(item,ILocationContainer)):
+                   organization.mapPoints[item.name] = item
+                   
+        elif IOrganization.providedBy(item):
+            if (item.__class__.__name__ != 'OnlineOrganization'):
+               for organization in (
+                       parentsWhichImplement(item,ILocationContainer)):
+                   organization.mapPoints[item.name] = item
+                   
     def catalogContent(self,item,ancestorNames):
         proxy = Proxy(item,ancestorNames)
-        
         self.contentCatalog.index_doc(int(item.importTime),proxy)
 
     def unCatalogContent(self,item):
@@ -313,10 +317,16 @@ class Branch(SimpleBranch):
                         
         elif item.__class__.__name__=='Politician':
             if (hasattr(item, 'candidateInfo') or
-                    hasattr(item, 'electedOfficial') or                    
-                    hasattr(item, 'partyOfficer')):
-                    del self.politicians[item.__name__]
-
+                    hasattr(item, 'electedOfficial')):
+               for organization in (
+                       parentsWhichImplement(item,ILocationContainer)):
+                   del organization.mapPoints[item.name]
+                   
+        elif IOrganization.providedBy(item):
+            if (item.__class__.__name__ != 'OnlineOrganization'):
+               for organization in (
+                       parentsWhichImplement(item,ILocationContainer)):
+                   del organization.mapPoints[item.name]                                      
     def checkName(self, name, object):
         """See zope.container.interfaces.INameChooser
         """
