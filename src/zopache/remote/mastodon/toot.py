@@ -132,7 +132,7 @@ class TootForm (EditForm,BaseBot):
         self.tootURL =  getattr(self.context,'tootURL','')
         self.tempTootURL =  getattr(self,'tootURL','')
         
-        image = self.gettootImage()
+        image = self.getTootImage()
         if image:
           self.imageURL = getattr(image, 'mastodonURL','')
  
