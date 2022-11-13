@@ -20,9 +20,10 @@ from zopache.pages.location import MapBase
 from zopache.json.jsonproperties import (OnlineOrganizationProperties,
                                           LocalOrganizationProperties)
 from zopache.crud.getimage import getImage
-from zopache.business.redundant import RedundantNotifications
+from zopache.business.redundantsocial import RedundantSocial
 
-class Base(Page, RedundantNotifications):    
+
+class Base(Page, RedundantSocial):    
     hidden = False
     eventsPageURL = ""
     hasScheduledEvents = False  
@@ -50,8 +51,6 @@ class OnlineOrganization  (OnlineOrganizationProperties,Base,
     clientClass = "Category"
     webApproved = True
     
-    def getCompaniesRecursively(self,result,showChildren = False):
-        return [self]
     
 from zopache.business.region import RegionBase
 @implementer (IOrganization)
@@ -59,7 +58,8 @@ class Organization  (
                      LocalOrganizationProperties,
                      GeoBase,
                      HasMembers,
-                     LocationLeaf):
+                     LocationLeaf,
+                     RedundantSocial):
     
     interface = IOrganization
     webClass = "Organization"
@@ -89,7 +89,8 @@ class MapOrganization(ImaginaryPage,
                       MapBase,
                       HasMembers,
                       Page,
-                      RegionBase):
+                      RegionBase,
+                      RedundantSocial):
 
     interface = IMapOrganization
     webClass = 'SmallParty'
@@ -138,8 +139,5 @@ class EndorsingOrganization(MapBase,Organization):
             if not item in siteRoot:
                 continue
             yield siteRoot[item]
-    
-    def getCompanies(self):
-        return self.endorsedPoliticians
     
 

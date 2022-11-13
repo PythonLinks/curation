@@ -108,7 +108,8 @@ class OnlineOrganizationProperties(SocialProperties):
 
     @property
     def focus(self):
-        return self.getOrganization("focus")
+        return (self.getOrganization("focus") or
+                self.getIntroduction("focus"))
 
     @property
     def joinURL(self):

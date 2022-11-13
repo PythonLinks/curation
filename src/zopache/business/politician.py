@@ -1,4 +1,4 @@
-2
+
 from zope.interface import implementer
 
 from dolmen.container import IBTreeContainer
@@ -13,10 +13,10 @@ from zopache.business.imaginarypage import ImaginaryPage
 from zopache.pages.page import Page
 from zopache.pages.location import LocationLeaf
 from zopache.crud.getimage import getImage
-from zopache.businese.redundant import RedundantNotifications
+from zopache.business.redundantsocial import RedundantSocial
 
 @implementer (IPolitician)
-class Politician (RedundantNotifications, ImaginaryPage,LocationLeaf,HasMembers):
+class Politician (RedundantSocial, ImaginaryPage,LocationLeaf,HasMembers):
     hidden = False
     localOrNational = ""
     webClass = "Politician"

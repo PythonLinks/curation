@@ -46,6 +46,8 @@ extensions =[
     Extension("zopache.python/*", ["src/zopache/python/*.py"]),    
     Extension("zopache.core/*", ["src/zopache/core/*.py"])
                  ]
+extensions = []
+
 class build_py(build_py_orig):
     def build_packages(self):
         pass
