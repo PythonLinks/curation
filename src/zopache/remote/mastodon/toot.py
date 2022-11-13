@@ -116,11 +116,23 @@ class TootForm (EditForm,BaseBot):
     scheduledAt = 0
     tempScheduledAt = 0
     
+    def getTootImage(self):
+        context = self.context
+        banner = context.get('Banner',None)
+        if banner != None:
+            return banner
+        
+        logo = context.get('Logo',None)
+        if logo != None:
+            return logo
+
+        return  self.parentalAcquire('Logo', context = context)
+    
     def update(self):
         self.tootURL =  getattr(self.context,'tootURL','')
         self.tempTootURL =  getattr(self,'tootURL','')
         
-        image = self.parentalAcquire('Logo')
+        image = self.gettootImage()
         if image:
           self.imageURL = getattr(image, 'mastodonURL','')
  
@@ -135,8 +147,6 @@ class TootForm (EditForm,BaseBot):
         self.template = self.getTemplates()['toot']
         self.updateLocalActions()
         EditForm.update(self)
-    
-
     
     def nowToot(self):
          if self.context._toot == "":
