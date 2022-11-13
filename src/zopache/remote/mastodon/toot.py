@@ -67,7 +67,7 @@ class Delete(Action):
     """
     def deleteImage(self):
         
-        image = self.parentalAcquire('Logo')
+        image = self.getDefaultImage()
         mediaId = getattr(image,'mediaId',None)        
         if mediaId == None:
             form.submissionError += "No Image to Delete"
@@ -116,7 +116,7 @@ class TootForm (EditForm,BaseBot):
     scheduledAt = 0
     tempScheduledAt = 0
     
-    def getTootImage(self):
+    def getDefaultImage(self):
         context = self.context
         banner = context.get('Banner',None)
         if banner != None:
@@ -132,7 +132,7 @@ class TootForm (EditForm,BaseBot):
         self.tootURL =  getattr(self.context,'tootURL','')
         self.tempTootURL =  getattr(self,'tootURL','')
         
-        image = self.getTootImage()
+        image = self.getDefaultImage()
         if image:
           self.imageURL = getattr(image, 'mastodonURL','')
  
@@ -251,7 +251,7 @@ class TootForm (EditForm,BaseBot):
     
     
     def mediaIdAsList(self):
-        image = self.parentalAcquire('Logo')
+        image = self.getDefaultImage()
         mediaId = getattr(image,'mediaId',None)
         if mediaId != None:
            return [mediaId]

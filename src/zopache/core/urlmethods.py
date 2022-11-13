@@ -75,6 +75,16 @@ class URLMethods(object):
         result += context.__name__
         return result
 
+    def secureImageURL(self):
+        image = self.getDefaultImage()           
+        result = 'https://'
+        result += self.getDomain()
+        result += '/'
+        result += image.parent.name
+        result += '/'
+        result += image.__name__
+        return result    
+
     def getSecureLongURL(self,context = None):
         if context == None:
            context = self.context
