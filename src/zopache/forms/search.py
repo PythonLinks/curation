@@ -56,11 +56,34 @@ def searchADictionary(view, aDict, defaultCategory = None):
             limit = 1000,
             sort_index='importTime'
             )
-    return numdocs, docIds
+    if searchTerm:
+       return numdocs, [], docIds
+   
+    category = root[category]
+    try:
+        content = category.json[type]
+    except:
+        return numdocs, [], docIds
+   
+    if len(content) == 0:
+       return numdocs, [], docIds            
 
-def valuesPlusRemainder(view,docIds):
+    featuredTimes= set()
+    for row  in content:
+           name = row['name']
+           item = root[name]
+           time = item.importTime
+           featuredTimes.add (time)
+    notFeaturedIds = []
+    for time in docIds:
+        if time not in featuredTimes:
+           notFeaturedIds.append(time)
+    return numdocs, list(featuredTimes),  notFeaturedIds
+        
+def valuesPlusRemainder(view,docIds, count = 6):
     index = view.getSiteRoot().contentByTime
-    values = [index[x] for x in take(6,docIds)]
+    values = [index[x] for x in take(count,docIds)]
+    
     #NOTE DOCIDS IS NOW 6 SMALLER   
     return values, docIds
 

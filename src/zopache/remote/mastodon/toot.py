@@ -1,3 +1,4 @@
+from time import time
 from datetime import datetime, timedelta
 
 
@@ -174,16 +175,18 @@ class TootForm (EditForm,BaseBot):
                 target = self.context
             else:
                 target = self
+            tootTime = time()
             #Only need to do this if
             #There is a future message
-            if delay >= minDelay:
+            if delay >0:
+                tootTime += (delay * 3600)
                 at= tootDict["scheduled_at"]
                 if at:
                    self.sendMessage("Your Toot will show up at: " +
                                  str(at))
                 self.sendMessage("local Server Time: " +
                                  str(datetime.now()))                
-
+            
             if tootDict.get('url',False):
                 target.tootURL = tootDict.url
                    
@@ -192,6 +195,8 @@ class TootForm (EditForm,BaseBot):
 
             if tootDict.get('schedule_at',False):
                 target.scheduledAt = tootDict['scheduledAt']
+                
+            target.lastTootTime = tootTime
                 
             #Otherwise the delete action does not show up. 
             self.updateLocalActions()

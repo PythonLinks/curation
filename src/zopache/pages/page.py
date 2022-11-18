@@ -386,7 +386,7 @@ class PageBase(PageVeryBase,PageMixIn,Ancestors):
     description = ''
     source = ''
     
-    def defaultToot(self):
+    def defaultToot(self,view):
         return( self.title +
                 "\n\n" + 
                 self.description +
