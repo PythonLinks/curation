@@ -1,0 +1,4 @@
+         
+	  <div tal:replace="structure content" />
+	  </div>
+    
