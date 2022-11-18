@@ -1,0 +1,11 @@
+
+I am quite ready to release an RSS exchange.  Just deciding on some final details.  How does that differfrom an RSS aggregator?  There are a ton of RSS aggregators. Enter some RSS Feeds, and they will aggregate them and display them. RSS aggregators supported syndicaton. Historically syndication meant that one site published the articles, and other sites would syndicate them.  The syndicators would aggregate articles and republish them.  The problem with that approach is that adding an RSS aggregator and syndicating content, does not bring any new traffic to anyone's web site.  Worse yet, one could loose traffic to the other sites.
+
+The RSS exchange changes the meaning of the word syndication.  All of the syndicate members now republish each others blog postings.  They can do that with their favorite RSS aggregator.  Of course managing the list of feeds for all syndicate members is a bit tricky. There is a need to maintain a central list.  We will call that the News Syndicate.
+
+So in this case the News Syndicate pulls in all of the RSS feeds, and republishes them.  The local members only have to sign up to 1 feed, from the News Syndicate.  As the News Syndicate grows, the syndicate members automatically get the content from the new members.
+
+I do not think any software does this. First of all I assume that RSS aggregators do not republish the aggregate RSS.  And even if they did, they would send users to the aggregation site, they need to send users to the original content sites.
+
+What about Freeloaders?  Everyone wants traffic, no one wants to give it.  So Google ends up in control. But in this case a community of interest will be reading each other's blog postings, and keeping an eye out that the other syndicate members are not freeloading.  Many eyes keep people honest.
+
