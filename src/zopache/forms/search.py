@@ -81,6 +81,7 @@ def searchADictionary(view, aDict, defaultCategory = None):
            name = row['name'].strip()
            if not name in root:
               continue 
+
            item = root[name]
            featuredItems.append(item)
            time = item.importTime
