@@ -41,17 +41,22 @@ class VideoBase(Voteable):
          self._toot = content
          return content
      
-    def defaultToot(self,view):
-        return   (
-                self.title +
-                "\n\n" +
-                self.description +
-                "\n\n" +
-                view.secureShortURL() +
-               "\n\n" +
-                self.tagsAsString() + ' ' +
-                self.parentalTags()                 
-                )
+    def getToot(self, view = None):
+        if self._toot:
+           return self._toot
+        else:
+            return self.defaultToot(view = view)
+              
+    def defaultToot(self,view = None):
+        result =  self.title +"\n\n" 
+        result += self.description + "\n\n"
+        if view:         
+           result +=  view.secureShortURL() + "\n\n" 
+        result +=  (
+                self.parentalTags() +
+               " #video #videos "
+                   )
+        return result
     
     def isVideo(self):
         return True
