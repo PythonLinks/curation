@@ -76,18 +76,23 @@ def searchADictionary(view, aDict, defaultCategory = None):
        return numdocs, [], docIds            
 
     featuredTimes= set()
+    featuredItems = []
     for row  in content:
            name = row['name'].strip()
            if not name in root:
               continue 
            item = root[name]
+           featuredItems.append(item)
            time = item.importTime
            featuredTimes.add (time)
     notFeaturedIds = []
     for time in docIds:
         if time not in featuredTimes:
            notFeaturedIds.append(time)
-    return numdocs, featuredItems,  notFeaturedIds
+           
+    #returning list(featuredTimes) incorrectly sorts them by importTime.
+    featuredTimes =  [item.importTime for item in featuredItems]           
+    return numdocs, featuredTimes,  notFeaturedIds
         
 def valuesPlusRemainder(view,docIds, count = 6):
     index = view.getSiteRoot().contentByTime
