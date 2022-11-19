@@ -19,6 +19,7 @@ class VideoBase(Voteable):
     _toot = ''
     importTime = 0
     lastTootTime = 0
+    publicationApproved = True
     
     def lastTooted(self):
         if self.lastTootTime == 0:

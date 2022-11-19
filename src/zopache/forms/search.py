@@ -22,7 +22,7 @@ def searchADictionary(view, aDict, defaultCategory = None):
     elif recommended == 'other':
         recommended = False
         
-        
+    originalType = type    
     #NOW FOR THE TYPE 
     if type == "video":
        type = True
@@ -60,8 +60,15 @@ def searchADictionary(view, aDict, defaultCategory = None):
        return numdocs, [], docIds
    
     category = root[category]
+
+    #Fixing a naming difference
+    if originalType == 'article':
+       originalType = 'articles'
+    if originalType == 'video':
+       originalType = 'videos'
+       
     try:
-        content = category.json[type]
+        content = category.json[originalType]
     except:
         return numdocs, [], docIds
    
@@ -70,7 +77,7 @@ def searchADictionary(view, aDict, defaultCategory = None):
 
     featuredTimes= set()
     for row  in content:
-           name = row['name']
+           name = row['name'].strip()
            item = root[name]
            time = item.importTime
            featuredTimes.add (time)
