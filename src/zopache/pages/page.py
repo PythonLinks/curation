@@ -464,7 +464,7 @@ class Link(PageBase, PageMixIn):
     bestApproved = False
     publicationApproved = True
     
-    def defaultToot(self):                
+    def defaultToot(self, view = None):                
         return( self.title +
                 "\n\n" + 
                 self.description +

@@ -119,14 +119,17 @@ class TootForm (EditForm,BaseBot):
     
     def getDefaultImage(self):
         context = self.context
-        banner = context.get('Banner',None)
-        if banner != None:
-            return banner
         
-        logo = context.get('Logo',None)
-        if logo != None:
-            return logo
+        if 'Banner' in context:
+            return context['Banner']
+        
+        if 'Logo' in context:
+            return context['Logo']        
 
+        if (hasattr(context,'rssFeed') and
+          'Logo' in context.rssFeed):
+            return context.rssFeed['Logo']           
+     
         return  self.parentalAcquire('Logo', context = context)
     
     def update(self):
