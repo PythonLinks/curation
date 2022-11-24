@@ -66,7 +66,6 @@ def searchADictionary(view, aDict, defaultCategory = None):
        originalType = 'articles'
     if originalType == 'video':
        originalType = 'videos'
-       
     try:
         content = category.json[originalType]
     except:
