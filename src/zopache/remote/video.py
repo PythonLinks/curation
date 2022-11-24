@@ -23,7 +23,7 @@ class VideoBase(Voteable):
     
     def lastTooted(self):
         if self.lastTootTime == 0:
-           lastTooted = "First Toot of this video. "
+           lastTooted = "My first toot of this video. "
         else:
             lastTooted = view.ago(self.lastTootTime)
         return lastTooted
