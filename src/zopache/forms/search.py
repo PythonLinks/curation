@@ -97,7 +97,7 @@ def searchADictionary(view, aDict, defaultCategory = None):
         
 def valuesPlusRemainder(view,docIds, count = 6):
     index = view.getSiteRoot().contentByTime
-    values = [index[x] for x in take(count,docIds)]
+    values = [index[int(x)] for x in take(count,docIds)]
     
     #NOTE DOCIDS IS NOW 6 SMALLER   
     return values, docIds
