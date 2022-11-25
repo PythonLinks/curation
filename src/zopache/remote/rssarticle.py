@@ -26,6 +26,7 @@ class RSSArticle(Page):
     description = ""
     emailApproved = True
     publicationApproved = False
+    lastTootTime = 0
     bestApproved = False
     tags = {}
     _toot = ""    

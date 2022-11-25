@@ -21,9 +21,11 @@ class VideoBase(Voteable):
     lastTootTime = 0
     publicationApproved = True
     
-    def lastTooted(self):
+    def lastTooted(self, view = None):
         if self.lastTootTime == 0:
            lastTooted = "My first toot of this video. "
+        elif view == None:
+           lastTooted = "My first toot of this video. "           
         else:
             lastTooted = view.ago(self.lastTootTime)
         return lastTooted
@@ -52,7 +54,7 @@ class VideoBase(Voteable):
         result += self.description + "\n\n"
         if view:         
            result +=  view.secureShortURL() + "\n\n" 
-        result += self.lastTooted() + "\n\n" 
+        result += self.lastTooted(view = view) + "\n\n" 
         result +=  (
                 self.parentalTags() +
                " #video #videos "
