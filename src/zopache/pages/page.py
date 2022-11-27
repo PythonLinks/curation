@@ -463,6 +463,7 @@ class Link(PageBase, PageMixIn):
     isArticle = True
     bestApproved = False
     publicationApproved = True
+    lastTootTime = 0
     
     def defaultToot(self, view = None):                
         return( self.title +
