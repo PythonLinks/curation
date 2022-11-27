@@ -91,6 +91,13 @@ class IClass(Interface):
         required = False,
         default = '',
     )
+
+    spoilerText = Text(
+        title = 'SpoilerText',
+        description = 'If empty, not displayed',
+        required = False,
+        default = '',
+    )    
     
     delay= Float(
         title = 'Delay',
@@ -130,8 +137,13 @@ class TootForm (EditForm,BaseBot):
           'Logo' in context.rssFeed):
             return context.rssFeed['Logo']           
      
-        return  self.parentalAcquire('Logo', context = context)
-    
+        image =  self.parentalAcquire('Logo', context = context)
+        if image:
+            return image
+        
+        raise Exception("This toot  needs an image!")
+
+        
     def update(self):
         self.tootURL =  getattr(self.context,'tootURL','')
         self.tempTootURL =  getattr(self,'tootURL','')
@@ -160,16 +172,21 @@ class TootForm (EditForm,BaseBot):
             return ''
         
          mediaList = self.mediaIdAsList()
-         minDelay = 0.1 #(hours)
+         spoilerText = self.context.spoilerText
+         if spoilerText == "":
+            del self.context.spoilerText
+            spoilerText = None
+           
+         minDelay = 0.03 #(hours)
+         delay = self.context.delay
+         if delay < minDelay:
+             delay = self.delay = 0
+             scheduledAt = None
+         else:    
+             scheduledAt = datetime.now() + timedelta( hours=delay + 1 )         
          try:
-            delay = self.context.delay
-            if delay < minDelay:
-                delay = self.delay = 0
-                scheduledAt = None
-            else:    
-                scheduledAt = datetime.now() + timedelta( hours=delay + 1 )
-     
             tootDict = self.proxyForUser().status_post(self.context.toot,
+                                            spoiler_text = spoilerText,
                                             media_ids=mediaList,
                                             scheduled_at = scheduledAt
         )
@@ -178,6 +195,7 @@ class TootForm (EditForm,BaseBot):
                 target = self.context
             else:
                 target = self
+                
             tootTime = time()
             #Only need to do this if
             #There is a future message
