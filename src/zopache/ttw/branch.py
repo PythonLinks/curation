@@ -190,11 +190,15 @@ class Branch(SimpleBranch):
             if itemType.providedBy(item):
                 self.indexItem(item,
                                itemType = itemType,
-                               ancestorNames = ancestorNames)           
+                               ancestorNames = ancestorNames,
+                               indexingBranch = True)           
                 if IBTreeContainer.providedBy(item):    
                    self.indexBranch(tree,item,ancestorNames = ancestorNames )
 
-    def indexItem(self,item, itemType=ICanonical,ancestorNames = []):
+    def indexItem(self,item,
+                  itemType=ICanonical,
+                  ancestorNames = [],
+                  indexingBranch = False):
         if not IPageBase.providedBy(item):
             return
 
@@ -217,7 +221,8 @@ class Branch(SimpleBranch):
                ancestorNames = item.parent.ancestorNames 
 
         if ILocationContainer.providedBy(item):
-           item.mapPoints =  OOBTree()
+           if indexingBranch:
+               item.mapPoints =  OOBTree()
            
         if item.__class__.__name__  == "Category":
            item.reInit()

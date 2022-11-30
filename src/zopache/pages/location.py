@@ -1,9 +1,11 @@
 import json
 
 from zope.interface import implementer
+from BTrees.OOBTree import OOBTree
+
 from zopache.pages.geo import geoCache
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn
-from zopache.pages.page import PageBase
+from zopache.pages.page import PageBase, Page
 from zopache.pages.interfaces  import (IPage,
                                        IPin,
                                        ILocationContainer,
@@ -94,15 +96,19 @@ class MapBase(LocationContainer):
     def getLocationsJSON(self):
         result = []
         for item in self.mapPoints.values():
-            result.append(item.getOneMarker())
+            if item.webApproved:
+               result.append(item.getOneMarker())
         return json.dumps (result, indent = 2) 
 
 #So the old maps had a center
 #Which was also their Marker
 @implementer (ISimpleMap)
-class SimpleMap(MapBase):        
+class SimpleMap(Page,MapBase):        
     webClass = "SimpleMap"
-
+    def __init__(self):
+       Page.__init__(self) 
+       self.mapPoints =  OOBTree()
+    
 @implementer(IPin)
 class Pin(LocationContainer):
     showChildren = False

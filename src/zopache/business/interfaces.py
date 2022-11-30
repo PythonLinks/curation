@@ -30,7 +30,7 @@ class ICity (ILocationContainer):
     )
     
 
-class IRegion(ILocationContainer):
+class IRegion(IPage,ILocationContainer):
     pass
 
     
@@ -276,8 +276,10 @@ class IOrganizationBase(IBTreeContainer,ICanonical):
 class IOnlineOrganization(IPageBase,IClass,IOrganizationBase,IFollow):
      pass          
 
-class IOrganization(IOrganizationBase, IClass,
-                ILocationContainer,IPageBase,IFollow        
+class IOrganization(IOrganizationBase,
+                    IClass,
+                    IPageBase,
+                    IFollow        
                     ):
      pass
 

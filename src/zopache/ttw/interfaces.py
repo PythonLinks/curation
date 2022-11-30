@@ -264,7 +264,7 @@ class IJSONBase(Interface):
 class ICanonicalJSON( IJSONBase,IJSONBase):
     pass
 
-class IJSON(IJSONBase):
+class IJSON(IJSONBase,ISourceLeaf):
     """Basic JSON CRUD """
 
     title = schema.TextLine(

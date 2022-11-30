@@ -46,7 +46,12 @@ class URLMethods(object):
            return "/" + item.__name__
        
         if not hasattr(item, '__parent__'):
-               return 'BROKEN-NO-PARENT'
+            if item == None:
+               return "BROKEN-ITEM-IS-NONE"
+            msg =  'BROKEN-NO-PARENT-'
+            msg += getattr(item,'__name__','')
+            msg +=  '-' + item.__class__.__name__
+            return msg
         else:
            container = item.__parent__
            basePath= self.longPathFor(container)

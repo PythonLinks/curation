@@ -41,6 +41,14 @@ class IMapOrganizationBase (Interface):
         default = '',
     )
 
+    address= schema.Text(
+        title = u'Address',
+        description = "Do you have an office location? (Optional) ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+    
     focus = schema.Choice(
         source = possibleFocus,
         title="Specialization",
