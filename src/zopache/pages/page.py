@@ -92,12 +92,11 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def noDashName(self):
         return self.name.replace('-','')
     
-    def getToot(self):
+    def getToot(self, view = None):
         if self._toot != "":
             return self._toot
-        
         else:
-            return self.defaultToot()
+            return self.defaultToot(view = view)
 
     def setToot(self,value):
         self._toot = value
@@ -386,7 +385,7 @@ class PageBase(PageVeryBase,PageMixIn,Ancestors):
     description = ''
     source = ''
     
-    def defaultToot(self):
+    def defaultToot(self,view=None):
         return( self.title +
                 "\n\n" + 
                 self.description +
@@ -464,9 +463,13 @@ class Link(PageBase, PageMixIn):
     isArticle = True
     bestApproved = False
     publicationApproved = True
+    lastTootTime = 0
     
-    def defaultToot(self):                
-        return ( Page.defaultToot(self) +
+    def defaultToot(self, view = None):                
+        return( self.title +
+                "\n\n" + 
+                self.description +
+                "\n\n" +
                 self.remoteURL +
                "\n\n" +
                "Via https://UncensoredNews.US/" + self.parent.name + 

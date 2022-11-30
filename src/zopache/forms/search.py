@@ -22,7 +22,7 @@ def searchADictionary(view, aDict, defaultCategory = None):
     elif recommended == 'other':
         recommended = False
         
-        
+    originalType = type    
     #NOW FOR THE TYPE 
     if type == "video":
        type = True
@@ -53,13 +53,51 @@ def searchADictionary(view, aDict, defaultCategory = None):
 
     numdocs, docIds = q.query(
             myQuery,
+            limit = 1000,
             sort_index='importTime'
             )
-    return numdocs, docIds
+    if searchTerm:
+       return numdocs, [], docIds
+   
+    category = root[category]
 
-def valuesPlusRemainder(view,docIds):
+    #Fixing a naming difference
+    if originalType == 'article':
+       originalType = 'articles'
+    if originalType == 'video':
+       originalType = 'videos'
+    try:
+        content = category.json[originalType]
+    except:
+        return numdocs, [], docIds
+   
+    if len(content) == 0:
+       return numdocs, [], docIds            
+
+    featuredTimes= set()
+    featuredItems = []
+    for row  in content:
+           name = row['name'].strip()
+           if not name in root:
+              continue 
+
+           item = root[name]
+           featuredItems.append(item)
+           time = item.importTime
+           featuredTimes.add (time)
+    notFeaturedIds = []
+    for time in docIds:
+        if time not in featuredTimes:
+           notFeaturedIds.append(time)
+           
+    #returning list(featuredTimes) incorrectly sorts them by importTime.
+    featuredTimes =  [item.importTime for item in featuredItems]           
+    return numdocs, featuredTimes,  notFeaturedIds
+        
+def valuesPlusRemainder(view,docIds, count = 6):
     index = view.getSiteRoot().contentByTime
-    values = [index[x] for x in take(6,docIds)]
+    values = [index[int(x)] for x in take(count,docIds)]
+    
     #NOTE DOCIDS IS NOW 6 SMALLER   
     return values, docIds
 

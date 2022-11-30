@@ -18,7 +18,49 @@ class VideoBase(Voteable):
     tags = ''
     _toot = ''
     importTime = 0
+    lastTootTime = 0
+    publicationApproved = True
+    
+    def lastTooted(self, view = None):
+        if self.lastTootTime == 0:
+           lastTooted = "My first toot of this video. "
+        elif view == None:
+           lastTooted = "My first toot of this video. "           
+        else:
+            lastTooted = view.ago(self.lastTootTime)
+        return lastTooted
 
+    def timeFreeToot(self):
+         content = self._toot
+         content = content.splitlines()
+         
+         for i, line in enumerate(content):
+               if "Last tooted" in line:
+                     content[i] = "" 
+         
+         separator = '\n'
+         content = separator.join(content)        
+         self._toot = content
+         return content
+     
+    def getToot(self, view = None):
+        if self._toot:
+           return self._toot
+        else:
+            return self.defaultToot(view = view)
+              
+    def defaultToot(self,view = None):
+        result =  self.title +"\n\n" 
+        result += self.description + "\n\n"
+        if view:         
+           result +=  view.secureShortURL() + "\n\n" 
+        result += self.lastTooted(view = view) + "\n\n" 
+        result +=  (
+                self.parentalTags() +
+               " #video #videos "
+                   )
+        return result
+    
     def isVideo(self):
         return True
     

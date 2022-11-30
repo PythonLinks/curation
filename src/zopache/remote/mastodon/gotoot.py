@@ -1,3 +1,4 @@
+from time import time
 from datetime import datetime, timedelta
 
 
@@ -67,7 +68,7 @@ class Delete(Action):
     """
     def deleteImage(self):
         
-        image = self.parentalAcquire('Logo')
+        image = self.getDefaultImage()
         mediaId = getattr(image,'mediaId',None)        
         if mediaId == None:
             form.submissionError += "No Image to Delete"
@@ -90,6 +91,13 @@ class IClass(Interface):
         required = False,
         default = '',
     )
+
+    spoilerText = Text(
+        title = 'SpoilerText',
+        description = 'If empty, not displayed',
+        required = False,
+        default = '',
+    )    
     
     delay= Float(
         title = 'Delay',
@@ -116,11 +124,31 @@ class TootForm (EditForm,BaseBot):
     scheduledAt = 0
     tempScheduledAt = 0
     
+    def getDefaultImage(self):
+        context = self.context
+        
+        if 'Banner' in context:
+            return context['Banner']
+        
+        if 'Logo' in context:
+            return context['Logo']        
+
+        if (hasattr(context,'rssFeed') and
+          'Logo' in context.rssFeed):
+            return context.rssFeed['Logo']           
+     
+        image =  self.parentalAcquire('Logo', context = context)
+        if image:
+            return image
+        
+        raise Exception("This toot  needs an image!")
+
+        
     def update(self):
         self.tootURL =  getattr(self.context,'tootURL','')
         self.tempTootURL =  getattr(self,'tootURL','')
         
-        image = self.parentalAcquire('Logo')
+        image = self.getDefaultImage()
         if image:
           self.imageURL = getattr(image, 'mastodonURL','')
  
@@ -136,8 +164,6 @@ class TootForm (EditForm,BaseBot):
         self.updateLocalActions()
         EditForm.update(self)
     
-
-    
     def nowToot(self):
          if self.context._toot == "":
             self.submissionError = """You submitted an empty toot, so nothing 
@@ -146,16 +172,21 @@ class TootForm (EditForm,BaseBot):
             return ''
         
          mediaList = self.mediaIdAsList()
-         minDelay = 0.1 #(hours)
+         spoilerText = self.context.spoilerText
+         if spoilerText == "":
+            del self.context.spoilerText
+            spoilerText = None
+           
+         minDelay = 0.03 #(hours)
+         delay = self.context.delay
+         if delay < minDelay:
+             delay = self.delay = 0
+             scheduledAt = None
+         else:    
+             scheduledAt = datetime.now() + timedelta( hours=delay + 1 )         
          try:
-            delay = self.context.delay
-            if delay < minDelay:
-                delay = self.delay = 0
-                scheduledAt = None
-            else:    
-                scheduledAt = datetime.now() + timedelta( hours=delay + 1 )
-     
             tootDict = self.proxyForUser().status_post(self.context.toot,
+                                            spoiler_text = spoilerText,
                                             media_ids=mediaList,
                                             scheduled_at = scheduledAt
         )
@@ -164,16 +195,19 @@ class TootForm (EditForm,BaseBot):
                 target = self.context
             else:
                 target = self
+                
+            tootTime = time()
             #Only need to do this if
             #There is a future message
-            if delay >= minDelay:
+            if delay >0:
+                tootTime += (delay * 3600)
                 at= tootDict["scheduled_at"]
                 if at:
                    self.sendMessage("Your Toot will show up at: " +
                                  str(at))
                 self.sendMessage("local Server Time: " +
                                  str(datetime.now()))                
-
+            
             if tootDict.get('url',False):
                 target.tootURL = tootDict.url
                    
@@ -182,6 +216,8 @@ class TootForm (EditForm,BaseBot):
 
             if tootDict.get('schedule_at',False):
                 target.scheduledAt = tootDict['scheduledAt']
+                
+            target.lastTootTime = tootTime
                 
             #Otherwise the delete action does not show up. 
             self.updateLocalActions()
@@ -241,7 +277,7 @@ class TootForm (EditForm,BaseBot):
     
     
     def mediaIdAsList(self):
-        image = self.parentalAcquire('Logo')
+        image = self.getDefaultImage()
         mediaId = getattr(image,'mediaId',None)
         if mediaId != None:
            return [mediaId]

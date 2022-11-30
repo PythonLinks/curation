@@ -26,6 +26,7 @@ class RSSArticle(Page):
     description = ""
     emailApproved = True
     publicationApproved = False
+    lastTootTime = 0
     bestApproved = False
     tags = {}
     _toot = ""    
@@ -50,7 +51,7 @@ class RSSArticle(Page):
     def creationDateForHumans(self):
          return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
      
-    def defaultToot(self):        
+    def defaultToot(self,view):        
             twitterId = self.rssFeed.twitterId
             return   (
                 self.title +
