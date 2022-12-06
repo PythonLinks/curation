@@ -282,7 +282,9 @@ class IOrganization(IOrganizationBase,
                     IFollow        
                     ):
      pass
-
+ 
+class IRegionalOrganization(IOrganization,ILocationContainer):
+    pass
 
 class IMeetup (IPage,IFollow):
     title = schema.TextLine(
