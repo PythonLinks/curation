@@ -22,7 +22,7 @@ class EditOrganization (EditJson):
 @view_component
 @name('addOrganization')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class AddOrganization(AddJson):
     title = "Add an Organization"
     subTitle = ""
