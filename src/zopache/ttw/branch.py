@@ -199,6 +199,7 @@ class Branch(SimpleBranch):
                   itemType=ICanonical,
                   ancestorNames = [],
                   indexingBranch = False):
+
         if not IPageBase.providedBy(item):
             return
 

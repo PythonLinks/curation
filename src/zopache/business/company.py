@@ -86,7 +86,6 @@ class Organization  (
 from zopache.business.imaporganization import IMapOrganization, IEndorsingOrganization
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
-                      MapBase,
                       HasMembers,
                       Page,
                       RegionBase,
