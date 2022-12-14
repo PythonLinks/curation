@@ -10,12 +10,9 @@ from zopache.remote.mastodon.interfaces import IServer
 @name("moauth")
 class MastodonOauth(Form,BaseBot):
     title = "Authenticate with Mastodon.Social"
-    subTitle = "You should never see this. "
+    subTitle = """Should you see this, it means their server is overloaded,
+    plese try logging in again.. """
     #actions = Actions()
            
     def update(self):
-        url = self.oauthProxy().auth_request_url(
-            redirect_uris= self.redirectURL(),
-            scopes=self.SCOPES,
-            force_login=False)
-        raise HTTPFound(url)
+        self.oauth()

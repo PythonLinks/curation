@@ -13,6 +13,8 @@ async def fetch(session,node,view):
    duration =  0
    if IRSSBase.providedBy(node):
       url = node.rssURL
+   elif node.__class__.__name__ == "AToot":
+      url = node.remoteURL
    elif IRSSArticle.providedBy(node):
       url = node.getImageURL()
       if url == "":
@@ -63,9 +65,10 @@ async def fetchCore(nodes,view):
     timeout = aiohttp.ClientTimeout(total=allowedTime)
     user_agent = {'User-agent': 'Mozilla/5.0'}
     async with aiohttp.ClientSession(timeout = timeout,
-                       headers = user_agent                                                                ) as session:    
+                       headers = user_agent
+                     ) as session:    
       for node in nodes:
-         if view.className(node) not in ['RSS','RSSArticle']:
+         if view.className(node) not in ['RSS','RSSArticle','AToot']:
             continue
          if IRSSArticle.providedBy(node):
               if  'Logo' in node:

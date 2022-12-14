@@ -18,70 +18,22 @@ from zopache.remote.irss import IRSS, IJustRSS
 from zopache.remote.rssdownload import fetchAll
 from zopache.crud.getimage import getImage
 
-@implementer (IRSS)     
-class RSS(Link,UniqueName):
-    webClass = "RSS"
-    htmlSummary = True
-    title = ""
-    twitterId = ''
-    msatodonId = ''
-    rssApproved = True
-    keepAllArticles = False
-    
-    def __init__(self):
-         self.localArticles = OOBTree()
-         Link.__init__(self)
-
-    def removeOldArticles(self):
-           articles = []
-           if self.keepAllArticles:
-               return
-           for value in self.values():
-               if value.__class__.__name__ == "RSSArticle":               
-                   articles.append(value)
-
-           for article in articles[0:-4]:    
-               article.preDeleteProcess(self)
-               del article.parent [article.name]
-               
-    """
-    REMOVES ARTICLES LISTED IN localArticles, but which has no parent. 
-    should be an empty set.
-
-    Has not yet been tested, so commented out. 
-    def clearOrphans(self):           
-           orphans = []    
-           for articlein self.localArticles.values():
-               if article.parent == None:
-                   orphans.append(article.permalink)
-           for key in orphans:
-               print (key)
-               del context.localArticles [key]
-    """
-         
-    def parseHTML(self,html):
+class RSSBase(object):
+    def parseHTML(self,html,maxLength = 300):
         soup = BeautifulSoup(html, 'html.parser')
         try:
            text = soup.text
            length = len(text)
-           if length <= 300:
+           if length <= maxLength:
               return text
            else:
-              for i in range(300,length):
+              for i in range(maxLength,length):
                   if text[i]==' ':
                      result = text [0:i-1] +  '...'
                      return result
         except:
            return ""
-
-    async def createArticles(self,entries,view):
-       globalArticles= self.getPublicationRoot().globalArticles
-       for article in entries[:20]:
-           theId = article['id']
-           if not theId in globalArticles:
-              importTime = await view.getTime()
-              self.createOneArticle(article,view,importTime)
-              
+          
     # FOR A NEW RSS FEED       
     def createOneArticle(self,article,view,importTime):
        new = RSSArticle()
@@ -122,14 +74,13 @@ class RSS(Link,UniqueName):
        
        newName = slugify (new.title)
        newName = self.uniqueBothName (self,newName)
-       print ("CREATING", newName)
        self[newName] = new
 
        #LocalList
        self.localArticles[theId] = new
        new.__parent__ = self
        new.rssFeed = self          
-       new.postAddProcess(view )
+       new.postAddProcess(view = view ,article = article)
 
     def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)
@@ -144,6 +95,56 @@ class RSS(Link,UniqueName):
             if item[0] ==  FAILURE:  
                view.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
+        
+@implementer (IRSS)     
+class RSS(Link,UniqueName,RSSBase):
+    webClass = "RSS"
+    htmlSummary = True
+    title = ""
+    twitterId = ''
+    mastodonId = ''
+    rssApproved = True
+    keepAllArticles = False
+    
+    def __init__(self):
+         self.localArticles = OOBTree()
+         Link.__init__(self)
+
+    def removeOldArticles(self):
+           articles = []
+           if self.keepAllArticles:
+               return
+           for value in self.values():
+               if value.__class__.__name__ == "RSSArticle":               
+                   articles.append(value)
+
+           for article in articles[0:-4]:    
+               article.preDeleteProcess(self)
+               del article.parent [article.name]
+               
+    """
+    REMOVES ARTICLES LISTED IN localArticles, but which has no parent. 
+    should be an empty set.
+
+    Has not yet been tested, so commented out. 
+    def clearOrphans(self):           
+           orphans = []    
+           for articlein self.localArticles.values():
+               if article.parent == None:
+                   orphans.append(article.permalink)
+           for key in orphans:
+               print (key)
+               del context.localArticles [key]
+    """
+         
+
+    async def createArticles(self,entries,view):
+       globalArticles= self.getPublicationRoot().globalArticles
+       for article in entries[:20]:
+           theId = article['id']
+           if not theId in globalArticles:
+              importTime = await view.getTime()
+              RSS.createOneArticle(article,view,importTime)
         
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)

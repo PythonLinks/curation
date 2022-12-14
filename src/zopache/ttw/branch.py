@@ -1,11 +1,33 @@
+#FOR INDEXING THIS USES pylons/hypatia.
+#Not that well documented.  You may want to read
+#https://github.com/repoze/repoze.catalog/blob/master/docs/usage.rst
+
+import time
 import random
 import sys
 from zope import schema
 from zope import interface
+
 from hypatia.catalog import Catalog
 from hypatia.field import FieldIndex
 from hypatia.text import TextIndex
 from hypatia.keyword import KeywordIndex
+
+from hypatia.text.htmlsplitter import HTMLWordSplitter
+
+from hypatia.text.lexicon import (
+    CaseNormalizer,
+    Lexicon,
+    Splitter,
+    StopWordRemover,
+    )
+
+lexicon = Lexicon(
+                  HTMLWordSplitter(),
+                  Splitter(),
+                  CaseNormalizer(),
+                  StopWordRemover())
+
 from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
@@ -113,7 +135,9 @@ class Branch(SimpleBranch):
         contentCatalog['isVideo']=FieldIndex('isVideo')
         contentCatalog['recommended']=FieldIndex('recommended')
         contentCatalog['titlePlusDescription']=TextIndex(
-                                  'titlePlusDescription')
+                                  'titlePlusDescription',
+                                 lexicon = lexicon)
+
         contentCatalog['ancestorNames']=KeywordIndex('ancestorNames')
         self.contentCatalog = contentCatalog
         
@@ -121,7 +145,13 @@ class Branch(SimpleBranch):
         categoryCatalog['titlePlusDescription']=TextIndex(
                                'titlePlusDescription')
         self.categoryCatalog = categoryCatalog
-        
+
+    @property    
+    def nextImportTime(self):    
+        lastImportTime = - int  (self.contentByTime.minKey()) 
+        currentTime = int(time.time())
+        return max (currentTime,lastImportTime + 1)
+
     def __delitem__(self, key):
         item = self[key]
         self.unIndexItem(item)
