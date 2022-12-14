@@ -10,4 +10,4 @@ class RegionalOrganization(Organization,RegionBase):
     def __init__(self):
        self.mapPoints =  OOBTree()
        Organization.__init__(self)
-       Region.__init__(self)
+       RegionBase.__init__(self)
