@@ -165,12 +165,12 @@ class TootForm (EditForm,BaseBot):
         EditForm.update(self)
     
     def nowToot(self):
+
          if self.context._toot == "":
             self.submissionError = """You submitted an empty toot, so nothing 
                                was posted. <br><br> The toot was reset to 
                               the defult toot."""
             return ''
-        
          mediaList = self.mediaIdAsList()
          spoilerText = self.context.spoilerText
          if spoilerText == "":

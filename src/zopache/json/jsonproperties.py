@@ -36,6 +36,9 @@ class BasicProperties(object):
 
 #NOW THE SOCIAL MEDIA LINKS   
 class SocialProperties(BasicProperties):
+    def getTikTokId(self):
+        return self.getConnect("tiktokId")
+    
     def getTwitterId(self):
         return self.getConnect("twitterId")
 

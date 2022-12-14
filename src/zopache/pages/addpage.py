@@ -166,7 +166,7 @@ class AddPin(AddAuthorizedPage):
 
 
 @view_component
-@name('addSimpleMap')
+@name('addMap')
 @target(IView)
 @context(IPageBase)    
 @implementer(ITreeSecurity)

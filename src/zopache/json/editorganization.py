@@ -22,7 +22,7 @@ class EditOrganization (EditJson):
 @view_component
 @name('addOrganization')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class AddOrganization(AddJson):
     title = "Add an Organization"
     subTitle = ""
@@ -42,6 +42,16 @@ class AddOrganization(AddJson):
         #result = json.dumps(contextJsonDict)
         #return result
 
+from zopache.business.regionalorganization import RegionalOrganization
+
+@view_component
+@name('addRegionalOrganization')
+@target(IView)
+@context(IPage)
+class AddRegionalOrganization(AddOrganization):
+    title = "Add a Regional Organization"
+    subTitle = ""
+    factory = RegionalOrganization
     
 class OnlineSchema(object):
     subTitle = ""

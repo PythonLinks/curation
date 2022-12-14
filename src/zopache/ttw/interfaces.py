@@ -82,7 +82,7 @@ class IFileBase(Interface):
     data = FileField(title=u'Upload a File')
 
 
-class IImageBase(Interface):    
+class IImageBase(IFileBase):    
     title = TextLine(
         title = u'Image Description',
         description = u'Describe this Image, so that the user has some idea what they are looking at. ',
@@ -264,7 +264,7 @@ class IJSONBase(Interface):
 class ICanonicalJSON( IJSONBase,IJSONBase):
     pass
 
-class IJSON(IJSONBase):
+class IJSON(IJSONBase,ISourceLeaf):
     """Basic JSON CRUD """
 
     title = schema.TextLine(

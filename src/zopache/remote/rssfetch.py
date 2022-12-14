@@ -29,14 +29,14 @@ class GetRSS(Form):
 
     def __init__(self, context, request, **kwargs):
         Form.__init__(self, context, request, **kwargs)
-        self.time = int(time.time())
+        self.time = self.getSiteRoot().nextImportTime
         self.lock = None
 
     async def getTime(self):
-        if self.lock == None:
-            self.lock = asyncio.Lock()        
+        lock = asyncio.Lock()
+            
         async with self.lock:
-            self.time -= 1
+            self.time += 1
             return self.time
         
     def update(self):

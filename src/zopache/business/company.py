@@ -1,5 +1,5 @@
 from zope.interface import implementer
-
+from BTrees.OOBTree import OOBTree
 from cromlech.security import Unauthorized
 from zopache.pages.location import LocationContainer
 from zopache.business.interfaces import IFollow
@@ -64,7 +64,7 @@ class Organization  (
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
-    webApproved = False
+    webApproved = True
     
     def getOneMarkerCore(self):
         focus = self.focus
@@ -86,17 +86,17 @@ class Organization  (
 from zopache.business.imaporganization import IMapOrganization, IEndorsingOrganization
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
-                      MapBase,
                       HasMembers,
                       Page,
                       RegionBase,
                       RedundantSocial):
-
+    tiktokId = ""
     interface = IMapOrganization
     webClass = 'SmallParty'
     #LocationBase inherits from Page
     def __init__(self):
         Map.__init__(self)
+        self.mapPoints =  OOBTree()
         Organization.__init__(self)
         
     def getDescriptionForDomain(self,view):

@@ -1,13 +1,15 @@
 from zope.interface import implementer
+from BTrees.OOBTree import OOBTree
 
 from zopache.core.relatives import Parents
 from zopache.business.interfaces import IPolitician
 from zopache.business.interfaces import IOrganizationBase,IOnlineOrganization
-from zopache.pages.location import LocationContainer
+from zopache.pages.page import Page
+from zopache.pages.location import MapBase
 from zopache.business.interfaces import IRegion
 from zopache.business.interfaces import IEvent
 
-class RegionBase(LocationContainer):
+class RegionBase(MapBase):
 
     specialization = ''
     showChildren = True
@@ -101,7 +103,11 @@ class RegionBase(LocationContainer):
 
 #I Think this is not needed    
 @implementer(IRegion)
-class Region(RegionBase):
+class Region(Page,RegionBase):
+    def __init__(self):
+       Page.__init__(self)
+       RegionBase.__init__()
+       self.mapPoints =  OOBTree()
 
     def hasFutureEvent(self):
         return False
