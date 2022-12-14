@@ -10,7 +10,7 @@
     <meta name="description" content="" />
   </head>
   <body class="bg-light">
-    ${structure: view.getLayout()["navbar.py"](view)}
+    ${structure: view.layoutAcquire("navbar.py")(view)}
     <div style = "padding-left: 20px;">
       ${structure: view.layoutAcquire('breadcrumbs')(view=view)}
 

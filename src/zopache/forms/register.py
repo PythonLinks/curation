@@ -16,11 +16,12 @@ from zopache.forms.interfaces import IRegister, ISubscribe
 from zopache.ttw.principalfolder import InternalPrincipal
 from zopache.forms.validator import Validator
 from zopache.ttw.mail import Notify
+from zopache.core.acquisition import Acquisition
 
 @form_component
 @name ('register')
 @context(Interface)
-class Register(BasicForm):
+class Register(BasicForm,Acquisition):
     dataValidators = [Validator]
     layoutName = "UserMenu"
     fields = Fields(IRegister)

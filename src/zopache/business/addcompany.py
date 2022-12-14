@@ -107,18 +107,6 @@ class AddMap(AddAuthorizedPage):
     label="Add a Map"
     factory = Map
 
-
-@view_component
-@name('addMapOrganization')
-@target(IView)
-@context(IPageBase)
-@implementer(ITreeSecurity)
-class AddMapOrganization(AddAuthorizedPage):
-    title = "Add an Organization with a Map"
-    subTitle = 'Usually for state parties. '
-    interface = IMapOrganization
-    factory = MapOrganization    
-    
 import crom
 from dolmen.forms.base.interfaces import IWidget
 from dolmen.forms.ztk.widgets.collection import (

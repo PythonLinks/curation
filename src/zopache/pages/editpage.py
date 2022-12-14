@@ -8,6 +8,8 @@ from zopache.ttw.htmlviews import (AceScripts,
 from zopache.pages.htmlvalidator import HTMLValidator
 from zopache.pages.interfaces import IPage
 from zopache.core.interfaces import ITreeSecurity
+from zopache.forms.urlvalidator import DuplicateURLValidator
+
 
 #HERE IS THE DEVELOPER ACE EDIT FORM
 @form_component
@@ -15,14 +17,14 @@ from zopache.core.interfaces import ITreeSecurity
 @name("aceedit")
 @implementer (ITreeSecurity)
 class AceEditPage(AceEditForm):
-    dataValidators = [HTMLValidator]    
+    dataValidators = [HTMLValidator,DuplicateURLValidator]    
 
 #HERE IS THE CKEDIT FORM
 @form_component
 @context(IPage)
 @name('ckedit')
 class CkEditPage(CkEditForm):
-    dataValidators = [HTMLValidator]        
+    dataValidators = [HTMLValidator,DuplicateURLValidator]    
 
 
 

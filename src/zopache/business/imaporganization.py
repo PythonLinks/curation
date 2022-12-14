@@ -12,6 +12,7 @@ from zopache.application.choices import fromList
 from zopache.business.ifollow import IFollow
 from zopache.pages.interfaces import IMap as IMapBase
 from zopache.pages.interfaces  import (
+                                       IPageBase,
                                        ILocationContainer,
                                        ILocationLeaf)
 def possibleFocus (context):
@@ -26,7 +27,7 @@ def getDict(context):
 
 directlyProvides(possibleFocus, IContextSourceBinder)
 
-class IMapOrganizationBase (Interface):
+class IMapOrganizationBase (IPageBase):
     title = schema.TextLine(
         title = 'Organization Name',
         description = u'What is this organization called?',
@@ -41,6 +42,14 @@ class IMapOrganizationBase (Interface):
         default = '',
     )
 
+    address= schema.Text(
+        title = u'Address',
+        description = "Do you have an office location? (Optional) ",
+        required = False,
+        max_length = 200,
+        default = '',
+    )
+    
     focus = schema.Choice(
         source = possibleFocus,
         title="Specialization",

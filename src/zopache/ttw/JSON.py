@@ -5,11 +5,11 @@ from zope.interface import implementer
 from dolmen.view import View
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
-
 from dolmen.container import IBTreeContainer ,OrderedBTreeContainer
 
 #PLEASE REMOVE THE NEXT LINE
 from dolmen.container import  BTreeContainer
+
 
 from zopache.core import Leaf
 from zopache.ttw.addeditforms import AceAddForm, AceEditForm
@@ -19,6 +19,7 @@ from zopache.ttw.interfaces import IJSON, IJSONBase, IJSONContainer
 from zopache.ttw.javascript import JavascriptBase
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
+from zopache.pages.interfaces import ILocationContainer
 
 class AceScripts(AceScripts):
     aceMode = 'json'
@@ -120,7 +121,7 @@ from zopache.business.getjson import getStateJson
 
 @view_component
 @name('geojson')
-@context(IMapOrganization)
+@context(ILocationContainer)
 class GEOIndex(View):
     responseFactory = Response
     make_response = makeJsonResponse
