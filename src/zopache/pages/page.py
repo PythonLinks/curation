@@ -452,8 +452,9 @@ class ActionNetwork(PageBase, PageMixIn):
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
     icon="ttwicons/WikiPage.png"
-
-
+    lastTootTime = 0
+    _toot = ""
+    
 @implementer (ILink)     
 class Link(PageBase, PageMixIn):
     webClass='Link'
