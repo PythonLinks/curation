@@ -60,8 +60,7 @@ class BaseAction(Action,BaseBot):
     def updateAccount(self,accountProxy,userAccount,person):
                 person.accountProxy = accountProxy
                 person.userAccountDict = userAccount
-                userAccount["mastodonDomain"] = (
-                    self.form.context.mastodonDomain)
+                userAccount["mastodonDomain"] = self.form.context.mastodonDomain
     
 class MastodonCallBackAction(BaseAction):
     def __call__(self, form):

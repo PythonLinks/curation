@@ -8,7 +8,8 @@ class TootedArticle(BaseArticle):
         self.importTime = importTime
         self.source = text
         self.tootId = tootId
-
+        BaseArticle.__init__(self)
+                             
     def titlePlusDescription(self):
         return self.title + self.source
 
