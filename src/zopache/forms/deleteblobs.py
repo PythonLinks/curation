@@ -24,35 +24,36 @@ class PackBlobs(Form):
            status = 'The unused blobs were deleted. '
            Form.update(self)
            root = self.getZodbRoot()
+           zodbPaths = []
            usedFiles = set()
-           usedNames = []
-           allFiles = set()
            for item in root.allChildObjects():
                if IFileBase.providedBy(item):
-                   usedNames.append(self.longPathFor(item))
+                   zodbPaths.append(self.longPathFor(item))
                    usedFiles.add(item.blob.committed())
 
+
+           for item in zodbPaths:
+              if '150W' in item:
+                  print (item)
+
+           breakpoint()               
            root = "/app/data/Blobs"
+           deletedFiles = 0
            for path, subdirs, files in os.walk(root):
               for name in files:
-                  allFiles.add (os.path.join(path, name))
+                  filePath = os.path.join(path, name)
+                  if not filePath  in usedFiles:
+                       deletedFiles += 1
+                       os.remove(filePath)
 
            status += "<br>"
-           status += "Number of Files" + str( len(allFiles))
-           status += "<br>"
-           
-           for item in allFiles.copy():
-               if item in usedFiles:
-                   allFiles.remove (item)
            status += "Number of Used Files" + str(len(usedFiles))
            status += "<br>"                   
-           status += "Removing " + str(len(allFiles)) + " files"
+           status += "Deleted" + str(deletedFiles) + " files"
            status += "<br>"
            status += "Keeping the folliwng files"
            status += "<br>"                              
-           for item in usedNames:
+           for item in zodbPaths:
                status += item + "<br>"                              
            self.status = status
-           for item in allFiles:
-                os.remove(item)
 
