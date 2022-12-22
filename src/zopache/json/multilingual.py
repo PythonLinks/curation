@@ -41,7 +41,6 @@ class Multilingual(PageVeryBase,Ancestors):
        return None
 
     def getTitleFor(self,view):
-        breakpoint()
         if (text := self.getFieldFor(view,'title'))!=None:               
             return text
         else:

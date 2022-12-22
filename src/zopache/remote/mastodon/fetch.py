@@ -49,7 +49,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         pageOfToots = [None]
         count = 0
         rateLimit = 10
-        breakpoint()
         pageCount = 0
         self.importTime = time.time()
         self.contentByTime = self.getSiteRoot().contentByTime

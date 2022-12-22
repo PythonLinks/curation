@@ -6,7 +6,7 @@ from zopache.remote.mastodon.interfaces import ITootedArticle
 @implementer (ITootedArticle)
 class TootedArticle(BaseArticle):
     def getAuthor(self,view ):
-        breakpoint()
+        return ''
 
     def preDeleteProcess(self,view):
         pass

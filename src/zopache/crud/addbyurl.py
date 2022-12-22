@@ -15,7 +15,6 @@ class AddByURLAction(Action):
     """Do not create, just crawl and redirect
     """
     def __call__(self, form):
-        breakpoint()
         self.form=form
         data, errors = form.extractData()
         if errors:

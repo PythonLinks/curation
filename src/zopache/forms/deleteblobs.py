@@ -36,7 +36,6 @@ class PackBlobs(Form):
               if '150W' in item:
                   print (item)
 
-           breakpoint()               
            root = "/app/data/Blobs"
            deletedFiles = 0
            for path, subdirs, files in os.walk(root):
