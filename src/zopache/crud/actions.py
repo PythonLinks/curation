@@ -60,7 +60,6 @@ class Add(Action, UniqueName, TransactionNote):
     #CATCHING AND REPORTING
     def callInner(self,obj,data,form):     
         notify(ObjectCreatedEvent(obj))
-
         self.actuallyAdd(obj,data)
         #form.sendMessage("Content created")
         baseURL = self.baseURL()

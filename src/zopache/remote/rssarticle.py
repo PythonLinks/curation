@@ -3,6 +3,7 @@ from slugify import slugify
 
 from zope.interface import Interface
 from zope import schema
+from zope.interface import implementer
 from dolmen.container import OrderedBTreeContainer
 
 from zopache.pages.interfaces import IPage, ICategory
@@ -16,41 +17,27 @@ from zopache.core.relatives import parentsWhichImplement
 
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
-@implementer (IRSSArticle)
-class RSSArticle(Page):
+    
+class BaseArticle(Page):    
     _category = ""
     importTime = 0
     isArticle = True
     imageURL = ""
-    webClass = "RSSLink"
     description = ""
     emailApproved = True
     publicationApproved = False
-    lastTootTime = 0
     bestApproved = False
     tags = {}
-    _toot = ""    
+    lastTootTime = 0
+    _toot = ""
+    
     def __init__(self):
          #Simpler to not call page initialization.
          #HOPE I DO NOT MISS ANYTHING
          OrderedBTreeContainer.__init__(self)
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
-
-    def getAuthor(self,view ):
-        author = self.rssFeed
-        authorName = author.title
-        authorURL = author.remoteURL
-        if 'Logo' in author:
-            imageURL = view.secureShortURL(context = author) + "/Logo"
-        else:    
-            topic = self.parent
-            imageURL = view.secureShortURL(context = self) + "/Logo"
-        return authorName, authorURL, imageURL
         
-    def creationDateForHumans(self):
-         return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
-     
     def defaultToot(self,view):        
             twitterId = self.rssFeed.twitterId
             return   (
@@ -84,14 +71,6 @@ class RSSArticle(Page):
                        terms.add (term)
                return terms 
            
-    def preDeleteProcess(self,view):
-        #Page.preDeleteProcess(self,view)
-        localArticles = self.rssFeed.localArticles
-        if hasattr(self,'permalink'):
-            if self.permalink in localArticles:
-                 del localArticles [self.permaLink]
-            else:
-                raise Exception("That article was not listed in localArticles.")
 
             
     def getCategory(self):
@@ -131,10 +110,6 @@ class RSSArticle(Page):
 
     #AND NOW RESET  A UNIQUE CREATION TIMES FOR ALL RSS ARTICLES
 
-    def postAddProcess (self, view = None):
-        if "exclusive for subscribers" in self.title.lower():
-           self.webApproved = False
-        
     def addImage(self):
            if  'Logo' in self:
                return
@@ -173,6 +148,35 @@ class RSSArticle(Page):
                return self, "NO IMAge urL in page html"
 
 
+@implementer (IRSSArticle)
+class RSSArticle(BaseArticle):
+    webClass = "RSSLink"
+
+    def creationDateForHumans(self):
+         return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
+         
+    def getAuthor(self,view ):
+        author = self.rssFeed
+        authorName = author.title
+        authorURL = author.remoteURL
+        if 'Logo' in author:
+            imageURL = view.secureShortURL(context = author) + "/Logo"
+        else:    
+            topic = self.parent
+            imageURL = view.secureShortURL(context = self) + "/Logo"
+        return authorName, authorURL, imageURL
+
+    def preDeleteProcess(self,view):
+        #Page.preDeleteProcess(self,view)
+        localArticles = self.rssFeed.localArticles
+        if hasattr(self,'permalink'):
+            if self.permalink in localArticles:
+                 del localArticles [self.permaLink]
+            else:
+                raise Exception("That article was not listed in localArticles.")
 
 
-
+    def postAddProcess (self, view = None,article = None):
+        if "exclusive for subscribers" in self.title.lower():
+           self.webApproved = False
+        

@@ -25,9 +25,9 @@ class VideoBase(Voteable):
         if self.lastTootTime == 0:
            lastTooted = "My first toot of this video. "
         elif view == None:
-           lastTooted = "My first toot of this video. "           
+           lastTooted = "ERROR CANNOT DISPLAY LAST TOOT TIME "           
         else:
-            lastTooted = view.ago(self.lastTootTime)
+            lastTooted = "Last Tooted " + view.ago(self.lastTootTime)
         return lastTooted
 
     def timeFreeToot(self):
@@ -54,7 +54,7 @@ class VideoBase(Voteable):
         result += self.description + "\n\n"
         if view:         
            result +=  view.secureShortURL() + "\n\n" 
-        result += self.lastTooted(view = view) + "\n\n" 
+        result += self.lastTooted(view = view ) + "\n\n" 
         result +=  (
                 self.parentalTags() +
                " #video #videos "

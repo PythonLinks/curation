@@ -1,7 +1,35 @@
+from cromlech.browser.exceptions import HTTPFound
 from mastodon import Mastodon
+from cromlech.security import unauthenticated_principal as anonymous
 
 class BaseBot(object):
     SCOPES = ['read:accounts','write:media','write:statuses']
+
+    def myAccount(self):
+        with open('/app/data/accessToken') as file:
+            accessToken = file.readline()
+
+        proxy = Mastodon(
+            client_id=None,
+            client_secret=None,
+            access_token = accessToken,
+            api_base_url='https://mastodon.social',
+            debug_requests=False,
+            ratelimit_method='wait',
+            ratelimit_pacefactor=1.1,
+            request_timeout=300, 
+            mastodon_version=None,
+            version_check_mode='created',
+            session=None,
+            feature_set='mainline')
+        return proxy
+   
+    def oauth(self):    
+        url = self.oauthProxy().auth_request_url(
+            redirect_uris= self.redirectURL(),
+            scopes=self.SCOPES,
+            force_login=False)
+        raise HTTPFound(url)
 
     def getProxy (self,accessToken,clientId,clientSecret,mastodonDomain):
         return  Mastodon(
@@ -19,9 +47,12 @@ class BaseBot(object):
         return mastodon 
 
     def proxyForUser(self):
-        proxy = getattr (self.request.principal,'accountProxy',None)        
+        principal = self.request.principal
+        if principal == anonymous:
+            self.oauth()
+        proxy = getattr (principal,'accountProxy',None)
         if proxy == None:
-           raise Exception("First you need to log in to a Mastodon server. ")
+            self.oauth()
         return proxy
     
     def oauthProxy(self):

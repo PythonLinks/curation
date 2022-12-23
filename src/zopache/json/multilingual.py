@@ -16,6 +16,7 @@ from zopache.core.ancestors import Ancestors
 class Multilingual(PageVeryBase,Ancestors):
     webClass = "Multilingual"    
 
+
     def getLanguages(self,view):
         if getattr(view,'languages', False):
            return view.languages 
@@ -45,6 +46,7 @@ class Multilingual(PageVeryBase,Ancestors):
             return text
         else:
            return "Error: No title, not even an blank title,  is available."
+       
     @property
     def title(self):
         json = self.json

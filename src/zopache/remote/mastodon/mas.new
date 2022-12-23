@@ -1,0 +1,59 @@
+from hypatia.text.htmlsplitter import HTMLWordSplitter
+from hypatia.text.lexicon import Lexicon, Splitter
+splitter = Splitter()
+htmlSplitter = HTMLWordSplitter()
+from mastodon import Mastodon
+
+def fetch():
+        with open('/app/data/accessToken') as file:
+            accessToken = file.readline()
+
+        proxy = Mastodon(
+            client_id=None,
+            client_secret=None,
+            access_token = accessToken,
+            api_base_url='https://mastodon.social',
+            debug_requests=False,
+            ratelimit_method='wait',
+            ratelimit_pacefactor=1.1,
+            request_timeout=300, 
+            mastodon_version=None,
+            version_check_mode='created',
+            session=None,
+            feature_set='mainline')
+
+       
+        maxId = None
+        count = 1
+        rateLimit = 1
+        pageOfToots = [None]
+
+        user = proxy.account_search("Snoro")[0]
+        while pageOfToots and (count <= rateLimit):
+           count += 1
+
+           pageOfToots = proxy.account_statuses(user.id)
+                       #max_id=maxId,
+                       #min_id=None,
+                       #since_id=None,
+                       #limit=None)
+        #reblogs_count
+        #favourites_count
+
+        for item in pageOfToots:
+              breakpoint()
+
+              content = item.content
+              content = splitter.process(content)
+              content = htmlSplitter.process(content)
+              print (len(content))
+
+              content = item.content
+              content = splitter.process(content)
+              content = htmlSplitter.process(content)
+              print (len(content))
+              
+              print (content)
+              print()
+              print()
+fetch()

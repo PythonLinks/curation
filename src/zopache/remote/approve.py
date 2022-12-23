@@ -17,6 +17,7 @@ from zopache.ttw.treewidget import TreeField
 from zopache.core.interfaces import ITreeSecurity
 from zopache.crud.update import Edit, Save,  SaveAndView,  Cancel
 from zopache.core.breadcrumbs import Breadcrumbs    
+from zopache.zmi.cutcopypaste import Cutter
 
 class IApprove(Interface):
     title = schema.TextLine(
@@ -70,6 +71,21 @@ class Publish(Save):
             if category!= context.__parent__:
                 context.moveTo(category)
 
+class AddCategory(Save):
+    def __call__(self,form):
+        result = Save.__call__(self,form)
+        if result == FAILURE:
+            return result            
+        context = self.form.context
+        context.webApproved = True
+        context.publicationApproved = True
+        category = getattr(context,'category',None)
+        del context.category
+        context.addImage()
+        if category:
+            Cutter(context).cut(form)
+            raise HTTPFound('/' + category  +'/addCategory')
+        return result        
 
 class PublishAndToot(Publish):
     def __call__(self,form):
@@ -114,6 +130,7 @@ class Approve (EditForm,Breadcrumbs):
                     Publish("Publish","publish"),
                     Retract("Retract","retract"),
                     PublishAndToot("Pubilsh And Toot","publishToot"),
+                    AddCategory("Add Category", "addCategory"),
                     Cancel("Cancel","Cancel"))
         
     def postProcess(self, view = None):
