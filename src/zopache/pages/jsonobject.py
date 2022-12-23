@@ -6,7 +6,7 @@ from dolmen.view import View
 from cromlech.webob.response import Response
 
 from zopache.core.viewdecorators import *
-from zopache.pages.interfaces import ICategory
+from zopache.pages.interfaces import ICategory, IMultilingual
 
 
 def make_json_response(view, result, *args, **kwargs):
@@ -28,7 +28,22 @@ class Articles(View):
            return 'JSON is not available for that object.'
         asDict = self.context.asDict(classes =['Category','RSS','RSSArticle'])
         return json.dumps(asDict, indent = 2)
-                                     
+
+
+#GET ALL THE MULTILIGUAL
+@view_component
+@name('json')
+@target(IView)
+@context(IMultilingual)
+class Multilingual(View):
+    responseFactory = Response
+    make_response = make_json_response
+    def render(self):
+        if self.context.__name__ not in ['syllabus']:
+           return 'JSON is not available for that object.'
+        asDict = self.context.asDict(classes =['Multilingual'])
+        return json.dumps(asDict, indent = 2)
+
 
 #THIS ONE JUST GETS THE TREE OF CATEGORIES
 @view_component
@@ -39,7 +54,7 @@ class Categories(View):
     responseFactory = Response
     make_response = make_json_response
     def render(self):
-        if self.context.__name__ not in ['categories']:
+        if self.context.__name__ not in ['categories','climate-change']:
            return 'JSON is not available for that object.'
         asDict =  self.context.asDict()
         return json.dumps(asDict,  indent = 2)               

@@ -224,7 +224,7 @@ class IRootPage(ISiteRoot,
                 IBranch):
     pass
 
-class ISiteRootPage(ISiteRoot,IBranch,IPageBase,IBTreeContainer):
+class ISiteRootPage(ISiteRoot,IBranch,IPage,IBTreeContainer):
     description= schema.Text(
         title = 'Description',
         description = "A brief description of this web site.",
