@@ -9,11 +9,11 @@ from zopache.core.breadcrumbs import Breadcrumbs
 
 from zopache.ttw.interfaces import IFileBase
 
+from zopache.core.interfaces import  ISiteRoot
 
 @form_component
-@context(IBranch)
+@context(ISiteRoot)
 @target(IView)
-@title("Pack")
 @name("packblobs")
 @permissions('Manage')
 class PackBlobs(Form):
@@ -31,16 +31,14 @@ class PackBlobs(Form):
                    zodbPaths.append(self.longPathFor(item))
                    usedFiles.add(item.blob.committed())
 
-
-           for item in zodbPaths:
-              if '150W' in item:
-                  print (item)
-
            root = "/app/data/Blobs"
            deletedFiles = 0
            for path, subdirs, files in os.walk(root):
               for name in files:
+                  if name == ".layout":
+                      continue
                   filePath = os.path.join(path, name)
+                  
                   if not filePath  in usedFiles:
                        deletedFiles += 1
                        os.remove(filePath)

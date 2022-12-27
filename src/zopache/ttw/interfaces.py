@@ -110,7 +110,7 @@ class IFile(IFileBase,ILeaf):
 class IImage(IImageBase,ILeaf):
     pass
 
-class IBTreeImage(IImage,IBTreeContainer):
+class IBTreeImage(IImageBase,IBTreeContainer):
     pass
 
      

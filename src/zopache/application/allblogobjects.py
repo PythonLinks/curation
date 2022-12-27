@@ -77,12 +77,9 @@ class AllVideoObjects(AllChildObjects):
 
 class ProcessTree(object):
     def allChildrenOfClass(self,className):
-        result = []
         for item in AllChildObjects(self):
             if item.__class__.__name__ == className:
-               result.append(item)
-        return result
-    
+               yield item    
     def allBlogObjects(self):
         return AllBlogObjects(self)
 

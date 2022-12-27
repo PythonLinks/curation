@@ -83,7 +83,8 @@ class IPageTop(Interface):
         description = u'Describe this page.',
         required = True,
     )
-class ILinkBase(Interface):
+    
+class ILinkBase(IBTreeContainer):
     pass
 
 class ILinkTop(Interface):

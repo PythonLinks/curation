@@ -60,11 +60,6 @@ class ImageBase(FileBase):
     attributionText = ""
     attributionURL = ""
         
-    #JUST A QUICK BUG FIX AVOIDANCE
-    def get(self,arg):
-        print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
-        return self
-
     def getImageTag(self,webClass = "",
                     alt = "",
                     style = "",
@@ -102,6 +97,12 @@ class ImageBase(FileBase):
 
 @implementer(IImage)
 class Image (Leaf,ImageBase):
+    #JUST A QUICK BUG FIX AVOIDANCE
+    def get(self,arg):
+        print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
+        return self
+
+
     def replace (self):
         parent = self.__parent__
         name = self.__name__

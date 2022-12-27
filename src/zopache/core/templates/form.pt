@@ -14,13 +14,13 @@
      ${structure: view.status}</p>
   
   <div class="text-danger"
-       tal:condition="view.errors">
+       tal:condition="view.errors" style = "color:red">
     <ul tal:condition="view.formErrors"
         tal:repeat="error view.formErrors">
       <li> <span tal:replace="error.title" /> </li>
     </ul>
   </div>
-  <div class="text-danger">
+  <div class="text-danger" style="color:red">
     <ul tal:condition="view.submissionErrors"
         tal:repeat="error view.submissionErrors">
       <li> <span tal:replace="error" /> </li>

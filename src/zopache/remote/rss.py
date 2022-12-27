@@ -137,14 +137,13 @@ class RSS(Link,UniqueName,RSSBase):
                del context.localArticles [key]
     """
          
-
     async def createArticles(self,entries,view):
        globalArticles= self.getPublicationRoot().globalArticles
        for article in entries[:20]:
            theId = article['id']
            if not theId in globalArticles:
               importTime = await view.getTime()
-              RSS.createOneArticle(article,view,importTime)
+              self.createOneArticle(article,view,importTime)
         
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)

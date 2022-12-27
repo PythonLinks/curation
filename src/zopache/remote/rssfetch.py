@@ -34,8 +34,7 @@ class GetRSS(Form):
 
     async def getTime(self):
         lock = asyncio.Lock()
-            
-        async with self.lock:
+        async with lock:
             self.time += 1
             return self.time
         

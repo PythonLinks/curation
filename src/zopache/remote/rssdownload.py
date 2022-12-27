@@ -68,7 +68,9 @@ async def fetchCore(nodes,view):
                        headers = user_agent
                      ) as session:    
       for node in nodes:
-         if view.className(node) not in ['RSS','RSSArticle','AToot']:
+         if view.className(node) not in {'RSS',
+                                         'RSSArticle',
+                                         'TootedArticle'}:
             continue
          if IRSSArticle.providedBy(node):
               if  'Logo' in node:
