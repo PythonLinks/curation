@@ -61,7 +61,15 @@ class Multilingual(PageVeryBase,Ancestors):
         if 'en' in json:
           return json['en']['description']
         else:
-          return "No English Description available"        
+          return "No English Description available"
+      
+    @property
+    def source(self):
+        json = self.json
+        if 'en' in json:
+          return json['en']['content']
+        else:
+          return "No English content available"              
       
     def getTitleForDomain(self,view):
         return self.getTitleFor(view)

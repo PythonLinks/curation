@@ -89,6 +89,8 @@ class OneNode (Action):
         context = form.context
         englishTitle = context.title        
         englishDescription = context.description
+        englishContent = context.source
+        
         json = context.json
         context._p_changed = True
         
@@ -120,20 +122,30 @@ class OneNode (Action):
                                    source_lang = 'en',
                                    target_lang=language)
 
+            translatedContent = translator.translate_text(
+                                   englishContent,
+                                   tag_handling = 'html',
+                                   source_lang = 'en',
+                                   target_lang=language)            
+
             translatedTitle = translatedTitle.text
             translatedDescription = translatedDescription.text
+            translatedContent = translatedContent.text
             
             if not language in json:
                json[language] = {}
             json[language]['title'] = translatedTitle
-            json[language]['description'] = translatedDescription            
+            json[language]['description'] = translatedDescription
+            json[language]['content'] = translatedContent            
             
             form.status += language + "<br> " 
             form.status +=  translatedTitle        
             form.status += "<br>"                
             form.status += translatedDescription
             form.status += "<br>"
+            form.status += translatedContent
             form.status += "<br>"
+            form.status += "<br>"            
            
 
 
