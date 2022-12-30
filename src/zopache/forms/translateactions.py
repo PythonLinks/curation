@@ -87,8 +87,11 @@ class OneNode (Action):
         self.form = form
 
         context = form.context
-        englishTitle = context.title        
-        englishDescription = context.description
+        englishTitle = context.title
+        hasDescription = context.__class__.__name__ == 'Multilingual'
+        if hasDescription:
+            englishDescription = context.description
+
         englishContent = context.source
         
         json = context.json
@@ -101,9 +104,10 @@ class OneNode (Action):
         form.status += "Title"
         form.status += "<br>"        
         form.status +=  englishTitle
-        form.status += "<br>"                
-        form.status += englishDescription
-        form.status += "<br>"
+        form.status += "<br>"                        
+        if hasDescription:
+           form.status += englishDescription
+           form.status += "<br>"
         form.status += "<br>"
         
         with open('/app/data/deepl') as file:
@@ -112,37 +116,45 @@ class OneNode (Action):
         translator = deepl.Translator(accessToken)
         
         for language in languages:
-            translatedTitle = translator.translate_text(
+            if not language in json:
+               json[language] = {}
+            jsonLang = json[language]
+            
+            if englishTitle.strip():
+               translatedTitle = translator.translate_text(
                                    englishTitle,
                                    source_lang = 'en',
-                                   target_lang=language)
+                                   target_lang=language).text
+            else:   
+               transaltedTitle = ""               
+            jsonLang['title'] = translatedTitle
             
-            translatedDescription = translator.translate_text(
+            if hasDescription:
+                if englishDescription.strip():
+                    translatedDescription = translator.translate_text(
                                    englishDescription,
                                    source_lang = 'en',
-                                   target_lang=language)
-
-            translatedContent = translator.translate_text(
+                                   target_lang=language).text
+                else:    
+                   translatedDescription = ""
+                jsonLang['description'] = translatedDescription
+            
+            if englishContent.strip():    
+                translatedContent = translator.translate_text(
                                    englishContent,
                                    tag_handling = 'html',
                                    source_lang = 'en',
-                                   target_lang=language)            
-
-            translatedTitle = translatedTitle.text
-            translatedDescription = translatedDescription.text
-            translatedContent = translatedContent.text
-            
-            if not language in json:
-               json[language] = {}
-            json[language]['title'] = translatedTitle
-            json[language]['description'] = translatedDescription
-            json[language]['content'] = translatedContent            
+                                   target_lang=language).text            
+            else:     
+                translatedContent = ""
+            jsonLang['content'] = translatedContent
             
             form.status += language + "<br> " 
-            form.status +=  translatedTitle        
-            form.status += "<br>"                
-            form.status += translatedDescription
+            form.status +=  translatedTitle
             form.status += "<br>"
+            if hasDescription:   
+               form.status += translatedDescription
+               form.status += "<br>"
             form.status += translatedContent
             form.status += "<br>"
             form.status += "<br>"            

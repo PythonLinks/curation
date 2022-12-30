@@ -3,19 +3,12 @@ from zope.interface import implementer
 
 from dolmen.forms.base.errors import Error, Errors
 
+from zopache.core import Leaf
 from zopache.pages.page import PageVeryBase
-from zopache.pages.interfaces import IMultilingual
-
-
-from zopache.core.viewdecorators import *
-from zopache.json.editjsonschema import AddJson, EditJson
-from zopache.core.interfaces import ITreeSecurity
+from zopache.json.interfaces import IMultilingual,IMultilingualLeaf
 from zopache.core.ancestors import Ancestors
 
-@implementer(IMultilingual)
-class Multilingual(PageVeryBase,Ancestors):
-    webClass = "Multilingual"    
-
+class Base(object):
 
     def getLanguages(self,view):
         if getattr(view,'languages', False):
@@ -56,14 +49,6 @@ class Multilingual(PageVeryBase,Ancestors):
           return "No English title available"
 
     @property
-    def description(self):
-        json = self.json
-        if 'en' in json:
-          return json['en']['description']
-        else:
-          return "No English Description available"
-      
-    @property
     def source(self):
         json = self.json
         if 'en' in json:
@@ -79,10 +64,7 @@ class Multilingual(PageVeryBase,Ancestors):
             return text
         else:
            return "Error: No description, not even a blank  description,  is available."
-
-    def getDescriptionForDomain(self,view):
-        return self.getDescriptionFor(view)            
-            
+    
     def getHtmlFor(self,view):
 
         if (text := self.getFieldFor(view,'content'))!=None:               
@@ -93,33 +75,36 @@ class Multilingual(PageVeryBase,Ancestors):
     def partialPostProcess(self, view=None):
         pass
 
-@form_component
-@name ('ckedit')
-@context(IMultilingual)
-@implementer(ITreeSecurity)
-class EditMultilingual (EditJson):
-    title = 'Edit this Multilingual Page.'
-    subTitle = ''
-    schemaName = "MultilingualSchema"  
+@implementer(IMultilingualLeaf)
+class MultilingualLeaf(Base,Leaf):
+    def postAddProcess(self, view = None):
+        pass
 
-
-from zopache.pages.interfaces import IPageBase
-@view_component
-@name('addMultilingual')
-@target(IView)
-@context(IPageBase)
-class AddMultilingual(AddJson):
-    title = "Add a MultiLingual Page"
-    subTitle = "You can add as many language versions as you need."
-    factory = Multilingual
-    schemaName = "MultilingualSchema"
-
-    def newName(self,data):
-        newName =  self.requestJsonDict['en']['title']
-        return newName
-        
-    def dataModel(self):   
-        contextJsonDict =  self.template['newMultilingualJson'].getAsDict()
-        result = json.dumps(contextJsonDict)
-        return result
+@implementer(IMultilingual)
+class Multilingual(Base,PageVeryBase,Ancestors):
+    webClass = "Multilingual"    
     
+    @property
+    def description(self):
+        json = self.json
+        if 'en' in json:
+          return json['en']['description']
+        else:
+          return "No English Description available"
+      
+
+    def getDescriptionForDomain(self,view):
+        return self.getDescriptionFor(view)            
+            
+
+
+from zopache.zmi.interfaces import IURLSegment
+import crom
+@crom.adapter
+@crom.sources(IMultilingualLeaf)
+@crom.target(IURLSegment)
+class IMulilingualLeafAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'ckedit'        

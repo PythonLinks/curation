@@ -7,7 +7,7 @@ from dolmen.forms.base import Actions
 
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
-from zopache.pages.interfaces import IMultilingual
+from zopache.json.interfaces import IMultilingual,IMultilingualLeaf
 from zopache.forms.translateactions import (OneLanguage,
                                             OneNode,
                                             languages
@@ -18,7 +18,7 @@ class ITranslate(Interface):
       targetLanguage= schema.TextLine(
         title='Enter the 2 letter target language code',
           description = "Legal languages are de, es, fr, pl, tr and ja.",
-          required=True)
+            required=False)
 
 @form_component
 @context(IMultilingual)
@@ -28,11 +28,26 @@ class ITranslate(Interface):
 class Translate(Form):
     title = "Translate"
     fields = Fields(ITranslate)
-    subTitle = "All of the titles to a different language."
+    subTitle = "This node to all languages, or all nodes to one language."
 
     @property
     def actions(self):
         return Actions(
               OneLanguage("Translate Branch"),
+              OneNode("Translate Node"),              
+              Cancel("Cancel","Cancel"))
+
+@form_component
+@context(IMultilingualLeaf)
+@target(IView)
+@name("translate")
+@permissions('Manage')
+class TranslateLeaf(Form):
+    title = "Translate"
+    subTitle = "The title and content."
+
+    @property
+    def actions(self):
+        return Actions(
               OneNode("Translate Node"),              
               Cancel("Cancel","Cancel"))

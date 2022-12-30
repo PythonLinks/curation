@@ -6,8 +6,8 @@ from dolmen.view import View
 from cromlech.webob.response import Response
 
 from zopache.core.viewdecorators import *
-from zopache.pages.interfaces import ICategory, IMultilingual
-
+from zopache.pages.interfaces import ICategory
+from zopache.json.interfaces import  IMultilingual
 
 def make_json_response(view, result, *args, **kwargs):
         response = view.responseFactory()

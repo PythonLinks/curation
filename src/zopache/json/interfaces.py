@@ -1,6 +1,17 @@
 from zope.interface import Interface
 from zope import schema
+
+from cromlech.container.interfaces import IOrderedContainer
+
 from zopache.pages.interfaces import IPageBase
+from zopache.pages.interfaces import IPageBase, IContent
+from zopache.crud.interfaces import ILeaf
+
+class IMultilingual(IPageBase,IContent,IOrderedContainer):
+    pass
+
+class IMultilingualLeaf(ILeaf):
+    pass
 
 class IClass(Interface):
     jsonData= schema.Text(

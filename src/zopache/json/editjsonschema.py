@@ -35,12 +35,16 @@ class Base(object):
     def jsonSchemaDict(self):
         result = getattr(self,'_jsonSchemaDict','')
         if result:
-           return result 
-        schema =  self.template[self.schemaName]
-        result = schema.getAsDict()
+           return result
+        result = self.getSchema()
         self._jsonSchemaDict = result
         return result
-
+    
+    def getSchema(self):
+        schema =  self.template[self.schemaName]
+        result = schema.getAsDict()
+        return result
+    
     @property    
     def jsonSchemaString(self):
         result = getattr(self,'_jsonSchemaString','')

@@ -150,8 +150,6 @@ class IPage(IPageTop,IPageBottom,IPageBase,
             IJSONInclude, IUntrustedHTML,IAceHTML):
     pass
 
-class IMultilingual(IPageBase,IContent,IOrderedContainer):
-    pass
 
 class IProxyPage(IPage):
     pass
