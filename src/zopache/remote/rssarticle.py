@@ -117,41 +117,21 @@ class BaseArticle(Page):
            if imageURL:
                getImage(self,imageURL)           
 
-    def getImageURL(self):
-        if hasattr(self,'imageURL'):
-            if self.imageURL != "":
-                return self.imageURL           
-        elif  hasattr(self,'links'):
-            for item in self.links:
-                if "image" in item.type:
-                    return self.item.href
-        return ""
-
-    async def processResponse(self,session, response,view):
-        if self.getImageURL():
-           content = await response.read()
-           return self, content, response.headers['Content-Type']
-        else:
-            html  =  await response.text()
-            result = web_preview(self.articleURL, content = html, parser="html.parser")
-            imageURL = result [2]
-            
-            if "This post is for paying subscribers." in html:
-               self.webApproved = False
-               
-            if imageURL:
-               self.imageURL = imageURL
-               response =  await fetch(session, self, view)
-               (article, content, contentType) = response               
-               return self, content, contentType
-            else:
-               return self, "NO IMAge urL in page html"
-
 
 @implementer (IRSSArticle)
 class RSSArticle(BaseArticle):
     webClass = "RSSLink"
 
+    def getImageURL(self):
+        if url:= getattr(self,'imageURL',None):
+            return url          
+        elif  hasattr(self,'links'):
+            for item in self.links:
+                if "image" in item.type:
+                    return self.item.href
+        return None
+
+    
     def creationDateForHumans(self):
          return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
          

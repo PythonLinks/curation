@@ -50,7 +50,8 @@ class GetRSS(Form):
         Form.update(self)
         #raise HTTPFound('/categories/newest')
 
-    #COPY OF THIS HERE AND IN RSS.PY    
+    #COPY OF THIS HERE AND IN RSS.PY
+    #This one has no view argument, just uses self
     def fetchArticles(self, feeds):    
         result = fetchAll(feeds,self)
         for item in result:

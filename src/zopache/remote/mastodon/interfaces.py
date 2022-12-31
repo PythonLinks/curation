@@ -8,14 +8,6 @@ from zopache.crud.interfaces import IContainer
 
 class IMastodonAccount(ILinkBase):    
     
-    htmlSummary=schema.Bool(
-        title = "Is the Summary HTML?",
-        description ="""For those sources where the summary
-        contains html tags""",
-        required = False,
-        default = False,
-        )
-    
     title=schema.TextLine(
         title = "Mastodon Account Name",
         description ="What is the account  called?",
@@ -28,12 +20,6 @@ class IMastodonAccount(ILinkBase):
         required = False,
         default = '',
     )    
-
-    twitterId=schema.TextLine(
-        title = "Twitter Id",
-        description ="""For Historic Reasons Without the "@" sign""",
-        required = False,
-        )
 
     mastodonId=schema.TextLine(
         title = "Mastodon Id",
@@ -62,8 +48,9 @@ class IAddMastodonAccount(IMastodonAccount):
         required = False,
         missing_value = '',
         )
-    
-class ITootedArticle(ILinkBase):
+
+from zopache.remote.irss import IRSSArticle    
+class ITootedArticle(IRSSArticle):
 
     title = schema.TextLine(
         title = 'Remote Article Name',
@@ -71,12 +58,6 @@ class ITootedArticle(ILinkBase):
         required = True,
     )
 
-    mastodonId=schema.TextLine(
-        title = "Mastodon Id",
-        description ="""@User@Domain""",
-        required = False,
-        )    
-    
     articleURL= schema.URI(
         title = 'Article URL',
         description = 'The url of the remote article',

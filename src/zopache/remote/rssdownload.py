@@ -11,21 +11,28 @@ from zopache.remote.irss import IRSSBase, IRSSArticle
 async def fetch(session,node,view):
    startTime = time.time()    
    duration =  0
+   
    if IRSSBase.providedBy(node):
       url = node.rssURL
-   elif node.__class__.__name__ == "AToot":
-      url = node.remoteURL
-   elif IRSSArticle.providedBy(node):
-      url = node.getImageURL()
-      if url == "":
+   elif node.__class__.__name__ == "TootedArticle":
+      if node.title == "":
          url = node.articleURL
+      else:
+         url = node.imageURL
+   elif node.__class__.__name__ == "RSSArticle":
+      return FAILURE, (node.__name__ + """We do not bulk
+      download rssarticle nor their images.""")
    else:
-      return FAILURE, node.__name__, "Neither Feed Nor RSS Article"
+      return FAILURE, node.__name__, ("Error Trying to Fetch " +
+      node.__class__.__name__)
+
+   #NOW PROCESS THE URL
    try:
         async with session.get(url) as response:
+
           if response.status == 200:
-             result =  await node.processResponse(session,response,view)
-             return SUCCESS, result
+             result =   await node.processResponse(session,response,view)
+             return result
           else:
              return FAILURE, node.name, 'status = ' + str(response.status)
 
@@ -33,26 +40,9 @@ async def fetch(session,node,view):
           duration =  time.time() - startTime 
           return FAILURE, node.__name__, "TIME OUT"  + str(duration)
           
-   except aiohttp.client_exceptions.InvalidURL as err:
-          return FAILURE, node.__name__, str(err)
-       
-   except aiohttp.client_exceptions.ClientConnectorError as err:    
-          return FAILURE, node.__name__, str(err)          
-     
-   except aiohttp.client_exceptions.ServerDisconnectedError as err:    
-          return FAILURE, node.__name__, str(err)          
-  
-   except ssl.SSLError as err:    
-          return FAILURE, node.__name__, str(err)
-       
-   except AttributeError as err:
-          return FAILURE, node.__name__, str(err)                 
-
    except:
           e = sys.exc_info()[0]
           return FAILURE, node.__name__, str(e)
-
-   return FAILURE, node.name, "UNEXPlAINED ERROR"
 
 def fetchAll(nodes,view):
     loop = asyncio.new_event_loop()

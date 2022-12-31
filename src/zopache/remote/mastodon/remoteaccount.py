@@ -20,14 +20,23 @@ from zopache.remote.mastodon.interfaces import IMastodonAccount
 
 @implementer (IMastodonAccount)
 class MastodonAccount(Page,UniqueName):
-    webClass = "MastodonAccount"
+    webClass = "RemoteAccount"
     crawledToStart = False
     htmlSummary = True
     title = ""
     twitterId = ''
     mastodonId = ''
     keepAllArticles = False
+    minId = None
+    
+    @property
+    def remoteURL(self):
+        blank,user, server = self.parts()
+        return 'https://' + server + '/@' + user
 
+    def parts(self):
+        return self.mastodonId.split('@')
+    
     def reset(self):
          self.upUntil = time.time()
          self.backTo = self.upUntil
@@ -37,9 +46,6 @@ class MastodonAccount(Page,UniqueName):
          self.reset()
          Page.__init__(self)
         
-
-              
-
     def postAddProcess(self,view = None):
         Page.postAddProcess(self,view = view)
         if self.logoURL:

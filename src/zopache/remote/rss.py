@@ -1,11 +1,14 @@
 import time
-from zope.interface import Interface
-from zope import schema
-from slugify import slugify
-import feedparser
 from html import unescape
 
+from slugify import slugify
+import feedparser
+
+from zope import schema
+from zope.interface import Interface
+
 from dolmen.forms.base.markers import FAILURE, SUCCESS
+
 from zopache.pages.page import Link
 from zopache.core.viewdecorators import *
 from zopache.crud.interfaces import IContainer
@@ -81,14 +84,17 @@ class RSSBase(object):
        new.__parent__ = self
        new.rssFeed = self          
        new.postAddProcess(view = view ,article = article)
-
+       return new
+   
     def postAddProcess(self,view = None):
         Link.postAddProcess(self,view = view)
         if self.logoURL:
             getImage(self,self.logoURL)
         self.fetchArticles([self],view)
 
-    #COPY OF THIS HERE AND IN RSS.PY    
+    #COPY OF THIS HERE AND IN RSSFetch.PY
+    #AND IN mastodon/fetch.py
+    #That one has no view argument.
     def fetchArticles(self,feeds,view):    
         result = fetchAll(feeds,view)
         for item in result:
@@ -139,12 +145,15 @@ class RSS(Link,UniqueName,RSSBase):
          
     async def createArticles(self,entries,view):
        globalArticles= self.getPublicationRoot().globalArticles
+       articles = []
        for article in entries[:20]:
            theId = article['id']
            if not theId in globalArticles:
               importTime = await view.getTime()
-              self.createOneArticle(article,view,importTime)
-        
+              new = self.createOneArticle(article,view,importTime)
+              articles.append(new)
+       return SUCCESS, articles
+   
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)
 

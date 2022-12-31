@@ -21,7 +21,7 @@ from zopache.pages.addanonymous import AddAnonymousPageByTitle
 @context(IPage)
 class AddMsatodonAccount(AddAnonymousPageByTitle,Notify):
      interface = IAddMastodonAccount
-     title = "Add an RSS Feed"
+     title = "Add a Remote Mastodon Account"
      subTitle =""
      count = 0
      factory = MastodonAccount
@@ -31,12 +31,13 @@ class AddMsatodonAccount(AddAnonymousPageByTitle,Notify):
      def newURL(self,baseURL):
         return baseURL + '/manage'
 
+     """
      def dataModel(self):
 
         contextJsonDict =  self.template['rssSchema'].getAsDict()
         result = json.dumps(contextJsonDict)
         return result
-   
+     """
 
 
 

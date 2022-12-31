@@ -269,6 +269,10 @@ class Branch(SimpleBranch):
             self.contentByTime[ int(item.importTime)] = item
             self.catalogContent(item,ancestorNames)
             self.globalArticles [item.permaLink] = item
+
+        elif item.__class__.__name__  == "TootedArticle":
+            self.contentByTime[item.importTime] = item
+            self.catalogContent(item,ancestorNames)
                     
         elif item.__class__.__name__ == 'Link': 
             self.contentByTime[int(item.importTime)] = item
@@ -342,6 +346,12 @@ class Branch(SimpleBranch):
             if item.permaLink in globalArticles:
                 del globalArticles [item.permaLink]
             self.unCatalogContent(item)
+
+        elif item.__class__.__name__  == "TootedArticle":
+            importTime = item.importTime             
+            if importTime in self.contentByTime:
+               del self.contentByTime[importTime]
+            self.unCatalogContent(item)            
            
         elif item.__class__.__name__ == 'Link':
             del self.contentByTime[int(item.importTime)]
