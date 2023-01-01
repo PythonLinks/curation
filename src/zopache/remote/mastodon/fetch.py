@@ -46,7 +46,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
     
     def update(self):
         context = self.context
-        allToots =  {}
+        self.allToots=allToots =  {}
+        self.startTime = time.time()
         self.siteRoot = self.getSiteRoot()
         proxy =  self.myAccount()
         pageOfToots = [None]
@@ -57,7 +58,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         accountName = context.mastodonId
         user = proxy.account_search(accountName)[0]
         
-        rateLimit = 1
+        rateLimit = 30
         if rateLimit >  proxy.ratelimit_remaining:
             rateLimit  = proxy.ratelimit_remaining - 1
         while pageOfToots and (count <= rateLimit):
@@ -81,8 +82,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         #SOMETHING IS FISHY HERE>
         #I SHOULD NOT NEED TO TEST IF IT IS THERE OR NOT. 
         for item in allToots.values():
-                print ("deleting ", item.importTime,
-                   self.contentByTime[-item.importTime].tootId )
                 del self.contentByTime[- item.importTime]
             
         self.fetchArticles (allToots.values())   
@@ -100,7 +99,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
     def processToots(self,pageOfToots,allToots):
         context = self.context
 
-        for toot in list(pageOfToots)[0:5]:
+        for toot in pageOfToots:
            if not toot.visibility == 'public':
                continue
 
@@ -171,11 +170,14 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            if not url in allToots:
                allToots[url] = new               
                self.contentByTime[-importTime] = new
-               print (-new.importTime in self.contentByTime)
                print ("adding ", importTime, tootId )       
 
     def render(self):
-        return ("<br> Size " + str(len(self.context)) )
+        print ("Duration = ", str((time.time() - self.startTime)/60))
+        return (
+            "Duration =  " + str((self.startTime - time.time())/60) +
+            "<br> New toots = " + str(len(self.allToots)) + 
+            "<Br> Total Toots " + str(len(self.context)) )
                 
 
     def removeEmptyParagraphs(self,soup):
