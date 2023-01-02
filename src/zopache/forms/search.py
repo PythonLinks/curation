@@ -120,30 +120,28 @@ def getResults(view):
 from itertools import islice
 goodTypes = ['RSSArticle','TootedArticle']
 
-def getRSSValues(context):
+def getRSSValuesRemainder(view):
+        context = view.context
         count = 0
-        result = []
+        values = []
+        remainder = []
         for item in context.reversedValuesAsList():
-            if item.__class__.__name__ in goodTypes:
+            if not item.__class__.__name__ in goodTypes:
+                continue
+            if count < 6:
                 count += 1 
-                result.append (item)
-            if count == 6:
-                break
-        return result    
+                values.append (item)
+            else:
+                remainder.append(item.importTime)
+        return values, remainder    
             
-def getRSSRemainder(context,values):
-        valuesLen = len(values)
-        for item in islice(context.values(),valuesLen):
-            if item.__class__.__name__ in goodTypes:
-                yield item.importTime
 
 def getRSSResults(view):
     context = view.context
     if len(view.request.form):
         return getResults(view)
     else:
-        values = getRSSValues(context)
-        remainder = getRSSRemainder(context,values)        
+        values , remainder = getRSSValuesRemainder(view)
         return len(context),[], values, remainder           
 
 def lastItem(view):    
