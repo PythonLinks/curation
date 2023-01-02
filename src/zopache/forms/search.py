@@ -5,11 +5,16 @@ from hypatia.query import Contains
 from more_itertools import take
 
 def searchADictionary(view, aDict, defaultCategory = None):
+    context = view.context 
     if defaultCategory == None:
-        defaultCategory = view.context.name
+        defaultCategory = context.name
+    if context.__class__.__name__ == 'RSS':
+       recommended = aDict.get("recommended","all")        
+    else:
+       recommended = aDict.get("recommended","recommended")        
     searchTerm = aDict.get("query","")
     type = aDict.get("type","both")
-    recommended = aDict.get("recommended","recommended")
+
     category = aDict.get("category",defaultCategory)
 
     root = view.getSiteRoot()
@@ -106,6 +111,7 @@ def justValues(view,docIds):
     return  [index[int(x)] for x in docIds]
 
 def getResults(view):
+    breakpoint()
     numdocs, featured, remainder = searchADictionary (
         view,view.request.form)
     numFeatured = len(featured)
