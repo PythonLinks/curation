@@ -50,6 +50,26 @@ class MapOrLocation (PageBase):
     def getOneMarkerCore(self):
         return []
  
+    def listOfAClass(self,aClassName):
+        result = []
+        for item in self.values():
+            if (item.__class__.__name__ == aClassName):
+               result.append (item)
+        return result
+
+    def listOfAClassInParents(self,aClassName):
+        result = []
+        node = self
+        while node != None:
+            for item in node.values():
+                if (item.__class__.__name__ == aClassName):
+                   result.append (item)
+            if not hasattr(node,'__parent__'):
+               break
+            node = node.__parent__
+        result.reverse()    
+        return result
+
 
 #At least used by events. 
 @implementer (ILocationLeaf)

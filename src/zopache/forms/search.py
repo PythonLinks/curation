@@ -114,34 +114,6 @@ def getResults(view):
         view,remainder, count = 6-numFeatured)
     return numdocs, featured, values, remainder
 
-#NOW WE HAVE THE PART FOR RSS AND TOOTED ARTICLES    
-from itertools import islice
-goodTypes = ['RSSArticle','TootedArticle']
-
-def getRSSValuesRemainder(view):
-        context = view.context
-        count = 0
-        values = []
-        remainder = []
-        for item in context.reversedValuesAsList():
-            if not item.__class__.__name__ in goodTypes:
-                continue
-            if count < 6:
-                count += 1 
-                values.append (item)
-            else:
-                remainder.append(item.importTime)
-        return values, remainder    
-            
-
-def getRSSResults(view):
-    context = view.context
-    if len(view.request.form):
-        return getResults(view)
-    else:
-        values , remainder = getRSSValuesRemainder(view)
-        return len(context),[], values, remainder           
-
 def lastItem(view):    
     items = view.getSiteRoot().contentByTime
     maxKey = items.maxKey()

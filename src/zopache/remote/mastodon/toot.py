@@ -3,27 +3,41 @@ import time
 
 from slugify import slugify
 
+from webpreview import web_preview
+
 from zope.interface import implementer
 
+from cromlech.container.contained import Contained
 from dolmen.forms.base.markers import FAILURE, SUCCESS
-from dolmen.container import OrderedBTreeContainer
+from dolmen.container import BTreeContainer
 
 from zopache.remote.rssarticle import BaseArticle
 from zopache.remote.mastodon.interfaces import ITootedArticle
 from zopache.remote.rssdownload import fetch
 from zopache.crud.getimage import createImageInFrom
-from webpreview import web_preview
+from zopache.pages.used import Used
+from zopache.remote.sharedarticle import SharedArticle
+from zopache.core.ancestors import Ancestors
+from zopache.ttw.html import UntrustedHTMLBase
+from cromlech.container.contained import Contained
+from zopache.core import Container
 
 @implementer(ITootedArticle)
-class TootedArticle(BaseArticle):
+class TootedArticle(Container,
+                    SharedArticle,
+                    Used,
+                    UntrustedHTMLBase):
+    
     webClass = "TootedArticle"
     webApproved = True
     publicationApproved = True
     description = ""
     title = ""
     content = ""
+    recommended = True
     
     def __init__(self,url,content,importTime,tootId,tootURL):
+        SharedArticle.__init__(self)        
         self.articleURL = url
         self.importTime = importTime
         self.description = content or "" 
@@ -34,9 +48,13 @@ class TootedArticle(BaseArticle):
         #Simpler to not call page initialization.
         #Base Article sets import time. Not good. 
         #HOPE I DO NOT MISS ANYTHING
-        OrderedBTreeContainer.__init__(self)
-        self.modificationTime= time.time()
 
+
+
+    @property
+    def publishedAt(self):
+        return self.importTime
+    
     def preDeleteProcess(self,view):
         localArticles = self.curator.localArticles
         try:

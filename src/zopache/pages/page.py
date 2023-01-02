@@ -14,7 +14,8 @@ from zopache.pages.interfaces import (ITime,IContent,IPage ,IPageBase,
                                       IRootPage,
                                       INews,
                                       ICategory)
-from zopache.core.getroot import getPublicationRoot, getZodbRoot
+
+from zopache.core.getroot import getZodbRoot
 from zopache.ttw.html import UntrustedHTMLBase
 from dolmen.container import OrderedBTreeContainer
 from cromlech.container.contained import Contained
@@ -34,24 +35,17 @@ from zopache.pages.interfaces import ILink,IActionNetwork
 from zopache.ttw.branch import Branch
 from zopache.core.relatives import parentsWhichImplement
 from zopache.core.relatives import Parents
+from zopache.pages.used import Used
 
-class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,ProcessTree):
+class PageVeryBase(Used,AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,ProcessTree):
     private = False
-    branchSize=1
+    branchSize =1
     webApproved = True
     emailApproved = False
     basePath = "/"
     createdBy = None
     editedBy = None
     toot = ""
-
-    def reversedValuesAsList(self):
-        result = []
-        for item in self.values():
-               result.append (item)
-        result.reverse()       
-        return result
-
 
 
     def myDict(self,view):
@@ -100,25 +94,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def noDashName(self):
         return self.name.replace('-','')
     
-    def getToot(self, view = None):
-        if self._toot != "":
-            return self._toot
-        else:
-            return self.defaultToot(view = view)
-
-    def setToot(self,value):
-        self._toot = value
-
-    toot = property (getToot, setToot)    
-    
-    def className(self):
-        return self.__class__.__name__
-    
-    def getTitleFor(self,view):
-        return self.title
-    
-    def getDescriptionFor(self,view):
-        return self.description
 
     def countMe (self):
         if not self.webApproved:
@@ -138,23 +113,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
         self.branchSize=total
         return total    
     
-    def getDefaultThumbNailURL(self):
-        if 'Logo' in self:
-            return  self.shortURL (self,viewName ='Logo')
-        return ""
-
-    def sortByClass(self):
-        result = defaultdict(list)   
-        for item in self.values():
-            result[item.__class__.__name__].append(item)
-        return result    
-
-    
-    def moveURL(self):
-        if hasattr(self,'url'):
-           self.remoteURL = self.url
-           del self.url
-           
     def listFutureEvents(self):
         result = []
         for item in self.allBlogObjects():
@@ -165,12 +123,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
         return result
 
                               
-    def allPagesAsList(self):
-        pages = []
-        for item in AllBlogObjects(self):
-            pages.append(item)
-        return pages
-    
     #USED TO DISPLAY CHILDREN, BUT NOT HTML OBJECTS
     def childCategories(self):
         result =[]
@@ -178,76 +130,11 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
             if (IPageBase.providedBy (item) and item.webApproved):
                result.append (item)
         return result
-
-    def newsItemsOnly(self):
-        articles = []
-        categories = []
-        links = []
-        for item in self.values():
-               className = item.__class__.__name__
-               if className == 'Category':
-                    categories.append(item)
-               #elif className == 'Link':
-               #     links.append(item)
-               #elif className == 'RssArticle':
-               #     if item.webApproved:
-               #          articles.append(item)                    
-        return categories #+ links + articles
     
     def canView(self,view):
         return True
     
-    def allValuesAsList(self):
-        result = []
-        for item in self.values():
-               result.append (item)
-        return result
-    
-    def valuesAsList(self):
-        result = []
-        for item in self.values():
-            if IContent.providedBy(item):            
-               result.append (item)
-        return result
-
-    def listOfAClass(self,aClassName):
-        result = []
-        for item in self.values():
-            if (item.__class__.__name__ == aClassName):
-               result.append (item)
-        return result
-
-    def listOfAClassInParents(self,aClassName):
-        result = []
-        node = self
-        while node != None:
-            for item in node.values():
-                if (item.__class__.__name__ == aClassName):
-                   result.append (item)
-            if not hasattr(node,'__parent__'):
-               break
-            node = node.__parent__
-        result.reverse()    
-        return result
-
         
-    def listOfAnInterface(self,aDottedName):
-        result = []
-        theInterface = locate(aDottedName)        
-        if theInterface == None:
-            return result
-        for item in self.values():
-            if theInterface.providedBy(item): 
-               result.append (item)
-        return result
-    
-    def getClientClass(self):
-        if (hasattr(self,'clientClass') and
-           self.clientClass != ""):
-           return self.clientClass
-        else:
-           return self.webClass
-       
     def postProcessCore(self,view=None):
         self.partialPostProcess(view=view)
         cache.resetCache(self)
@@ -294,17 +181,8 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
          if jsonRoot:
             jsonRoot.setJson()
     
-    def __init__(self):
-         OrderedBTreeContainer.__init__(self)
-         self.creationTime=time.time()
-         self.modificationTime=self.creationTime
-
-    def getPublicationRoot(self):
-        return getPublicationRoot(self)
-
     def getZodbRoot(self):
         return getZodbRoot (self)
-
      
     def blogParents(self):
          return parentsUpTo(self,ISiteRootPage)
@@ -312,9 +190,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     def isCategory (self):
         return False
     
-    def isVideo(self):
-        return False
-
     def isPage (self):
         return True    
 
@@ -340,15 +215,11 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
          else:
             return True
            
-
     def editDateForRSS(self):
          return time.strftime("%a, %d %b %Y %H:%M:%S %z",time.localtime(self.modificationTime))
 
     def editDateForSiteMap(self):
          return time.strftime("%Y-%m-%d",time.localtime(self.modificationTime))
-
-    def creationDateForHumans(self):
-         return time.strftime("%Y-%m-%d",time.localtime(self.creationTime))
 
     def editDateForHumans(self):
          return self.creationTime
@@ -380,12 +251,6 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
                   children.append(item.asDict(classes = classes))
         return new
     
-    @property
-    def titlePlusDescription(self):
-        if self.description == None:
-           return self.title
-
-        return self.title + " " + self.description + " " + self.parent.title
     
     
 class PageBase(PageVeryBase,PageMixIn,Ancestors):
@@ -393,23 +258,6 @@ class PageBase(PageVeryBase,PageMixIn,Ancestors):
     description = ''
     source = ''
     
-    def defaultToot(self,view=None):
-        return( self.title +
-                "\n\n" + 
-                self.description +
-                "\n\n" +
-                self.parentalTags() +
-                "\n\n"          
-        )
-    
-    def parentalTags(self):
-        result = []
-        parents = parentsWhichImplement(self,ICategory)
-        for item in parents:
-            tags = item.tags
-            if tags != '':
-               result.append(tags)
-        return ' '.join(result) 
 
     def sortedByTitle(self):
            unsortedList=[]
@@ -434,15 +282,6 @@ class PageBase(PageVeryBase,PageMixIn,Ancestors):
         self.title=self.title.replace ('\r' , " ")                
 
     
-    def getTitle(self):
-         return self.title
-
-    def getTitleForDomain(self,domain):
-        return self.title
-
-    def getDescriptionForDomain(self,domain):
-        return self.description
-
     def getAuthor(self,view):
         topic = self.parent
         topicName = topic.name

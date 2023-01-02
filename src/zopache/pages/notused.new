@@ -1,0 +1,72 @@
+class NotUsed(obect):
+   def reversedValuesAsList(self):
+        result = []
+        for item in self.values():
+               result.append (item)
+        result.reverse()       
+        return result
+
+
+    def getDefaultThumbNailURL(self):
+        if 'Logo' in self:
+            return  self.shortURL (self,viewName ='Logo')
+        return ""
+    
+    def sortByClass(self):
+        result = defaultdict(list)   
+        for item in self.values():
+            result[item.__class__.__name__].append(item)
+        return result    
+
+    
+    def moveURL(self):
+        if hasattr(self,'url'):
+           self.remoteURL = self.url
+           del self.url
+           
+    def allPagesAsList(self):
+        pages = []
+        for item in AllBlogObjects(self):
+            pages.append(item)
+        return pages
+    
+    def newsItemsOnly(self):
+        articles = []
+        categories = []
+        links = []
+        for item in self.values():
+               className = item.__class__.__name__
+               if className == 'Category':
+                    categories.append(item)
+               #elif className == 'Link':
+               #     links.append(item)
+               #elif className == 'RssArticle':
+               #     if item.webApproved:
+               #          articles.append(item)                    
+        return categories #+ links + articles
+
+    def listOfAnInterface(self,aDottedName):
+        result = []
+        theInterface = locate(aDottedName)        
+        if theInterface == None:
+            return result
+        for item in self.values():
+            if theInterface.providedBy(item): 
+               result.append (item)
+        return result
+    
+    def getClientClass(self):
+        if (hasattr(self,'clientClass') and
+           self.clientClass != ""):
+           return self.clientClass
+        else:
+           return self.webClass
+       
+
+
+
+
+
+
+
+       

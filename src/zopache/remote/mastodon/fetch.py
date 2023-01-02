@@ -36,12 +36,10 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
 
     subTitle = "If there are a lot of toots, it can take a while. "
 
-    def previousImportTime(self):
-            time = self.importTime 
+    def previousImportTime(self,time):
             while True:
                 time -= 1
                 if - time not in self.contentByTime:
-                    self.importTime = time
                     return time
             raise Exception("No Possible times were found!")
 
@@ -55,7 +53,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         pageOfToots = [None]
         count = 0
         pageCount = 0
-        self.importTime = int(time.time()) + 1
         self.contentByTime = self.getSiteRoot().contentByTime
         accountName = account.mastodonId
         print ("Acount Name")
@@ -68,12 +65,12 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         #zero rate limit, so always leave a few
         #available.
         #rateLimit = 5
-        rateLimit = 100
+        #rateLimit = 100
         #rateLimit = proxy.ratelimit_remaining - 3        
-        if rateLimit >=  proxy.ratelimit_remaining:
-            rateLimit  = proxy.ratelimit_remaining - 3
+        #if rateLimit >=  proxy.ratelimit_remaining:
+        #    rateLimit  = proxy.ratelimit_remaining - 3
 
-        while pageOfToots and (count <= rateLimit):
+        while pageOfToots and (proxy.ratelimit_remaining > 3):
            loopStart = time.time() 
            if self.duplicates > 50:
                print ("EVERYTHING IS DOWNLOADED")
@@ -189,9 +186,14 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            tootURL = toot.url
            soup = self.removeEmptyParagraphs(soup)
            content = str(soup)
-           importTime = self.previousImportTime()
+           try:
+               importTime = time.mktime(toot.created_at.timetuple())
+           except:
+               importTime = time.time()
+               
+           importTime = int(importTime)
+           importTime = self.previousImportTime(importTime) 
            new = TootedArticle(url,content,importTime,tootId,tootURL)
-           new.publishedAt = time.mktime(toot.created_at.timetuple())
            new.tags = ' '.join(self.textTags)
            new.__parent__ = account
            new.curator = account
