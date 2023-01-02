@@ -63,8 +63,6 @@ class MastodonAccount(Page,UniqueName):
                view.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
         
-    def postProcess(self,view = None):
-        Link.postProcess(self, view = view)
 
     async def processResponse(self, session, response,view):
           html  =  await response.text()

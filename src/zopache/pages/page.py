@@ -22,7 +22,6 @@ from cromlech.container.contained import Contained
 from zope.interface import implementer
 from zopache.ttw.interfaces import IBranch
 from zopache.ttw.branch import Branch
-from zopache.core.relatives import parentWhichImplements
 from zopache.core.relatives import parentsUpTo
 from zopache.core.ancestors import Ancestors
 from zopache.pages.cache import cache, PageMixIn, RecentMixIn

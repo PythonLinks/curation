@@ -342,12 +342,17 @@ class LogoAcquire2(View):
              logo = context['Logo']
              return logo['200W'].data
          
-         rssFeed = getattr(context,'rssFeed',context)
-         if 'Logo' in rssFeed:
-             logo = rssFeed['Logo']
-             return logo.get('200W').data
+         source = (getattr(context,'rssFeed',None) or
+                   getattr(context,'curator',None) )
+
+         if source:
+             if 'Logo' in source:
+               logo = source['Logo']
+               return logo.get('200W').data
          
-         logo = ParentalAcquire(rssFeed)['Logo']
+             logo = ParentalAcquire(source)['Logo']
+         else:   
+            logo = ParentalAcquire(context)['Logo']            
          if logo == None:
              return ''
          return logo['200W'].data
