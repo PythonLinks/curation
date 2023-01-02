@@ -74,6 +74,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
             rateLimit  = proxy.ratelimit_remaining - 3
 
         while pageOfToots and (count <= rateLimit):
+           loopStart = time.time() 
            if self.duplicates > 50:
                print ("EVERYTHING IS DOWNLOADED")
                break
@@ -108,14 +109,15 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
             
            self.fetchArticles (allToots.values())
            transaction.manager.commit()
-               
+           loopEnd = time.time()
+           print ("LoopTime = ", loopEnd - loopStart)
         Form.update(self)
         print ("PAGECOUNT = ", pageCount)
         #print ("Number of Toots",len(account))
         
     def fetchArticles(self,articles):
         view = self
-        result = fetchAll(articles,view)
+        result = fetchAll(articles,view, allowedTime = 30)
         for item in result:
             print (result[0])
             if item[0] ==  FAILURE:  

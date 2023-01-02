@@ -95,17 +95,15 @@ def searchADictionary(view, aDict, defaultCategory = None):
     featuredTimes =  [item.importTime for item in featuredItems]           
     return numdocs, featuredTimes,  notFeaturedIds
 
-
 def valuesPlusRemainder(view,docIds, count = 6):
     index = view.getSiteRoot().contentByTime
     values = [index[int(x)] for x in take(count,docIds)]
     #NOTE DOCIDS IS NOW 6 SMALLER   
     return values, docIds
 
-
 def justValues(view,docIds):
     index = view.getSiteRoot().contentByTime
-    return  [index[x] for x in docIds]
+    return  [index[int(x)] for x in docIds]
 
 def getResults(view):
     numdocs, featured, remainder = searchADictionary (
