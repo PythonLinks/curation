@@ -22,6 +22,7 @@ from zopache.remote.rssdownload import fetchAll
 from zopache.crud.getimage import getImage
 
 class RSSBase(object):
+    
     def parseHTML(self,html,maxLength = 300):
         soup = BeautifulSoup(html, 'html.parser')
         try:
@@ -161,8 +162,7 @@ class RSS(Link,UniqueName,RSSBase):
           html  =  await response.text()
           feed = feedparser.parse(html)
           entries = feed['entries']
-          await self.createArticles(entries,view)
-
+          return await self.createArticles(entries,view)
           
 @implementer(IJustRSS)
 class JustRSS(RSS):

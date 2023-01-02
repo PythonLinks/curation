@@ -52,11 +52,12 @@ class GetRSS(Form):
 
     #COPY OF THIS HERE AND IN RSS.PY
     #This one has no view argument, just uses self
-    def fetchArticles(self, feeds):    
+    def fetchArticles(self, feeds):
+
         result = fetchAll(feeds,self)
         for item in result:
-            if item[0] ==  FAILURE:  
-              self.submissionErrors.append( "ERROR:" + str(item [1:]))
+              if item[0] ==  FAILURE:  
+                 self.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
 
 

@@ -37,7 +37,9 @@ class BaseArticle(Page):
          OrderedBTreeContainer.__init__(self)
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
-        
+
+
+    
     def defaultToot(self,view):        
             twitterId = self.rssFeed.twitterId
             return   (

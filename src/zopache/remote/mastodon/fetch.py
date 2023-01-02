@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 from langdetect import detect
 from langdetect.lang_detect_exception import LangDetectException
 
+import transaction
+
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 
 from zopache.core.viewdecorators import *
@@ -45,8 +47,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
 
     
     def update(self):
-        context = self.context
-        self.allToots=allToots =  {}
+        self.duplicates = 0
+        account = self.context
         self.startTime = time.time()
         self.siteRoot = self.getSiteRoot()
         proxy =  self.myAccount()
@@ -55,17 +57,37 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         pageCount = 0
         self.importTime = int(time.time()) + 1
         self.contentByTime = self.getSiteRoot().contentByTime
-        accountName = context.mastodonId
+        accountName = account.mastodonId
+        print ("Acount Name")
         user = proxy.account_search(accountName)[0]
+        print ("Acount Name DONE ")               
+               
         
-        rateLimit = 30
-        if rateLimit >  proxy.ratelimit_remaining:
-            rateLimit  = proxy.ratelimit_remaining - 1
+
+        #Do not want to start a web thread with a 
+        #zero rate limit, so always leave a few
+        #available.
+        #rateLimit = 5
+        rateLimit = 100
+        #rateLimit = proxy.ratelimit_remaining - 3        
+        if rateLimit >=  proxy.ratelimit_remaining:
+            rateLimit  = proxy.ratelimit_remaining - 3
+
         while pageOfToots and (count <= rateLimit):
+           if self.duplicates > 50:
+               print ("EVERYTHING IS DOWNLOADED")
+               break
+           maxId = account.minId
+           minId = None
+           if account.crawledToStart:
+              maxId = None
+              
            print (".", end = "")
+           self.allToots=allToots =  {}
+           
            pageOfToots = proxy.account_statuses(user.id,
-                        max_id=self.context.minId,
-                       min_id=None,
+                       max_id=maxId,
+                       min_id=minId,
                        since_id=None,
                        limit=1000)
 
@@ -76,38 +98,48 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
               self.processToots(
                   pageOfToots,allToots)
            else:
-             context.crawledToStart = True
-        print ("Number of Toots",len(self.context))
-        
-        #SOMETHING IS FISHY HERE>
-        #I SHOULD NOT NEED TO TEST IF IT IS THERE OR NOT. 
-        for item in allToots.values():
-                del self.contentByTime[- item.importTime]
+             account.crawledToStart = True
+
+           #Until you fetch the article, give it a name,
+           #and add it to the
+           #Parent, it will not be in contentByTime. 
+           for item in allToots.values():
+                  del self.contentByTime[- item.importTime]
             
-        self.fetchArticles (allToots.values())   
+           self.fetchArticles (allToots.values())
+           transaction.manager.commit()
+               
         Form.update(self)
         print ("PAGECOUNT = ", pageCount)
+        #print ("Number of Toots",len(account))
         
     def fetchArticles(self,articles):
         view = self
         result = fetchAll(articles,view)
         for item in result:
+            print (result[0])
             if item[0] ==  FAILURE:  
-               view.submissionErrors.append( "ERROR:" + str(item [1:]))
+               view.submissionErrors.append( "ERROR:" + str(item [1]))
+               print ("item 1", str(item [1]))               
         self.status='RSS Feeds were downloaded.'
 
     def processToots(self,pageOfToots,allToots):
-        context = self.context
-
+        account = self.context
+        
         for toot in pageOfToots:
+           tootId = toot.id
+           if tootId in account.localArticles:
+               self.duplicates += 1
+               continue
+           
            if not toot.visibility == 'public':
                continue
 
-           if context.minId == None:
-               context.minId = toot.id
+           if account.minId == None:
+               account.minId = tootId
                
-           elif toot.id < context.minId:
-                context.minId = toot.id
+           elif tootId < account.minId:
+                account.minId = tootId
 
            content = toot.content
            self.hashTags = []
@@ -152,7 +184,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            if tootLength - urlLength < 30:
                continue
 
-           tootId = toot.id
            tootURL = toot.url
            soup = self.removeEmptyParagraphs(soup)
            content = str(soup)
@@ -160,17 +191,15 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            new = TootedArticle(url,content,importTime,tootId,tootURL)
            new.publishedAt = time.mktime(toot.created_at.timetuple())
            new.tags = ' '.join(self.textTags)
-           new.__parent__ = self.context
-           new.curator = self.context
+           new.__parent__ = account
+           new.curator = account
            new.articleURL = url
-
            new.numberOfBoosts = toot.reblogs_count
            new.numberOfFavorites = toot.favourites_count
 
            if not url in allToots:
                allToots[url] = new               
                self.contentByTime[-importTime] = new
-               print ("adding ", importTime, tootId )       
 
     def render(self):
         print ("Duration = ", str((time.time() - self.startTime)/60))

@@ -11,8 +11,7 @@ from zopache.remote.irss import IRSSBase, IRSSArticle
 async def fetch(session,node,view):
    startTime = time.time()    
    duration =  0
-   
-   if IRSSBase.providedBy(node):
+   if node.__class__.__name__ == "RSS":
       url = node.rssURL
    elif node.__class__.__name__ == "TootedArticle":
       if node.title == "":
@@ -32,7 +31,7 @@ async def fetch(session,node,view):
 
           if response.status == 200:
              result =   await node.processResponse(session,response,view)
-             return result
+             return SUCCESS, result
           else:
              return FAILURE, node.name, 'status = ' + str(response.status)
 
@@ -44,14 +43,13 @@ async def fetch(session,node,view):
           e = sys.exc_info()[0]
           return FAILURE, node.__name__, str(e)
 
-def fetchAll(nodes,view):
+def fetchAll(nodes,view,allowedTime = 120):
     loop = asyncio.new_event_loop()
     #asyncio.set_event_loop(loop)
-    return loop.run_until_complete(fetchCore(nodes,view))
+    return loop.run_until_complete(fetchCore(nodes,view,allowedTime))
    
-async def fetchCore(nodes,view):   
+async def fetchCore(nodes,view,allowedTime):   
     tasks = []
-    allowedTime = 120
     timeout = aiohttp.ClientTimeout(total=allowedTime)
     user_agent = {'User-agent': 'Mozilla/5.0'}
     async with aiohttp.ClientSession(timeout = timeout,

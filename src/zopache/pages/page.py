@@ -45,6 +45,14 @@ class PageVeryBase(AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,
     editedBy = None
     toot = ""
 
+    def reversedValuesAsList(self):
+        result = []
+        for item in self.values():
+               result.append (item)
+        result.reverse()       
+        return result
+
+
 
     def myDict(self,view):
                 

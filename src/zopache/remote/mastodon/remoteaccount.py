@@ -4,13 +4,15 @@ from zope import schema
 from slugify import slugify
 from html import unescape
 
+from BTrees.OOBTree import OOBTree
 from dolmen.forms.base.markers import FAILURE, SUCCESS
+
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPage
 from zopache.crud.interfaces import IContainer
 from zopache.core.uniquename import UniqueName
-from BTrees.OOBTree import OOBTree
+
 
 from bs4 import BeautifulSoup
 from zopache.remote.rssdownload import fetchAll
@@ -27,7 +29,8 @@ class MastodonAccount(Page,UniqueName):
     twitterId = ''
     mastodonId = ''
     keepAllArticles = False
-    minId = None
+    minId = None 
+    maxId = None
     
     @property
     def remoteURL(self):

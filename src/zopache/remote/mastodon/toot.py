@@ -19,13 +19,14 @@ class TootedArticle(BaseArticle):
     webClass = "TootedArticle"
     webApproved = True
     publicationApproved = True
-    descruotion = ""
+    description = ""
     title = ""
-
+    content = ""
+    
     def __init__(self,url,content,importTime,tootId,tootURL):
         self.articleURL = url
         self.importTime = importTime
-        self.description = content
+        self.description = content or "" 
         self.tootId = tootId
         self.tootURL = tootURL
         self.content = content
@@ -35,13 +36,27 @@ class TootedArticle(BaseArticle):
         #HOPE I DO NOT MISS ANYTHING
         OrderedBTreeContainer.__init__(self)
         self.modificationTime= time.time()
-        
-    
+
+    def preDeleteProcess(self,view):
+        localArticles = self.curator.localArticles
+        try:
+           del localArticles [self.tootId]
+        except:
+           raise Exception("""Could not delete that tootedarticle
+           from local articles.""", tootId)
+       
+    @property
     def titlePlusDescription(self):
-        return self.title + self.source
+        #This can be deleted. 
+        if self.description == None:
+            self.description = ""
+        if self.title == None:
+            self.title = ""            
+        return self.title + self.description
 
     def tagsAsHTML(self):
         return self.tags
+    
     async def processResponse(self, session, response,view):
         contentType = response.headers.get('content-type').lower()
 
@@ -70,21 +85,21 @@ class TootedArticle(BaseArticle):
     async def processTextResponse(self, session, response,view):        
         try:
             html  =  await response.text()
-
-            
             title, description, image  = web_preview(self.articleURL, content = html )
                          
         except:
             return  FAILURE, "Web Preview Failed to Parse Response"
-
+        if not title:
+            return FAILURE, "NO TITLE GIVEN"
         self.title = title
         self.imageURL = image
         self.source = description
         newName = slugify (self.title)
         newName = view.uniqueBothName (self,newName)
-        parent = self.parent
-        parent[newName] = self
-        parent.localArticles[newName] = self
+        account = self.parent
+        account[newName] = self
+        print (".",end = "")
+        account.localArticles[self.tootId] = self
         self.postAddProcess(view )
         if image:
            return await fetch(session,self,view)

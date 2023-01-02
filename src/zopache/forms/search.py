@@ -1,3 +1,4 @@
+from itertools import islice,tee
 from hypatia.catalog import CatalogQuery
 import hypatia 
 from hypatia.query import Contains
@@ -93,16 +94,62 @@ def searchADictionary(view, aDict, defaultCategory = None):
     #returning list(featuredTimes) incorrectly sorts them by importTime.
     featuredTimes =  [item.importTime for item in featuredItems]           
     return numdocs, featuredTimes,  notFeaturedIds
-        
+
+
 def valuesPlusRemainder(view,docIds, count = 6):
     index = view.getSiteRoot().contentByTime
     values = [index[int(x)] for x in take(count,docIds)]
-    
     #NOTE DOCIDS IS NOW 6 SMALLER   
     return values, docIds
+
 
 def justValues(view,docIds):
     index = view.getSiteRoot().contentByTime
     return  [index[x] for x in docIds]
+
+def getResults(view):
+    numdocs, featured, remainder = searchADictionary (
+        view,view.request.form)
+    numFeatured = len(featured)
+    featured= justValues (view,featured)
+    values, remainder = valuesPlusRemainder (
+        view,remainder, count = 6-numFeatured)
+    return numdocs, featured, values, remainder
+
+#NOW WE HAVE THE PART FOR RSS AND TOOTED ARTICLES    
+from itertools import islice
+goodTypes = ['RSSArticle','TootedArticle']
+
+def getRSSValues(context):
+        count = 0
+        result = []
+        for item in context.reversedValuesAsList():
+            if item.__class__.__name__ in goodTypes:
+                count += 1 
+                result.append (item)
+            if count == 6:
+                break
+        return result    
+            
+def getRSSRemainder(context,values):
+        valuesLen = len(values)
+        for item in islice(context.values(),valuesLen):
+            if item.__class__.__name__ in goodTypes:
+                yield item.importTime
+
+def getRSSResults(view):
+    context = view.context
+    if len(view.request.form):
+        return getResults(view)
+    else:
+        values = getRSSValues(context)
+        remainder = getRSSRemainder(context,values)        
+        return len(context),[], values, remainder           
+
+def lastItem(view):    
+    items = view.getSiteRoot().contentByTime
+    maxKey = items.maxKey()
+    lastItem = items[maxKey]
+
 
 

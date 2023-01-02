@@ -178,11 +178,11 @@ class DeleteForm(Form):
     """
     label =''
     subTitle='Delete This Object'
-    description = """Are you really sure ? This will also delete all of its 
-children, and reindex the tree.<br><br> 
- If there are video objects (advanced version)
- in this branch of the tree, the links from the conference will not be 
-deleted, and there will be trouble.  """
+    description = """Are you really sure ? This will also delete
+    all of its children, and reindex the tree.<br><br> 
+    If there are objects that link across the tree, there
+    will be trouble."""
+    
     actions = Actions(DeleteAction(_("Delete","Delete")),
                       formactions.Cancel(_("Cancel","Cancel")))
 
