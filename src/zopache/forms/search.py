@@ -111,7 +111,7 @@ def justValues(view,docIds):
     return  [index[int(x)] for x in docIds]
 
 def getResults(view):
-    breakpoint()
+
     numdocs, featured, remainder = searchADictionary (
         view,view.request.form)
     numFeatured = len(featured)

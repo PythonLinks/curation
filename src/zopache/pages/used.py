@@ -1,7 +1,7 @@
 import time
 from zopache.core.getroot import getPublicationRoot
 from zopache.core.relatives import parentsWhichImplement
-from zopache.pages.interfaces import ICategory
+from zopache.pages.interfaces import ICategory,IContent
 
 class Used(object):
     
