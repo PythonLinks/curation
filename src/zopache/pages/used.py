@@ -4,6 +4,8 @@ from zopache.core.relatives import parentsWhichImplement
 from zopache.pages.interfaces import ICategory,IContent
 
 class Used(object):
+    lastTootTime = 0
+    _toot = ""
     
     @property
     def isVideo(self):

@@ -14,6 +14,7 @@ from webpreview import web_preview
 from zopache.remote.rssdownload import fetch
 from zopache.remote.irss import IRSSArticle
 from zopache.core.relatives import parentsWhichImplement
+from zopache.crud.getimage import getImage
 
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
@@ -28,9 +29,7 @@ class BaseArticle(Page):
     publicationApproved = False
     bestApproved = False
     tags = {}
-    lastTootTime = 0
-    _toot = ""
-    
+    delay = 0
     def __init__(self):
          #Simpler to not call page initialization.
          #HOPE I DO NOT MISS ANYTHING
@@ -51,7 +50,7 @@ class BaseArticle(Page):
                 (("\n\nBy @" + twitterId.strip() + "@twitter.com")
                     if twitterId else '') +
                "\n\n" +
-               "Via https://UncensoredNews.US/" + self.parent.name + 
+               "Read more at:  https://UncensoredNews.US/" + self.parent.name + 
                "\n\n" +
                 self.tagsAsString() + ' ' +
                 self.parentalTags()                 
@@ -130,7 +129,7 @@ class RSSArticle(BaseArticle):
         elif  hasattr(self,'links'):
             for item in self.links:
                 if "image" in item.type:
-                    return self.item.href
+                    return item.href
         return None
 
     
