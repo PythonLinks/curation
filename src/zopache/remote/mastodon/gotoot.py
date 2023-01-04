@@ -179,6 +179,8 @@ class TootForm (EditForm,BaseBot):
            
          minDelay = 0.03 #(hours)
          delay = self.context.delay
+         if delay == None:
+             delay = 0
          if delay < minDelay:
              delay = self.delay = 0
              scheduledAt = None

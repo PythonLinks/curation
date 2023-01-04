@@ -44,8 +44,6 @@ class PageVeryBase(Used,AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Conta
     basePath = "/"
     createdBy = None
     editedBy = None
-    toot = ""
-
 
     def myDict(self,view):
                 
@@ -298,19 +296,15 @@ class ActionNetwork(PageBase, PageMixIn):
 class Page(PageBase, PageMixIn):
     webClass='WikiPage'
     icon="ttwicons/WikiPage.png"
-    lastTootTime = 0
-    _toot = ""
     
 @implementer (ILink)     
 class Link(PageBase, PageMixIn):
     webClass='Link'
     icon="ttwicons/WikiPage.png"
     tags = {}
-    _toot = ""
     isArticle = True
     bestApproved = False
     publicationApproved = True
-    lastTootTime = 0
     
     def defaultToot(self, view = None):                
         return( self.title +
