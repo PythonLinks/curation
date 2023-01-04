@@ -97,20 +97,22 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                   pageOfToots,allToots)
            else:
              account.crawledToStart = True
-
-           #Until you fetch the article, give it a name,
-           #and add it to the
-           #Parent, it will not be in contentByTime. 
-           for item in allToots.values():
-                  del self.contentByTime[- item.importTime]
-            
-           self.fetchArticles (allToots.values())
-           transaction.manager.commit()
+           self.postProcessPage(allToots)
            loopEnd = time.time()
            print ("LoopTime = ", loopEnd - loopStart)
         Form.update(self)
         print ("PAGECOUNT = ", pageCount)
         #print ("Number of Toots",len(account))
+        
+    def postProcessPage(self,allToots):
+           #Until you fetch the article, give it a name,
+           #and add it to the
+           #Parent, it will not be in contentByTime. 
+           for item in allToots.values():
+                  del self.contentByTime[- item.importTime]
+           self.fetchArticles (allToots.values())
+           transaction.manager.commit()
+
         
     def fetchArticles(self,articles):
         view = self
@@ -261,3 +263,32 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            pass
        return False    
 
+@form_component
+@context(IMastodonAccount)
+@target(IView)
+@name("fixtime")
+class Fixtime(Form,BaseBot,RSSBase):
+    def postProcess(self,allToots):
+        pass
+
+    def processToots(self,pageOfToots,allToots):
+        account = self.context
+        root = self.getSiteRoot()
+        contentByTime = root.contentByTime
+        for toot in pageOfToots:
+            if tootedArticle := account.localArticles.get(toot.id,None):
+               publicationTime = None 
+               try:
+                   publcationTime = time.mktime(
+                       toot.created_at.timetuple())
+                   publicationTime = int (publicationTime)
+               except:
+                   breakpoint() #STILL DEVELOPING THIS FUNCITON
+                   pass
+               if publicationTime:
+                  root.unIndexItem(tootedArticle) 
+                  del contentByTime[tootedArticle.importTime]
+                  importTime = self.previousImportTime(importTime)
+                  tootedArticle.importTime = importTime
+                  contentByTime [importTime] = previousArticle
+                  root.indexItem(tootedArticle) 

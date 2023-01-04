@@ -68,15 +68,14 @@ class Traverser(object):
                   else:
                      publisher.newContext(item)                      
                      return item, None
-        try:                 
+        try:
+            
            view = self.view_lookup(request, context, name)
            if view is not None:
                return context, view           
-        except:
-           pass     
-        view = self.view_lookup(request, context, "not-found")
-        # NotFound(request,context)
-        return context, view
+        except ComponentLookupError as e:
+           view = self.view_lookup(request, context, "not-found")
+           return context, view
 
  
 
