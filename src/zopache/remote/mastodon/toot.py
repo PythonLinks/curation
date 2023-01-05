@@ -5,6 +5,8 @@ from slugify import slugify
 
 from webpreview import web_preview
 
+from bs4 import BeautifulSoup
+
 from zope.interface import implementer
 
 from cromlech.container.contained import Contained
@@ -122,4 +124,24 @@ class TootedArticle(Container,
         if image:
            return await fetch(session,self,view)
         else:
-           return SUCCESS, self 
+           return SUCCESS, self
+       
+    def defaultToot(self,view):
+        toot = self
+        soup = BeautifulSoup(toot.description, 'html.parser')
+        result = ""
+        for tag in soup.contents:
+            result += tag.text
+            if tag.name == 'p':
+                result += "\n"
+        return   (
+                result +
+                "\n\n" +
+                toot.curator.mastodonId +
+                "'s #BestToots\n\n" +
+                self.articleURL +
+               "\n\n" +
+               "More:"  + 
+               "\n\n" +
+                toot.tags + " "
+                )

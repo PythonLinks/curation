@@ -165,16 +165,17 @@ class TootForm (EditForm,BaseBot):
         EditForm.update(self)
     
     def nowToot(self):
-
-         if self.context._toot == "":
-            self.submissionError = """You submitted an empty toot, so nothing 
+         context = self.context
+         if context._toot == "":
+            self.submissionError = """You submitted an empty toot,
+                               so nothing 
                                was posted. <br><br> The toot was reset to 
-                              the defult toot."""
+                               the defult toot."""
             return ''
          mediaList = self.mediaIdAsList()
-         spoilerText = self.context.spoilerText
+         spoilerText = context.spoilerText
          if spoilerText == "":
-            del self.context.spoilerText
+            del context.spoilerText
             spoilerText = None
            
          minDelay = 0.03 #(hours)
@@ -185,9 +186,13 @@ class TootForm (EditForm,BaseBot):
              delay = self.delay = 0
              scheduledAt = None
          else:    
-             scheduledAt = datetime.now() + timedelta( hours=delay + 1 )         
+             scheduledAt = datetime.now() + timedelta( hours=delay + 1 )
+         inReplyToId = (context.tootId
+                        if self.className(context)=='TootedArticle'
+                        else None)
          try:
             tootDict = self.proxyForUser().status_post(self.context.toot,
+                                            in_reply_to_id=inReplyToId,
                                             spoiler_text = spoilerText,
                                             media_ids=mediaList,
                                             scheduled_at = scheduledAt
