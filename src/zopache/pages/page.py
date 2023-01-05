@@ -44,6 +44,10 @@ class PageVeryBase(Used,AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Conta
     basePath = "/"
     createdBy = None
     editedBy = None
+    def __init__(self):
+         OrderedBTreeContainer.__init__(self)
+         self.creationTime=time.time()
+         self.modificationTime=self.creationTime
 
     def myDict(self,view):
                 

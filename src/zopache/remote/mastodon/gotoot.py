@@ -11,7 +11,7 @@ from dolmen.forms.base import Actions
 
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zopache.remote.irss import IRSSArticle
 from zopache.crud.update import Cancel, Edit
 from zopache.crud.update import Edit
@@ -109,7 +109,7 @@ class IClass(Interface):
     
 @form_component
 @name ('toot')
-@context(IPage)
+@context(IPageBase)
 class TootForm (EditForm,BaseBot):
     title = 'Toot'
     subTitle = 'Limit 500 characters'
