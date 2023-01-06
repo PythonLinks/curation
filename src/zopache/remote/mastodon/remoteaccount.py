@@ -1,37 +1,43 @@
 import time
-from zope.interface import Interface
-from zope import schema
-from slugify import slugify
-from html import unescape
 
+from dolmen.container import BTreeContainer
 from BTrees.OOBTree import OOBTree
-from dolmen.forms.base.markers import FAILURE, SUCCESS
 
-from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
-from zopache.pages.interfaces import IPage
-from zopache.crud.interfaces import IContainer
 from zopache.core.uniquename import UniqueName
-
-
-from bs4 import BeautifulSoup
-from zopache.remote.rssdownload import fetchAll
-from zopache.crud.getimage import getImage
-from zopache.remote.mastodon.article import TootedArticle
+from zopache.pages.used import Used
 from zopache.remote.mastodon.interfaces import IMastodonAccount
+from zopache.core import Container
+from zopache.ttw.html import UntrustedHTMLBase
+from zopache.crud.getimage import getImage
+from zopache.core.ancestors import Ancestors
+
+#all imports are used
 
 @implementer (IMastodonAccount)
-class MastodonAccount(Page,UniqueName):
+class MastodonAccount(
+                    Container,
+                    Used,
+                    UniqueName,
+                    Ancestors,
+                    UntrustedHTMLBase):    
     webClass = "RemoteAccount"
     htmlSummary = True
     title = ""
     twitterId = ''
     mastodonId = ''
     keepAllArticles = False
-    crawledToStart = False
-    minId = None 
-    maxId = None
-    
+
+    def __init__(self):
+         self.localArticles = OOBTree()
+         self.reset()
+         Container.__init__(self)
+         
+    def reset(self):
+         self.crawledToStart = False
+         self.minId = None 
+         self.maxId = None
+        
     def __delitem__(self,key):
         siteRoot = self.getPublicationRoot()
         item = self[key]
@@ -51,20 +57,9 @@ class MastodonAccount(Page,UniqueName):
     def parts(self):
         return self.mastodonId.split('@')
     
-    def reset(self):
-         self.upUntil = time.time()
-         self.backTo = self.upUntil
-    
-    def __init__(self):
-         self.localArticles = OOBTree()
-         self.reset()
-         Page.__init__(self)
-        
     def postAddProcess(self,view = None):
-        Page.postAddProcess(self,view = view)
         if self.logoURL:
             getImage(self,self.logoURL)
-        self.fetchArticles([self],view)
 
     #COPY OF THIS HERE AND IN RSS.PY    
     def fetchArticles(self,feeds,view):    

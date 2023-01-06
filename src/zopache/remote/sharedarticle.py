@@ -30,4 +30,7 @@ class SharedArticle(object):
     def preDeleteProcess(self,view):
        pass
 
+    def creationDateForHumans(self):
+         return time.strftime("%Y-%m-%d",time.localtime(self.importTime))
+
    

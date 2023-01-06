@@ -1,25 +1,21 @@
 from slugify import slugify
 
-from zopache.crud.addbyurl import  AddByURLForm
-from zopache.crud.forms import AddByTitleForm
-from zopache.core.interfaces import ITreeSecurity,IUserSecurity
+from zopache.crud.forms import AddByTitleForm, TreeSecurityAddForm
+from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
-from zopache.pages.interfaces import IPageBase, IPage
-from zopache.remote.rss import  RSS, JustRSS
-from zopache.remote.mastodon.interfaces import IAddMastodonAccount, IMastodonAccount
+from zopache.pages.interfaces import IPageBase
+from zopache.remote.mastodon.interfaces import IAddMastodonAccount
 from zopache.remote.mastodon.remoteaccount import MastodonAccount
-from zopache.core.page import Page
 from zopache.ttw.mail import Notify
-from BTrees.OOBTree import OOBTree
-from dolmen.container import IBTreeContainer
 from zopache.business.exists import Duplicate
-from zopache.pages.addanonymous import AddAnonymousPageByTitle
+from zopache.ttw.htmlviews import AddCkHTMLBase
+from zopache.pages.addpage import AddByTitleForm
 
 @view_component
 @name ('addMastodonAccount')
 @target(IView)
-@context(IPage)
-class AddMsatodonAccount(AddAnonymousPageByTitle,Notify):
+@context(IPageBase)
+class AddMsatodonAccount(AddByTitleForm):
      interface = IAddMastodonAccount
      title = "Add a Remote Mastodon Account"
      subTitle =""
@@ -31,13 +27,6 @@ class AddMsatodonAccount(AddAnonymousPageByTitle,Notify):
      def newURL(self,baseURL):
         return baseURL + '/manage'
 
-     """
-     def dataModel(self):
-
-        contextJsonDict =  self.template['rssSchema'].getAsDict()
-        result = json.dumps(contextJsonDict)
-        return result
-     """
 
 
 

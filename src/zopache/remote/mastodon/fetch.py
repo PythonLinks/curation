@@ -31,9 +31,7 @@ class Reset(Form,BaseBot,RSSBase):
     
     def update(self):
         context = self.context
-        context.crawledToStart = False
-        context.minId = None 
-        context.maxId = None
+        context.reset()
         self.status='Account was reset.'
         
 @form_component
