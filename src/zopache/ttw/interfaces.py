@@ -359,12 +359,6 @@ class IAceHTMLClass(IAceHTML, IIndexHTML,ILeaf):
         required = False,
     )
 
-class IAceCMSClass(IAceHTMLClass):
-    pass
-
-class IAceIFrameClass(IAceHTMLClass):
-    pass
-    
 class IAceHTMLPage(IAceHTML, IIndexHTML,ILeaf):
     pass
 

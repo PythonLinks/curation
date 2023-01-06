@@ -28,8 +28,6 @@ from zopache.ttw.interfaces import (ISource,
                                     IAceHTMLClass,
                                     IUntrustedHTML,
                                     IIndexHTML,
-                                    IAceCMSClass,
-                                    IAceIFrameClass,
                                     IAceHTMLPage)
 from zopache.ttw.addeditforms import TreeSecurityAddForm, AceEditForm
 
@@ -38,8 +36,6 @@ from zopache.ttw.html import (HTML,
                               AceHTML,
                               TrustedHTML,
                               UntrustedHTML,
-                              AceCMSHTML,
-                              AceIFrameHTML,
                               HTMLPage,
                               SecureHTML)
 
@@ -118,22 +114,6 @@ class AddAceHTMLBase(AceScripts,AddHTMLBase,TreeSecurityAddForm):
 class AddAceHTML (AddAceHTMLBase):
     pass
 
-
-@form_component
-@name (u'addAceIFrame')
-@context(IBTreeContainer)
-@implementer(ITreeSecurity)
-class AddAceIFrame (AddAceHTMLBase):
-    factory = AceIFrameHTML
-
-@form_component
-@name (u'addAceCMS')
-@context(IBTreeContainer)
-@implementer(ITreeSecurity)
-class AddAceCMS (AddAceHTMLBase):
-    factory = AceCMSHTML
-
-
 @view_component
 @name('index')
 @context(IIndexHTML)
@@ -143,10 +123,6 @@ class Index(View,Breadcrumbs):
     make_response = make_view_response
     def setDisplayObject(self,item):
         self.zopacheTemplate=item
-
-
-    def isCMS(self):
-        return False
 
     def remoteHref(self,url,title):
             return F'<a href="{url}" > {title}</a>'
@@ -197,48 +173,6 @@ class PageIndex(AceObjectIndex):
     def update(self):
         self.zopacheTemplate = self.layoutAcquire('index')
         
-"""  
-@view_component
-@name('index')
-@context(IAceCMSClass)
-class CMSIndex(Index):
-    def isCMS(self):
-        return True
-
-    def breadcrumbs(self):
-        return self.divBreadcrumbs(self.context,viewName = 'wp-content')
-
-    def command(self,name):
-        url =  self.context.__name__ + '/cms-' + name
-        return url
-
-    def page(self,name):
-        url =  name +"/wp-content"
-        return url
-"""
-
-#INDEX IFRAME CLASS
-@view_component
-@name('index')
-@context(IAceIFrameClass)
-class IFrameIndex(Index):
-    def isCMS(self):
-        return True
-
-    def breadcrumbs(self):
-        return self.divBreadcrumbs(self.context,viewName = 'html-content')
-        
-    def command(self,name):
-        url =  self.context.__name__ + '/iframe-' + name
-        return url
-
-    def page(self,name):
-        url =  name +"/html-content"
-        return url
-
-    def remoteHref(self,url,title):
-            return F'<a href="{url}" target ="_parent"> {title}</a>'
-
 class BaseHTMLEditForm(BaseEditForm):
     actions = Actions()
     dataValidators = [HTMLValidator]    
