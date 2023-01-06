@@ -76,15 +76,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                
         
 
-        #Do not want to start a web thread with a 
-        #zero rate limit, so always leave a few
-        #available.
-        #rateLimit = 5
-        #rateLimit = 100
-        #rateLimit = proxy.ratelimit_remaining - 3        
-        #if rateLimit >=  proxy.ratelimit_remaining:
-        #    rateLimit  = proxy.ratelimit_remaining - 3
-
         while pageOfToots and (proxy.ratelimit_remaining > 3):
 
            loopStart = time.time() 
@@ -118,7 +109,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            print ("LoopTime = ", loopEnd - loopStart)
         Form.update(self)
         print ("PAGECOUNT = ", pageCount)
-        #print ("Number of Toots",len(account))
+
         
     def postProcessPage(self,allToots):
            #Until you fetch the article, give it a name,
@@ -147,12 +138,9 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         for toot in pageOfToots:
            tootId = toot.id           
            if oldToot :=  account.localArticles.get(tootId,None):
-               self.fixTime(toot)
                self.duplicates += 1
                oldToot.numberOfBoosts = toot.reblogs_count
                oldToot.numberOfFavorites = toot.favourites_count
-               oldToot.hasMedia =  True if toot.media_attachments else False
-               continue
            
            if not toot.visibility == 'public':
                continue
@@ -242,7 +230,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
     def getPublicationTime(self,toot):           
         publicationTime = time.mktime(toot.created_at.timetuple())
         return int (publicationTime)
-                
+
+    """
     def fixTime(self,toot):
             root = self.siteRoot
             account = self.context
@@ -258,7 +247,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                   importTime = self.previousImportTime(publicationTime)
                   tootedArticle.importTime = importTime
                   root.indexItem(tootedArticle) 
-
+    """
     def render(self):
         print ("Duration = ", str((time.time() - self.startTime)/60))
         return (
@@ -315,29 +304,3 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            pass
        return False    
 
-@form_component
-@context(IMastodonAccount)
-@target(IView)
-@name("fixtimes")
-class Fixtime(CrawlMastodon):
-    def postProcess(self,allToots):
-        pass
-
-    def update(self):
-        breakpoint()
-        values = self.context.valuesAsList()[500:]
-        for item in values:
-            item.preDeleteProcess(self)
-            del self.context[item.name]
-        Form.update(self)
-        
-    def render(self):
-        return ("DONE")
-                
-        
-    def processToots(self,pageOfToots,allToots):
-        account = self.context
-        root = self.getSiteRoot()
-        contentByTime = root.contentByTime
-        for toot in pageOfToots:
-           self.fixTime(toot,account,contentByTime)
