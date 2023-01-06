@@ -23,15 +23,26 @@ from zopache.remote.mastodon.interfaces import IMastodonAccount
 @implementer (IMastodonAccount)
 class MastodonAccount(Page,UniqueName):
     webClass = "RemoteAccount"
-    crawledToStart = False
     htmlSummary = True
     title = ""
     twitterId = ''
     mastodonId = ''
     keepAllArticles = False
+    crawledToStart = False
     minId = None 
     maxId = None
     
+    def __delitem__(self,key):
+        siteRoot = self.getPublicationRoot()
+        item = self[key]
+        siteRoot.unIndexItem(item)
+        BTreeContainer.__delitem__(self,key)
+        
+    def __setitem__(self,  key,item):
+        BTreeContainer.__setitem__(self,key,item)
+        siteRoot = self.getPublicationRoot()     
+        siteRoot.addItem(item)
+        
     @property
     def remoteURL(self):
         blank,user, server = self.parts()

@@ -7,12 +7,11 @@ from zope.schema import Password, TextLine, Int
 from zope.schema import Text, TextLine, Choice, Bool, DottedName
 from dolmen.container import IBTreeContainer
 from cromlech.security.interfaces import IPrincipal as ICromlechPrincipal
-#from cromlech.file.interfaces import IFile as IFileBase
 
 from zopache.crud.interfaces import *
 from zopache.crud.interfaces import ILeaf
 from zopache.crud.interfaces import IImutable
-from zopache.crud.interfaces import IMoveable
+from zopache.crud.interfaces import IMoveable,IDeletable
 from zopache.core.interfaces import ITreeSecurity
 from zopache.forms.imagevalidator import ImageValidator
 
@@ -72,8 +71,8 @@ run a chat and voting server"""
 
 from cromlech.file import FileField
 
-
-class IFileBase(Interface):    
+#Not copyable. 
+class IFileBase(IMoveable,IDeletable):    
     title = TextLine(
         title = u'File Desciption',
         description = u'Describe this File.',
@@ -377,10 +376,7 @@ class IAceHTMLPage(IAceHTML, IIndexHTML,ILeaf):
 class ISourceContainer(ISource,
                     IBTreeContainer,
                     IAddContainer,
-                    IRenameable,
-                    ICopyable,
-                    IMoveable,
-                    IDeletable
+                    IZMI
                ): 
      pass
 

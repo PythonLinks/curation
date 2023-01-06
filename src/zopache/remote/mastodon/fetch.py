@@ -24,6 +24,21 @@ regexp = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 @form_component
 @context(IMastodonAccount)
 @target(IView)
+@name("reset")
+class Reset(Form,BaseBot,RSSBase):
+    title = "Reset this mastodon Account"
+    subtitle = "So you can crawl it again"
+    
+    def update(self):
+        context = self.context
+        context.crawledToStart = False
+        context.minId = None 
+        context.maxId = None
+        self.status='Account was reset.'
+        
+@form_component
+@context(IMastodonAccount)
+@target(IView)
 @name("fetch")
 class CrawlMastodon(Form,BaseBot,RSSBase):
 
@@ -71,10 +86,11 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         #    rateLimit  = proxy.ratelimit_remaining - 3
 
         while pageOfToots and (proxy.ratelimit_remaining > 3):
+
            loopStart = time.time() 
-           if self.duplicates > 50:
+           if self.duplicates > 10:
                print ("EVERYTHING IS DOWNLOADED")
-               break
+               #break
            maxId = account.minId
            minId = None
            if account.crawledToStart:
@@ -126,11 +142,16 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
 
     def processToots(self,pageOfToots,allToots):
         account = self.context
-        
+        root = self.siteRoot
+        contentByTime = self.contentByTime
         for toot in pageOfToots:
-           tootId = toot.id
-           if tootId in account.localArticles:
+           tootId = toot.id           
+           if oldToot :=  account.localArticles.get(tootId,None):
+               self.fixTime(toot)
                self.duplicates += 1
+               oldToot.numberOfBoosts = toot.reblogs_count
+               oldToot.numberOfFavorites = toot.favourites_count
+               oldToot.hasMedia =  True if toot.media_attachments else False
                continue
            
            if not toot.visibility == 'public':
@@ -177,19 +198,28 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            if "uncensorednews.us" in url.lower():
                   continue
 
-           if self.siteRoot.existsRemoteURL(url):
-                  continue
-
            urlLength = len(url)
            tootLength = len (toot.content)
            if tootLength - urlLength < 30:
                continue
+           
+           if url in allToots:
+              continue
+
+           #ALL TESTS HAVE PASSED, YOU CAN DELETE THE OLD RSS ARTICLE
+           #AND REPLACE IT
+           rssParent = None
+           if rssArticle := self.siteRoot.existsRemoteURL(url):
+              rssParent = rssArticle.parent 
+              if self.className(rssArticle) == "RSSArticle":
+                 rssArticle.preDeleteProcess(self)
+                 del rssArticle.parent[rssArticle.name]
 
            tootURL = toot.url
            soup = self.removeEmptyParagraphs(soup)
            content = str(soup)
            try:
-               importTime = time.mktime(toot.created_at.timetuple())
+               importTime = self.getPublicationTime(toot)
            except:
                importTime = time.time()
                
@@ -197,15 +227,37 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            importTime = self.previousImportTime(importTime) 
            new = TootedArticle(url,content,importTime,tootId,tootURL)
            new.tags = ' '.join(self.textTags)
-           new.__parent__ = account
+           new.__parent__ = rssParent or account
            new.curator = account
            new.articleURL = url
+           new.hasMedia =  True if toot.media_attachments else False
+           new.userId = toot.account.acct
            new.numberOfBoosts = toot.reblogs_count
            new.numberOfFavorites = toot.favourites_count
 
            if not url in allToots:
                allToots[url] = new               
                self.contentByTime[-importTime] = new
+               
+    def getPublicationTime(self,toot):           
+        publicationTime = time.mktime(toot.created_at.timetuple())
+        return int (publicationTime)
+                
+    def fixTime(self,toot):
+            root = self.siteRoot
+            account = self.context
+            contentByTime = self.contentByTime        
+            if tootedArticle := account.localArticles.get(toot.id,None):
+               publicationTime = None 
+               try:
+                   publicationTime = self.getPublicationTime(toot)
+               except:
+                   pass
+               if publicationTime:
+                  root.unIndexItem(tootedArticle)
+                  importTime = self.previousImportTime(publicationTime)
+                  tootedArticle.importTime = importTime
+                  root.indexItem(tootedArticle) 
 
     def render(self):
         print ("Duration = ", str((time.time() - self.startTime)/60))
@@ -266,29 +318,26 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
 @form_component
 @context(IMastodonAccount)
 @target(IView)
-@name("fixtime")
-class Fixtime(Form,BaseBot,RSSBase):
+@name("fixtimes")
+class Fixtime(CrawlMastodon):
     def postProcess(self,allToots):
         pass
 
+    def update(self):
+        breakpoint()
+        values = self.context.valuesAsList()[500:]
+        for item in values:
+            item.preDeleteProcess(self)
+            del self.context[item.name]
+        Form.update(self)
+        
+    def render(self):
+        return ("DONE")
+                
+        
     def processToots(self,pageOfToots,allToots):
         account = self.context
         root = self.getSiteRoot()
         contentByTime = root.contentByTime
         for toot in pageOfToots:
-            if tootedArticle := account.localArticles.get(toot.id,None):
-               publicationTime = None 
-               try:
-                   publcationTime = time.mktime(
-                       toot.created_at.timetuple())
-                   publicationTime = int (publicationTime)
-               except:
-                   breakpoint() #STILL DEVELOPING THIS FUNCITON
-                   pass
-               if publicationTime:
-                  root.unIndexItem(tootedArticle) 
-                  del contentByTime[tootedArticle.importTime]
-                  importTime = self.previousImportTime(importTime)
-                  tootedArticle.importTime = importTime
-                  contentByTime [importTime] = previousArticle
-                  root.indexItem(tootedArticle) 
+           self.fixTime(toot,account,contentByTime)

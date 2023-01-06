@@ -116,10 +116,11 @@ class TootedArticle(Container,
         self.source = description
         newName = slugify (self.title)
         newName = view.uniqueBothName (self,newName)
-        account = self.parent
-        account[newName] = self
+        curator= self.curator
+        parent = self.parent
+        parent[newName] = self
         print (".",end = "")
-        account.localArticles[self.tootId] = self
+        curator.localArticles[self.tootId] = self
         self.postAddProcess(view )
         if image:
            return await fetch(session,self,view)
