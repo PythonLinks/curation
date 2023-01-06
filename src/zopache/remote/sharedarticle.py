@@ -3,6 +3,8 @@ import time
 from dolmen.container import BTreeContainer
 
 from zopache.core.getroot import getPublicationRoot
+from zopache.crud.getimage import getImage
+
 
 class SharedArticle(object):
     def __init__(self):
@@ -31,3 +33,26 @@ class SharedArticle(object):
        pass
 
    
+    def addImage(self):
+           if  'Logo' in self:
+               return
+           imageURL = self.getImageURL()
+           if imageURL:
+               getImage(self,imageURL)           
+
+    def getImageURL(self):
+        if url:= getattr(self,'imageURL',None):
+            return url          
+        elif  hasattr(self,'links'):
+            for item in self.links:
+                if "image" in item.type:
+                    return item.href
+        return None
+
+    
+    def moveTo(self,category):
+              name = self.__name__
+              del self.__parent__[name]
+              category [name] = self
+              self.__name__ = name
+  
