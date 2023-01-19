@@ -27,7 +27,6 @@ class BaseArticle(Page):
     description = ""
     emailApproved = True
     publicationApproved = False
-    bestApproved = False
     tags = {}
     delay = 0
     def __init__(self):

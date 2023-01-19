@@ -198,9 +198,13 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            if rssArticle := self.siteRoot.existsRemoteURL(url):
               rssParent = rssArticle.parent 
               if self.className(rssArticle) == "RSSArticle":
+                  
+                 if rssArticle.publicationApproved:
+                     continue
                  rssArticle.preDeleteProcess(self)
                  del rssArticle.parent[rssArticle.name]
-
+              else:
+                 continue 
            tootURL = toot.url
            soup = self.removeEmptyParagraphs(soup)
            content = str(soup)

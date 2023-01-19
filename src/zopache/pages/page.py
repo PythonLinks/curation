@@ -307,7 +307,6 @@ class Link(PageBase, PageMixIn):
     icon="ttwicons/WikiPage.png"
     tags = {}
     isArticle = True
-    bestApproved = False
     publicationApproved = True
     
     def defaultToot(self, view = None):                

@@ -39,12 +39,6 @@ class IApprove(Interface):
         required = False,
         default = False)
 
-    bestApproved = schema.Bool(
-        title = "Best Articles?",
-        description = ".",
-        required = False,
-        default = False)    
-
     category=TreeField(
            title="Category Search",
            description= """Choose where to move the articcle. """,
