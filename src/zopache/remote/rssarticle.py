@@ -15,11 +15,12 @@ from zopache.remote.rssdownload import fetch
 from zopache.remote.irss import IRSSArticle
 from zopache.core.relatives import parentsWhichImplement
 from zopache.crud.getimage import getImage
-
+from zopache.remote.articlemixin import ArticleMixIn
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
-    
-class BaseArticle(Page):    
+from zopache.remote.articlemixin import ArticleMixIn
+
+class BaseArticle(Page,ArticleMixIn):    
     _category = ""
     importTime = 0
     isArticle = True
@@ -82,12 +83,12 @@ class BaseArticle(Page):
               category [name] = self
               self.__name__ = name
   
-    def setImportTime(self,importTime,root):
-        importTime = int(importTime)
+    def setImportTime(self,publishedAt,root):
+        importTime = int(publishedAt)
         while (True):
+           importTime -= 1            
            if not root.hasAnythingAt(importTime):
                 break;
-                importTime += 1
         self.importTime = importTime
             
 
@@ -119,7 +120,7 @@ class BaseArticle(Page):
 
 
 @implementer (IRSSArticle)
-class RSSArticle(BaseArticle):
+class RSSArticle(BaseArticle,ArticleMixIn):
     webClass = "RSSLink"
 
     def getImageURL(self):

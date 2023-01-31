@@ -7,7 +7,6 @@ class Used(object):
     lastTootTime = 0
     _toot = ""
     
-    @property
     def isVideo(self):
         return False
 

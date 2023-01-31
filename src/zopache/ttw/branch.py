@@ -171,8 +171,8 @@ class Branch(SimpleBranch):
        link = self.urlOnly(link)
        return self.remoteURLs.get(link,None)
    
-    def addRemoteURL(self,anObject):
-       link = self.urlOnly(anObject.remoteURL)
+    def addRemoteURL(self,anObject,remoteURL):
+       link = self.urlOnly(remoteURL)
        if link == "":
            return
 
@@ -189,7 +189,8 @@ class Branch(SimpleBranch):
 
         link = self.urlOnly(link)
         del self.remoteURLs[link]
-       
+
+            
     def getUniqueNumberString(self):
         anInteger = random.randint (1,sys.maxsize)        
         while (True):
@@ -238,8 +239,10 @@ class Branch(SimpleBranch):
         if not getattr(item,'webApproved',True):
                    return
 
-        if hasattr(item,'remoteURL'):
-            self.addRemoteURL(item)
+        if getattr(item,'remoteURL',None):
+            self.addRemoteURL(item.remoteURL)
+        if getattr(item,'articleURL',None):
+            self.addRemoteURL(item,item.articleURL)
             
         if hasattr(item,'twitterId'):
             twitterId = item.twitterId
@@ -269,7 +272,7 @@ class Branch(SimpleBranch):
             self.catalogContent(item,ancestorNames)
             self.globalArticles [item.permaLink] = item
 
-        elif item.__class__.__name__  == "TootedArticle":
+        elif item.__class__.__name__  == "Article":
             self.contentByTime[item.importTime] = item
             self.catalogContent(item,ancestorNames)
                     
@@ -317,11 +320,12 @@ class Branch(SimpleBranch):
         if not getattr(item,'webApproved',True): 
                    return
 
-        if hasattr(item,'remoteURL'):
-            remoteURL = item.remoteURL
-            if remoteURL:
-                self.deleteRemoteURL(remoteURL)
+        if getattr(item,'remoteURL',None):
+            self.deleteRemoteURL(item.remoteURL)
 
+        if getattr(item,'articleURL',None):
+            self.deleteRemoteURL(item.articleURL)
+            
         if getattr(item,'twitterId',''):
             del self.pagesByTwitterId [item.twitterId]
 
@@ -346,7 +350,7 @@ class Branch(SimpleBranch):
                 del globalArticles [item.permaLink]
             self.unCatalogContent(item)
 
-        elif item.__class__.__name__  == "TootedArticle":
+        elif item.__class__.__name__  == "Article":
             importTime = item.importTime             
             if importTime in self.contentByTime:
                del self.contentByTime[importTime]
@@ -436,8 +440,9 @@ class Proxy(object):
     
     @property
     def isArticle(self):
-       return self.target.__class__.__name__ in [ "RSSArticle","Link"]
-
+       return self.target.__class__.__name__ in [ "RSSArticle",
+                                                  "Link",
+                                                  'Article']
     @property
     def importTime(self):
         importTime = self.target.importTime

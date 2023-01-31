@@ -72,7 +72,7 @@ run a chat and voting server"""
 from cromlech.file import FileField
 
 #Not copyable. 
-class IFileBase(IMoveable,IDeletable):    
+class IFileBase(IMoveable,IDeletable,IRenameable):    
     title = TextLine(
         title = u'File Desciption',
         description = u'Describe this File.',

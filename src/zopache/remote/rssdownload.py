@@ -3,45 +3,71 @@ import asyncio
 import ssl
 import time
 import sys
+import logging
+from inspect import currentframe, getframeinfo
 
 from dolmen.forms.base.markers import FAILURE, SUCCESS
-
 from zopache.remote.irss import IRSSBase, IRSSArticle
+
+logging.basicConfig(
+   filename='/app/data/urls',
+   filemode='w',
+   format='%(message)s')
 
 async def fetch(session,node,view):
    startTime = time.time()    
    duration =  0
-   if node.__class__.__name__ == "RSS":
+   className = view.className(node)
+   
+   if className == "RSS":
       url = node.rssURL
-   elif node.__class__.__name__ == "TootedArticle":
-      if node.title == "":
+   elif className == 'Article':
+      if not node.title:
          url = node.articleURL
-      else:
-         url = node.imageURL
-   elif node.__class__.__name__ == "RSSArticle":
-      return FAILURE, (node.__name__ + """We do not bulk
-      download rssarticle nor their images.""")
+      else:   
+         url = getattr(node,'imageURL',None)
+         if url in ["",None]:
+            return SUCCESS, (node.name + " No image URL.") 
+   elif className == "RSSArticle":
+      url = getattr(node,'imageURL',None)
+      if not url:
+         return FAILURE, ("Existing Article " +
+                          node.name +
+                          " No image URL.") 
    else:
       return FAILURE, node.__name__, ("Error Trying to Fetch " +
       node.__class__.__name__)
-
    #NOW PROCESS THE URL
    try:
         async with session.get(url) as response:
-
-          if response.status == 200:
-             result =   await node.processResponse(session,response,view)
-             return SUCCESS, result
+          status = response.status
+          if status == 200:
+             result = await node.processResponse(session,response,view)
+             return  result
           else:
-             return FAILURE, node.name, 'status = ' + str(response.status)
-
+             statusStr = str(status) + ' '
+             logging.warning(statusStr + url)
+             return FAILURE,( node, 
+                              ' status = ' +
+                              statusStr +
+                              url )
+                              
    except asyncio.TimeoutError as err:
-          duration =  time.time() - startTime 
-          return FAILURE, node.__name__, "TIME OUT"  + str(duration)
+          duration =  time.time() - startTime
+          duration = int(duration)
+          return FAILURE, node, "TIME OUT: "  + str(duration) + 's ' + url
           
    except:
+          frameinfo = getframeinfo(currentframe())
           e = sys.exc_info()[0]
-          return FAILURE, node.__name__, str(e)
+          return (FAILURE,
+                  (frameinfo.filename + ' ' +
+                  str(frameinfo.lineno) + ' ' + 
+                   str(e)),
+                  node
+                  )      
+          return FAILURE, node ,  (" IN RSSDownload " +
+                                   str(e) + ' ' + url) 
 
 def fetchAll(nodes,view,allowedTime = 120):
     loop = asyncio.new_event_loop()
@@ -58,7 +84,8 @@ async def fetchCore(nodes,view,allowedTime):
       for node in nodes:
          if view.className(node) not in {'RSS',
                                          'RSSArticle',
-                                         'TootedArticle'}:
+                                         'Article',
+                                         'Toot'}:
             continue
          if IRSSArticle.providedBy(node):
               if  'Logo' in node:

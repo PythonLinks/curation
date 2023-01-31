@@ -35,6 +35,7 @@ from zopache.ttw.branch import Branch
 from zopache.core.relatives import parentsWhichImplement
 from zopache.core.relatives import Parents
 from zopache.pages.used import Used
+from zopache.remote.articlemixin import ArticleMixIn
 
 class PageVeryBase(Used,AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Contained,ProcessTree):
     private = False
@@ -302,7 +303,7 @@ class Page(PageBase, PageMixIn):
     icon="ttwicons/WikiPage.png"
     
 @implementer (ILink)     
-class Link(PageBase, PageMixIn):
+class Link(PageBase, PageMixIn, ArticleMixIn):
     webClass='Link'
     icon="ttwicons/WikiPage.png"
     tags = {}

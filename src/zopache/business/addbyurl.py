@@ -30,6 +30,7 @@ class ProcessURL(object):
             response = {}                        
         return [],response
 
+        
 @view_component
 @name('addByURL')
 @target(IView)

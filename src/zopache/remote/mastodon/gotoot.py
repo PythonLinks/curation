@@ -188,7 +188,7 @@ class TootForm (EditForm,BaseBot):
          else:    
              scheduledAt = datetime.now() + timedelta( hours=delay + 1 )
          inReplyToId = (context.tootId
-                        if self.className(context)=='TootedArticle'
+                        if self.className(context)=='Toot'
                         else None)
          try:
             tootDict = self.proxyForUser().status_post(self.context.toot,
@@ -288,13 +288,13 @@ class TootForm (EditForm,BaseBot):
         mediaId = getattr(image,'mediaId',None)
         if mediaId != None:
            return [mediaId]
-        data , mimeType = image.mastodonImage()
+        data , mimeType, title = image.mastodonImage()
         
         try: 
-           mediaDict =   self.proxyForUser().media_post(media_file=data,
-                                          mime_type=mimeType,
-                                          description=self.context.title,
-                                          focus=None)
+           mediaDict =   self.proxyForUser().media_post(media_file = data,
+                                          mime_type = mimeType,
+                                          description = title,
+                                          focus = None)
            image.mastodonURL = mediaDict['url']
            image.mastodonId = mediaDict['id']           
            return [image.mastodonId]
