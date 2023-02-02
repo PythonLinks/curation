@@ -4,6 +4,7 @@ from BTrees.OOBTree import OOBTree
 
 from zopache.core.viewdecorators import *
 from zopache.remote.mastodon.interfaces import IMastodonAccount
+from zopache.remote.mastodon.interfaces import IRemoteAccount
 from zopache.application.source import Source
 
 from zopache.crud.getimage import getImage
@@ -11,7 +12,8 @@ from zopache.crud.getimage import getImage
 #all imports are used
 
 @implementer (IMastodonAccount)
-class MastodonAccount(Source):
+class RemoteAccount(Source):
+    
     webClass = "RemoteAccount"
     htmlSummary = True
     title = ""
@@ -22,6 +24,12 @@ class MastodonAccount(Source):
     def __init__(self):
          self.reset()
          Source.__init__(self)
+         
+    def valuesAsList(self):
+        result = []
+        for item in self.values():
+               result.append (item)
+        return result
          
     def reset(self):
          self.crawledToStart = False
@@ -47,13 +55,16 @@ class MastodonAccount(Source):
             if item[0] ==  FAILURE:  
                view.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
-        
+
+class MastodonAccount(RemoteAccount):
+    pass
+
 import crom
 from zopache.zmi.interfaces import IURLSegment
 @crom.adapter
-@crom.sources(IMastodonAccount)
+@crom.sources(IRemoteAccount)
 @crom.target(IURLSegment)
-class IMastodonAccountAdaptor(object):
+class IRemoteAccountAdaptor(object):
     def __init__(self,context):
         self.context=context   
 

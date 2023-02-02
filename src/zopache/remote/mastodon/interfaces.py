@@ -6,7 +6,7 @@ from zope.schema.vocabulary import SimpleVocabulary,SimpleTerm
 
 from zopache.crud.interfaces import ILeaf, IContainer,IDeletable
 
-class IMastodonAccount(ILinkBase):    
+class IRemoteAccount(ILinkBase):    
     
     title=schema.TextLine(
         title = "Mastodon Account Name",
@@ -40,6 +40,9 @@ class IMastodonAccount(ILinkBase):
         required = False,
         default = True,
         )    
+
+class IMastodonAccount(IRemoteAccount):
+    pass
 
 class IAddMastodonAccount(IMastodonAccount):
     logoURL=schema.URI(

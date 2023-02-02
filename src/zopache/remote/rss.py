@@ -66,7 +66,7 @@ class RSS(Link,UniqueName,RSSBase):
     keepAllArticles = False
 
     # FOR A NEW RSS FEED       
-    def createOneArticle(self,article,view,importTime):
+    def createOneArticle(self,article,view):
        new = RSSArticle()
        new.articleURL = article.link
        if hasattr(article, 'tags'):
@@ -145,14 +145,17 @@ class RSS(Link,UniqueName,RSSBase):
     """
          
     async def createArticles(self,entries,view):
-       globalArticles= self.getPublicationRoot().globalArticles
+       root =  self.getPublicationRoot()
+       globalArticles= root.globalArticles
        articles = []
        for article in entries[:20]:
            theId = article['id']
-           if not theId in globalArticles:
-              importTime = await view.getTime()
-              new = self.createOneArticle(article,view,importTime)
-              articles.append(new)
+           if theId in globalArticles:
+               continue
+           if root.existsRemoteURL(article.link):
+               continue
+           new = self.createOneArticle(article,view)
+           articles.append(new)
        return SUCCESS, articles
    
     def postProcess(self,view = None):

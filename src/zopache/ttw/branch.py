@@ -68,7 +68,7 @@ class SimpleBranch(object):
     def indexTree(self):
         self.valuesByToken=OOBTree()
         self.indexBranch(self,self)
-        
+
     def __contains__(self, key):
         return (key in self._data  or 
                 key in self.valuesByToken)
@@ -175,10 +175,9 @@ class Branch(SimpleBranch):
        link = self.urlOnly(remoteURL)
        if link == "":
            return
-
        if link in self.remoteURLs:
-          message = f"""The object called {anObject.__name__} with url: {link} is already in the database. """
-          raise Exception (message)
+          print ("DUPLICATE URLs", anObject.name,
+                 self.existsRemoteURL(remoteURL).name)
        else:
           self.remoteURLs[link] = anObject 
            
@@ -222,9 +221,11 @@ class Branch(SimpleBranch):
                 self.indexItem(item,
                                itemType = itemType,
                                ancestorNames = ancestorNames,
-                               indexingBranch = True)           
-                if IBTreeContainer.providedBy(item):    
-                   self.indexBranch(tree,item,ancestorNames = ancestorNames )
+                               indexingBranch = True)
+                if IBTreeContainer.providedBy(item):
+                        self.indexBranch(tree,
+                                         item,
+                                         ancestorNames = ancestorNames)
 
     def indexItem(self,item,
                   itemType=ICanonical,
@@ -240,7 +241,8 @@ class Branch(SimpleBranch):
                    return
 
         if getattr(item,'remoteURL',None):
-            self.addRemoteURL(item.remoteURL)
+            self.addRemoteURL(item,item.remoteURL)
+            
         if getattr(item,'articleURL',None):
             self.addRemoteURL(item,item.articleURL)
             
@@ -326,8 +328,8 @@ class Branch(SimpleBranch):
         if getattr(item,'articleURL',None):
             self.deleteRemoteURL(item.articleURL)
             
-        if getattr(item,'twitterId',''):
-            del self.pagesByTwitterId [item.twitterId]
+        #if getattr(item,'twitterId',''):
+        #    del self.pagesByTwitterId [item.twitterId]
 
         if item.__class__.__name__  == "Category":
            pass 
