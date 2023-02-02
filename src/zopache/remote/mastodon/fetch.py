@@ -242,7 +242,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                 print (soup.get_text())
 
                 
-        breakpoint()        
     """
     """
     def fixTime(self,toot):
