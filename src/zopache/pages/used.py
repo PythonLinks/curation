@@ -49,7 +49,6 @@ class Used(object):
     def getPublicationRoot(self):
         return getPublicationRoot(self)
 
-    @property
     def titlePlusDescription(self):
         if self.description == None:
            return self.title

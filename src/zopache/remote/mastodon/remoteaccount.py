@@ -20,10 +20,11 @@ class RemoteAccount(Source):
     twitterId = ''
     mastodonId = ''
     keepAllArticles = False
-
+    description = ""
     def __init__(self):
-         self.reset()
          Source.__init__(self)
+         self.reset()
+
          
     def valuesAsList(self):
         result = []
@@ -42,7 +43,11 @@ class RemoteAccount(Source):
         return 'https://' + server + '/@' + user
 
     def parts(self):
-        return self.mastodonId.split('@')
+        id = self.mastodonId or "@Snoro@mastodon.social"
+        return id.split('@')
+
+    def userName(self):
+        return "@" + self.parts()[1]
     
     def postAddProcess(self,view = None):
         if self.logoURL:

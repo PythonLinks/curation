@@ -122,9 +122,17 @@ class Branch(SimpleBranch):
         SimpleBranch.__init__(self)
         self.reInit()
 
+    def mostRecentCuratedNews(self):
+        for item in self.contentByTime.values():
+            if item.__class__.__name__ != 'Link':
+               if item.publicationApproved:
+                   return item
+        return None
+    
     def reInit(self):        
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
+        self.tootedLinks = OOBTree()
         self.pagesByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
         self.categoryIndex = IOBTree()
@@ -188,7 +196,9 @@ class Branch(SimpleBranch):
 
         link = self.urlOnly(link)
         del self.remoteURLs[link]
-
+        #try:
+        #except:
+        #  print ("ERROR: ", link)   
             
     def getUniqueNumberString(self):
         anInteger = random.randint (1,sys.maxsize)        
@@ -227,6 +237,10 @@ class Branch(SimpleBranch):
                                          item,
                                          ancestorNames = ancestorNames)
 
+    def addTootedArticle(self,article):
+        if len(article.toots) > 0:
+            self.tootedArticles[int(article.importTime)] = article
+            
     def indexItem(self,item,
                   itemType=ICanonical,
                   ancestorNames = [],
@@ -270,16 +284,21 @@ class Branch(SimpleBranch):
            #        item)               
            
         elif item.__class__.__name__  == "RSSArticle":
-            self.contentByTime[ int(item.importTime)] = item
+            importTime = int(item.importTime)
+            self.addTootedArticle(item)
+            self.contentByTime[importTime] = item
             self.catalogContent(item,ancestorNames)
             self.globalArticles [item.permaLink] = item
 
         elif item.__class__.__name__  == "Article":
+            self.addTootedArticle(item)
             self.contentByTime[item.importTime] = item
             self.catalogContent(item,ancestorNames)
                     
-        elif item.__class__.__name__ == 'Link': 
-            self.contentByTime[int(item.importTime)] = item
+        elif item.__class__.__name__ == 'Link':
+            importTime = int(item.importTime)
+            self.addTootedArticle(item)
+            self.contentByTime[importTime] = item
             self.catalogContent(item,ancestorNames)
                     
         elif IVideo.providedBy(item):
@@ -346,6 +365,8 @@ class Branch(SimpleBranch):
         elif item.__class__.__name__  == "RSSArticle":
             globalArticles = self.globalArticles
             importTime = int(item.importTime)             
+            if importTime in self.tootedArticles:
+               del self.tootedArticles[importTime]                         
             if importTime in self.contentByTime:
                del self.contentByTime[importTime]
             if item.permaLink in globalArticles:
@@ -353,12 +374,16 @@ class Branch(SimpleBranch):
             self.unCatalogContent(item)
 
         elif item.__class__.__name__  == "Article":
-            importTime = item.importTime             
+            importTime = item.importTime
+            if importTime in self.tootedArticles:
+               del self.tootedArticles[importTime]                         
             if importTime in self.contentByTime:
                del self.contentByTime[importTime]
             self.unCatalogContent(item)            
            
         elif item.__class__.__name__ == 'Link':
+            if importTime in self.tootedArticles:
+               del self.tootedArticles[importTime]             
             del self.contentByTime[int(item.importTime)]
             self.unCatalogContent(item)
             
@@ -458,13 +483,14 @@ class Proxy(object):
     def recommended(self):
         return (IVideo.providedBy(self.target) or
                 getattr(self.target,'publicationApproved', False))
-                
-    def __getattribute__ (self,name):
-       if name in {'titlePlusDescription'}:
-           return object.__getattribute__(self.target,name)
-       else:
-          return object.__getattribute__(self,name)
-     
+    
+    @property            
+    def titlePlusDescription(self):
+        result =self.target.titlePlusDescription()
+        if getattr(self.target,'toots',[]):
+           result += 'Via: ' + self.target.getVia()
+        return result
+        
 @implementer(IPublicationRoot)       
 class Root (Branch):
    pass

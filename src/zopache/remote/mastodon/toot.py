@@ -1,5 +1,7 @@
 import sys
 import time
+import re
+
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
@@ -22,7 +24,9 @@ from zopache.core import Leaf
 hostNamesToIgnore = {"uncensorednews.us",
                      "takvera.blogspot.com",
                      "twitter.com",
-                     "www.twitter.com"}
+                     "www.twitter.com",
+                     "climatejustice.social",
+                     "c.im"}
 
 
 @implementer(IToot)
@@ -38,28 +42,44 @@ class Toot(Leaf):
     numberOfBoosts = 0
     numberOfFavorites = 0
     count = 0
-
+    
+    def __init__(self):
+        Leaf.__init__(self)
+        self.articles = []
+        self.articleURLs = []
+        
+    def addArticle(self,article):
+        #There is a hidden _p_changed
+        self.articles.append(article)
+        self.articleURLs.remove (article.articleURL)                       
+        self._p_changed = True        
+        
+    def removeArticle(self,article):
+        self.articles.remove(article)
+        self.articleURLs.append(article.articleURL)
+        self._p_changed = True
+        
     def createToot(self,toot,account):
         if toot.reblog:
-            return None, []
-        self.source = content = toot.content
-        soup = BeautifulSoup(content, 'html.parser')
+            return None
+        self.source =  toot.content
+        soup = BeautifulSoup(toot.content, 'html.parser')
         text = soup.get_text()
         if not soup.text.strip():
-            return None , []
+            return None
            
         try:
             language = detect(text)
         except LangDetectException as e:
-            return None , []
+            return None
         if language != 'en':
-            return None , []
+            return None 
 
         soup, textTags = self.removeHashTags(soup)
         soup, articleURLs = self.processURLs (soup)
-        if len(articleURLs) != 1:
-            return None,articleURLs
-        url = articleURLs[0]
+        self.articleURLs = articleURLs
+        if len(articleURLs) == 0:
+            return None
         soup.smooth()
         soup = self.removeEmptyParagraphs(soup)
             
@@ -73,12 +93,10 @@ class Toot(Leaf):
         self.userId = toot.account.acct
         self.numberOfBoosts = toot.reblogs_count
         self.numberOfFavorites = toot.favourites_count
-
-        self.articleURL = url
         self.description = ""
         self.tootId = tootId
         self.tootURL = toot.url
-        return self, articleURLs
+        return self
 
     def processURLs(self,soup):    
         urls  = soup.find_all('a')
@@ -105,10 +123,10 @@ class Toot(Leaf):
         return soup, articleURLs
     
     def preDeleteProcess(self,view):
-        article = getattr(self,'article',None)
-        if article:
+        for article in self.articles.copy():
+            self.removeArticle(article)
             article.removeToot(self)
-    
+            
     def tagsAsHTML(self):
         return self.tags
     
@@ -145,8 +163,14 @@ class Toot(Leaf):
                        tag.replace_with('')
             else:
                for tag in sequence:
-                   textTags.append(tag.text)                   
-                   tag.replace_with(tag.text)
+                   text = tag.text
+                   textTags.append(text)
+                   result= re.findall('[A-Z]*[^A-Z]*', text[1:])
+                   result.remove('')
+                   #print ("SPLIT= ", result)
+                   text = ' '.join(result)
+                   tag.replace_with(text)
+                                             
         return soup,textTags
         
     def isHashTag(self,tag):

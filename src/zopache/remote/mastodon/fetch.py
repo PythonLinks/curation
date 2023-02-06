@@ -14,6 +14,7 @@ from zopache.remote.mastodon.toot import Toot
 from zopache.remote.rssdownload import fetchAll
 from zopache.remote.news.mastodonarticles import MastodonArticles
 from zopache.remote.news.article import Article
+from zopache.remote.mastodon.remoteaccount import RemoteAccount
 
 import re
 regexp = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
@@ -60,7 +61,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
     
     def getAccount(self,toot):
         root = self.siteRoot
-        feeds = root['mastodon-feeds']
+        feeds = root['mastodon-accounts']
         accountName = self.getAccountName(toot)
         account = feeds.get(accountName,None)
         if account == None:
@@ -100,8 +101,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
               
            print (".", end = "")
            self.allToots=allToots = set()
-           self.newArticles = newArticles = set()
-           self.oldarticles = oldArticles = set()
+           self.newArticles = newArticles = {}
+           self.oldArticles = oldArticles = set()
            pageOfToots = proxy.account_statuses(user.id,
                        max_id=maxId,
                        min_id=minId,
@@ -128,17 +129,24 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            #Until you successfull fetch the article, 
            #and add it to the
            #Parent, it will not be in contentByTime. 
-           for item in newArticles:
+           for item in newArticles.values():
                   del self.contentByTime[-item.importTime]
-           self.fetchArticles (newArticles | oldArticles)
+           allArticles = set(newArticles.values()) | oldArticles
+           self.fetchArticles (allArticles)
            for toot in allToots:
-               url = toot.articleURL
-               article = self.siteRoot.existsRemoteURL(url)
-               if article:
-                  toot.article = article
-                  article.addToot(toot)
-                  del toot.articleURL   
-               
+               for url in toot.articleURLs:
+                   article = self.siteRoot.existsRemoteURL(url)
+                   if article:
+                      toot.addArticle(article) 
+                      article.addToot(toot)
+                      
+           #Since the created articles did not know about
+           #the relevant toots.
+           root = self.siteRoot
+           for article in newArticles.values():
+               if article.name:
+                   root.unIndexItem(article)
+                   root.indexItem(article)
            transaction.manager.commit()
         
     def fetchArticles(self,articles):
@@ -148,7 +156,9 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
             if item[0] ==  FAILURE:  
                view.submissionErrors.append("ERROR: " + str(item[1:]))
                if not 'status' in str(item[1:] ):
-                  print ( 'FAILURE' + str(item[1:] ))
+                  if not "TIME OUT" in str(item): 
+                     print ( str(item))
+                     
         self.status='RSS Feeds were downloaded.'
 
         
@@ -179,16 +189,20 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                 importedAccount.minId = tootId
                 
            account = self.getAccount(toot)
-           new, articleURLs = Toot().createToot(toot,account)
-           if new != None:
+           new  = Toot().createToot(toot,account)
+
+           if new == None:
+               continue
+           else:
                if new.name == None:
                   print ("Error: new.name == None")
-                  break
+                  continue
                try:
                   account[new.name] = new
                except:
                    print ("ERROR: account[new.name] = new")
-                   break
+                   continueyes
+                   
                allToots.add( new)               
                
            #CALCULATE THE LINK IMPORT TIME
@@ -198,23 +212,27 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                importTime = time.time()
            importTime = int(importTime)
 
-           for url in articleURLs:           
-               #FIRST GET THE ARTICLE
-               #If the article exists, publicationApprove it
-               #And possibly add a Logo.                     
+           for url in new.articleURLs:           
+
+               #Get the article
+               #If the article exists, publication approve it.
+               #If it is publication approved no need to fetch the image
+               #if the article does not exists
+               #And no other toot mentioned the article
+               #Create the article
                article = self.siteRoot.existsRemoteURL(url)
-               if article == None:
+               if article == None:  
+                 if not url in newArticles:
                    anArticle = Article()
                    anArticle.articleURL = url
                    anArticle.parent = self.mastodonArticles
                    importTime = self.previousImportTime(importTime)
                    anArticle.importTime = importTime
-                   newArticles.add(anArticle)
+                   newArticles[url] = anArticle
                    self.contentByTime[-importTime] = anArticle
                else:
-                   #if publicationApproved, it will have a logo 
                    if not article.publicationApproved:
-                       oldArticles.add (article)
+                       self.oldArticles.add (article)
                        article.publicationApproved = True
             
     def getPublicationTime(self,toot):           
