@@ -43,7 +43,7 @@ class RemoteAccount(Source):
         return 'https://' + server + '/@' + user
 
     def parts(self):
-        id = self.mastodonId or "@Snoro@mastodon.social"
+        id = self.mastodonId
         return id.split('@')
 
     def userName(self):
