@@ -8,6 +8,7 @@ from .interfaces import IObjectPaster, IObjectDeleter
 from .interfaces import IObjectRetitler, IObjectRenamer
 from zopache.pages.cache import cache
 from zopache.crud.utilities import title_or_name
+from zopache.core.transactionnote import TransactionNote
 
 class BaseAction(Action):
     def getValues(self,form,message,which='ids_list'):
@@ -136,18 +137,17 @@ class DeleteObjects(BaseAction):
                     "You did not select any objects to delete")
         container = form.context
 
+        note = f"Deleting {len(ids)} Objects From: "
+        note += form.context.__name__ + "<Br>"
+        note += '<br>'.join(ids)
+        note = note[0:100]        
+        TransactionNote().describeTransactionWithText(note)
+
         for id in ids:
             item= container [id]
             deleter = IObjectDeleter(item)
             deleter.deleteItem(form)
+            
         cache.resetCache(form.context)
         return SuccessMarker('Deleted', True)
             
-         # HINTS ON HOW TO DO ERRORS
-         #   form.errors = errors
-         #   return FAILURE
-         #   form.errors.append(Error(
-         #       title='Login failed',
-         #       identifier=self.prefix,
-         #   ))
-        #raise HTTPFound(url)

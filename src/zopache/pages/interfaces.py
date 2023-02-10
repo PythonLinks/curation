@@ -82,7 +82,7 @@ class IPageTop(Interface):
         required = True,
     )
 
-class IPageBase(ILayoutView,ICanonical):
+class IPageBase(ILayoutView,ICanonical,IContent):
     pass
     
 class ILinkBase(IPageBase,IBTreeContainer):

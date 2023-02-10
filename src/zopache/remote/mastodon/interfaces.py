@@ -4,9 +4,9 @@ from zopache.pages.interfaces import  ILinkBase
 from z3c.schema.email  import RFC822MailAddress as Email
 from zope.schema.vocabulary import SimpleVocabulary,SimpleTerm
 
-from zopache.crud.interfaces import IContainer
+from zopache.crud.interfaces import ILeaf, IContainer,IDeletable
 
-class IMastodonAccount(ILinkBase):    
+class IRemoteAccount(ILinkBase):    
     
     title=schema.TextLine(
         title = "Mastodon Account Name",
@@ -41,6 +41,9 @@ class IMastodonAccount(ILinkBase):
         default = True,
         )    
 
+class IMastodonAccount(IRemoteAccount):
+    pass
+
 class IAddMastodonAccount(IMastodonAccount):
     logoURL=schema.URI(
         title = "Logo URL ",
@@ -49,21 +52,8 @@ class IAddMastodonAccount(IMastodonAccount):
         missing_value = '',
         )
 
-from zopache.remote.irss import IRSSArticle    
-class ITootedArticle(IRSSArticle):
 
-    title = schema.TextLine(
-        title = 'Remote Article Name',
-        description = 'What is the title of this link?',
-        required = True,
-    )
-
-    articleURL= schema.URI(
-        title = 'Article URL',
-        description = 'The url of the remote article',
-        required = False,
-    )
-    
+class IToot(ILeaf,IDeletable):
     description= schema.Text(
         title = u'Description',
         description = """A brief introduction of this page.  

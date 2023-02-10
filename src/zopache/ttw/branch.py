@@ -68,7 +68,7 @@ class SimpleBranch(object):
     def indexTree(self):
         self.valuesByToken=OOBTree()
         self.indexBranch(self,self)
-        
+
     def __contains__(self, key):
         return (key in self._data  or 
                 key in self.valuesByToken)
@@ -122,9 +122,17 @@ class Branch(SimpleBranch):
         SimpleBranch.__init__(self)
         self.reInit()
 
+    def mostRecentCuratedNews(self):
+        for item in self.contentByTime.values():
+            if item.__class__.__name__ != 'Link':
+               if item.publicationApproved:
+                   return item
+        return None
+    
     def reInit(self):        
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
+        self.tootedLinks = OOBTree()
         self.pagesByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
         self.categoryIndex = IOBTree()
@@ -171,14 +179,13 @@ class Branch(SimpleBranch):
        link = self.urlOnly(link)
        return self.remoteURLs.get(link,None)
    
-    def addRemoteURL(self,anObject):
-       link = self.urlOnly(anObject.remoteURL)
+    def addRemoteURL(self,anObject,remoteURL):
+       link = self.urlOnly(remoteURL)
        if link == "":
            return
-
        if link in self.remoteURLs:
-          message = f"""The object called {anObject.__name__} with url: {link} is already in the database. """
-          raise Exception (message)
+          print ("DUPLICATE URLs", anObject.name,
+                 self.existsRemoteURL(remoteURL).name)
        else:
           self.remoteURLs[link] = anObject 
            
@@ -189,7 +196,10 @@ class Branch(SimpleBranch):
 
         link = self.urlOnly(link)
         del self.remoteURLs[link]
-       
+        #try:
+        #except:
+        #  print ("ERROR: ", link)   
+            
     def getUniqueNumberString(self):
         anInteger = random.randint (1,sys.maxsize)        
         while (True):
@@ -221,10 +231,16 @@ class Branch(SimpleBranch):
                 self.indexItem(item,
                                itemType = itemType,
                                ancestorNames = ancestorNames,
-                               indexingBranch = True)           
-                if IBTreeContainer.providedBy(item):    
-                   self.indexBranch(tree,item,ancestorNames = ancestorNames )
+                               indexingBranch = True)
+                if IBTreeContainer.providedBy(item):
+                        self.indexBranch(tree,
+                                         item,
+                                         ancestorNames = ancestorNames)
 
+    def addTootedArticle(self,article):
+        if len(article.toots) > 0:
+            self.tootedArticles[int(article.importTime)] = article
+            
     def indexItem(self,item,
                   itemType=ICanonical,
                   ancestorNames = [],
@@ -238,8 +254,11 @@ class Branch(SimpleBranch):
         if not getattr(item,'webApproved',True):
                    return
 
-        if hasattr(item,'remoteURL'):
-            self.addRemoteURL(item)
+        if getattr(item,'remoteURL',None):
+            self.addRemoteURL(item,item.remoteURL)
+            
+        if getattr(item,'articleURL',None):
+            self.addRemoteURL(item,item.articleURL)
             
         if hasattr(item,'twitterId'):
             twitterId = item.twitterId
@@ -265,16 +284,21 @@ class Branch(SimpleBranch):
            #        item)               
            
         elif item.__class__.__name__  == "RSSArticle":
-            self.contentByTime[ int(item.importTime)] = item
+            importTime = int(item.importTime)
+            self.addTootedArticle(item)
+            self.contentByTime[importTime] = item
             self.catalogContent(item,ancestorNames)
             self.globalArticles [item.permaLink] = item
 
-        elif item.__class__.__name__  == "TootedArticle":
+        elif item.__class__.__name__  == "Article":
+            self.addTootedArticle(item)
             self.contentByTime[item.importTime] = item
             self.catalogContent(item,ancestorNames)
                     
-        elif item.__class__.__name__ == 'Link': 
-            self.contentByTime[int(item.importTime)] = item
+        elif item.__class__.__name__ == 'Link':
+            importTime = int(item.importTime)
+            self.addTootedArticle(item)
+            self.contentByTime[importTime] = item
             self.catalogContent(item,ancestorNames)
                     
         elif IVideo.providedBy(item):
@@ -317,13 +341,14 @@ class Branch(SimpleBranch):
         if not getattr(item,'webApproved',True): 
                    return
 
-        if hasattr(item,'remoteURL'):
-            remoteURL = item.remoteURL
-            if remoteURL:
-                self.deleteRemoteURL(remoteURL)
+        if getattr(item,'remoteURL',None):
+            self.deleteRemoteURL(item.remoteURL)
 
-        if getattr(item,'twitterId',''):
-            del self.pagesByTwitterId [item.twitterId]
+        if getattr(item,'articleURL',None):
+            self.deleteRemoteURL(item.articleURL)
+            
+        #if getattr(item,'twitterId',''):
+        #    del self.pagesByTwitterId [item.twitterId]
 
         if item.__class__.__name__  == "Category":
            pass 
@@ -340,19 +365,25 @@ class Branch(SimpleBranch):
         elif item.__class__.__name__  == "RSSArticle":
             globalArticles = self.globalArticles
             importTime = int(item.importTime)             
+            if importTime in self.tootedArticles:
+               del self.tootedArticles[importTime]                         
             if importTime in self.contentByTime:
                del self.contentByTime[importTime]
             if item.permaLink in globalArticles:
                 del globalArticles [item.permaLink]
             self.unCatalogContent(item)
 
-        elif item.__class__.__name__  == "TootedArticle":
-            importTime = item.importTime             
+        elif item.__class__.__name__  == "Article":
+            importTime = item.importTime
+            if importTime in self.tootedArticles:
+               del self.tootedArticles[importTime]                         
             if importTime in self.contentByTime:
                del self.contentByTime[importTime]
             self.unCatalogContent(item)            
            
         elif item.__class__.__name__ == 'Link':
+            if importTime in self.tootedArticles:
+               del self.tootedArticles[importTime]             
             del self.contentByTime[int(item.importTime)]
             self.unCatalogContent(item)
             
@@ -436,8 +467,9 @@ class Proxy(object):
     
     @property
     def isArticle(self):
-       return self.target.__class__.__name__ in [ "RSSArticle","Link"]
-
+       return self.target.__class__.__name__ in [ "RSSArticle",
+                                                  "Link",
+                                                  'Article']
     @property
     def importTime(self):
         importTime = self.target.importTime
@@ -451,13 +483,14 @@ class Proxy(object):
     def recommended(self):
         return (IVideo.providedBy(self.target) or
                 getattr(self.target,'publicationApproved', False))
-                
-    def __getattribute__ (self,name):
-       if name in {'titlePlusDescription'}:
-           return object.__getattribute__(self.target,name)
-       else:
-          return object.__getattribute__(self,name)
-     
+    
+    @property            
+    def titlePlusDescription(self):
+        result =self.target.titlePlusDescription()
+        if getattr(self.target,'toots',[]):
+           result += 'Via: ' + self.target.getVia()
+        return result
+        
 @implementer(IPublicationRoot)       
 class Root (Branch):
    pass

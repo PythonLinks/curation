@@ -7,7 +7,6 @@ class Used(object):
     lastTootTime = 0
     _toot = ""
     
-    @property
     def isVideo(self):
         return False
 
@@ -50,7 +49,6 @@ class Used(object):
     def getPublicationRoot(self):
         return getPublicationRoot(self)
 
-    @property
     def titlePlusDescription(self):
         if self.description == None:
            return self.title

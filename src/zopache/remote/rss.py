@@ -38,8 +38,35 @@ class RSSBase(object):
         except:
            return ""
           
+   
+    def postAddProcess(self,view = None):
+        Link.postAddProcess(self,view = view)
+        if self.logoURL:
+            getImage(self,self.logoURL)
+        self.fetchArticles([self],view)
+
+    #COPY OF THIS HERE AND IN RSSFetch.PY
+    #AND IN mastodon/fetch.py
+    #That one has no view argument.
+    def fetchArticles(self,feeds,view):    
+        result = fetchAll(feeds,view)
+        for item in result:
+            if item[0] ==  FAILURE:  
+               view.submissionErrors.append( "ERROR:" + str(item))
+        self.status='RSS Feeds were downloaded.'
+        
+@implementer (IRSS)     
+class RSS(Link,UniqueName,RSSBase):
+    webClass = "RSS"
+    htmlSummary = True
+    title = ""
+    twitterId = ''
+    mastodonId = ''
+    rssApproved = True
+    keepAllArticles = False
+
     # FOR A NEW RSS FEED       
-    def createOneArticle(self,article,view,importTime):
+    def createOneArticle(self,article,view):
        new = RSSArticle()
        new.articleURL = article.link
        if hasattr(article, 'tags'):
@@ -73,8 +100,7 @@ class RSSBase(object):
           
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
-       #new.setImportTime(importTime, view.getSiteRoot())
-       new.importTime = importTime
+       new.setImportTime(new.publishedAt,view.getSiteRoot())
        
        newName = slugify (new.title)
        newName = self.uniqueBothName (self,newName)
@@ -86,32 +112,6 @@ class RSSBase(object):
        new.rssFeed = self          
        new.postAddProcess(view = view ,article = article)
        return new
-   
-    def postAddProcess(self,view = None):
-        Link.postAddProcess(self,view = view)
-        if self.logoURL:
-            getImage(self,self.logoURL)
-        self.fetchArticles([self],view)
-
-    #COPY OF THIS HERE AND IN RSSFetch.PY
-    #AND IN mastodon/fetch.py
-    #That one has no view argument.
-    def fetchArticles(self,feeds,view):    
-        result = fetchAll(feeds,view)
-        for item in result:
-            if item[0] ==  FAILURE:  
-               view.submissionErrors.append( "ERROR:" + str(item [1:]))
-        self.status='RSS Feeds were downloaded.'
-        
-@implementer (IRSS)     
-class RSS(Link,UniqueName,RSSBase):
-    webClass = "RSS"
-    htmlSummary = True
-    title = ""
-    twitterId = ''
-    mastodonId = ''
-    rssApproved = True
-    keepAllArticles = False
     
     def __init__(self):
          self.localArticles = OOBTree()
@@ -140,19 +140,22 @@ class RSS(Link,UniqueName,RSSBase):
                if article.parent == None:
                    orphans.append(article.permalink)
            for key in orphans:
-               print (key)
+               p rint (key)
                del context.localArticles [key]
     """
          
     async def createArticles(self,entries,view):
-       globalArticles= self.getPublicationRoot().globalArticles
+       root =  self.getPublicationRoot()
+       globalArticles= root.globalArticles
        articles = []
        for article in entries[:20]:
            theId = article['id']
-           if not theId in globalArticles:
-              importTime = await view.getTime()
-              new = self.createOneArticle(article,view,importTime)
-              articles.append(new)
+           if theId in globalArticles:
+               continue
+           if root.existsRemoteURL(article.link):
+               continue
+           new = self.createOneArticle(article,view)
+           articles.append(new)
        return SUCCESS, articles
    
     def postProcess(self,view = None):

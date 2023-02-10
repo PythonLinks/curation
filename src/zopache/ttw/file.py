@@ -102,7 +102,6 @@ class Image (Leaf,ImageBase):
         print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
         return self
 
-
     def replace (self):
         parent = self.__parent__
         name = self.__name__
@@ -228,7 +227,7 @@ class BTreeImage(ImageBase,Container):
          byteImgIO = io.BytesIO()
          pilImage.save(byteImgIO,'PNG')
          byteImgIO.seek(0)
-         return byteImgIO.read(), "image/png"
+         return byteImgIO.read(), "image/png", getattr(self,title,"")
 
     #THE FOLLOWING METHOD I THINK CUTS A PORTRAIT MODE PICTURE SQUARE
     #I THINK IT BREAKS ON LANDSCAPE MODE
@@ -248,7 +247,6 @@ def make_file_response(view, result, *args, **kwargs):
         response.write(result or u'')
         response.headers['cache-control'] = 'public,max-age=3600'  
         return response
-
     
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response

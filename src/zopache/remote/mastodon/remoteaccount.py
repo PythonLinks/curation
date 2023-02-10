@@ -1,59 +1,57 @@
 import time
-from zope.interface import Interface
-from zope import schema
-from slugify import slugify
-from html import unescape
 
 from BTrees.OOBTree import OOBTree
-from dolmen.forms.base.markers import FAILURE, SUCCESS
 
-from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
-from zopache.pages.interfaces import IPage
-from zopache.crud.interfaces import IContainer
-from zopache.core.uniquename import UniqueName
-
-
-from bs4 import BeautifulSoup
-from zopache.remote.rssdownload import fetchAll
-from zopache.crud.getimage import getImage
-from zopache.remote.mastodon.article import TootedArticle
 from zopache.remote.mastodon.interfaces import IMastodonAccount
+from zopache.remote.mastodon.interfaces import IRemoteAccount
+from zopache.application.source import Source
+
+from zopache.crud.getimage import getImage
+
+#all imports are used
 
 @implementer (IMastodonAccount)
-class MastodonAccount(Page,UniqueName):
+class RemoteAccount(Source):
+    
     webClass = "RemoteAccount"
-    crawledToStart = False
     htmlSummary = True
     title = ""
     twitterId = ''
     mastodonId = ''
     keepAllArticles = False
-    minId = None 
-    maxId = None
-    
+    description = ""
+    def __init__(self):
+         Source.__init__(self)
+         self.reset()
+
+         
+    def valuesAsList(self):
+        result = []
+        for item in self.values():
+               result.append (item)
+        return result
+         
+    def reset(self):
+         self.crawledToStart = False
+         self.minId = None 
+         self.maxId = None
+        
     @property
     def remoteURL(self):
         blank,user, server = self.parts()
         return 'https://' + server + '/@' + user
 
     def parts(self):
-        return self.mastodonId.split('@')
+        id = self.mastodonId or "@Snoro@mastodon.social"
+        return id.split('@')
+
+    def userName(self):
+        return "@" + self.parts()[1]
     
-    def reset(self):
-         self.upUntil = time.time()
-         self.backTo = self.upUntil
-    
-    def __init__(self):
-         self.localArticles = OOBTree()
-         self.reset()
-         Page.__init__(self)
-        
     def postAddProcess(self,view = None):
-        Page.postAddProcess(self,view = view)
         if self.logoURL:
             getImage(self,self.logoURL)
-        self.fetchArticles([self],view)
 
     #COPY OF THIS HERE AND IN RSS.PY    
     def fetchArticles(self,feeds,view):    
@@ -62,22 +60,16 @@ class MastodonAccount(Page,UniqueName):
             if item[0] ==  FAILURE:  
                view.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
-        
 
-    async def processResponse(self, session, response,view):
-          html  =  await response.text()
-          feed = feedparser.parse(html)
-          entries = feed['entries']
-          await self.createArticles(entries,view)
-
-          
+class MastodonAccount(RemoteAccount):
+    pass
 
 import crom
 from zopache.zmi.interfaces import IURLSegment
 @crom.adapter
-@crom.sources(IMastodonAccount)
+@crom.sources(IRemoteAccount)
 @crom.target(IURLSegment)
-class IMastodonAccountAdaptor(object):
+class IRemoteAccountAdaptor(object):
     def __init__(self,context):
         self.context=context   
 

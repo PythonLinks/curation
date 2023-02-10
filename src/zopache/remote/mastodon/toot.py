@@ -1,5 +1,12 @@
 import sys
 import time
+import re
+
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
+
+from langdetect import detect
+from langdetect.lang_detect_exception import LangDetectException
 
 from slugify import slugify
 
@@ -9,139 +16,176 @@ from bs4 import BeautifulSoup
 
 from zope.interface import implementer
 
-from cromlech.container.contained import Contained
 from dolmen.forms.base.markers import FAILURE, SUCCESS
-from dolmen.container import BTreeContainer
+from zopache.remote.mastodon.interfaces import IToot
 
-from zopache.remote.rssarticle import BaseArticle
-from zopache.remote.mastodon.interfaces import ITootedArticle
-from zopache.remote.rssdownload import fetch
-from zopache.crud.getimage import createImageInFrom
-from zopache.pages.used import Used
-from zopache.remote.sharedarticle import SharedArticle
-from zopache.core.ancestors import Ancestors
-from zopache.ttw.html import UntrustedHTMLBase
-from cromlech.container.contained import Contained
-from zopache.core import Container
+from zopache.core import Leaf
 
-@implementer(ITootedArticle)
-class TootedArticle(Container,
-                    SharedArticle,
-                    Used,
-                    UntrustedHTMLBase):
-    
-    webClass = "TootedArticle"
-    webApproved = True
-    publicationApproved = True
+hostNamesToIgnore = {"uncensorednews.us",
+                     "takvera.blogspot.com",
+                     "twitter.com",
+                     "www.twitter.com",
+                     "climatejustice.social",
+                     "c.im"}
+
+
+@implementer(IToot)
+class Toot(Leaf):
+    webClass = "Toot"
+    webApproved = False
+    publicationApproved = False
     description = ""
     title = ""
     content = ""
-    recommended = True
+    source = ""
+    recommended = False
+    numberOfBoosts = 0
+    numberOfFavorites = 0
+    count = 0
     
-    def __init__(self,url,content,importTime,tootId,tootURL):
-        SharedArticle.__init__(self)        
-        self.articleURL = url
-        self.importTime = importTime
-        self.description = content or "" 
+    def __init__(self):
+        Leaf.__init__(self)
+        self.articles = []
+        self.articleURLs = []
+        
+    def addArticle(self,article):
+        #There is a hidden _p_changed
+        self.articles.append(article)
+        self.articleURLs.remove (article.articleURL)                       
+        self._p_changed = True        
+        
+    def removeArticle(self,article):
+        self.articles.remove(article)
+        self.articleURLs.append(article.articleURL)
+        self._p_changed = True
+        
+    def createToot(self,toot,account):
+        if toot.reblog:
+            return None
+        self.source =  toot.content
+        soup = BeautifulSoup(toot.content, 'html.parser')
+        text = soup.get_text()
+        if not soup.text.strip():
+            return None
+           
+        try:
+            language = detect(text)
+        except LangDetectException as e:
+            return None
+        if language != 'en':
+            return None 
+
+        soup, textTags = self.removeHashTags(soup)
+        soup, articleURLs = self.processURLs (soup)
+        self.articleURLs = articleURLs
+        if len(articleURLs) == 0:
+            return None
+        soup.smooth()
+        soup = self.removeEmptyParagraphs(soup)
+            
+        #NOW CREATE THE TOOT   
+        self.content = str(soup)
+        self.tags = ' '.join(textTags)
+        self.parent =  account
+        tootId = str(toot.id)
+        self.name = tootId
+        self.hasMedia =  True if toot.media_attachments else False
+        self.userId = toot.account.acct
+        self.numberOfBoosts = toot.reblogs_count
+        self.numberOfFavorites = toot.favourites_count
+        self.description = ""
         self.tootId = tootId
-        self.tootURL = tootURL
-        self.content = content
-        self.count = 0
-        #Simpler to not call page initialization.
-        #Base Article sets import time. Not good. 
-        #HOPE I DO NOT MISS ANYTHING
+        self.tootURL = toot.url
+        return self
 
-
-
-    @property
-    def publishedAt(self):
-        return self.importTime
+    def processURLs(self,soup):    
+        urls  = soup.find_all('a')
+        articleURLs = []
+        for item in urls:
+            #Ignore Mentions     
+            text = item.get_text() 
+            if not text:
+                continue
+            if text and text[0]=='@':
+               continue
+           
+            url = item["href"]
+            item.replace_with('')            
+            if not url:
+                continue
+            hostName = urlparse(url).hostname
+            if not hostName:
+               continue                
+            if hostName.lower() in hostNamesToIgnore:
+               continue
+            articleURLs.append(url)
+            
+        return soup, articleURLs
     
     def preDeleteProcess(self,view):
-        localArticles = self.curator.localArticles
-        try:
-           del localArticles [self.tootId]
-        except:
-           raise Exception("""Could not delete that tootedarticle
-           from local articles.""", tootId)
-       
-    @property
-    def titlePlusDescription(self):
-        #This can be deleted. 
-        if self.description == None:
-            self.description = ""
-        if self.title == None:
-            self.title = ""            
-        return self.title + self.description
-
+        for article in self.articles.copy():
+            self.removeArticle(article)
+            article.removeToot(self)
+            
     def tagsAsHTML(self):
         return self.tags
     
-    async def processResponse(self, session, response,view):
-        contentType = response.headers.get('content-type').lower()
+    def updateValue(self,name,newValue):
+        if getattr(self,name,None) != newValue:
+            setattr(self,name,newValue)
+            
+    #Iterate through destroying all but the last hash tag. 
+    def removeHashTags(self,soup):
+        hashTags =  []
+        textTags = []                        
+        
+        previousTag = None
+        lastWasHashTag = False
+        contents = soup.contents
+        for paragraph in contents:
+            for tag in paragraph:
+                #skip spaces
+                if not tag.text.strip():
+                    continue
+                if self.isHashTag(tag):
+                    if not lastWasHashTag:
+                        hashTags.append([])
+                    hashTags [-1].append(tag)
+                    lastWasHashTag = True
+                else:
+                    lastWasHashTag = False 
 
-        if 'text'in contentType:
-           return await self.processTextResponse(
-              session, response,view)
-        elif 'image' in contentType:
-           result =  await self.processImageResponse(session, response,view)
-              
-           return result
-        else:
-          return (FAILURE, 'Bad contentType in tooted article' +
-                  contentType)
+        for sequence in hashTags:
 
-    async def processImageResponse(self,session, response, view):
-        try:
-            content =  await response.content.read()
-            contentType = response.headers['content-type']
-            createImageInFrom(self,content, contentType, 'Logo')
-            print ("*", end = "")            
-            return SUCCESS, self
-        except:
-            e = sys.exc_info()[0]
-            return FAILURE, node.__name__ + str(e)     
+            if len (sequence) > 1:
+               for tag in sequence:
+                       textTags.append(tag.text)
+                       tag.replace_with('')
+            else:
+               for tag in sequence:
+                   text = tag.text
+                   textTags.append(text)
+                   result= re.findall('[A-Z]*[^A-Z]*', text[1:])
+                   result.remove('')
+                   #print ("SPLIT= ", result)
+                   text = ' '.join(result)
+                   tag.replace_with(text)
+                                             
+        return soup,textTags
+        
+    def isHashTag(self,tag):
+       try:
+           if tag.name == 'a':
+              if tag.text[0] == '#':
+                  return True
+       except:
+           pass
+       return False    
 
-    async def processTextResponse(self, session, response,view):        
-        try:
-            html  =  await response.text()
-            title, description, image  = web_preview(self.articleURL, content = html )
-                         
-        except:
-            return  FAILURE, "Web Preview Failed to Parse Response"
-        if not title:
-            return FAILURE, "NO TITLE GIVEN"
-        self.title = title
-        self.imageURL = image
-        self.source = description
-        newName = slugify (self.title)
-        newName = view.uniqueBothName (self,newName)
-        account = self.parent
-        account[newName] = self
-        print (".",end = "")
-        account.localArticles[self.tootId] = self
-        self.postAddProcess(view )
-        if image:
-           return await fetch(session,self,view)
-        else:
-           return SUCCESS, self
-       
-    def defaultToot(self,view):
-        toot = self
-        soup = BeautifulSoup(toot.description, 'html.parser')
-        result = ""
-        for tag in soup.contents:
-            result += tag.text
-            if tag.name == 'p':
-                result += "\n"
-        return   (
-                result +
-                "\n\n" +
-                toot.curator.mastodonId +
-                "'s #BestToots\n\n" +
-                self.articleURL +
-               "\n\n" +
-               "More:"  + 
-               "\n\n" +
-                toot.tags + " "
-                )
+    def removeEmptyParagraphs(self,soup):
+        for item in soup:
+            if not item.text.strip():
+               item.replace_with('')
+        return soup       
+
+   

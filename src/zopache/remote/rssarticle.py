@@ -14,11 +14,13 @@ from zopache.remote.rssdownload import fetch
 from zopache.remote.irss import IRSSArticle
 from zopache.core.relatives import parentsWhichImplement
 
+from zopache.crud.getimage import getImage
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
-from zopache.remote.sharedarticle import SharedArticle
+from zopache.remote.news.mixin import NewsMixIn
 
-class BaseArticle(Page,SharedArticle):    
+class BaseArticle(NewsMixIn,Page):    
+
     _category = ""
     importTime = 0
     isArticle = True
@@ -26,7 +28,6 @@ class BaseArticle(Page,SharedArticle):
     description = ""
     emailApproved = True
     publicationApproved = False
-    bestApproved = False
     tags = {}
     delay = 0
     def __init__(self):
@@ -35,8 +36,6 @@ class BaseArticle(Page,SharedArticle):
          OrderedBTreeContainer.__init__(self)
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
-
-
     
     def defaultToot(self,view):        
             twitterId = self.rssFeed.twitterId
@@ -76,12 +75,19 @@ class BaseArticle(Page,SharedArticle):
     def getCategory(self):
       return self._category
 
-    def setImportTime(self,importTime,root):
-        importTime = int(importTime)
+    def moveTo(self,category):
+              name = self.__name__
+              del self.__parent__[name]
+              category [name] = self
+              self.__name__ = name
+  
+    def setImportTime(self,publishedAt,root):
+        importTime = int(publishedAt)
+
         while (True):
+           importTime -= 1            
            if not root.hasAnythingAt(importTime):
                 break;
-                importTime += 1
         self.importTime = importTime
             
 
@@ -123,12 +129,15 @@ class RSSArticle(BaseArticle):
 
     def preDeleteProcess(self,view):
         #Page.preDeleteProcess(self,view)
+        self.removeAllToots()
         localArticles = self.rssFeed.localArticles
         if hasattr(self,'permalink'):
             if self.permalink in localArticles:
                  del localArticles [self.permaLink]
             else:
                 raise Exception("That article was not listed in localArticles.")
+            
+            
 
 
     def postAddProcess (self, view = None,article = None):

@@ -1,8 +1,4 @@
 import time
-from bs4 import BeautifulSoup
-
-from langdetect import detect
-from langdetect.lang_detect_exception import LangDetectException
 
 import transaction
 
@@ -14,13 +10,28 @@ from zopache.remote.mastodon.basebot import BaseBot
 from cromlech.browser.exceptions import HTTPFound
 from zopache.remote.mastodon.interfaces import IServer, IMastodonAccount
 from zopache.remote.rss import RSSBase
-from zopache.remote.mastodon.toot import TootedArticle
+from zopache.remote.mastodon.toot import Toot
 from zopache.remote.rssdownload import fetchAll
-
+from zopache.remote.news.mastodonarticles import MastodonArticles
+from zopache.remote.news.article import Article
+from zopache.remote.mastodon.remoteaccount import RemoteAccount
 
 import re
 regexp = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
+@form_component
+@context(IMastodonAccount)
+@target(IView)
+@name("reset")
+class Reset(Form,BaseBot,RSSBase):
+    title = "Reset this mastodon Account"
+    subtitle = "So you can crawl it again"
+    
+    def update(self):
+        context = self.context
+        context.reset()
+        self.status='Account was reset.'
+        
 @form_component
 @context(IMastodonAccount)
 @target(IView)
@@ -34,7 +45,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         title += self.context.mastodonId
         return  title
 
-    subTitle = "If there are a lot of toots, it can take a while. "
 
     def previousImportTime(self,time):
             while True:
@@ -42,11 +52,26 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                 if - time not in self.contentByTime:
                     return time
             raise Exception("No Possible times were found!")
-
+        
+    def getAccountName(self,toot):
+        accountName = toot.account.acct
+        if not '@' in accountName:
+            accountName += "@mastodon.social"
+        return accountName
     
+    def getAccount(self,toot):
+        root = self.siteRoot
+        feeds = root['mastodon-accounts']
+        accountName = self.getAccountName(toot)
+        account = feeds.get(accountName,None)
+        if account == None:
+           account = RemoteAccount()
+           account.title = toot.account.username
+           feeds [accountName] = account
+        return account    
+        
     def update(self):
         self.duplicates = 0
-        account = self.context
         self.startTime = time.time()
         self.siteRoot = self.getSiteRoot()
         proxy =  self.myAccount()
@@ -54,158 +79,165 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         count = 0
         pageCount = 0
         self.contentByTime = self.getSiteRoot().contentByTime
-        accountName = account.mastodonId
-        print ("Acount Name")
-        user = proxy.account_search(accountName)[0]
-        print ("Acount Name DONE ")               
-               
+        importedAccount = self.context
+        importedAccountName = importedAccount.mastodonId
+        user = proxy.account_search(importedAccountName)[0]
+
+        self.mastodonArticles =self.siteRoot.get('mastodon-articles',None)
+        if self.mastodonArticles == None:
+            self.mastodonArticles = MastodonArticles()
+            self.siteRoot['mastodon-articles'] = self.mastodonArticles
         
-
-        #Do not want to start a web thread with a 
-        #zero rate limit, so always leave a few
-        #available.
-        #rateLimit = 5
-        #rateLimit = 100
-        #rateLimit = proxy.ratelimit_remaining - 3        
-        #if rateLimit >=  proxy.ratelimit_remaining:
-        #    rateLimit  = proxy.ratelimit_remaining - 3
-
         while pageOfToots and (proxy.ratelimit_remaining > 3):
+
            loopStart = time.time() 
-           if self.duplicates > 50:
+           if self.duplicates > 5:
                print ("EVERYTHING IS DOWNLOADED")
                break
-           maxId = account.minId
+           maxId = importedAccount.minId
            minId = None
-           if account.crawledToStart:
+           if importedAccount.crawledToStart:
               maxId = None
               
            print (".", end = "")
-           self.allToots=allToots =  {}
-           
+           self.allToots=allToots = set()
+           self.newArticles = newArticles = {}
+           self.oldArticles = oldArticles = set()
            pageOfToots = proxy.account_statuses(user.id,
                        max_id=maxId,
                        min_id=minId,
                        since_id=None,
                        limit=1000)
 
+
            pageCount += 1 
            count += 1
 
            if pageOfToots:
               self.processToots(
-                  pageOfToots,allToots)
+                  pageOfToots,allToots,newArticles)
            else:
-             account.crawledToStart = True
-           self.postProcessPage(allToots)
+             importedAccount.crawledToStart = True
+           self.postProcessPage(allToots,newArticles,oldArticles)
            loopEnd = time.time()
            print ("LoopTime = ", loopEnd - loopStart)
         Form.update(self)
         print ("PAGECOUNT = ", pageCount)
-        #print ("Number of Toots",len(account))
+
         
-    def postProcessPage(self,allToots):
-           #Until you fetch the article, give it a name,
+    def postProcessPage(self,allToots,newArticles,oldArticles):
+           #Until you successfull fetch the article, 
            #and add it to the
            #Parent, it will not be in contentByTime. 
-           for item in allToots.values():
-                  del self.contentByTime[- item.importTime]
-           self.fetchArticles (allToots.values())
+           for item in newArticles.values():
+                  del self.contentByTime[-item.importTime]
+           allArticles = set(newArticles.values()) | oldArticles
+           self.fetchArticles (allArticles)
+           for toot in allToots:
+               for url in toot.articleURLs:
+                   article = self.siteRoot.existsRemoteURL(url)
+                   if article:
+                      toot.addArticle(article) 
+                      article.addToot(toot)
+                      
+           #Since the created articles did not know about
+           #the relevant toots.
+           root = self.siteRoot
+           for article in newArticles.values():
+               if article.name:
+                   root.unIndexItem(article)
+                   root.indexItem(article)
            transaction.manager.commit()
-
         
     def fetchArticles(self,articles):
         view = self
-        result = fetchAll(articles,view, allowedTime = 30)
+        result = fetchAll(articles,view, allowedTime = 20)
         for item in result:
-            print (result[0])
             if item[0] ==  FAILURE:  
-               view.submissionErrors.append( "ERROR:" + str(item [1]))
-               print ("item 1", str(item [1]))               
+               view.submissionErrors.append("ERROR: " + str(item[1:]))
+               if not 'status' in str(item[1:] ):
+                  if not "TIME OUT" in str(item): 
+                     print ( str(item))
+                     
         self.status='RSS Feeds were downloaded.'
 
-    def processToots(self,pageOfToots,allToots):
-        account = self.context
         
+    def processToots(self,pageOfToots,allToots,newArticles):
+        root = self.siteRoot
+        contentByTime = root.contentByTime
+
         for toot in pageOfToots:
-           tootId = toot.id
-           if tootId in account.localArticles:
+           account = self.getAccount(toot)
+           importedAccount = self.context
+           if  toot.visibility in ['private','direct']:
+               continue
+           tootId = str(toot.id)
+           if oldToot :=  account.get(tootId,None):
                self.duplicates += 1
+               oldToot.updateValue(
+                                'numberOfBoosts',
+                                toot.reblogs_count)
+               oldToot.updateValue(
+                                'numberOfFavorites',
+                                toot.favourites_count)
                continue
            
-           if not toot.visibility == 'public':
-               continue
-
-           if account.minId == None:
-               account.minId = tootId
+           if importedAccount.minId == None:
+               importedAccount.minId = tootId
                
-           elif tootId < account.minId:
-                account.minId = tootId
+           elif tootId < importedAccount.minId:
+                importedAccount.minId = tootId
+                
+           account = self.getAccount(toot)
+           new  = Toot().createToot(toot,account)
 
-           content = toot.content
-           self.hashTags = []
-           self.textTags = []           
-           soup = BeautifulSoup(content, 'html.parser')
-           
-           text = soup.text
-           if not soup.text.strip():
+           if new == None:
                continue
-           try:
-                language = detect(text)
-           except LangDetectException as e:
-               continue
-           
-           if language != 'en':
-               continue
-
-           soup = self.removeHashTags(soup)
-           urls  = soup.find_all('a')
-
-           for item in urls:
-               if 'mastodon.social'in item['href'].lower():
-                   item.replace_with(item.text)
+           else:
+               if new.name == None:
+                  print ("Error: new.name == None")
+                  continue
+               try:
+                  account[new.name] = new
+               except:
+                   print ("ERROR: account[new.name] = new")
+                   continueyes
                    
-           urls = soup.find_all('a')
-           if len(urls) != 1:
-               continue
-           url = urls [0].text
-           urls[0].replace_with('')
-           soup.smooth()        
-           if not url:
-               continue
-                 
-           if "uncensorednews.us" in url.lower():
-                  continue
-
-           if self.siteRoot.existsRemoteURL(url):
-                  continue
-
-           urlLength = len(url)
-           tootLength = len (toot.content)
-           if tootLength - urlLength < 30:
-               continue
-
-           tootURL = toot.url
-           soup = self.removeEmptyParagraphs(soup)
-           content = str(soup)
+               allToots.add( new)               
+               
+           #CALCULATE THE LINK IMPORT TIME
            try:
-               importTime = time.mktime(toot.created_at.timetuple())
+               importTime = self.getPublicationTime(toot)
            except:
                importTime = time.time()
-               
            importTime = int(importTime)
-           importTime = self.previousImportTime(importTime) 
-           new = TootedArticle(url,content,importTime,tootId,tootURL)
-           new.tags = ' '.join(self.textTags)
-           new.__parent__ = account
-           new.curator = account
-           new.articleURL = url
-           new.numberOfBoosts = toot.reblogs_count
-           new.numberOfFavorites = toot.favourites_count
 
-           if not url in allToots:
-               allToots[url] = new               
-               self.contentByTime[-importTime] = new
+           for url in new.articleURLs:           
+
+               #Get the article
+               #If the article exists, publication approve it.
+               #If it is publication approved no need to fetch the image
+               #if the article does not exists
+               #And no other toot mentioned the article
+               #Create the article
+               article = self.siteRoot.existsRemoteURL(url)
+               if article == None:  
+                 if not url in newArticles:
+                   anArticle = Article()
+                   anArticle.articleURL = url
+                   anArticle.parent = self.mastodonArticles
+                   importTime = self.previousImportTime(importTime)
+                   anArticle.importTime = importTime
+                   newArticles[url] = anArticle
+                   self.contentByTime[-importTime] = anArticle
+               else:
+                   if not article.publicationApproved:
+                       self.oldArticles.add (article)
+                       article.publicationApproved = True
+            
+    def getPublicationTime(self,toot):           
+        publicationTime = time.mktime(toot.created_at.timetuple())
+        return int (publicationTime)
 
     def render(self):
         print ("Duration = ", str((time.time() - self.startTime)/60))
@@ -215,80 +247,34 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
             "<Br> Total Toots " + str(len(self.context)) )
                 
 
-    def removeEmptyParagraphs(self,soup):
-        for item in soup:
-            if not item.text.strip():
-               item.replace_with('')
-        return soup       
-
                
-    #Iterate through destroying all but the last hash tag. 
-    def removeHashTags(self,soup):
-        self.hashTags = hashTags =  []
-        
-        previousTag = None
-        lastWasHashTag = False
-        contents = soup.contents
-        for paragraph in contents:
-            for tag in paragraph:
-                #skip spaces
-                if not tag.text.strip():
-                    continue
-                if self.isHashTag(tag):
-                    if not lastWasHashTag:
-                        hashTags.append([])
-                    hashTags [-1].append(tag)
-                    lastWasHashTag = True
-                else:
-                    lastWasHashTag = False 
+    """
+    def debug(self,pageOfToots):
+        from bs4 import BeautifulSoup
+        for item in pageOfToots:
+       yes
+    if not item.reblog:
+                soup = BeautifulSoup(item.content, 'html.parser')
+                print()
+                print( item.created_at.ctime())
+                print (soup.get_text())
 
-        for sequence in hashTags:
-
-            if len (sequence) > 1:
-               for tag in sequence:
-                       self.textTags.append(tag.text)
-                       tag.replace_with('')
-            else:
-               for tag in sequence:
-                   self.textTags.append(tag.text)                   
-                   tag.replace_with(tag.text)
-        return soup
-        
-    def isHashTag(self,tag):
-       try:
-           if tag.name == 'a':
-              if tag.text[0] == '#':
-                  return True
-       except:
-           pass
-       return False    
-
-@form_component
-@context(IMastodonAccount)
-@target(IView)
-@name("fixtime")
-class Fixtime(Form,BaseBot,RSSBase):
-    def postProcess(self,allToots):
-        pass
-
-    def processToots(self,pageOfToots,allToots):
-        account = self.context
-        root = self.getSiteRoot()
-        contentByTime = root.contentByTime
-        for toot in pageOfToots:
+                
+    """
+    """
+    def fixTime(self,toot):
+            root = self.siteRoot
+            account = self.context
+            contentByTime = self.contentByTime        
             if tootedArticle := account.localArticles.get(toot.id,None):
                publicationTime = None 
                try:
-                   publcationTime = time.mktime(
-                       toot.created_at.timetuple())
-                   publicationTime = int (publicationTime)
+                   publicationTime = self.getPublicationTime(toot)
                except:
-                   breakpoint() #STILL DEVELOPING THIS FUNCITON
                    pass
                if publicationTime:
-                  root.unIndexItem(tootedArticle) 
-                  del contentByTime[tootedArticle.importTime]
-                  importTime = self.previousImportTime(importTime)
+                  root.unIndexItem(tootedArticle)
+                  importTime = self.previousImportTime(publicationTime)
                   tootedArticle.importTime = importTime
-                  contentByTime [importTime] = previousArticle
                   root.indexItem(tootedArticle) 
+    """
