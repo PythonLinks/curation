@@ -137,7 +137,8 @@ class Branch(SimpleBranch):
         self.globalArticles = OOBTree()
         self.categoryIndex = IOBTree()
         self.contentByTime = IOBTree()        
-
+        self.tootedArticles = IOBTree()
+        
         contentCatalog = Catalog()
         contentCatalog['importTime'] = FieldIndex('importTime')
         contentCatalog['isVideo']=FieldIndex('isVideo')

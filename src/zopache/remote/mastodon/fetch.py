@@ -56,7 +56,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
     def getAccountName(self,toot):
         accountName = toot.account.acct
         if not '@' in accountName:
-            accountName += "@mastodon.social"
+            accountName = "@"  + accountName + "@mastodon.social"
         return accountName
     
     def getAccount(self,toot):

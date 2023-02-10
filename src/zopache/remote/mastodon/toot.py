@@ -49,14 +49,15 @@ class Toot(Leaf):
         self.articleURLs = []
         
     def addArticle(self,article):
-        #There is a hidden _p_changed
         self.articles.append(article)
-        self.articleURLs.remove (article.articleURL)                       
+        url = getattr(article, 'articleURL', article.remoteURL)
+        self.articleURLs.remove (url)                       
         self._p_changed = True        
         
     def removeArticle(self,article):
         self.articles.remove(article)
-        self.articleURLs.append(article.articleURL)
+        url = getattr(article, 'articleURL', article.remoteURL)        
+        self.articleURLs.append(url)
         self._p_changed = True
         
     def createToot(self,toot,account):
