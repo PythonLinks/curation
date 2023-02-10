@@ -191,15 +191,12 @@ class Branch(SimpleBranch):
           self.remoteURLs[link] = anObject 
            
     def deleteRemoteURL(self,link):
-
         if link == "":
            return
 
         link = self.urlOnly(link)
         del self.remoteURLs[link]
-        #try:
-        #except:
-        #  print ("ERROR: ", link)   
+
             
     def getUniqueNumberString(self):
         anInteger = random.randint (1,sys.maxsize)        

@@ -50,13 +50,15 @@ class Toot(Leaf):
         
     def addArticle(self,article):
         self.articles.append(article)
-        url = getattr(article, 'articleURL', article.remoteURL)
+        url = (getattr(article, 'articleURL', False) or
+                   article.remoteURL)        
         self.articleURLs.remove (url)                       
         self._p_changed = True        
         
     def removeArticle(self,article):
         self.articles.remove(article)
-        url = getattr(article, 'articleURL', article.remoteURL)        
+        url = (getattr(article, 'articleURL', False) or
+                   article.remoteURL)        
         self.articleURLs.append(url)
         self._p_changed = True
         
