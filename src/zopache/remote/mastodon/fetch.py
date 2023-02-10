@@ -157,8 +157,11 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
                view.submissionErrors.append("ERROR: " + str(item[1:]))
                if not 'status' in str(item[1:] ):
                   if not "TIME OUT" in str(item): 
-                     print ( str(item))
-                     
+                     try:
+                         print ( str(item))
+                     except:
+                         print (type(item))
+                         
         self.status='RSS Feeds were downloaded.'
 
         
