@@ -155,7 +155,6 @@ class RSS(Link,UniqueName,RSSBase):
                continue
            if root.existsRemoteURL(article.link):
                continue
-           breakpoint()
            new = self.createOneArticle(article,view,currentTime)
            articles.append(new)
        return SUCCESS, articles

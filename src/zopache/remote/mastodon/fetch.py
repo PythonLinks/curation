@@ -123,6 +123,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
            print ("LoopTime = ", loopEnd - loopStart)
         Form.update(self)
         print ("PAGECOUNT = ", pageCount)
+        self.getSiteRoot().lastMastodonFetchTime = time.time()
 
         
     def postProcessPage(self,allToots,newArticles,oldArticles):
