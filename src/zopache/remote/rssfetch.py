@@ -46,7 +46,11 @@ class GetRSS(Form):
                   if item.rssApproved:   
                       feeds.append(item)
         self.fetchArticles(feeds)
-        self.getSiteRoot().lastFetchTime = time.time()
+        root = self.getSiteRoot()
+        root.lastRSSFetchTime = time.time() 
+        if hasattr(root,'lastFetchTime'):
+            del root.lastFetchTime
+            
         Form.update(self)
         #raise HTTPFound('/categories/newest')
 
