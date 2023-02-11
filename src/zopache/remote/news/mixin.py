@@ -1,3 +1,4 @@
+from zopache.core.getroot import getPublicationRoot
 
 class NewsMixIn(object):
     #To make a simple unified codebase
@@ -6,11 +7,11 @@ class NewsMixIn(object):
     #Add somethign to it, to create a new array
     toots = []
     
+    
+    
     def getVia(self):
-        result = ""
-        for toot in self.toots:
-            result += toot.parent.userName() + ' '
-        return result
+        result = [toot.parent.userName() for toot in self.toots]
+        return ' '.join (result)
     
     def getDescription(self,view):
         for item in self.toots:            
@@ -20,16 +21,17 @@ class NewsMixIn(object):
         return self.description
 
     def getBoosts(self):
-        boosts = 0
-        for item in self.toots:
-            boosts += item.numberOfBoosts
-        return boosts
+        return sum( [item.numberOfBoosts for item in self.toots])
+
     
     def addToot(self,toot):
         #Because, to save space,  some have a shared class toot list.
         if len (self.toots) == 0:
            self.toots = [] 
         self.toots.append(toot)
+        if len (self.toots) == 1:
+           getPublicationRoot(self).tootedArticles[
+               int(self.importTime)] = self 
         self.p_changed = True
 
     def hasToots(self):
@@ -37,13 +39,14 @@ class NewsMixIn(object):
 
     def removeToot(self,toot):
         self.toots.remove(toot)
+        if len(self.toots) == 0:
+           del getPublicationRoot(self).tootedArticles[int(self.importTime)] 
         self.p_changed = True
 
     def removeAllToots(self):
         if len(self.toots)==0:                    
            return
-        
         for aToot in self.toots:
-            aToot.removeArticle(self)        
-        self.toots =[]
-        self.removeFromShortList()
+            aToot.removeArticle(self)
+        self.toots =[] 
+        del getPublicationRoot(self).tootedArticles[int(self.importTime)]         

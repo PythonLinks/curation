@@ -66,7 +66,7 @@ class RSS(Link,UniqueName,RSSBase):
     keepAllArticles = False
 
     # FOR A NEW RSS FEED       
-    def createOneArticle(self,article,view):
+    def createOneArticle(self,article,view,currentTime):
        new = RSSArticle()
        new.articleURL = article.link
        if hasattr(article, 'tags'):
@@ -94,9 +94,9 @@ class RSS(Link,UniqueName,RSSBase):
        if hasattr(article,"published_parsed"):
           new.publishedAt = min(
                             time.mktime( article["published_parsed"]),
-                            importTime)
+                            currentTime)
        else:
-          new.publishedAt = importTime
+          new.publishedAt = currentTime
           
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
@@ -145,6 +145,7 @@ class RSS(Link,UniqueName,RSSBase):
     """
          
     async def createArticles(self,entries,view):
+       currentTime = int(time.time()) 
        root =  self.getPublicationRoot()
        globalArticles= root.globalArticles
        articles = []
@@ -154,7 +155,8 @@ class RSS(Link,UniqueName,RSSBase):
                continue
            if root.existsRemoteURL(article.link):
                continue
-           new = self.createOneArticle(article,view)
+           breakpoint()
+           new = self.createOneArticle(article,view,currentTime)
            articles.append(new)
        return SUCCESS, articles
    

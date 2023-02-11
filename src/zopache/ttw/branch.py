@@ -132,10 +132,8 @@ class Branch(SimpleBranch):
     def reInit(self):        
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
-        self.tootedLinks = OOBTree()
         self.pagesByTwitterId = OOBTree()
         self.globalArticles = OOBTree()
-        self.categoryIndex = IOBTree()
         self.contentByTime = IOBTree()        
         self.tootedArticles = IOBTree()
         
@@ -351,6 +349,7 @@ class Branch(SimpleBranch):
         if item.__class__.__name__  == "Category":
            pass 
            #creationTime = int (item.creationTime)
+           #self.categoryIndex = IOBTree()
            #del self.categoryIndex[item.creationTime] 
            #self.categoryCatalog.unindex_doc(creationTime)
        
