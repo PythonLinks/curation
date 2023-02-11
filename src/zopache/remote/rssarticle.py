@@ -18,8 +18,9 @@ from zopache.crud.getimage import getImage
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
 from zopache.remote.news.mixin import NewsMixIn
+from zopache.remote.sharedarticle import SharedArticle
 
-class BaseArticle(NewsMixIn,Page):    
+class BaseArticle(NewsMixIn,SharedArticle,Page):    
 
     _category = ""
     importTime = 0

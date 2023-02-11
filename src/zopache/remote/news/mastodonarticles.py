@@ -16,8 +16,6 @@ class MastodonArticles(Source):
     description = "Articles mentioned on Mastodon."
     htmlSummary = True
     title = ""
-    twitterId = ''
-    mastodonId = ''
     keepAllArticles = True
 
 import crom

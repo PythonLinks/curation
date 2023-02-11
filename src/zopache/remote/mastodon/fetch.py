@@ -67,6 +67,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
         if account == None:
            account = RemoteAccount()
            account.title = toot.account.username
+           account.mastodonId = accountName
            feeds [accountName] = account
         return account    
         
