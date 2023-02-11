@@ -35,7 +35,6 @@ class Toot(Leaf):
     webApproved = False
     publicationApproved = False
     description = ""
-    title = ""
     content = ""
     source = ""
     recommended = False
@@ -47,7 +46,14 @@ class Toot(Leaf):
         Leaf.__init__(self)
         self.articles = []
         self.articleURLs = []
-        
+
+    @property    
+    def title(self):
+
+        if self.articles:
+            return self.articles[0].title
+        return self.content[0:30]
+    
     def addArticle(self,article):
         self.articles.append(article)
         url = (getattr(article, 'articleURL', False) or
