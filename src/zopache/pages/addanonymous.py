@@ -68,5 +68,5 @@ class AddLink(AddAnonymousPageByTitle):
     subTitle = "Refering to a remote page."
     factory = Link
     def update(self):
-        AddAnonymousPageByTitle.__init__(self)
+        AddAnonymousPageByTitle.update(self)
         self.getSiteRoot().lastLinkAddedTime = time.time()

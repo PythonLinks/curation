@@ -379,6 +379,7 @@ class Branch(SimpleBranch):
             self.unCatalogContent(item)            
            
         elif item.__class__.__name__ == 'Link':
+            importTime = int(item.importTime)
             if importTime in self.tootedArticles:
                del self.tootedArticles[importTime]             
             del self.contentByTime[int(item.importTime)]
