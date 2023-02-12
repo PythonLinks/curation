@@ -44,6 +44,8 @@ class RemoteAccount(Source):
 
     def parts(self):
         id = self.mastodonId
+        if id[0]!='@':
+            id = '@' + id
         return id.split('@')
 
     def userName(self):
