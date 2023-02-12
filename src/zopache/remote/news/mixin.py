@@ -7,8 +7,18 @@ class NewsMixIn(object):
     #Add somethign to it, to create a new array
     toots = []
     
-    
-    
+    def getDescriptionFor(self,view):
+        for toot in self.toots:
+            if len (toot.content) > 10:
+                return toot.content
+        return self.description
+            
+    def getViaHref(self):
+      result = "Via: "
+      for toot in self.toots:
+        result += f'<a href = "{toot.tootURL}">{toot.parent.mastodonId}</a>'
+      return result      
+       
     def getVia(self):
         result = [toot.parent.userName() for toot in self.toots]
         return ' '.join (result)
