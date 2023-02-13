@@ -1,3 +1,5 @@
+import time
+
 from zope import schema
 from zope.schema import Text
 
@@ -6,7 +8,7 @@ from dolmen.forms.base import DISPLAY
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 
 from zopache.core.viewdecorators import *
-from zopache.remote.rssarticle import IRSSArticle
+from zopache.pages.interfaces import ILinkBase
 from zopache.forms.interfaces import IApprove
 
 from dolmen.forms.base import Actions
@@ -108,8 +110,8 @@ class Retract(Save):
 
 @form_component
 @name ('approve')
-@context(IRSSArticle)
-@implementer(ITreeSecurity)
+@context(ILinkBase)
+@permissions("Curate")
 class Approve (EditForm,Breadcrumbs):
     title = 'Approve this Article?'
     subTitle = "The article will be moved to its new location. "
@@ -128,9 +130,18 @@ class Approve (EditForm,Breadcrumbs):
                     Cancel("Cancel","Cancel"))
         
     def postProcess(self, view = None):
-        self.siteRoot = self.getSiteRoot()
-        context = self.context
-        context.postProcess(view = self)
+        root = self.getSiteRoot() 
+        aTime = int(time.time())
+
+        if not hasattr(root,'movedArticles'):
+           from BTrees.IOBTree import IOBTree            
+           root.movedArticles = IOBTree()
+        movedArticles = root.movedArticles
+        movedArticles[- aTime] = context
+        while len(movedArticles) > 30:
+           maxkey = movedArticles.maxKey()
+           del movedArticles [maxKey]
+        self.context.postProcess(view = self)
         
            
 

@@ -168,9 +168,7 @@ class Paster(BaseClass):
     def allowed(self,obj):
         if hasattr(obj,'canCopy'):
            return obj.canCopy()                
-        if ICopyable.providedBy(obj):
-                return True
-        return False
+        return True
 
 
 #THIS IS THE GENERIC DELETER

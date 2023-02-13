@@ -17,7 +17,10 @@ class NewsMixIn(object):
       result = []
       for toot in self.toots:
         result.append ( f'<a href = "{toot.tootURL}" target = "_blank">{toot.parent.mastodonId}</a>')
-      return "Via: " + ", ".join(result)       
+      if len(self.toots) == 0 :
+          return ""
+      else:
+          return "Via: " + ", ".join(result)       
        
     def getVia(self):
         result = [toot.parent.userName() for toot in self.toots]
