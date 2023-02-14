@@ -137,7 +137,7 @@ class Approve (EditForm,Breadcrumbs):
            from BTrees.IOBTree import IOBTree            
            root.movedArticles = IOBTree()
         movedArticles = root.movedArticles
-        movedArticles[- aTime] = context
+        movedArticles[- aTime] = self.context
         while len(movedArticles) > 30:
            maxkey = movedArticles.maxKey()
            del movedArticles [maxKey]
