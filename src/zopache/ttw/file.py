@@ -208,7 +208,7 @@ class BTreeImage(ImageBase,Container):
          #Max size of 4MB for images on Mastodon
          ratio = 3900000  / self.size
          if ratio >=1:
-             return self.data, self.contentType
+             return self.data, self.contentType, getattr(self,"title","")
          
          newWidth = int(ratio * self.width)
          newHeight = int (ratio * self.height)
@@ -227,7 +227,7 @@ class BTreeImage(ImageBase,Container):
          byteImgIO = io.BytesIO()
          pilImage.save(byteImgIO,'PNG')
          byteImgIO.seek(0)
-         return byteImgIO.read(), "image/png", getattr(self,title,"")
+         return byteImgIO.read(), "image/png", getattr(self,"title","")
 
     #THE FOLLOWING METHOD I THINK CUTS A PORTRAIT MODE PICTURE SQUARE
     #I THINK IT BREAKS ON LANDSCAPE MODE
