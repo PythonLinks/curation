@@ -23,6 +23,8 @@ class AddMsatodonAccount(AddByTitleForm):
      factory = MastodonAccount
      layoutName = "UserMenu"
      dataValidators = [Duplicate]
+     def newName(self,data):
+         return data['mastodonId'].strip()
      
      def newURL(self,baseURL):
         return baseURL + '/manage'

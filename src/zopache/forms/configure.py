@@ -20,6 +20,13 @@ class IForm(Interface):
         missing_value = "",
     )
 
+    diffDomain= DottedName(
+        title = u'Diff Server',
+        description = "With which you compare the ttw source code.",
+        required = False,
+        missing_value = "",
+    )    
+
     mqttServer= TextLine(
         title = "MQTT Server URL",
         description = "For real time notifications.",

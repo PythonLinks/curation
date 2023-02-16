@@ -13,7 +13,7 @@ class IRemoteAccount(ILinkBase):
         description ="What is the account  called?",
         required = True,
         )
-
+    
     description= schema.Text(
         title = 'Description',
         description = """The Mastodon Account BIo.  """,
@@ -26,6 +26,12 @@ class IRemoteAccount(ILinkBase):
         description ="""@User@Domain""",
         required = False,
         )    
+
+    defaultCategory = schema.TextLine(
+        title = "Whereto place their recommended links",
+        description ="This is the /slug where you can see their recommendedlinks.",
+        required = True,
+        )
     
     rssApproved=schema.Bool(
         title = "Is this feed approved for downloading",
@@ -39,8 +45,21 @@ class IRemoteAccount(ILinkBase):
         description ="Or clear out the old ones to save space?",
         required = False,
         default = True,
-        )    
-
+    )    
+        
+    domainName = schema.DottedName(
+        title = 'Their Domain Name',
+        description = 'Articles in this domain are listed, not approved.',
+        required = False,
+    )
+    
+    wordsToAvoid = schema.Text(
+        title = 'Words To Avoid',
+        description = """These words will get the item rejected.  """,
+        required = False,
+        default = '',
+    )
+    
 class IMastodonAccount(IRemoteAccount):
     pass
 

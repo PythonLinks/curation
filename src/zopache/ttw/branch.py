@@ -179,6 +179,8 @@ class Branch(SimpleBranch):
        return self.remoteURLs.get(link,None)
    
     def addRemoteURL(self,anObject,remoteURL):
+       if anObject.__class__.__name__  == "RemoteAccount":               
+           return
        link = self.urlOnly(remoteURL)
        if link == "":
            return
@@ -190,9 +192,12 @@ class Branch(SimpleBranch):
            
     def deleteRemoteURL(self,link):
         if link == "":
-           return
-
+            return
         link = self.urlOnly(link)
+        
+        #Temporary RemoteAccountFix, best to remove. 
+        if not link in self.remoteURLs:
+            return
         del self.remoteURLs[link]
 
             

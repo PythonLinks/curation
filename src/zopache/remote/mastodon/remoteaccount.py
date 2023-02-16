@@ -20,7 +20,9 @@ class RemoteAccount(Source):
     twitterId = ''
     mastodonId = ''
     keepAllArticles = False
+    wordsToAvoid = ""
     description = ""
+    defaultCategory = ""
     def __init__(self):
          Source.__init__(self)
          self.reset()
