@@ -128,12 +128,16 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                loopEnd = time.time()
                print ("LoopTime = ", loopEnd - loopStart)
            else:
+               print ("CRAWLED TO START")
                importedAccount.crawledToStart = True
                break
-
+           
            if importedAccount.crawledToStart == True:
-              lastToot = pageOfToots [-1]               
-              if loopStart - getPublicationTime(lastToot) > fiveDays:
+              lastToot = pageOfToots [-1]
+              
+              age = loopStart - self.getPublicationTime(lastToot)
+              print ("AGE = ", age/(3600 *24))
+              if age > fiveDays:
                  break
              
         Form.update(self)
@@ -272,9 +276,9 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                        article.publicationApproved = True
                        
     def hasWords(self,toot,account):
-        #print (toot.content[0:300])
-        #breakpoint()
         for word in account.wordsToAvoid.split("\r\n"):
+               if word == '':
+                   continue
                if word in toot.content:
                   return True
         return False

@@ -23,6 +23,7 @@ class RemoteAccount(Source):
     wordsToAvoid = ""
     description = ""
     defaultCategory = ""
+    domainName = ""
     def __init__(self):
          Source.__init__(self)
          self.reset()
