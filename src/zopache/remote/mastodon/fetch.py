@@ -22,7 +22,7 @@ import re
 regexp = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
 
-fiveDays = 3600 * 24 * 5
+fiveDays = 3600 * 24 * 10
 
 @form_component
 @context(IMastodonAccount)
