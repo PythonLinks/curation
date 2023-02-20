@@ -264,8 +264,7 @@ class TootForm (EditForm,BaseBot):
 
     def addUnAuthorizedActions(self):
         actionList = [OnlyToot("Toot","toot"),
-                      OnlyTootAndView("Toot And View","tootView"),
-                      OnlyReset("Reset",'reset')
+                      OnlyTootAndView("Toot And View","tootView")
                       ]
         actionList.append(Cancel("Cancel","Cancel"))
         actionList = tuple(actionList)                  
