@@ -62,7 +62,7 @@ class DuplicateURLValidator(BaseValidator):
         errors = Errors()
         
         theItem = self.urlExists(data) 
-        if ((theItem != None) and (
+        if ((theItem != False) and (
                 theItem != self.form.context)):
            form = self.form
            msg = "That url is already in the database at: "
