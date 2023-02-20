@@ -284,6 +284,8 @@ class TootForm (EditForm,BaseBot):
     
     
     def mediaIdAsList(self):
+        if self.className() == "EmbedVideo":
+            return None
         image = self.getDefaultImage()
         mediaId = getattr(image,'mediaId',None)
         if mediaId != None:

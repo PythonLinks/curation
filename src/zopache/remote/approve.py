@@ -139,7 +139,7 @@ class Approve (EditForm,Breadcrumbs):
         movedArticles = root.movedArticles
         movedArticles[- aTime] = self.context
         while len(movedArticles) > 30:
-           maxkey = movedArticles.maxKey()
+           maxKey = movedArticles.maxKey()
            del movedArticles [maxKey]
         self.context.postProcess(view = self)
         

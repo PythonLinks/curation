@@ -1,3 +1,5 @@
+from bs4 import BeautifulSoup
+
 from zopache.pages.page import Page
 from zopache.core.viewdecorators import *
 from zopache.remote.ivideo import (IBasicVideo,
@@ -52,9 +54,13 @@ class VideoBase(Voteable):
     def defaultToot(self,view = None):
         result =  self.title +"\n\n" 
         result += self.description + "\n\n"
+        result += "Read more in /" + self.parent.name
+        result += "\n\n"        
         if view:         
-           result +=  view.secureShortURL() + "\n\n" 
-        result += self.lastTooted(view = view ) + "\n\n" 
+           result +=  "https:// " + view.secureShortURL(self.parent)[8:]
+           result +=  "\n\n" 
+        result += self.getRemoteURL()
+        result += "\n\n"
         result +=  (
                 self.parentalTags() +
                " #video #videos "
@@ -170,8 +176,13 @@ class EmbedVideo (VideoBase,Page):
     
     def getFlexFrame(self):
         return self.getIFrame(False)               
-    
 
+    def getRemoteURL(self):
+        soup = BeautifulSoup(self.embed, 'html.parser')
+
+        url = soup.find("iframe")["src"]
+        return url
+    
     def getIFrame(self,wide):
         iFrameId = f"{self.name + '-video'}"           
         embed = self.embed

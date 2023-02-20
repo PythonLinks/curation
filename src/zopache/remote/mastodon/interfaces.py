@@ -3,7 +3,7 @@ from zope import schema
 from zopache.pages.interfaces import  ILinkBase
 from z3c.schema.email  import RFC822MailAddress as Email
 from zope.schema.vocabulary import SimpleVocabulary,SimpleTerm
-
+from zopache.ttw.interfaces import IInternalPrincipal
 from zopache.crud.interfaces import ILeaf, IContainer,IDeletable
 
 class IRemoteAccount(ILinkBase):    
@@ -60,7 +60,7 @@ class IRemoteAccount(ILinkBase):
         default = '',
     )
     
-class IMastodonAccount(IRemoteAccount):
+class IMastodonAccount(IInternalPrincipal):
     pass
 
 class IAddMastodonAccount(IMastodonAccount):

@@ -49,7 +49,6 @@ class Toot(Leaf):
 
     @property    
     def title(self):
-
         if self.articles:
             return self.articles[0].title
         return self.content[0:30]
@@ -68,27 +67,52 @@ class Toot(Leaf):
         self.articleURLs.append(url)
         self._p_changed = True
         
+    def hasWords(self, toot, account):
+        for word in account.wordsToAvoid.split("\r\n"):
+               if word == '':
+                   continue
+               if word in toot.content:
+                  return True
+        return False
+        
     def createToot(self,toot,account):
         if toot.reblog:
-            return None
+            return 'Reblog', self
+        
+        if toot.visibility in ['private','direct']:
+           return 'Visibility', self
+
+        if self.hasWords(toot,account):
+          return "Forbidden Wods", self
+       
+        tootId = str(toot.id)
+        if oldToot :=  account.get(tootId,None):
+            oldToot.updateValue(
+                                'numberOfBoosts',
+                                toot.reblogs_count)
+            oldToot.updateValue(
+                                'numberOfFavorites',
+                                toot.favourites_count)
+            return "Existing Toot", self
+        
         self.source =  toot.content
         soup = BeautifulSoup(toot.content, 'html.parser')
         text = soup.get_text()
+        self._title = text [0:40]        
         if not soup.text.strip():
-            return None
-           
+            return 'No Content', self
         try:
             language = detect(text)
         except LangDetectException as e:
-            return None
+            return 'Language Error', self
         if language != 'en':
-            return None 
+            return 'Not English', self
 
         soup, textTags = self.removeHashTags(soup)
         soup, articleURLs = self.processURLs (soup)
         self.articleURLs = articleURLs
         if len(articleURLs) == 0:
-            return None
+            return 'No article URLS', self
         soup.smooth()
         soup = self.removeEmptyParagraphs(soup)
             
@@ -105,7 +129,14 @@ class Toot(Leaf):
         self.description = ""
         self.tootId = tootId
         self.tootURL = toot.url
-        return self
+        if self.name == None:
+           return "Error: new.name == None", self
+        try:
+            account[self.name] = self
+        except:
+            return "ERROR: account[new.name] = new", self
+        
+        return 'SUCCESS', self
 
     def processURLs(self,soup):    
         urls  = soup.find_all('a')

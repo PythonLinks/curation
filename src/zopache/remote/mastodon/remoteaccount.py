@@ -3,7 +3,7 @@ import time
 from BTrees.OOBTree import OOBTree
 
 from zopache.core.viewdecorators import *
-from zopache.remote.mastodon.interfaces import IMastodonAccount
+from zopache.remote.mastodon.interfaces import IRemoteAccount
 from zopache.remote.mastodon.interfaces import IRemoteAccount
 from zopache.application.source import Source
 
@@ -11,7 +11,7 @@ from zopache.crud.getimage import getImage
 
 #all imports are used
 
-@implementer (IMastodonAccount)
+@implementer (IRemoteAccount)
 class RemoteAccount(Source):
     
     webClass = "RemoteAccount"
@@ -28,7 +28,20 @@ class RemoteAccount(Source):
          Source.__init__(self)
          self.reset()
 
-         
+    def minMaxIds(self):
+        maxId = self.minId
+        minId = None
+        if self.crawledToStart:
+              maxId = None
+        return minId, maxId
+
+    def setMinId(self, tootId):
+        if self.minId == None:
+            self.minId = tootId
+               
+        elif tootId < self.minId:
+            self.minId = tootId
+
     def valuesAsList(self):
         result = []
         for item in self.values():

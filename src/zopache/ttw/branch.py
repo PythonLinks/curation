@@ -122,12 +122,19 @@ class Branch(SimpleBranch):
         SimpleBranch.__init__(self)
         self.reInit()
 
-    def mostRecentCuratedNews(self):
+    def mostRecentlyCuratedRSSArticle(self):
         for item in self.contentByTime.values():
-            if item.__class__.__name__ != 'Link':
+            if item.__class__.__name__ == 'RSSArticle':
                if item.publicationApproved:
                    return item
         return None
+
+    def mostRecentlyAddedLink(self):
+        for item in self.contentByTime.values():
+            if item.__class__.__name__ == 'Link':
+               if item.publicationApproved:
+                   return item
+        return None    
     
     def reInit(self):        
         self.valuesByToken=OOBTree()
@@ -176,7 +183,7 @@ class Branch(SimpleBranch):
        if link == "":
            return False
        link = self.urlOnly(link)
-       return self.remoteURLs.get(link,None)
+       return self.remoteURLs.get(link,False)
    
     def addRemoteURL(self,anObject,remoteURL):
        if anObject.__class__.__name__  == "RemoteAccount":               

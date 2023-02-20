@@ -9,7 +9,7 @@ from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
 from zopache.remote.mastodon.basebot import BaseBot
 from cromlech.browser.exceptions import HTTPFound
-from zopache.remote.mastodon.interfaces import IServer, IMastodonAccount
+from zopache.remote.mastodon.interfaces import IServer, IRemoteAccount
 from zopache.remote.rss import RSSBase
 from zopache.remote.mastodon.toot import Toot
 from zopache.remote.rssdownload import fetchAll
@@ -17,18 +17,20 @@ from zopache.remote.news.mastodonarticles import MastodonArticles
 from zopache.remote.news.article import Article
 from zopache.remote.mastodon.remoteaccount import RemoteAccount
 from zopache.core.transactionnote import TransactionNote
+from zopache.core.view import View
 
 import re
 regexp = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
 
-fiveDays = 3600 * 24 * 10
+crawlBackSeconds = 3600 * 24 * 10 #10 Days
 
-@form_component
-@context(IMastodonAccount)
+@view_component
+@context(IRemoteAccount)
 @target(IView)
 @name("reset")
-class Reset(Form,BaseBot,RSSBase):
+@permissions('Manage')
+class Reset(View):
     title = "Reset this mastodon Account"
     subtitle = "So you can crawl it again"
     
@@ -37,11 +39,12 @@ class Reset(Form,BaseBot,RSSBase):
         context.reset()
         self.status='Account was reset.'
         
-@form_component
-@context(IMastodonAccount)
+@view_component
+@context(IRemoteAccount)
 @target(IView)
 @name("fetch")
-class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
+@permissions('Manage')
+class CrawlMastodon(View,BaseBot,RSSBase,TransactionNote):
 
     #First the title
     @property
@@ -84,12 +87,11 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
         self.siteRoot = self.getSiteRoot()
         proxy =  self.myAccount()
         pageOfToots = [None]
-        count = 0
         pageCount = 0
         self.contentByTime = self.getSiteRoot().contentByTime
-        importedAccount = self.context
-        importedAccountName = importedAccount.mastodonId
-        user = proxy.account_search(importedAccountName)[0]
+        account = self.context
+        accountName = account.mastodonId
+        user = proxy.account_search(accountName)[0]
 
         self.mastodonArticles =self.siteRoot.get('mastodon-articles',None)
         if self.mastodonArticles == None:
@@ -99,53 +101,45 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
         while pageOfToots and (proxy.ratelimit_remaining > 3):
 
            loopStart = time.time() 
-           if self.duplicates > 5:
-               print ("EVERYTHING IS DOWNLOADED")
-               break
-           maxId = importedAccount.minId
-           minId = None
-           if importedAccount.crawledToStart:
-              maxId = None
-              
-           print (".", end = "")
+           minId, maxId = account.minMaxIds()
+           
            self.allToots=allToots = set()
            self.newArticles = newArticles = {}
            self.oldArticles = oldArticles = set()
+           
            pageOfToots = proxy.account_statuses(user.id,
                        max_id=maxId,
                        min_id=minId,
                        since_id=None,
                        limit=1000)
 
-
            pageCount += 1 
-           count += 1
 
            if pageOfToots:
                self.processToots(
                    pageOfToots,allToots,newArticles)
-               self.postProcessPage(importedAccountName,allToots,newArticles,oldArticles)
+               self.postProcessPage(accountName,allToots,newArticles,oldArticles)
                loopEnd = time.time()
                print ("LoopTime = ", loopEnd - loopStart)
            else:
                print ("CRAWLED TO START")
-               importedAccount.crawledToStart = True
+               account.crawledToStart = True
                break
            
-           if importedAccount.crawledToStart == True:
+           if account.crawledToStart == True:
               lastToot = pageOfToots [-1]
               
               age = loopStart - self.getPublicationTime(lastToot)
               print ("AGE = ", age/(3600 *24))
-              if age > fiveDays:
+              if age > crawlBackSeconds:
                  break
+           account.modificationTime = loopStart 
              
         Form.update(self)
         print ("PAGECOUNT = ", pageCount)
         self.getSiteRoot().lastMastodonFetchTime = time.time()
-
         
-    def postProcessPage(self,importedAccountName,allToots,newArticles,oldArticles):
+    def postProcessPage(self,accountName,allToots,newArticles,oldArticles):
            #Until you successfull fetch the article, 
            #and add it to the
            #Parent, it will not be in contentByTime. 
@@ -168,7 +162,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                    root.unIndexItem(article)
                    root.indexItem(article)
            self.describeTransactionWithText(
-                "Fetching from: " + importedAccountName 
+                "Fetching from: " + accountName 
            )                   
            transaction.manager.commit()
         
@@ -193,95 +187,38 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
         contentByTime = root.contentByTime
 
         for toot in pageOfToots:
-           account = self.getAccount(toot)
-           importedAccount = self.context
-           if  toot.visibility in ['private','direct']:
-               continue
+
+           account = self.context
            tootId = str(toot.id)
-           if oldToot :=  account.get(tootId,None):
-               self.duplicates += 1
-               oldToot.updateValue(
-                                'numberOfBoosts',
-                                toot.reblogs_count)
-               oldToot.updateValue(
-                                'numberOfFavorites',
-                                toot.favourites_count)
-               continue
-           
-           if importedAccount.minId == None:
-               importedAccount.minId = tootId
-               
-           elif tootId < importedAccount.minId:
-                importedAccount.minId = tootId
+           account.setMinId(tootId)
                 
-           account = self.getAccount(toot)
-           
-           if self.hasWords(toot,importedAccount):
-                   continue
-               
-           new  = Toot().createToot(toot,account)
-
-           if new == None:
+           message, new  = Toot().createToot(toot,account)
+           print (message)
+           if message != "SUCCESS":
                continue
-           else:
-               if new.name == None:
-                  print ("Error: new.name == None")
-                  continue
-               try:
-                  account[new.name] = new
-               except:
-                   print ("ERROR: account[new.name] = new")
-                   continueyes
-                   
-               allToots.add( new)               
+           allToots.add(new)               
                
-           #CALCULATE THE LINK IMPORT TIME
-           importTime = self.getPublicationTime(toot)
-
-           importTime = int(importTime)
-
            for url in new.articleURLs:           
-
-               #Get the article
-               #If the article exists, publication approve it.
-               #If it is publication approved no need to fetch the image
-               #if the article does not exists
-               #And no other toot mentioned the article
-               #Create the article
                article = self.siteRoot.existsRemoteURL(url)
-               if article == None:  
-                 if not url in newArticles:
-                   anArticle = Article()
-                   if 'red' in toot.tags:
-                       anArticle.red = True
-                   if 'yellow' in toot.tags:
-                       anArticle.yello = True
-
-                   anArticle.articleURL = url
-                   hostName = urlparse(url).hostname
-                   domainName = importedAccount.domainName
-                   if domainName and (domainName in hostName):
-                       anArticle.webApproved = False
-                   anArticle.parent = root.get(
-                                     account.defaultCategory,
-                                     self.mastodonArticles)
-                   
-                   importTime = self.previousImportTime(importTime)
-                   anArticle.importTime = importTime
-                   newArticles[url] = anArticle
-                   self.contentByTime[-importTime] = anArticle
-               else:
+               if article == False:
+                 if url in newArticles:
                    if not article.publicationApproved:
                        self.oldArticles.add (article)
                        article.publicationApproved = True
+                 else:
+                     anArticle = Article(toot,
+                                       url,
+                                       account,
+                                       self.mastodonArticles)
+                     importTime = self.getPublicationTime(toot)
+                     importTime = int(importTime)
+                     importTime = self.previousImportTime(importTime)
+                     anArticle.importTime = importTime
+
+                     newArticles[url] = anArticle
+                     self.contentByTime[-importTime] = anArticle
+                     print (".", end = "")
                        
-    def hasWords(self,toot,account):
-        for word in account.wordsToAvoid.split("\r\n"):
-               if word == '':
-                   continue
-               if word in toot.content:
-                  return True
-        return False
     
     def getPublicationTime(self,toot):           
         try:

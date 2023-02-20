@@ -17,9 +17,22 @@ class Article (Link):
     __name__ = ''
 
     
-    def __init__(self):
+    def __init__(self, toot, url, account, mastodonArticles):
         Link.__init__(self)
         self.toots = []
+        if 'red' in toot.tags:
+            self.red = True
+        if 'yellow' in toot.tags:
+            self.yellow = True
+
+        self.articleURL = url
+        hostName = urlparse(url).hostname
+        domainName = account.domainName
+        if domainName and (domainName in hostName):
+           self.webApproved = False
+        self.parent = root.get(
+           account.defaultCategory,
+           self.mastodonArticles)
     
     def titlePlusDescription(self):
         return (self.title + ' ' +
