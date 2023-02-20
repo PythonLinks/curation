@@ -24,7 +24,8 @@ class NewsMixIn(object):
        
     def getVia(self):
         result = [toot.parent.userName() for toot in self.toots]
-        return ' '.join (result)
+        if result:
+            return "Via: " + ' '.join (result)
     
     def getDescription(self,view):
         for item in self.toots:            

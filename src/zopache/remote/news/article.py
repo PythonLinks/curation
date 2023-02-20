@@ -1,6 +1,6 @@
 from slugify import slugify
 from inspect import currentframe, getframeinfo
-
+from bs4 import BeautifulSoup
 from webpreview import web_preview
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 
@@ -134,14 +134,15 @@ class Article (Link):
             result += tag.text
             if tag.name == 'p':
                 result += "\n"
+
         return   (
                 result +
                 "\n\n" +
-                toot.curator.mastodonId +
-                "'s #BestToots\n\n" +
+                self.getVia() +
+                "\n\n" +
                 self.articleURL +
                "\n\n" +
-               "More:"  + 
-               "\n\n" +
-                toot.tags + " "
+               "Read More: \n"  +
+               "UncensoredNews.US/" + self.parent.name +  
+               "\n\n" 
                 )
