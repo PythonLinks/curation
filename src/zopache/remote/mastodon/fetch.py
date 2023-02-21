@@ -204,11 +204,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
            for url in new.articleURLs:           
                article = self.siteRoot.existsRemoteURL(url)
                if article == False:
-                 if url in newArticles:
-                   if not article.publicationApproved:
-                       self.oldArticles.add (article)
-                       article.publicationApproved = True
-                 else:
                      anArticle = Article(toot,
                                        url,
                                        account,
@@ -221,7 +216,13 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
 
                      newArticles[url] = anArticle
                      self.contentByTime[-importTime] = anArticle
-                     print (".", end = "")
+                     print (".", end = "") 
+               else:                    
+                 if url not in newArticles:
+                   if not article.publicationApproved:
+                       article.publicationApproved = True
+                       self.oldArticles.add (article)
+
                        
     
     def getPublicationTime(self,toot):           
