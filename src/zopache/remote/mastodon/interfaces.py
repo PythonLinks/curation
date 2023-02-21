@@ -30,7 +30,7 @@ class IRemoteAccount(ILinkBase):
     defaultCategory = schema.TextLine(
         title = "Whereto place their recommended links",
         description ="This is the /slug where you can see their recommendedlinks.",
-        required = True,
+        required = False,
         )
     
     rssApproved=schema.Bool(
@@ -51,6 +51,7 @@ class IRemoteAccount(ILinkBase):
         title = 'Their Domain Name',
         description = 'Articles in this domain are listed, not approved.',
         required = False,
+        missing_value = "",
     )
     
     wordsToAvoid = schema.Text(
@@ -63,7 +64,7 @@ class IRemoteAccount(ILinkBase):
 class IMastodonAccount(IInternalPrincipal):
     pass
 
-class IAddMastodonAccount(IMastodonAccount):
+class IAddRemoteAccount(IRemoteAccount):
     logoURL=schema.URI(
         title = "Logo URL ",
         description ="An image is important",
