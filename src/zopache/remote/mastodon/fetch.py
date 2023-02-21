@@ -1,3 +1,5 @@
+
+import re
 import time
 from urllib.parse import urlparse
 
@@ -17,9 +19,9 @@ from zopache.remote.news.mastodonarticles import MastodonArticles
 from zopache.remote.news.article import Article
 from zopache.remote.mastodon.remoteaccount import RemoteAccount
 from zopache.core.transactionnote import TransactionNote
-from zopache.core.view import View
+from zopache.core.baseform import Form
 
-import re
+
 regexp = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
 
@@ -30,9 +32,10 @@ crawlBackSeconds = 3600 * 24 * 10 #10 Days
 @target(IView)
 @name("reset")
 @permissions('Manage')
-class Reset(View):
+class Reset(Form):
     title = "Reset this mastodon Account"
     subtitle = "So you can crawl it again"
+
     
     def update(self):
         context = self.context
@@ -44,7 +47,7 @@ class Reset(View):
 @target(IView)
 @name("fetch")
 @permissions('Manage')
-class CrawlMastodon(View,BaseBot,RSSBase,TransactionNote):
+class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
 
     #First the title
     @property
