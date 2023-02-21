@@ -205,7 +205,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                article = self.siteRoot.existsRemoteURL(url)
                if article == False:
                  if url not in newArticles:
-                      anArticle = Article(toot,
+                     anArticle = Article(toot,
                                        url,
                                        account,
                                        self.mastodonArticles,
