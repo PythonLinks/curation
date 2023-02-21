@@ -1,3 +1,4 @@
+from urllib.parse import urlparse
 from slugify import slugify
 from inspect import currentframe, getframeinfo
 from bs4 import BeautifulSoup
@@ -17,7 +18,7 @@ class Article (Link):
     __name__ = ''
 
     
-    def __init__(self, toot, url, account, mastodonArticles):
+    def __init__(self, toot, url, account, mastodonArticles,root):
         Link.__init__(self)
         self.toots = []
         if 'red' in toot.tags:
@@ -26,13 +27,14 @@ class Article (Link):
             self.yellow = True
 
         self.articleURL = url
+
         hostName = urlparse(url).hostname
         domainName = account.domainName
         if domainName and (domainName in hostName):
            self.webApproved = False
         self.parent = root.get(
            account.defaultCategory,
-           self.mastodonArticles)
+           mastodonArticles)
     
     def titlePlusDescription(self):
         return (self.title + ' ' +

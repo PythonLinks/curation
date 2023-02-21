@@ -212,7 +212,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                      anArticle = Article(toot,
                                        url,
                                        account,
-                                       self.mastodonArticles)
+                                       self.mastodonArticles,
+                                       root)
                      importTime = self.getPublicationTime(toot)
                      importTime = int(importTime)
                      importTime = self.previousImportTime(importTime)
