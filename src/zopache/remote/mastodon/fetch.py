@@ -103,7 +103,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
         
         while pageOfToots and (proxy.ratelimit_remaining > 3):
 
-           loopStart = time.time() 
+           loopStart = time.time()
            minId, maxId = account.minMaxIds()
            
            self.allToots=allToots = set()
@@ -153,7 +153,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
            for toot in allToots:
                for url in toot.articleURLs:
                    article = self.siteRoot.existsRemoteURL(url)
-                   if article:
+                   if article != False:
                       toot.addArticle(article) 
                       article.addToot(toot)
                       
@@ -204,7 +204,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
            for url in new.articleURLs:           
                article = self.siteRoot.existsRemoteURL(url)
                if article == False:
-                     anArticle = Article(toot,
+                 if url not in newArticles:
+                      anArticle = Article(toot,
                                        url,
                                        account,
                                        self.mastodonArticles,
@@ -218,7 +219,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                      self.contentByTime[-importTime] = anArticle
                      print (".", end = "") 
                else:                    
-                 if url not in newArticles:
                    if not article.publicationApproved:
                        article.publicationApproved = True
                        self.oldArticles.add (article)
