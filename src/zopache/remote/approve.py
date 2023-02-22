@@ -62,6 +62,7 @@ class Publish(Save):
         form = self.form
         if getattr(context,'category',''):
             context.publicationApproved = True
+            
             context.addImage()
             category = form.getSiteRoot()[context.category]
             if category!= context.__parent__:
