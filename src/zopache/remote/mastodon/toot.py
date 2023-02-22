@@ -41,23 +41,28 @@ class Toot(Leaf):
     numberOfBoosts = 0
     numberOfFavorites = 0
     count = 0
+    title = ""
     
     def __init__(self):
         Leaf.__init__(self)
         self.articles = []
         self.articleURLs = []
 
-    @property    
-    def title(self):
-        if self.articles:
-            return self.articles[0].title
-        return self.content[0:30]
-    
     def addArticle(self,article):
         self.articles.append(article)
         url = (getattr(article, 'articleURL', False) or
-                   article.remoteURL)        
-        self.articleURLs.remove (url)                       
+                   article.remoteURL)
+        try:
+           self.articleURLs.remove (url)
+        except ValueError as e:
+           if url.startswith("https://"):
+              url = "http://" + url[8:]
+              self.articleURLs.remove (url)
+           elif url.startswith("http://"):
+              url = "https://" + url[7:]
+              self.articleURLs.remove (url)              
+           else:
+              raise ValueError("In toot.py") 
         self._p_changed = True        
         
     def removeArticle(self,article):
@@ -83,7 +88,7 @@ class Toot(Leaf):
            return 'Visibility', self
 
         if self.hasWords(toot,account):
-          return "Forbidden Wods", self
+          return "Forbidden Words", self
        
         tootId = str(toot.id)
         if oldToot :=  account.get(tootId,None):
@@ -93,12 +98,12 @@ class Toot(Leaf):
             oldToot.updateValue(
                                 'numberOfFavorites',
                                 toot.favourites_count)
-            return "Existing Toot", self
+            return "Existing Toot", oldToot
         
         self.source =  toot.content
         soup = BeautifulSoup(toot.content, 'html.parser')
         text = soup.get_text()
-        self._title = text [0:40]        
+        self.title = text [0:20]        
         if not soup.text.strip():
             return 'No Content', self
         try:
@@ -138,6 +143,12 @@ class Toot(Leaf):
         
         return 'SUCCESS', self
 
+    @property
+    def asText(self):
+        soup = BeautifulSoup(self.source, 'html.parser')
+        text = soup.get_text()
+        return text
+        
     def processURLs(self,soup):    
         urls  = soup.find_all('a')
         articleURLs = []

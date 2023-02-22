@@ -188,7 +188,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
     def processToots(self,pageOfToots,allToots,newArticles):
         root = self.siteRoot
         contentByTime = root.contentByTime
-
         for toot in pageOfToots:
 
            account = self.context
@@ -196,7 +195,11 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
            account.setMinId(tootId)
                 
            message, new  = Toot().createToot(toot,account)
-           print (message)
+           #if new != None:
+           #  if not new.asText.startswith('@'):
+           #    print (new.asText[0:200])
+           #    print (message)
+           #    break point()
            if message != "SUCCESS":
                continue
            allToots.add(new)               
