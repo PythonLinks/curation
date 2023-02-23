@@ -18,9 +18,8 @@ from zopache.crud.getimage import getImage
 from zopache.remote.voteable import Voteable
 from zopache.pages.page import Page    
 from zopache.remote.news.mixin import NewsMixIn
-from zopache.remote.sharedarticle import SharedArticle
 
-class BaseArticle(NewsMixIn,SharedArticle,Page):    
+class BaseArticle(NewsMixIn,Page):    
 
     _category = ""
     importTime = 0
@@ -109,6 +108,26 @@ class BaseArticle(NewsMixIn,SharedArticle,Page):
         
     creationTime = property(getCreationTime,setCreationTime)
 
+    def creationDateForHumans(self):
+         return time.strftime("%Y-%m-%d",time.localtime(self.importTime))
+
+   
+    def moveTo(self,category):
+              name = self.__name__
+              del self.__parent__[name]
+              category [name] = self
+              self.__name__ = name
+  
+    def preProcess(self,view):
+       pass
+    def postProcess(self,view):
+       pass
+    def postAddProcess(self,view):
+       pass
+    def preDeleteProcess(self,view):
+       pass
+
+    
 
 @implementer (IRSSArticle)
 class RSSArticle(BaseArticle):
