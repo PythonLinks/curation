@@ -24,23 +24,18 @@ class RemoteAccount(Source):
     description = ""
     defaultCategory = ""
     domainName = ""
+    maxId = None
+    
     def __init__(self):
          Source.__init__(self)
          self.reset()
 
-    def minMaxIds(self):
-        maxId = self.minId
-        minId = None
-        if self.crawledToStart:
-              maxId = None
-        return minId, maxId
-
-    def setMinId(self, tootId):
-        if self.minId == None:
-            self.minId = tootId
+    def setMaxId(self, tootId):
+        if self.maxId == None:
+            self.maxId = tootId
                
-        elif tootId < self.minId:
-            self.minId = tootId
+        elif tootId < self.maxId:
+            self.maxId = tootId
 
     def valuesAsList(self):
         result = []

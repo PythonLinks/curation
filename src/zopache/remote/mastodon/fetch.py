@@ -100,50 +100,65 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
         if self.mastodonArticles == None:
             self.mastodonArticles = MastodonArticles()
             self.siteRoot['mastodon-articles'] = self.mastodonArticles
-        
-        while pageOfToots and (proxy.ratelimit_remaining > 3):
 
-           loopStart = time.time()
-           minId, maxId = account.minMaxIds()
-           
+        startTime = time.time()
+        pageOfToots = [None]
+        
+        if account.crawledToStart == True:
+            maxId = None
+            age = 0
+            while (pageOfToots and
+                (proxy.ratelimit_remaining > 3) and
+                (age < 6)):
+                pageOfToots = proxy.account_statuses(user.id,
+                       max_id=maxId,
+                       limit=1000)
+                if len (pageOfToots) > 0:
+                    maxId = pageOfToots [-1].id
+                age = self.processPage(pageOfToots,account)
+                pageCount += 1
+
+        else:    #First Import
+            while pageOfToots and (proxy.ratelimit_remaining > 3):
+                maxId = account.maxId
+                pageOfToots = proxy.account_statuses(user.id,
+                       max_id=maxId,
+                       limit=1000)
+                if len (pageOfToots) > 0:
+                    account.setMaxId(pageOfToots[-1].id)
+                self.processPage(pageOfToots,account)
+                pageCount += 1                         
+
+        Form.update(self)
+        print ("PAGECOUNT = ", pageCount)
+        self.getSiteRoot().lastMastodonFetchTime = startTime
+        print ("Crawled To Start", account.crawledToStart)
+        account.modificationTime = startTime
+             
+    def processPage(self,pageOfToots,account):
+           loopStart = time.time()        
            self.allToots=allToots = set()
            self.newArticles = newArticles = {}
            self.oldArticles = oldArticles = set()
-           
-           pageOfToots = proxy.account_statuses(user.id,
-                       max_id=maxId,
-                       min_id=minId,
-                       since_id=None,
-                       limit=1000)
-
-           pageCount += 1 
 
            if pageOfToots:
                self.processToots(
                    pageOfToots,allToots,newArticles)
-               self.postProcessPage(accountName,allToots,newArticles,oldArticles)
+               self.postProcessPage(allToots,newArticles,oldArticles)
                loopEnd = time.time()
                print ("\nLoopTime = ", loopEnd - loopStart)
+               lastToot = pageOfToots [-1]
+               age = loopStart - self.getPublicationTime(lastToot)
+               age = age/(3600 *24)              
+               print ("AGE = ", age)               
            else:
+               age = 0
                print ("CRAWLED TO START")
                account.crawledToStart = True
-               break
-           print ("Crawled To Start", account.crawledToStart)
-           if account.crawledToStart == True:
-               if len(pageOfToots) > 0:    
-                   lastToot = pageOfToots [-1]
-                   age = loopStart - self.getPublicationTime(lastToot)
-                   age = age/(3600 *24)              
-                   print ("AGE = ", age)
-                   if age > 5:  #days
-                       break
-           account.modificationTime = loopStart 
-             
-        Form.update(self)
-        print ("PAGECOUNT = ", pageCount)
-        self.getSiteRoot().lastMastodonFetchTime = time.time()
-        
-    def postProcessPage(self,accountName,allToots,newArticles,oldArticles):
+           return age
+
+           
+    def postProcessPage(self,allToots,newArticles,oldArticles):
            #Until you successfull fetch the article, 
            #and add it to the
            #Parent, it will not be in contentByTime. 
@@ -166,7 +181,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                    root.unIndexItem(article)
                    root.indexItem(article)
            self.describeTransactionWithText(
-                "Fetching from: " + accountName 
+                "Fetching from: " + self.context.mastodonId
            )                   
            transaction.manager.commit()
         
@@ -179,9 +194,9 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                if not 'status' in str(item[1:] ):
                   if not "TIME OUT" in str(item): 
                      try:
-                         print ( str(item))
+                         print ("\n", str(item))
                      except:
-                         print (type(item))
+                         print ("\n", type(item))
                          
         self.status='RSS Feeds were downloaded.'
 
@@ -193,7 +208,6 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
 
            account = self.context
            tootId = str(toot.id)
-           account.setMinId(tootId)
                 
            message, new  = Toot().createToot(toot,account)
            #if new != None:
