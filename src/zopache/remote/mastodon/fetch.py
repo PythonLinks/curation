@@ -128,14 +128,15 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                print ("CRAWLED TO START")
                account.crawledToStart = True
                break
-           
+           print ("Crawled To Start", account.crawledToStart)
            if account.crawledToStart == True:
-              lastToot = pageOfToots [-1]
-              
-              age = loopStart - self.getPublicationTime(lastToot)
-              print ("AGE = ", age/(3600 *24))
-              if age > crawlBackSeconds:
-                 break
+               if len(pageOfToots) > 0:    
+                   lastToot = pageOfToots [-1]
+                   age = loopStart - self.getPublicationTime(lastToot)
+                   age = age/(3600 *24)              
+                   print ("AGE = ", age)
+                   if age > 5:  #days
+                       break
            account.modificationTime = loopStart 
              
         Form.update(self)
