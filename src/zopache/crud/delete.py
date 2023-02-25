@@ -47,7 +47,7 @@ class DeleteBranch(Action):
             self.deleteOne(child,form)
             
 
-class DeleteNode(Action,Base):
+class DeleteLeaf(Action,Base):
     successMessage = "The node has been deleted."
     failureMessage = """"This node  could not be deleted,
                      it contains something other than an image"""

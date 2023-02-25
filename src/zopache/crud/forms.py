@@ -167,7 +167,7 @@ class DisplayForm(Form):
         return getAllFields(displayed, '__parent__', '__name__', 'title')
 
 from zopache.pages.interfaces import IPageBase
-from zopache.crud.delete import (DeleteNode,
+from zopache.crud.delete import (DeleteLeaf,
                                  DeleteChildren,
                                  DeleteBranch)
 
@@ -189,7 +189,7 @@ class DeleteForm(Form):
     
     """
     
-    actions = Actions(DeleteNode("Node","Node"),
+    actions = Actions(DeleteLeaf("Leaf","Leaf"),
                       DeleteChildren("Children","Children"),
                       DeleteBranch("Branch","Branch"),
                       formactions.Cancel("Cancel","Cancel"))

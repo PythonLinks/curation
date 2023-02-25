@@ -60,7 +60,6 @@ class BaseValidator(object):
 class DuplicateURLValidator(BaseValidator):             
     def validate(self, data):
         errors = Errors()
-        
         theItem = self.urlExists(data) 
         if ((theItem != False) and (
                 theItem != self.form.context)):
