@@ -6,13 +6,10 @@
   <h1 tal:condition="view.label"
       tal:content="view.label">Label</h1>
   
-  <p tal:condition="view.description"
-     tal:content="view.description">Description</p>
-  
-  <p class="form-status"
+  <p class="form-status" 
      tal:condition="view.status">
      ${structure: view.status}</p>
-  
+
   <div class="text-danger"
        tal:condition="view.errors" style = "color:red">
     <ul tal:condition="view.formErrors"
@@ -26,6 +23,10 @@
       <li> <span tal:replace="error" /> </li>
     </ul>
   </div>
+
+  <p tal:condition="view.description"
+     tal:content="structure: view.description">Description</p>
+  
 
   <span style= "max-width:40em" tal:condition="hasattr(view,'preamble')">
   <p>${structure: view.preamble}</p><br></span>  

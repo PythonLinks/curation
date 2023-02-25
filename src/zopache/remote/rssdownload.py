@@ -18,7 +18,6 @@ async def fetch(session,node,view):
    startTime = time.time()    
    duration =  0
    className = view.className(node)
-   
    if className == "RSS":
       url = node.rssURL
    elif className == 'Article':
@@ -27,7 +26,7 @@ async def fetch(session,node,view):
       else:   
          url = getattr(node,'imageURL',None)
          if url in ["",None]:
-            return SUCCESS, (node.name + " No image URL.") 
+            return SUCCESS, (node.name + " No image URL.")
    elif className == "RSSArticle":
       url = getattr(node,'imageURL',None)
       if not url:
@@ -39,6 +38,7 @@ async def fetch(session,node,view):
       node.__class__.__name__)
    #NOW PROCESS THE URL
    try:
+        url = url.strip()
         async with session.get(url) as response:
           status = response.status
           if status == 200:

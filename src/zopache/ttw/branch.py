@@ -172,10 +172,10 @@ class Branch(SimpleBranch):
         OrderedBTreeContainer.__delitem__(self,key)
                 
     def urlOnly(self,link):
-       if link.startswith('http'):
-          link = link.split('://')[1:]
-          #Just to be cautious.
-          link =''.join(link)
+       if link.startswith('http://'):
+          link = link[7:]
+       elif link.startswith('https://'):
+           link = link[8:]
        return link
    
 
@@ -192,8 +192,11 @@ class Branch(SimpleBranch):
        if link == "":
            return
        if link in self.remoteURLs:
+          print(link) 
           print ("DUPLICATE URLs", anObject.name,
                  self.existsRemoteURL(remoteURL).name)
+          
+          pass
        else:
           self.remoteURLs[link] = anObject 
            

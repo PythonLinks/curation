@@ -25,7 +25,7 @@ from zopache.core.baseform import Form
 regexp = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
 
-crawlBackSeconds = 3600 * 24 * 10 #10 Days
+crawlBackSeconds = 3600 * 24 * 5 #5 Days
 
 @view_component
 @context(IRemoteAccount)
@@ -123,7 +123,7 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                    pageOfToots,allToots,newArticles)
                self.postProcessPage(accountName,allToots,newArticles,oldArticles)
                loopEnd = time.time()
-               print ("LoopTime = ", loopEnd - loopStart)
+               print ("\nLoopTime = ", loopEnd - loopStart)
            else:
                print ("CRAWLED TO START")
                account.crawledToStart = True
@@ -202,9 +202,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
            #    break point()
            if message != "SUCCESS":
                continue
-           allToots.add(new)               
-               
-           for url in new.articleURLs:           
+           allToots.add(new)           
+           for url in new.articleURLs:
                article = self.siteRoot.existsRemoteURL(url)
                if article == False:
                  if url not in newArticles:

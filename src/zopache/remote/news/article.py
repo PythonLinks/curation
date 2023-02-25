@@ -3,12 +3,16 @@ from slugify import slugify
 from inspect import currentframe, getframeinfo
 from bs4 import BeautifulSoup
 from webpreview import web_preview
+from zope.interface import implementer
+
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 
 from zopache.pages.page import Link
 from zopache.remote.rssdownload import fetch
 from zopache.crud.getimage import createImageInFrom
+from zopache.remote.news.interfaces import IArticle
 
+@implementer(IArticle)
 class Article (Link):
     webClass = "RSSLink"
     toots = None
@@ -46,12 +50,6 @@ class Article (Link):
             self.toots = []
     
     async def processResponse(self, session, response,view):
-        #if 'aus.social' in self.articleURL: 
-        #    break point()
-        #if 'c.im' in self.articleURL: 
-        #    break point()            
-
-
         try:
             contentType = response.headers.get('content-type').lower()
         except:
@@ -78,17 +76,20 @@ class Article (Link):
             content =  await response.content.read()
             contentType = response.headers['content-type']
             createImageInFrom(self,content, contentType, 'Logo')
+            print ("*",end = "")
             return SUCCESS, self
         except:
           frameinfo = getframeinfo(currentframe())
           e = sys.exc_info()[0]          
           return (FAILURE,
-                  (frameinfo.filename + ' ' +
-                   str(frameinfo.lineno) + ' ' +
+                  ("Error processing Image response in Article " +
                    str(e)),
                    self)
                               
     async def processTextResponse(self, session, response,view):
+        if view.siteRoot.existsRemoteURL(self.articleURL) != False:
+           return FAILURE, "URL Exists"
+        
         try:
             html  =  await response.text()
             title, description, image  = web_preview(self.articleURL, content = html )
@@ -102,21 +103,21 @@ class Article (Link):
            "To use the Mastodon web application, please enable JavaScript."
            in html):
              return  FAILURE, "This is a mastodon server"
-        if not title:
+        if not title.strip():
             return FAILURE, "NO TITLE GIVEN", self
         self.title = title
-        self.imageURL = image
-        if view.siteRoot.existsRemoteURL(self.articleURL):        
-           return
+        if image:
+            self.imageURL = image
        
         if len(description) > 100:
            decription = description[100:]
            description = description.rsplit(' ', 1)[0]
            description = description + "..."
+           
         self.description = description
-        newName = slugify (self.title)
-        newName = view.uniqueBothName (self,newName)
         parent = self.parent
+        newName = slugify (self.title)
+        newName = view.uniqueBothName (parent,newName)
         parent[newName] = self
         print (".",end = "")
         self.postAddProcess(view )
