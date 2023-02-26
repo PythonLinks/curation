@@ -146,11 +146,13 @@ class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
                    pageOfToots,allToots,newArticles)
                self.postProcessPage(allToots,newArticles,oldArticles)
                loopEnd = time.time()
-               print ("\nLoopTime = ", loopEnd - loopStart)
+               loopTime = int(loopEnd - loopStart)
                lastToot = pageOfToots [-1]
                age = loopStart - self.getPublicationTime(lastToot)
-               age = age/(3600 *24)              
-               print ("AGE = ", age)               
+               age = age/(3600 *24)
+               age = int(age)
+               print ("AGE = ", age, end = "")
+               print ("\nLoopTime = ", loopTime)
            else:
                age = 0
                print ("CRAWLED TO START")
