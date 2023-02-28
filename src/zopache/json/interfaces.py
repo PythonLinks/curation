@@ -19,7 +19,10 @@ class IClass(Interface):
         required = True,
         default = '{}',
     )
-    
+
+class IBasicJSON(IClass):
+    pass
+
 class INewsLetter(IClass):
     pass
 

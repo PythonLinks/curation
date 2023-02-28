@@ -41,7 +41,8 @@ class Base(object):
         return result
     
     def getSchema(self):
-        schema =  self.template[self.schemaName]
+        schemaName = self.getSchemaName()
+        schema =  self.template[schemaName]
         result = schema.getAsDict()
         return result
     
@@ -85,6 +86,9 @@ class AddJson (Base, AddAnonymousPage):
     dataValidators = [JSONSchemaValidator, Duplicate,
                       DuplicateURLValidator]
 
+    def getSchemaName(self):
+        return self.schemaName
+    
     def update(self):
         AddAnonymousPage.update(self)
         self.template = self.getTemplates()['json-editor']    
@@ -106,6 +110,9 @@ class AddJson (Base, AddAnonymousPage):
     
 class EditJson( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
+    
+    def getSchemaName(self):
+        return self.conext.schemaName
     
     def contextJsonDict(self):
         return self.context.json

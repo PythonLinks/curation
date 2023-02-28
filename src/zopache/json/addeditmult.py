@@ -12,7 +12,8 @@ from zopache.json.multilingual import Multilingual, MultilingualLeaf
 
 class LeafBase(object):
     def getSchema(self):
-        schema =  self.template[self.schemaName]
+        schemaName = self.getSchemaName()        
+        schema =  self.template[schemaName]
         result = schema.getAsDict()
         for item in result['properties'].values():
             item['required'].remove('description')
@@ -35,7 +36,6 @@ class EditMultilingual (EditJson):
 class EditMultilingualLeaf (LeafBase,EditJson):
     title = 'Edit this Multilingual Text.'
     subTitle = ''
-    schemaName = "MultilingualSchema"  
     dataValidators = [JSONSchemaValidator]
     
 @view_component

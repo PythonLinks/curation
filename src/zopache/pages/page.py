@@ -364,6 +364,7 @@ class SiteRoot(Branch,PageBase,PageMixIn):
 @implementer(IRootPage)         
 class RootPage(SiteRoot):
     twitterId = ""
+    mastodonLogin = False    
     mqttServer = ""
     def getSiteRootFor(self,hostName):
         return self
@@ -375,7 +376,8 @@ class SiteRootPage(SiteRoot):
     twitterId = ""
     mqttServer = ""
     localLogin = False
-
+    mastodonLogin = False
+    
     def __init__(self):
        from zopache.ttw.principalfolder import PrincipalFolder
        Page.__init__(self)

@@ -53,7 +53,14 @@ class IForm(Interface):
         description = "For security best to disable, and use Google OAuth login",
         required = False,
         default = True,
-    )    
+    )
+
+    mastodonLogin = Bool(
+        title = "Allow Mastodon Logins?",
+        description = "Better than local Login or Google Oauth",
+        required = False,
+        default = False,
+    )        
 
     mapBoxKey= TextLine(
         title = "MapBox Key",
