@@ -112,7 +112,7 @@ class EditJson( Base,EditForm):
     dataValidators = [JSONSchemaValidator]
     
     def getSchemaName(self):
-        return self.conext.schemaName
+        return self.context.schemaName
     
     def contextJsonDict(self):
         return self.context.json

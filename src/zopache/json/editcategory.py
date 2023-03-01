@@ -11,4 +11,4 @@ from zopache.business.exists import DuplicateOrganization
 @implementer(ITreeSecurity)
 class EditFeaturedContent(EditJson):
     subTitle = 'Select Featured Articles and Videos.'
-    schemaName = "FeaturedSchema"
+
