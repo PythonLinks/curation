@@ -20,8 +20,8 @@ from cromlech.browser.exceptions import HTTPFound
 @form_component
 @context(IPage)
 @crom.target(IView)
-@name("getrss")
-@permissions('Manage')
+@name("getrssxyz")
+#@permissions('Manage')
 @implementer(ITreeSecurity)
 class GetRSS(Form):
     title = "Download the RSS Feeds"

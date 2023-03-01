@@ -45,8 +45,8 @@ class Reset(Form):
 @view_component
 @context(IRemoteAccount)
 @target(IView)
-@name("fetch")
-@permissions('Manage')
+@name("fetchxyz")
+#@permissions('Manage')
 class CrawlMastodon(Form,BaseBot,RSSBase,TransactionNote):
 
     #First the title
