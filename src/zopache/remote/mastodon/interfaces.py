@@ -6,6 +6,10 @@ from zope.schema.vocabulary import SimpleVocabulary,SimpleTerm
 from zopache.ttw.interfaces import IInternalPrincipal
 from zopache.crud.interfaces import ILeaf, IContainer,IDeletable
 
+from zopache.ttw.interfaces import IInternalPrincipal
+class IAccount(IInternalPrincipal):
+    pass
+
 class IRemoteAccount(ILinkBase):    
     
     title=schema.TextLine(
@@ -61,8 +65,6 @@ class IRemoteAccount(ILinkBase):
         default = '',
     )
     
-class IMastodonAccount(IInternalPrincipal):
-    pass
 
 class IAddRemoteAccount(IRemoteAccount):
     logoURL=schema.URI(
