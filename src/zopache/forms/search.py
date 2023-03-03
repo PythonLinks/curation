@@ -17,7 +17,9 @@ def searchCore(view, aDict,categoryName,limit):
 
     contentCatalog = root.contentCatalog
     q = CatalogQuery (contentCatalog)
-    fields = [] 
+    fields = []
+    if newCategory := aDict.get("newCategory",False) :
+       fields.append(hypatia.query.NotAny(contentCatalog['ancestorNames'], newCategory))
     
     #NOW FOR RECOMMENDED
     if recommended == 'recommended':
@@ -73,7 +75,6 @@ def searchADictionary(view,
 
     if defaultCategory == None:
         categoryName = view.context.name
-    
     numDocs, docIds = searchCore (view,
                                   aDict,
                                   categoryName,
@@ -130,9 +131,8 @@ def justValues(view,docIds):
     return  [index[int(x)] for x in docIds]
 
 def getResults(view):
-
-    numDocs, featured, remainder = searchADictionary (
-        view,view.request.form)
+    numDocs, featured, remainder = searchADictionary (view,view.request.form)
+        
     numFeatured = len(featured)
     featured= justValues (view,featured)
     values, remainder = valuesPlusRemainder (
