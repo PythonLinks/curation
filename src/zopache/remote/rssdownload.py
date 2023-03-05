@@ -9,10 +9,10 @@ from inspect import currentframe, getframeinfo
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 from zopache.remote.irss import IRSSBase, IRSSArticle
 
-logging.basicConfig(
-   filename='/app/data/urls',
-   filemode='w',
-   format='%(message)s')
+#logging.basicConfig(
+#   filename='/app/data/urls',
+#   filemode='w',
+#   format='%(message)s')
 
 async def fetch(session,node,view):
    startTime = time.time()    

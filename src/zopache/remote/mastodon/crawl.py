@@ -18,5 +18,13 @@ class CrawlMastodon(View):
         for account in context.values():
             if account.className == ("RemoteAccount"):
                 feeds.append(account)
+        feeds.sort()
+        
+        feeds.sort(key=lambda feed: feed.lastImported)
+        result = ""
+        for item in feeds:
+            result += Fetch(self.context,self.request)().render()
 
-        feeds.sort(key=lambda feed: feed.modificationTime)
+        self.status = result    
+            
+            

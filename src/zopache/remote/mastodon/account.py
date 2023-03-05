@@ -53,6 +53,7 @@ class Account(InternalPrincipal):
 
     def notifyUserNewUser(self):
         pass
+    
 import crom
 from zopache.zmi.interfaces import IURLSegment
 @crom.adapter
@@ -63,4 +64,4 @@ class IRemoteAccountAdaptor(object):
         self.context=context   
 
     def getSegment(self):
-        return 'manage'
+        return 'permissions'
