@@ -248,7 +248,10 @@ class RemoteAccount(Source,TransactionNote):
            account = self
            message, new  = Toot().createToot(toot,account)
            #logger.info (message)
-           #print (message)
+           #try:
+           #   print (message, new.title)
+           #except:
+           #   print (message)
            if message == "Existing Toot":
               existingToots = True
            if message != "SUCCESS":
