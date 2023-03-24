@@ -27,7 +27,28 @@ class Reset(Form):
         context.reset()
         self.status='Account was reset.'
         #logging.info ("Reset account ", context.mastodonId)
-        
+
+8888
+@view_component
+@context(IRemoteAccount)
+@target(IView)
+@name("reset2")
+@permissions('Manage')
+class Reset2(Form):
+    title = "Reset the most recent toot id. "
+    subtitle = "So you can crawl it again"
+    
+    def update(self):
+        context = self.context
+        context.mostRecentTootId = None
+        context.lastLongImport = time.time() - (3600 * 24 * 8)
+        all = context.valuesAsList()
+        all = all [-20:]
+        for item in all:
+            del context [item.name]
+        self.status='Account was reset.'
+        #logging.info ("Reset account ", context.mastodonId)
+
 @view_component
 @context(IRemoteAccount)
 @target(IView)
@@ -66,6 +87,8 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
     def update(self):
         self.startTime = time.time()
         self.root = self.getSiteRoot()
+        #self.siteRoot is Needed elsewhere. 
+        self.siteRoot = self.root
         self.proxy =  self.myAccount()
         account = self.context
         self.contentByTime = self.getSiteRoot().contentByTime
@@ -75,10 +98,12 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
             logging.debug('You may want to move it.')
             self.mastodonArticles = MastodonArticles()
             self.root['mastodon-articles'] = self.mastodonArticles
-        totalNewToots, pageCount = account.crawl(self)
+
+        totalNewArticles, pageCount = account.crawl(self)
         logging.debug("Pages,Articles" + account.mastodonId +
-                      str(pageCount) + " " + str ( totalNewToots))
-        self.totalNewToots = totalNewToots                          
+                      str(pageCount) + " " + str ( totalNewArticles))
+        self.totalNewArticles = totalNewArticles
+        self.pageCount = pageCount
         Form.update(self)
         
     def render(self):
@@ -88,10 +113,9 @@ class CrawlMastodon(Form,BaseBot,RSSBase):
             "Account was crawled. Details in /app/data/crawl <br>" +
             "Duration =  " + str(self.duration) + 
             " minutes" +
-            "<br> New toots = " + str(self.totalNewToots) + 
-            "<Br> Total Toots " + str(len(self.context)) )
-                
-
+            "<br> New Articles = " + str(self.totalNewArticles) + 
+                "<Br> Page Count " + str(self.pageCount) +
+    "<Br> Total Toots " + str(len(self.context)) )
                
     """
     def debug(self,pageOfToots):

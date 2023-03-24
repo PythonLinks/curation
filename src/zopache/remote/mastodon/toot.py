@@ -82,7 +82,7 @@ class Toot(Leaf):
         
     def createToot(self,toot,account):
         if toot.reblog:
-            return 'Reblog', self
+            return 'Reblog/Boosted', self
         
         if toot.visibility in ['private','direct']:
            return 'Visibility', self
@@ -102,6 +102,7 @@ class Toot(Leaf):
         
         self.source =  toot.content
         soup = BeautifulSoup(toot.content, 'html.parser')
+ 
         text = soup.get_text()
         self.title = text [0:20]        
         if not soup.text.strip():
@@ -119,7 +120,10 @@ class Toot(Leaf):
         if len(articleURLs) == 0:
             return 'No article URLS', self
         soup.smooth()
+        text = soup.get_text()
         soup = self.removeEmptyParagraphs(soup)
+        if len (text) > 500:
+            return "Text is too long", self
             
         #NOW CREATE THE TOOT   
         self.content = str(soup)

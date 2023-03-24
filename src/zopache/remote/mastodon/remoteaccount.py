@@ -37,7 +37,7 @@ class RemoteAccount(Source,TransactionNote):
     domainName = ""
     maxId = None
     mostRecentTootId = None
-    lastImported = 0
+    lastLongImportTime = 0
     
     def __init__(self):
          Source.__init__(self)
@@ -50,6 +50,31 @@ class RemoteAccount(Source,TransactionNote):
                     return time
             raise Exception("No Possible times were found!")
 
+
+
+    def crawlingToStart (self,view,proxy,user):        
+        maxId = self.maxId
+        pageOfToots = [None]
+        pageCount = 0
+        totalNewArticles = 0
+        logger.info("Crawling To Start " + self.mastodonId)
+        while pageOfToots and (proxy.ratelimit_remaining > 3):
+                pageOfToots = proxy.account_statuses(user.id,
+                       max_id=maxId,
+                       limit=1000)
+                if len(pageOfToots) == 0:
+                    self.crawledToStart = True
+                    logger.info ("Crawled To Start" +  self.mastodonId)
+                else:
+                    existingToots, newArticles = (
+                      self.processPage(pageOfToots,view))
+                    totalNewArticles += newArticles
+                    pageCount += 1
+                lastToot = pageOfToots [-1]
+                maxId = self.setMaxId(maxId,lastToot.id)
+        self.maxId = maxId            
+        return totalNewArticles, pageCount
+    
     def setMaxId(self, maxId,tootId):
         if maxId == None:
             return  tootId
@@ -62,91 +87,82 @@ class RemoteAccount(Source,TransactionNote):
          
     def crawl(self,view):
         proxy = view.proxy
-        startTime = view.startTime
-        proxy = view.proxy
         account = self
         accountName = account.mastodonId
-        logger.info("Crawling " + accountName )
         user = proxy.account_search(accountName)[0]
-        pageCount = 0
+        logger.info ("\n---------------------------\n")
+        if self.crawledToStart == False: #first import
+               return self.crawlingToStart(view,proxy,user)
+        else:
+               return self.crawlingMostRecent(view,proxy,user)
+
+
+    def crawlingMostRecent(self,view,proxy,user):           
         totalNewArticles = 0
         oldestTootAge = 0
-        pageOfToots = [None]
-
-        if self.crawledToStart == False: #first import
-            maxId = self.maxId
-            totalNewArticles = 0
-            first = True
-            logger.info("Crawling Old Toots ",
+        pageCount = 0
+        maxId = None
+        existingToots = False
+        startTime = view .startTime
+        lastLongImportTime = self.lastLongImportTime
+        longImportedTimeAgo = startTime - lastLongImportTime
+        daysLongImportedAgo = longImportedTimeAgo/secondsInaDay
+        longImport = daysLongImportedAgo > 6 
+        logger.info ("Imported Ago " +
+                             str(int(daysLongImportedAgo)))
+        if longImport == True:
+            self.lastLongImportTime = startTime
+            logger.info("Crawling Long Imports " +  self.mastodonId)       
+        logger.info("Crawling Recent Toots " +  self.mastodonId)
+        pageOfToots = proxy.account_statuses(
+                              user.id,
+                              max_id = maxId)
+        if (len (pageOfToots) > 0):
+            mostRecentTootId = pageOfToots [0].id                
+            done = mostRecentTootId == self.mostRecentTootId
+            if done:
+                logger.info("No New Toots " + self.mastodonId)
+                return 0, 0
+            else:
+                self.mostRecentTootId = mostRecentTootId
+        self.lastImported = startTime
+        self.modificationTime = startTime
+                
+        while (pageOfToots and
+                (proxy.ratelimit_remaining > 3) ):
+              if len(pageOfToots) == 0:
+                  logger.warning("Stange, No Toots were returned ",
                           self.mastodonId)
-            while pageOfToots and (proxy.ratelimit_remaining > 3):
-                first = False
-                pageOfToots = proxy.account_statuses(user.id,
-                       max_id=maxId,
-                       limit=1000)
-                if len(pageOfToots) == 0:
-                    self.crawledToStart = True
-                    logger.info ("Crawled To Start", self.mastodonId)
-                else:
-                    oldestTootAge,maxId, newArticles = (
-                      self.processPage(pageOfToots,view))
-                    totalNewArticles += newArticles
-                    pageCount += 1
+                  break
 
-            
-        else:
-            maxId = None
-            oldestTootAge = 0
-            first = True
-            logger.info("Crawling Recent Toots " +  self.mastodonId)
-                          
-            while (pageOfToots and
-                (proxy.ratelimit_remaining > 3) and
-                (oldestTootAge < 6)):
-                logger.info ("First Loop") 
-
-                lastImported = account.lastImported
-                lastImportedAgo = startTime - lastImported
-                daysImportedAgo = lastImportedAgo/secondsInaDay
-                #If last imported less than a day ago, only import
-                #a day's toots. 
-                if ((oldestTootAge > 1) and
-                    (lastImportedAgo < secondsInaDay)):
-                   logger.debug("Break: Only crawling for a day " +
+              if (existingToots and
+                  not longImport and 
+                  (oldestTootAge > 1)):
+                  logger.debug("Break: Only crawling for a day " +
                                  self.mastodonId) 
+                  break
+                       
+              if (existingToots and
+                  longImport and
+                  (oldestTootAge > 6)):
+                  logger.debug("Break: Crawled For 6 days  " +
+                                 self.mastodonId) 
+                  break                  
 
-                   break
-               
-                pageOfToots = proxy.account_statuses(
-                    user.id,
-                    max_id = maxId)
-                    
-                if len(pageOfToots) == 0:
-                    logger.warning("Stange, No Toots were returned ",
-                          self.mastodonId)
-                    break
-               
-                if first:
-                    mostRecentTootId = pageOfToots [0].id                
-                    if mostRecentTootId == self.mostRecentTootId:
-                          logger.info("No New Toots ",
-                          self.mastodonId)
-                          break
-                    #self.mostRecentTootId = mostRecentTootId
-                    first = False 
-
-                oldestTootAge,maxId, newArticles = (
+              existingToots, newArticles = (
                       self.processPage(pageOfToots,view))
-                totalNewArticles += newArticles
-                pageCount += 1
-                self.maxId = maxId
-        logger.info ("oldestToot Age %s",oldestTootAge)
-        logger.info ("Imported Ago  %s",str(int(daysImportedAgo)))        
-        
-        if first == False:
-            self.lastImported = startTime
-            self.modificationTime = startTime
-        self.maxId = maxId
+              totalNewArticles += newArticles
+              print ("TOTAL NEW ARTICLES + ", totalNewArticles)
+              pageCount += 1
+              lastToot = pageOfToots [-1]
+              maxId = self.setMaxId(maxId,lastToot.id)
+              oldestTootAge = self.tootAge(lastToot,view)
+              print ("Age = ", oldestTootAge," days", end = "")
+              pageOfToots = proxy.account_statuses(
+                              user.id,
+                              max_id = maxId)
+                
+        logger.info ("oldestToot Age " + str(int(oldestTootAge)))
         return totalNewArticles, pageCount
 
     def processPage(self,pageOfToots,view):
@@ -154,19 +170,23 @@ class RemoteAccount(Source,TransactionNote):
         view.newArticles = newArticles = {}
         view.oldArticles = oldArticles = set() 
         loopStart = time.time()
-        self.processToots(pageOfToots,view)
+        existingToots = self.processToots(pageOfToots,view)
         numberOfNewArticles = self.postProcessPage(view)
-
         loopEnd = time.time()
         loopTime = int(loopEnd - loopStart)
-        lastToot = pageOfToots [-1]
-        age = loopEnd - self.getPublicationTime(lastToot,view)
-        oldestTootAge = int(age/(secondsInaDay))
-        print ("Age = ", oldestTootAge," days", end = "")
         print("\nLoopTime = ", loopTime, " seconds")
-        maxId = self.setMaxId(self.maxId,lastToot.id)
-        return oldestTootAge,maxId, numberOfNewArticles
-           
+        logger.info("Number of New Articles = " +
+                    str(numberOfNewArticles ))
+        if existingToots:
+           logger.info("ExistingToots")
+        return existingToots,  numberOfNewArticles
+    
+    def tootAge(self,toot,view):
+        currentTime = view.startTime
+        age = currentTime - self.getPublicationTime(toot,view)
+        tootAge = int(age/(secondsInaDay))
+        return tootAge
+    
     def postProcessPage(self,view):
            allToots = view.allToots
            newArticles = view.newArticles
@@ -202,7 +222,7 @@ class RemoteAccount(Source,TransactionNote):
 
     #COPY OF THIS HERE AND IN RSS.PY    
 
-    def fetchArticles(self,articles,view):    
+    def fetchArticles(self,articles,view):
         result = fetchAll(articles,view, allowedTime = 20)
         for item in result:
             if item[0] ==  FAILURE:  
@@ -223,10 +243,14 @@ class RemoteAccount(Source,TransactionNote):
         newArticles = view.newArticles
         oldArticles = view.oldArticles
         contentByTime = root.contentByTime
+        existingToots = False
         for toot in pageOfToots:
            account = self
            message, new  = Toot().createToot(toot,account)
-           print (message)
+           #logger.info (message)
+           #print (message)
+           if message == "Existing Toot":
+              existingToots = True
            if message != "SUCCESS":
                continue
            allToots.add(new)           
@@ -249,6 +273,7 @@ class RemoteAccount(Source,TransactionNote):
                    if not article.publicationApproved:
                        article.publicationApproved = True
                        oldArticles.add (article)
+        return existingToots
     
     def getPublicationTime(self,toot,view):           
         try:
