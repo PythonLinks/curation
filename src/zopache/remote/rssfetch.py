@@ -22,7 +22,7 @@ from cromlech.browser.exceptions import HTTPFound
 @crom.target(IView)
 @name("getrssxyz")
 #@permissions('Manage')
-@implementer(ITreeSecurity)
+#@implementer(ITreeSecurity)
 class GetRSS(Form):
     title = "Download the RSS Feeds"
     subTitle = "To get the newest news."
