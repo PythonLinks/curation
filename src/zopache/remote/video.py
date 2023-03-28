@@ -53,19 +53,18 @@ class VideoBase(Voteable):
               
     def defaultToot(self,view = None):
         result =  self.title +"\n\n" 
-        result += self.description + "\n\n"
+        result += self.description
+        result += "\n"
+        result += "(Click the url, not the image.)"
+        result +=  "\n\n" 
+        result +=  view.secureShortURL(self)
+        result +=  "\n\n" 
         if view:
-           if view.isManager():
-              result += "Read more in /" + self.parent.name
-              result += "\n"
-              result +=  "(https://) "
-              result +=  view.secureShortURL(self.parent)[8:]
-              result +=  "\n\n" 
-           else:               
-              result += "Via @UncensoredNews@Msatodon.Social \n\n"
-        result += self.getRemoteURL()
-        result += "\n\n"
+           if not view.isManager():
+              result += "Via @UncensoredNews@Mastodon.Social \n\n"
         result +=  (
+                self.tags +
+                " " +
                 self.parentalTags() +
                " #videos "
                    )
