@@ -45,7 +45,7 @@ class BaseValidator(object):
         self.data = data
         remoteURL = self.getURL(data)
         if not remoteURL:
-           return None  
+           return False  
         form = self.form
         siteRoot = form.getSiteRoot()
         urlObject = siteRoot.existsRemoteURL(remoteURL)
@@ -61,7 +61,7 @@ class DuplicateURLValidator(BaseValidator):
     def validate(self, data):
         errors = Errors()
         theItem = self.urlExists(data) 
-        if ((theItem != None) and (
+        if ((theItem != False) and (
                 theItem != self.form.context)):
            form = self.form
            msg = "That url is already in the database at: "
