@@ -53,7 +53,6 @@ class BaseArticle(NewsMixIn,Page):
                 self.tagsAsString() + ' ' +
                 self.parentalTags()                 
                 )
-
         
     def tagsAsString(self):
                return" ".join (self.tagsAsArray())
@@ -69,8 +68,6 @@ class BaseArticle(NewsMixIn,Page):
                    if term not in {"#news","#featured"}:
                        terms.add (term)
                return terms 
-           
-
             
     def getCategory(self):
       return self._category
@@ -133,6 +130,20 @@ class BaseArticle(NewsMixIn,Page):
 class RSSArticle(BaseArticle):
     webClass = "RSSLink"
 
+    def titlePlusDescription(self):
+        result = self.title + " "
+        if self.description != None:
+           result += self.description + " "
+        result += self.parent.title + " "
+        try:
+            result += self.rssFeed.title
+        except:
+            breakpoint()
+            pass
+                  
+        return result
+
+    
     def creationDateForHumans(self):
          return time.strftime("%Y-%m-%d",time.localtime(self.publishedAt))
          
