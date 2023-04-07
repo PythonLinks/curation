@@ -39,20 +39,26 @@ class BaseArticle(NewsMixIn,Page):
     
     def defaultToot(self,view):        
             twitterId = self.rssFeed.twitterId
-            return   (
+            
+            result = (
                 self.title +
                 "\n\n" +
                 self.description +
                 "\n\n" +
                 self.articleURL +
-                (("\n\nBy @" + twitterId.strip() + "@twitter.com")
-                    if twitterId else '') +
-               "\n\n" +
-               "Read more at:  https://UncensoredNews.US/" + self.parent.name + 
+                "\n\n")
+            if twitterId:
+                result += ("\n\nBy @" + twitterId.strip() +
+                           "@twitter.com \n\n")
+            if not view.isManager():
+                result += "via @UncensoredNews@Mastodon.Social \n\n"            
+            result += ("Read more at:  https://UncensoredNews.US/" +
+               self.parent.name + 
                "\n\n" +
                 self.tagsAsString() + ' ' +
                 self.parentalTags()                 
                 )
+            return result
         
     def tagsAsString(self):
                return" ".join (self.tagsAsArray())

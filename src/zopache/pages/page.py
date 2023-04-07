@@ -312,19 +312,27 @@ class Link(NewsMixIn,PageBase, PageMixIn):
     
     def preDeleteProcess(self,view):
         self.removeAllToots()
-        
-    def defaultToot(self, view = None):                
-        return( self.title +
-                "\n\n" + 
-                self.description +
+
+
+    def defaultToot(self,view):
+            result = (
+                self.title +
                 "\n\n" +
-                self.remoteURL +
+                self.description +
+                "\n\n" )
+            if not view.isManager():
+                result += "via @UncensoredNews@Mastodon.Social \n\n"
+                            
+            result +=  (self.remoteURL +
                "\n\n" +
-               "Via https://UncensoredNews.US/" + self.parent.name + 
+               "Read more at:  https://UncensoredNews.US/" +
+               self.parent.name + 
                "\n\n" +
-                self.parentalTags() +
-                "\n\n"                                  
+                self.tagsAsString() + ' ' +
+                self.parentalTags()                 
                 )
+            return result        
+
     
     def getImportTime(self):
         return self.creationTime

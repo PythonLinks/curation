@@ -130,22 +130,19 @@ class Article (Link):
         pass
     
     def defaultToot(self,view):
-        toot = self
-        soup = BeautifulSoup(toot.description, 'html.parser')
-        result = ""
-        for tag in soup.contents:
-            result += tag.text
-            if tag.name == 'p':
-                result += "\n"
-
-        return   (
-                result +
+            result = (
+                self.title +
                 "\n\n" +
-                self.getVia() +
-                "\n\n" +
-                self.articleURL +
+                self.description +
+                "\n\n" )
+            if not view.isManager():
+                result += "via @UncensoredNews@Mastodon.Social \n\n"
+            result +=  (self.articleURL +
                "\n\n" +
-               "Read More: \n"  +
-               "UncensoredNews.US/" + self.parent.name +  
-               "\n\n" 
+               "Read more at:  https://UncensoredNews.US/" +
+               self.parent.name + 
+               "\n\n" +
+               self.tagsAsString() + ' ' +
+               self.parentalTags()                 
                 )
+            return result
