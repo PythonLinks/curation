@@ -36,30 +36,23 @@ class BaseArticle(NewsMixIn,Page):
          OrderedBTreeContainer.__init__(self)
          self.modificationTime= time.time()
          self.importTime = int(self.modificationTime)
-    
-    def defaultToot(self,view):        
+
+
+    def tootTwitterId(self):
             twitterId = self.rssFeed.twitterId
-            
-            result = (
-                self.title +
-                "\n\n" +
-                self.description +
-                "\n\n" +
-                self.articleURL +
-                "\n\n")
             if twitterId:
-                result += ("\n\nBy @" + twitterId.strip() +
+                return ("\n\nBy @" + twitterId.strip() +
                            "@twitter.com \n\n")
-            if not view.isManager():
-                result += "via @UncensoredNews@Mastodon.Social \n\n"            
-            result += ("Read more at:  https://UncensoredNews.US/" +
-               self.parent.name + 
-               "\n\n" +
-                self.tagsAsString() + ' ' +
-                self.parentalTags()                 
-                )
-            return result
+            return ""
         
+     
+    def defaultToot(self,view):        
+        return (self.tootTitlePlusDescription() +    
+                  self.tootTwitterId()+
+                  self.tootArticleURL() +
+                  self.tootVia(view) +
+                  self.tootReadMore() )
+                  
     def tagsAsString(self):
                return" ".join (self.tagsAsArray())
 

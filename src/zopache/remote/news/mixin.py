@@ -6,6 +6,34 @@ class NewsMixIn(object):
     #Just make sure that the first time you
     #Add somethign to it, to create a new array
     toots = []
+
+    def tootTitlePlusDescription (self):            
+            
+            result = (
+                self.title +
+                "\n\n" +
+                self.description +
+                "\n\n" )
+            return result
+
+
+    def tootArticleURL(self):
+        return self.articleURL + "\n\n"
+                
+    def tootVia(self, view):
+            if view.isManager():
+                return ""
+            else:      
+                return  "via @UncensoredNews@Mastodon.Social \n\n"
+
+    def tootReadMore(self):                
+            result = ("Read more at:  https://UncensoredNews.US/" +
+               self.parent.name + 
+               "\n\n" +
+                self.tagsAsString() + ' ' +
+                self.parentalTags()                 
+                )
+            return result
     
     def getDescriptionFor(self,view):
         for toot in self.toots:

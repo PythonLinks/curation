@@ -21,6 +21,10 @@ class Article (Link):
     title = ''
     __name__ = ''
 
+    #This has to be here, otherwise link version overrides it. 
+    def tootArticleURL(self):
+        return self.articleURL + "\n\n"
+                
     
     def __init__(self, toot, url, account, mastodonArticles,root):
         Link.__init__(self)
@@ -129,20 +133,10 @@ class Article (Link):
     def postAddProcess(self,view):
         pass
     
-    def defaultToot(self,view):
-            result = (
-                self.title +
-                "\n\n" +
-                self.description +
-                "\n\n" )
-            if not view.isManager():
-                result += "via @UncensoredNews@Mastodon.Social \n\n"
-            result +=  (self.articleURL +
-               "\n\n" +
-               "Read more at:  https://UncensoredNews.US/" +
-               self.parent.name + 
-               "\n\n" +
-               self.tagsAsString() + ' ' +
-               self.parentalTags()                 
-                )
-            return result
+    def defaultToot(self,view):        
+        return (self.tootTitlePlusDescription() +    
+                  self.tootArticleURL() +
+                  self.tootVia(view) +
+                  self.tootReadMore() )
+               
+
