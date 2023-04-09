@@ -29,7 +29,8 @@ class  AceScripts(object):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js" integrity="sha512-Y5n0fbohPllOQ21fTwM/h9sQQ/1a1h5KhweGhu2zwD8lAoJnTgVa7NIrFa1bRDIMQHixtyuRV2ubIx+qWbGdDA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 """
-        if self.getSiteRoot().mqttServer:
+        root = self.getSiteRoot()
+        if getattr(root,'mqttServer',''):
             result +=" <script> var parameters = "
             result += self.parameters()
             result += ";</script>"

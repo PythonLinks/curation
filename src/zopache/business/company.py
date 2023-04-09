@@ -48,6 +48,7 @@ class Company  (GeoBase,LocationContainer):
 class OnlineOrganization  (OnlineOrganizationProperties,Base,
                            HasMembers):   
     webClass = "Organization"
+    schemaName = "OrganizationSchema"
     clientClass = "Category"
     webApproved = True
     

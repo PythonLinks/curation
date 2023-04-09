@@ -20,6 +20,13 @@ class IForm(Interface):
         missing_value = "",
     )
 
+    diffDomain= DottedName(
+        title = u'Diff Server',
+        description = "With which you compare the ttw source code.",
+        required = False,
+        missing_value = "",
+    )    
+
     mqttServer= TextLine(
         title = "MQTT Server URL",
         description = "For real time notifications.",
@@ -46,7 +53,14 @@ class IForm(Interface):
         description = "For security best to disable, and use Google OAuth login",
         required = False,
         default = True,
-    )    
+    )
+
+    mastodonLogin = Bool(
+        title = "Allow Mastodon Logins?",
+        description = "Better than local Login or Google Oauth",
+        required = False,
+        default = False,
+    )        
 
     mapBoxKey= TextLine(
         title = "MapBox Key",

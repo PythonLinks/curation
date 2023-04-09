@@ -27,7 +27,10 @@ table-hover table-condensed" summary="Content listing"
 
    <thead  class="thead-inverse">
      <tr>
-      <th><a onClick="checkAll()">Check<br>All</a></th>
+      <th tal:switch = "len(context) > 0">
+      <a tal:case = "True" style = "text-decoration-line: underline;" onClick="checkAll()">Check<br>All</a>
+      <span tal:case = "False">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</span>
+</th>
       <th>Icon</th>
       <th> Name->Manage </th>
       <th> Title->Edit </th>

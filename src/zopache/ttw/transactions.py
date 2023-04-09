@@ -36,8 +36,8 @@ class Transactions(Page):
        def results(self):
            root = getZodbRoot(self.context)
            db = root._p_jar.db()
-           log=db.undoLog(0, sys.maxsize)
-           results =  list(log) [:200]
+           results = db.undoLog(0, 200)
+           #results =  list(log) [:200]
 
            return results
 

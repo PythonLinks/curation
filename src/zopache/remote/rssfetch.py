@@ -20,23 +20,22 @@ from cromlech.browser.exceptions import HTTPFound
 @form_component
 @context(IPage)
 @crom.target(IView)
-@name("getrss")
-@permissions('Manage')
-@implementer(ITreeSecurity)
+@name("getrssxyz")
+#@permissions('Manage')
+#@implementer(ITreeSecurity)
 class GetRSS(Form):
     title = "Download the RSS Feeds"
     subTitle = "To get the newest news."
 
     def __init__(self, context, request, **kwargs):
         Form.__init__(self, context, request, **kwargs)
-        self.time = int(time.time())
+        self.time = self.getSiteRoot().nextImportTime
         self.lock = None
 
     async def getTime(self):
-        if self.lock == None:
-            self.lock = asyncio.Lock()        
-        async with self.lock:
-            self.time -= 1
+        lock = asyncio.Lock()
+        async with lock:
+            self.time += 1
             return self.time
         
     def update(self):
@@ -47,16 +46,22 @@ class GetRSS(Form):
                   if item.rssApproved:   
                       feeds.append(item)
         self.fetchArticles(feeds)
-        self.getSiteRoot().lastFetchTime = time.time()
+        root = self.getSiteRoot()
+        root.lastRSSFetchTime = time.time() 
+        if hasattr(root,'lastFetchTime'):
+            del root.lastFetchTime
+            
         Form.update(self)
         #raise HTTPFound('/categories/newest')
 
-    #COPY OF THIS HERE AND IN RSS.PY    
-    def fetchArticles(self, feeds):    
+    #COPY OF THIS HERE AND IN RSS.PY
+    #This one has no view argument, just uses self
+    def fetchArticles(self, feeds):
+
         result = fetchAll(feeds,self)
         for item in result:
-            if item[0] ==  FAILURE:  
-              self.submissionErrors.append( "ERROR:" + str(item [1:]))
+              if item[0] ==  FAILURE:  
+                 self.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
 
 

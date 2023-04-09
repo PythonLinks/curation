@@ -1,3 +1,5 @@
+import time
+
 from dolmen.forms.base import Actions
 from zopache.crud import actions as formactions
 from zopache.crud.actions import AddByTitle
@@ -65,3 +67,6 @@ class AddLink(AddAnonymousPageByTitle):
     title = "Add a Link"
     subTitle = "Refering to a remote page."
     factory = Link
+    def update(self):
+        AddAnonymousPageByTitle.update(self)
+        self.getSiteRoot().lastLinkAddedTime = time.time()

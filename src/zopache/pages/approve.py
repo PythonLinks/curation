@@ -9,7 +9,7 @@ from zopache.remote.vote import make_text_response
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
 from zopache.pages.interfaces import IPageBase, ILinkBase
-from zopache.forms.interfaces import IApprove,IApproveBest
+from zopache.forms.interfaces import IApprove
 from zopache.core.interfaces import ITreeSecurity
 from zopache.remote.rssarticle import IRSSArticle
 from zopache.pages.cache import cache
@@ -25,15 +25,15 @@ class Approve (EditForm):
     interface = IApprove
     fields = Fields(IApprove)
 
-@form_component
-@name ('approveLink')
-@context(ILinkBase)
-@implementer(ITreeSecurity)
-class ApproveLink (EditForm):
-    title = 'Approve this posting'
-    subTitle = ''
-    interface = IApproveBest
-    fields = Fields(IApproveBest)    
+#@form_component
+#@name ('approveLink')
+#@context(ILinkBase)
+#@implementer(ITreeSecurity)
+#class ApproveLink (EditForm):
+#    title = 'Approve this posting'
+#    subTitle = ''
+#    interface = IApprove
+#    #fields = Fields(IApprove)    
 
 
 @form_component
