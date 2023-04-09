@@ -93,9 +93,7 @@ class Cutter(BaseClass):
                 self.view.error += self.context.__name__  + """" 
                      IS NOT ALLOWED TO BE CUT <br>"""
                 return
-        if hasattr(obj,'preDeleteProcess'):
-            obj.preDeleteProcess(view=view)
-            
+
         oldName=obj.__name__
         toFolder=cutFolder(view)
 
@@ -170,9 +168,7 @@ class Paster(BaseClass):
     def allowed(self,obj):
         if hasattr(obj,'canCopy'):
            return obj.canCopy()                
-        if ICopyable.providedBy(obj):
-                return True
-        return False
+        return True
 
 
 #THIS IS THE GENERIC DELETER
@@ -191,7 +187,6 @@ class Deleter(BaseClass):
             return
         
         # HAVE TO DESCRIE BEFORE DELETING OTHERWISE NO NAME AVAILABLE
-        self.describeWithActionAndView(obj,self,view)
         if hasattr(obj,'preDeleteProcess'):
             obj.preDeleteProcess(view)                
         del container[name]

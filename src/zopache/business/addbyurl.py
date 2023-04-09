@@ -28,8 +28,9 @@ class ProcessURL(object):
             error = Error("Failed to Fetch URL" + str(err))
             errors.append(error)
             response = {}                        
-        return errors,response
+        return [],response
 
+        
 @view_component
 @name('addByURL')
 @target(IView)

@@ -1,11 +1,14 @@
 import time
-from zope.interface import Interface
-from zope import schema
-from slugify import slugify
-import feedparser
 from html import unescape
 
+from slugify import slugify
+import feedparser
+
+from zope import schema
+from zope.interface import Interface
+
 from dolmen.forms.base.markers import FAILURE, SUCCESS
+
 from zopache.pages.page import Link
 from zopache.core.viewdecorators import *
 from zopache.crud.interfaces import IContainer
@@ -18,15 +21,97 @@ from zopache.remote.irss import IRSS, IJustRSS
 from zopache.remote.rssdownload import fetchAll
 from zopache.crud.getimage import getImage
 
+class RSSBase(object):
+    
+    def parseHTML(self,html,maxLength = 300):
+        soup = BeautifulSoup(html, 'html.parser')
+        try:
+           text = soup.text
+           length = len(text)
+           if length <= maxLength:
+              return text
+           else:
+              for i in range(maxLength,length):
+                  if text[i]==' ':
+                     result = text [0:i-1] +  '...'
+                     return result
+        except:
+           return ""
+          
+   
+    def postAddProcess(self,view = None):
+        Link.postAddProcess(self,view = view)
+        if self.logoURL:
+            getImage(self,self.logoURL)
+        self.fetchArticles([self],view)
+
+    #COPY OF THIS HERE AND IN RSSFetch.PY
+    #AND IN mastodon/fetch.py
+    #That one has no view argument.
+    def fetchArticles(self,feeds,view):    
+        result = fetchAll(feeds,view)
+        for item in result:
+            if item[0] ==  FAILURE:  
+               view.submissionErrors.append( "ERROR:" + str(item))
+        self.status='RSS Feeds were downloaded.'
+        
 @implementer (IRSS)     
-class RSS(Link,UniqueName):
+class RSS(Link,UniqueName,RSSBase):
     webClass = "RSS"
     htmlSummary = True
     title = ""
     twitterId = ''
-    msatodonId = ''
+    mastodonId = ''
     rssApproved = True
     keepAllArticles = False
+
+    # FOR A NEW RSS FEED       
+    def createOneArticle(self,article,view,currentTime):
+       new = RSSArticle()
+       new.articleURL = article.link
+       if hasattr(article, 'tags'):
+           new.tags = article.tags
+       unescaped = unescape (article.title)
+       result  = self.parseHTML(unescaped)
+       new.title = result
+
+       if hasattr(article,'summary'):
+           unescaped = unescape( article.summary)
+           result  = self.parseHTML(unescaped)
+           new.description = result or unescaped or ''
+       
+       if hasattr(article, 'updated_parsed'):
+          new.updated = article.updated_parsed
+
+       if 'image' in article:      
+           new.image = article.image
+
+       if 'links' in article:
+           new.links = article.links
+           
+       theId = article['id']
+       new.permaLink = theId
+       if hasattr(article,"published_parsed"):
+          new.publishedAt = min(
+                            time.mktime( article["published_parsed"]),
+                            currentTime)
+       else:
+          new.publishedAt = currentTime
+          
+       #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
+       #PREVENTS BUNCHING THEM UP.
+       new.setImportTime(new.publishedAt,view.getSiteRoot())
+       
+       newName = slugify (new.title)
+       newName = self.uniqueBothName (self,newName)
+       self[newName] = new
+
+       #LocalList
+       self.localArticles[theId] = new
+       new.__parent__ = self
+       new.rssFeed = self          
+       new.postAddProcess(view = view ,article = article)
+       return new
     
     def __init__(self):
          self.localArticles = OOBTree()
@@ -55,96 +140,25 @@ class RSS(Link,UniqueName):
                if article.parent == None:
                    orphans.append(article.permalink)
            for key in orphans:
-               print (key)
+               p rint (key)
                del context.localArticles [key]
     """
          
-    def parseHTML(self,html):
-        soup = BeautifulSoup(html, 'html.parser')
-        try:
-           text = soup.text
-           length = len(text)
-           if length <= 300:
-              return text
-           else:
-              for i in range(300,length):
-                  if text[i]==' ':
-                     result = text [0:i-1] +  '...'
-                     return result
-        except:
-           return ""
-
     async def createArticles(self,entries,view):
-       globalArticles= self.getPublicationRoot().globalArticles
+       currentTime = int(time.time()) 
+       root =  self.getPublicationRoot()
+       globalArticles= root.globalArticles
+       articles = []
        for article in entries[:20]:
            theId = article['id']
-           if not theId in globalArticles:
-              importTime = await view.getTime()
-              self.createOneArticle(article,view,importTime)
-              
-    # FOR A NEW RSS FEED       
-    def createOneArticle(self,article,view,importTime):
-       new = RSSArticle()
-       new.articleURL = article.link
-       if hasattr(article, 'tags'):
-           new.tags = article.tags
-       unescaped = unescape (article.title)
-       result  = self.parseHTML(unescaped)
-       new.title = result
-
-       if hasattr(article,'summary'):
-           unescaped = unescape( article.summary)
-           result  = self.parseHTML(unescaped)
-           new.description = result or unescaped or ''
-       
-       if hasattr(article, 'updated_parsed'):
-          new.updated = article.updated_parsed
-
-       if 'image' in article:      
-           new.image = article.image
-
-       if 'links' in article:
-           new.links = article.links
-           
-       theId = article['id']
-       new.permaLink = theId
-       if hasattr(article,"published_parsed"):
-          new.publishedAt = min(
-                            time.mktime( article["published_parsed"]),
-                            importTime)
-       else:
-          new.publishedAt = importTime
-          
-       #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
-       #PREVENTS BUNCHING THEM UP.
-       #new.setImportTime(importTime, view.getSiteRoot())
-       new.importTime = importTime
-       
-       newName = slugify (new.title)
-       newName = self.uniqueBothName (self,newName)
-       print ("CREATING", newName)
-       self[newName] = new
-
-       #LocalList
-       self.localArticles[theId] = new
-       new.__parent__ = self
-       new.rssFeed = self          
-       new.postAddProcess(view )
-
-    def postAddProcess(self,view = None):
-        Link.postAddProcess(self,view = view)
-        if self.logoURL:
-            getImage(self,self.logoURL)
-        self.fetchArticles([self],view)
-
-    #COPY OF THIS HERE AND IN RSS.PY    
-    def fetchArticles(self,feeds,view):    
-        result = fetchAll(feeds,view)
-        for item in result:
-            if item[0] ==  FAILURE:  
-               view.submissionErrors.append( "ERROR:" + str(item [1:]))
-        self.status='RSS Feeds were downloaded.'
-        
+           if theId in globalArticles:
+               continue
+           if root.existsRemoteURL(article.link):
+               continue
+           new = self.createOneArticle(article,view,currentTime)
+           articles.append(new)
+       return SUCCESS, articles
+   
     def postProcess(self,view = None):
         Link.postProcess(self, view = view)
 
@@ -152,8 +166,7 @@ class RSS(Link,UniqueName):
           html  =  await response.text()
           feed = feedparser.parse(html)
           entries = feed['entries']
-          await self.createArticles(entries,view)
-
+          return await self.createArticles(entries,view)
           
 @implementer(IJustRSS)
 class JustRSS(RSS):

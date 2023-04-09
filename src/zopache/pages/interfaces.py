@@ -1,11 +1,10 @@
 from zope.interface import Interface
 from zope import schema
-from zopache.crud.interfaces import IContainer , IZodbRoot
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrderedContainer
 from cromlech.browser.interfaces import IPublicationRoot
 
-
+from zopache.crud.interfaces import IContainer , IZodbRoot
 from zopache.ttw.interfaces import ISourceLeaf
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.python.interfaces import IDirectory
@@ -15,7 +14,6 @@ from zopache.ttw.interfaces import IAceHTML
 from zopache.core.interfaces import ICountable, ISiteRoot
 from zopache.crud.interfaces import ILeaf
 from zopache.ttw.interfaces import IJSON
-
 
 class ICategoryBase(Interface):
     title = schema.TextLine(
@@ -83,7 +81,11 @@ class IPageTop(Interface):
         description = u'Describe this page.',
         required = True,
     )
-class ILinkBase(Interface):
+
+class IPageBase(ILayoutView,ICanonical,IContent):
+    pass
+    
+class ILinkBase(IPageBase,IBTreeContainer):
     pass
 
 class ILinkTop(Interface):
@@ -141,16 +143,12 @@ class IActionNetwork(ILinkTop,
         default = u'',
     )       
 
-class IPageBase(ILayoutView,ICanonical):
-    pass
 
 class IPage(IPageTop,IPageBottom,IPageBase,
             IContent, IOrderedContainer,
             IJSONInclude, IUntrustedHTML,IAceHTML):
     pass
 
-class IMultilingual(IPageBase,IContent,IOrderedContainer):
-    pass
 
 class IProxyPage(IPage):
     pass
@@ -224,7 +222,7 @@ class IRootPage(ISiteRoot,
                 IBranch):
     pass
 
-class ISiteRootPage(ISiteRoot,IBranch,IPageBase,IBTreeContainer):
+class ISiteRootPage(ISiteRoot,IBranch,IPage,IBTreeContainer):
     description= schema.Text(
         title = 'Description',
         description = "A brief description of this web site.",

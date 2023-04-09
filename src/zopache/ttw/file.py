@@ -60,11 +60,6 @@ class ImageBase(FileBase):
     attributionText = ""
     attributionURL = ""
         
-    #JUST A QUICK BUG FIX AVOIDANCE
-    def get(self,arg):
-        print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
-        return self
-
     def getImageTag(self,webClass = "",
                     alt = "",
                     style = "",
@@ -102,6 +97,11 @@ class ImageBase(FileBase):
 
 @implementer(IImage)
 class Image (Leaf,ImageBase):
+    #JUST A QUICK BUG FIX AVOIDANCE
+    def get(self,arg):
+        print ("BUG",self.__parent__.name, self.__parent__.__parent__.name)
+        return self
+
     def replace (self):
         parent = self.__parent__
         name = self.__name__
@@ -208,7 +208,7 @@ class BTreeImage(ImageBase,Container):
          #Max size of 4MB for images on Mastodon
          ratio = 3900000  / self.size
          if ratio >=1:
-             return self.data, self.contentType
+             return self.data, self.contentType, getattr(self,"title","")
          
          newWidth = int(ratio * self.width)
          newHeight = int (ratio * self.height)
@@ -227,7 +227,7 @@ class BTreeImage(ImageBase,Container):
          byteImgIO = io.BytesIO()
          pilImage.save(byteImgIO,'PNG')
          byteImgIO.seek(0)
-         return byteImgIO.read(), "image/png"
+         return byteImgIO.read(), "image/png", getattr(self,"title","")
 
     #THE FOLLOWING METHOD I THINK CUTS A PORTRAIT MODE PICTURE SQUARE
     #I THINK IT BREAKS ON LANDSCAPE MODE
@@ -247,7 +247,6 @@ def make_file_response(view, result, *args, **kwargs):
         response.write(result or u'')
         response.headers['cache-control'] = 'public,max-age=3600'  
         return response
-
     
 from cromlech.webob.response import Response
 from dolmen.view import View, make_view_response
@@ -341,12 +340,17 @@ class LogoAcquire2(View):
              logo = context['Logo']
              return logo['200W'].data
          
-         rssFeed = getattr(context,'rssFeed',context)
-         if 'Logo' in rssFeed:
-             logo = rssFeed['Logo']
-             return logo.get('200W').data
+         source = (getattr(context,'rssFeed',None) or
+                   getattr(context,'curator',None) )
+
+         if source:
+             if 'Logo' in source:
+               logo = source['Logo']
+               return logo.get('200W').data
          
-         logo = ParentalAcquire(rssFeed)['Logo']
+             logo = ParentalAcquire(source)['Logo']
+         else:   
+            logo = ParentalAcquire(context)['Logo']            
          if logo == None:
              return ''
          return logo['200W'].data

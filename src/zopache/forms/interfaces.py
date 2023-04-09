@@ -10,36 +10,6 @@ class IApprove(Interface):
         required = False,
         default = False)
 
-class IApproveBest(IApprove):
-    webApproved = schema.Bool(
-        title = "Approved for publication on the web.",
-        required = False,
-        default = False)
-    
-    bestApproved = schema.Bool(
-        title = "Approved for Best.",
-        required = False,
-        default = False)    
-
-    #emailApproved = schema.Bool(
-    #    title = "Approved for publication in Emails.",
-    #    required = False,
-    #    default = False)
-
-    #private = schema.Bool(
-    #    title = "Should this page be private?",
-    #    required = False,
-    #    default = False)    
-    
-    """
-    hidden = schema.Bool(
-        title = "Hidden from the public.Login Required.",
-        description = "" "When this is checked, unauthorized viewers get a message "You are not permitted to view that page."  This discourages spammers.  For 
-        publicly visible pages, this should be unchecked. "" ",
-        required = False,
-        default = False)
-     """
-
 class ILogin(Interface):
 
     email  = schema.TextLine(

@@ -3,10 +3,8 @@ from slugify import slugify
 from zope.interface import implementer
 
 from zopache.ttw.principalfolder import InternalPrincipal
-from zopache.ttw.interfaces import IInternalPrincipal
 
-class IAccount(IInternalPrincipal):
-    pass
+from zopache.remote.mastodon.interfaces import IAccount
 
 @implementer(IAccount)
 class Account(InternalPrincipal):
@@ -55,3 +53,15 @@ class Account(InternalPrincipal):
 
     def notifyUserNewUser(self):
         pass
+    
+import crom
+from zopache.zmi.interfaces import IURLSegment
+@crom.adapter
+@crom.sources(IAccount)
+@crom.target(IURLSegment)
+class IRemoteAccountAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+
+    def getSegment(self):
+        return 'permissions'

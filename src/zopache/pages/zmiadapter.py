@@ -103,12 +103,6 @@ class PageDeleter(Deleter):
             self.view.error +=   name + " was not deleted. <br>"   
             self.view.error += " Maybe it still contains something"
             return
-        self.describeWithActionAndView(contained,self,view)
-        #OKAY NOW DO THE WORK
-        # DELETE THE CANNONICAL NAME
-        # HAVE TO DO THIS FIRST
-        self.describeTransaction("Deleted an object with a Canonical URL",contained)
-
         # DELETE THE OBJECT
         container=contained.__parent__
         # So even though root is not used till later, 

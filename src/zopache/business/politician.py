@@ -20,6 +20,7 @@ class Politician (RedundantSocial, ImaginaryPage,LocationLeaf,HasMembers):
     hidden = False
     localOrNational = ""
     webClass = "Politician"
+    schemaName = "PoliticianSchema"
     clientClass = "category"
     def __init__(self):
         ImaginaryPage.__init__(self)

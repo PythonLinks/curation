@@ -148,7 +148,7 @@ class URLMethods(object):
         item = self.context if len(args)==0 else args [0]
         return self.longPathFor(item)
     
-    def relativeURL(self,*args):        
+    def relativeURL(self,*args):
         item = self.context if len(args)==0 else args [0]        
         isSiteRoot =IPublicationRoot.providedBy(item)
         isZodbRoot = IZodbRoot.providedBy (item)
