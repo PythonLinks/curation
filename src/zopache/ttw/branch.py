@@ -31,7 +31,7 @@ lexicon = Lexicon(
 from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
-from BTrees.OOBTree import OOBTree
+from BTrees.OOBTree import OOBTree, TreeSet
 from BTrees.IOBTree import IOBTree
 
 from cromlech.browser.interfaces import IPublicationRoot
@@ -136,7 +136,8 @@ class Branch(SimpleBranch):
                    return item
         return None    
     
-    def reInit(self):        
+    def reInit(self):
+        self.rssFeeds = TreeSet() 
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
         self.pagesByTwitterId = OOBTree()
@@ -288,6 +289,7 @@ class Branch(SimpleBranch):
            item.reInit()
 
         elif item.__class__.__name__  == "RSS":
+           self.rssFeeds.add(item) 
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds += 1
            #self.categoryCatalog.index_doc(
@@ -369,6 +371,7 @@ class Branch(SimpleBranch):
            #self.categoryCatalog.unindex_doc(creationTime)
        
         elif item.__class__.__name__  == "RSS":
+           self.rssFeeds.remove(item)
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds -= 1
            #self.categoryCatalog.unindex_doc(item.importTime)           
