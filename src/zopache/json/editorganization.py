@@ -47,11 +47,12 @@ from zopache.business.regionalorganization import RegionalOrganization
 @view_component
 @name('addRegionalOrganization')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class AddRegionalOrganization(AddOrganization):
     title = "Add a Regional Organization"
     subTitle = ""
     factory = RegionalOrganization
+    schemaName = "OrganizationSchema"
     
 class OnlineSchema(object):
     subTitle = ""
