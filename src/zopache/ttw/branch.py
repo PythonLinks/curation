@@ -224,7 +224,7 @@ class Branch(SimpleBranch):
            if indexingBranch:
                item.mapPoints =  OOBTree()
            
-        if item.__class__.__name__  == "Category":
+        if item.__class__.__name__  in  ["Category","RegionalCategory"]:
            item.reInit()
 
         elif item.__class__.__name__  == "RSS":
@@ -291,7 +291,7 @@ class Branch(SimpleBranch):
         if getattr(item,'twitterId',''):
             del self.pagesByTwitterId [item.twitterId]
 
-        if item.__class__.__name__  == "Category":
+        if item.__class__.__name__  in ["Category", "RegionalCategory"]:
            pass 
            #creationTime = int (item.creationTime)
            #del self.categoryIndex[item.creationTime] 

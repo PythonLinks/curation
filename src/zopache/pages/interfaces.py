@@ -330,8 +330,5 @@ class IGeographicalCategory(ICategory, IGeography):
 class ILocationCategory (IGeographicalCategory, ILatLng):
     pass
 
-class IRegionCategory(IGeographicalCategory):
-    pass
-
 class IMapCategory(IGeographicalCategory,ILatLng):
     pass

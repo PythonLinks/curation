@@ -348,3 +348,9 @@ class IMap (IPage,IMapBase,IFollow):
 	    description = "Should it show the objects in the children?",           
 	    required = False,
 	    default = False)   
+
+from zopache.pages.interfaces import ICategory
+from zopache.business.interfaces import IRegion
+class IRegionalCategory(IRegion,ICategory):
+    pass
+

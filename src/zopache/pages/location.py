@@ -1,4 +1,5 @@
 import json
+from json_stream import streamable_list
 
 from zope.interface import implementer
 from BTrees.OOBTree import OOBTree
@@ -92,13 +93,15 @@ class MapBase(LocationContainer):
                   result.append(item)
         return result          
 
-     
-    def getLocationsJSON(self):
-        result = []
+    def generateItems(self): 
         for item in self.mapPoints.values():
             if item.webApproved:
-               result.append(item.getOneMarker())
-        return json.dumps (result, indent = 2) 
+               yield item.getOneMarker()
+
+    def getLocationsJSON(self):
+        #https://pypi.org/project/json-stream/
+        data =  streamable_list(self.generateItems())
+        return json.dumps (data, indent = 2) 
 
 #So the old maps had a center
 #Which was also their Marker

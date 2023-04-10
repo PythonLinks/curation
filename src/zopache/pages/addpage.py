@@ -223,7 +223,7 @@ class AddRegionCategory(AddAuthorizedPage):
     title = 'Add a Region Category'
     subTitle = 'Both a region and a category.  '
     interface = IRegionCategory
-    factory = RegionCategory  
+    factory = RegionalCategory  
 
 #LOCATION CATEGORY
 from zopache.pages.interfaces import ILocationCategory

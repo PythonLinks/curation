@@ -258,14 +258,6 @@ class MapCategory(Category,MapBase):
                     yield grandChild
                 yield child    
 
-@implementer(IRegionCategory)
-class RegionCategory(Category,MapBase):
-    webClass = "RegionCategory"    
-    def mapPoints(self):
-        for child in self.values():
-            if ILocationCategory.providedBy(child):
-                yield child
-
 from zopache.zmi.interfaces import IURLSegment
 import crom
 @crom.adapter
