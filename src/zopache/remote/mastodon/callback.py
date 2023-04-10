@@ -10,7 +10,8 @@ from zopache.remote.mastodon.basebot import BaseBot
 @name("callback")
 class MastodonOauth(Form, BaseBot):
     title = "Respond to the Oauth Callback "
-    subTitle = "You should never see his. ."
+    subTitle = """If you see this, it means the Mastodon server
+    is overloaded, please try again. """
     def update(self):
         MastodonCallBackAction("Redirect","redirect")(self)
         

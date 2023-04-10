@@ -1,3 +1,5 @@
+import time
+
 from zope import schema
 from zope.schema import Text
 
@@ -6,7 +8,7 @@ from dolmen.forms.base import DISPLAY
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 
 from zopache.core.viewdecorators import *
-from zopache.remote.rssarticle import IRSSArticle
+from zopache.pages.interfaces import ILinkBase
 from zopache.forms.interfaces import IApprove
 
 from dolmen.forms.base import Actions
@@ -17,6 +19,7 @@ from zopache.ttw.treewidget import TreeField
 from zopache.core.interfaces import ITreeSecurity
 from zopache.crud.update import Edit, Save,  SaveAndView,  Cancel
 from zopache.core.breadcrumbs import Breadcrumbs    
+from zopache.zmi.cutcopypaste import Cutter
 
 class IApprove(Interface):
     title = schema.TextLine(
@@ -37,12 +40,6 @@ class IApprove(Interface):
         description = "Use this option to hide this article.",
         required = False,
         default = False)
-
-    bestApproved = schema.Bool(
-        title = "Best Articles?",
-        description = ".",
-        required = False,
-        default = False)    
 
     category=TreeField(
            title="Category Search",
@@ -65,11 +62,27 @@ class Publish(Save):
         form = self.form
         if getattr(context,'category',''):
             context.publicationApproved = True
+            
             context.addImage()
             category = form.getSiteRoot()[context.category]
             if category!= context.__parent__:
                 context.moveTo(category)
 
+class AddCategory(Save):
+    def __call__(self,form):
+        result = Save.__call__(self,form)
+        if result == FAILURE:
+            return result            
+        context = self.form.context
+        context.webApproved = True
+        context.publicationApproved = True
+        category = getattr(context,'category',None)
+        del context.category
+        context.addImage()
+        if category:
+            Cutter(context).cut(form)
+            raise HTTPFound('/' + category  +'/addCategory')
+        return result        
 
 class PublishAndToot(Publish):
     def __call__(self,form):
@@ -98,8 +111,8 @@ class Retract(Save):
 
 @form_component
 @name ('approve')
-@context(IRSSArticle)
-@implementer(ITreeSecurity)
+@context(ILinkBase)
+@permissions("Curate")
 class Approve (EditForm,Breadcrumbs):
     title = 'Approve this Article?'
     subTitle = "The article will be moved to its new location. "
@@ -114,12 +127,22 @@ class Approve (EditForm,Breadcrumbs):
                     Publish("Publish","publish"),
                     Retract("Retract","retract"),
                     PublishAndToot("Pubilsh And Toot","publishToot"),
+                    AddCategory("Add Category", "addCategory"),
                     Cancel("Cancel","Cancel"))
         
     def postProcess(self, view = None):
-        self.siteRoot = self.getSiteRoot()
-        context = self.context
-        context.postProcess(view = self)
+        root = self.getSiteRoot() 
+        aTime = int(time.time())
+
+        if not hasattr(root,'movedArticles'):
+           from BTrees.IOBTree import IOBTree            
+           root.movedArticles = IOBTree()
+        movedArticles = root.movedArticles
+        movedArticles[- aTime] = self.context
+        while len(movedArticles) > 30:
+           maxKey = movedArticles.maxKey()
+           del movedArticles [maxKey]
+        self.context.postProcess(view = self)
         
            
 

@@ -48,6 +48,7 @@ class Company  (GeoBase,LocationContainer):
 class OnlineOrganization  (OnlineOrganizationProperties,Base,
                            HasMembers):   
     webClass = "Organization"
+    schemaName = "OrganizationSchema"
     clientClass = "Category"
     webApproved = True
     
@@ -86,7 +87,6 @@ class Organization  (
 from zopache.business.imaporganization import IMapOrganization, IEndorsingOrganization
 @implementer (IMapOrganization)
 class MapOrganization(ImaginaryPage,
-                      MapBase,
                       HasMembers,
                       Page,
                       RegionBase,

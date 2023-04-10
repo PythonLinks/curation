@@ -11,7 +11,7 @@ from dolmen.forms.base import Actions
 
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 from zopache.remote.irss import IRSSArticle
 from zopache.crud.update import Cancel, Edit
 from zopache.crud.update import Edit
@@ -109,7 +109,7 @@ class IClass(Interface):
     
 @form_component
 @name ('toot')
-@context(IPage)
+@context(IPageBase)
 class TootForm (EditForm,BaseBot):
     title = 'Toot'
     subTitle = 'Limit 500 characters'
@@ -165,27 +165,34 @@ class TootForm (EditForm,BaseBot):
         EditForm.update(self)
     
     def nowToot(self):
-         if self.context._toot == "":
-            self.submissionError = """You submitted an empty toot, so nothing 
+         context = self.context
+         if context._toot == "":
+            self.submissionError = """You submitted an empty toot,
+                               so nothing 
                                was posted. <br><br> The toot was reset to 
-                              the defult toot."""
+                               the defult toot."""
             return ''
-        
          mediaList = self.mediaIdAsList()
-         spoilerText = self.context.spoilerText
+         spoilerText = context.spoilerText
          if spoilerText == "":
-            del self.context.spoilerText
+            del context.spoilerText
             spoilerText = None
            
          minDelay = 0.03 #(hours)
          delay = self.context.delay
+         if delay == None:
+             delay = 0
          if delay < minDelay:
              delay = self.delay = 0
              scheduledAt = None
          else:    
-             scheduledAt = datetime.now() + timedelta( hours=delay + 1 )         
+             scheduledAt = datetime.now() + timedelta( hours=delay + 1 )
+         inReplyToId = (context.tootId
+                        if self.className(context)=='Toot'
+                        else None)
          try:
             tootDict = self.proxyForUser().status_post(self.context.toot,
+                                            in_reply_to_id=inReplyToId,
                                             spoiler_text = spoilerText,
                                             media_ids=mediaList,
                                             scheduled_at = scheduledAt
@@ -258,9 +265,9 @@ class TootForm (EditForm,BaseBot):
     def addUnAuthorizedActions(self):
         actionList = [OnlyToot("Toot","toot"),
                       OnlyTootAndView("Toot And View","tootView"),
-                      OnlyReset("Reset",'reset')
+                      Reset("Reset",'reset'),
+                      Cancel("Cancel","Cancel")                      
                       ]
-        actionList.append(Cancel("Cancel","Cancel"))
         actionList = tuple(actionList)                  
         self.actions = Actions(*actionList)        
 
@@ -277,17 +284,19 @@ class TootForm (EditForm,BaseBot):
     
     
     def mediaIdAsList(self):
+        #if self.className() == "EmbedVideo":
+        #    return None
         image = self.getDefaultImage()
         mediaId = getattr(image,'mediaId',None)
         if mediaId != None:
            return [mediaId]
-        data , mimeType = image.mastodonImage()
+        data , mimeType, title = image.mastodonImage()
         
         try: 
-           mediaDict =   self.proxyForUser().media_post(media_file=data,
-                                          mime_type=mimeType,
-                                          description=self.context.title,
-                                          focus=None)
+           mediaDict =   self.proxyForUser().media_post(media_file = data,
+                                          mime_type = mimeType,
+                                          description = title,
+                                          focus = None)
            image.mastodonURL = mediaDict['url']
            image.mastodonId = mediaDict['id']           
            return [image.mastodonId]

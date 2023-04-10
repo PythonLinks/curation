@@ -19,7 +19,7 @@ from zopache.ttw.container import AdminContainer
 
 secondsInADay = 24*60*60
 
-class Base(object):    
+class Base(object):
     @property
     def size(self):
         return len(self.source)
@@ -45,6 +45,7 @@ class Base(object):
 
 @implementer (ICategory)     
 class Category(Page):
+    schemaName = "FeaturedSchema"    
     webClass = "Category"
     title = ""
     description = ""

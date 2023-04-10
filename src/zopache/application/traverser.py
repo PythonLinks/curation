@@ -12,6 +12,7 @@ from zopache.ttw.interfaces import ITemplate
 from zopache.ttw.interfaces import IWebClass
 from zopache.ttw.acquisition import webClassAcquire
 from zopache.python.interfaces import IDirectory
+from zopache.application.notfound import NotFound
 
 class NotFound(Exception):
     pass
@@ -67,12 +68,15 @@ class Traverser(object):
                   else:
                      publisher.newContext(item)                      
                      return item, None
-                 
-        view = self.view_lookup(request, context, name)
-        if view is not None:
-              return context, view
+        try:
+            
+           view = self.view_lookup(request, context, name)
+           if view is not None:
+               return context, view           
+        except ComponentLookupError as e:
+           view = self.view_lookup(request, context, "not-found")
+           return context, view
 
-        raise NotFound(self.context, name, request)
  
 
 

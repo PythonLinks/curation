@@ -47,6 +47,9 @@ class Tests(object):
     def isManager(self):
         return self.hasPermission('Manage')
 
+    def isCurator(self):
+        return self.hasPermission('Curate')    
+
     def isPython(self):
         return self.hasPermission('Python')    
     

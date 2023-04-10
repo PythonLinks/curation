@@ -22,6 +22,7 @@ class Politician (RedundantSocial, ImaginaryPage,
     hidden = False
     localOrNational = ""
     webClass = "Politician"
+    schemaName = "PoliticianSchema"
     clientClass = "category"
     def __init__(self):
         ImaginaryPage.__init__(self)

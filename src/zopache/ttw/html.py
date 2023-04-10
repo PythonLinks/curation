@@ -14,8 +14,6 @@ from zopache.ttw.interfaces import (ISource,
                                     IAceHTMLClass,
                                     IUntrustedHTML,
                                     IIndexHTML,
-                                    IAceCMSClass,
-                                    IAceIFrameClass,
                                     IAceHTMLPage)
 
 
@@ -152,15 +150,6 @@ class HTML(TrustedHTML,Leaf):
 @implementer(IAceHTMLClass)
 class AceHTML(TrustedHTML,Leaf):
     icon="ttwicons/HTML.svg"
-
-@implementer(IAceCMSClass)
-class AceCMSHTML(TrustedHTML,Leaf):
-    icon="ttwicons/HTML.svg"
-
-@implementer(IAceIFrameClass)
-class AceIFrameHTML(TrustedHTML,Leaf):
-    icon="ttwicons/HTML.svg"        
-
 
 @implementer(IAceHTMLPage)
 class HTMLPage(TrustedHTML,Leaf):

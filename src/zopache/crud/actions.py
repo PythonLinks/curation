@@ -49,6 +49,7 @@ class Add(Action, UniqueName, TransactionNote):
         if errors:
             form.submissionError = errors
             return FAILURE
+
         return self.callInner(obj,data,form)
     
     def baseURL(self):
@@ -117,7 +118,10 @@ class AddByName(Add):
 
 class AddByTitle (Add):
     def actuallyAdd(self,item,data):
-        newName = self.newName(data)
+        if hasattr(self.form,'newName'):
+            newName = self.form.newName(data)
+        else:    
+            newName = self.newName(data)        
         context = self.getContext(data)
         context[newName]=item
         item.__parent__ = context

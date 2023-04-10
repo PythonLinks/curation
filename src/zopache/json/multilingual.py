@@ -3,89 +3,108 @@ from zope.interface import implementer
 
 from dolmen.forms.base.errors import Error, Errors
 
+from zopache.core import Leaf
 from zopache.pages.page import PageVeryBase
-from zopache.pages.interfaces import IMultilingual
-
-
-from zopache.core.viewdecorators import *
-from zopache.json.editjsonschema import AddJson, EditJson
-from zopache.core.interfaces import ITreeSecurity
+from zopache.json.interfaces import IMultilingual,IMultilingualLeaf
 from zopache.core.ancestors import Ancestors
 
-@implementer(IMultilingual)
-class Multilingual(PageVeryBase,Ancestors):
-    webClass = "Multilingual"    
-    
+class Base(object):
+
+    def getLanguages(self,view):
+        if getattr(view,'languages', False):
+           return view.languages 
+        try:
+          header = view.request.headers["Accept-Language"]
+        except:
+          header = ['en']
+        #header is "en,fr;0.3,de;0.5,en-uk"  
+        languages = header.split(',')
+        languages = [language.split(';')[0][:2] for language in languages]
+        #Default Language
+        languages.append ('en')
+        view.languages = languages
+        return languages
+        
+    def getFieldFor(self,view,field):    
+       languages = self.getLanguages(view)
+       json = self.json
+       for lang in languages:
+           if (data:= json.get(lang,None)) != None:
+               if (text:= data.get(field,None)) != None:
+                   return text        
+       return None
+
     def getTitleFor(self,view):
-       if len(self.json) > 0: 
-          return self.json[0]["title"]
-       else:
-           return "Error: Please define at least one language."
-
-    def getTitleForDomain(self,view):
-       if len(self.json) > 0: 
-          return self.json[0]["title"]
-       else:
-           return "Error: Please define at least one language."       
+        if (text := self.getFieldFor(view,'title'))!=None:               
+            return text
+        else:
+           return "Error: No title, not even an blank title,  is available."
        
+    @property
+    def title(self):
+        json = self.json
+        if 'en' in json:
+          return json['en']['title']
+        else:
+          return "No English title available"
+
+    @property
+    def source(self):
+        json = self.json
+        if 'en' in json:
+          return json['en']['content']
+        else:
+          return "No English content available"              
+      
+    def getTitleForDomain(self,view):
+        return self.getTitleFor(view)
+
     def getDescriptionFor(self,view):
-       if len(self.json) > 0: 
-          return self.json[0]["description"]
-       else:
-           return "Error: Please define at least one language."
-
-    def getDescriptionForDomain(self,view):
-       if len(self.json) > 0: 
-          return self.json[0]["description"]
-       else:
-           return "Error: Please define at least one language."       
-
+        if (text := self.getFieldFor(view,'description'))!=None:               
+            return text
+        else:
+           return "Error: No description, not even a blank  description,  is available."
+    
     def getHtmlFor(self,view):
-       if len(self.json) > 0: 
-          return self.json[0]["content"]
-       else:
-           return "Error: Please define at least one language."              
+
+        if (text := self.getFieldFor(view,'content'))!=None:               
+            return text
+        else:
+           return "Error: No content is available."            
             
     def partialPostProcess(self, view=None):
-        for item in self.json:
-            item["description"]=item["description"].replace ('"' , "&ldquo;", 1)
-            item["description"]=item["description"].replace ('"' , "&rdquo;", 1)
-            item["description"]=item["description"].replace ('"' , "&ldquo;")
-            item["description"]=item["description"].replace ('\n' , " ")
-            item["description"]=item["description"].replace ('\r' , " ")           
-            item["title"]=item["title"].replace ('"' , "&ldquo;", 1)
-            item["title"]=item["title"].replace ('"' , "&rdquo;", 1)
-            item["title"]=item["title"].replace ('"' , "&ldquo;")
-            item["title"]=item["title"].replace ('\n' , " ")
-            item["title"]=item["title"].replace ('\r' , " ")                
+        pass
 
-@form_component
-@name ('ckedit')
-@context(IMultilingual)
-@implementer(ITreeSecurity)
-class EditMultilingual (EditJson):
-    title = 'Edit this Multilingual Page.'
-    subTitle = ''
-    schemaName = "MultilingualSchema"  
+@implementer(IMultilingualLeaf)
+class MultilingualLeaf(Base,Leaf):
+    def postAddProcess(self, view = None):
+        pass
 
-
-from zopache.pages.interfaces import IPageBase
-@view_component
-@name('addMultilingual')
-@target(IView)
-@context(IPageBase)
-class AddMultilingual(AddJson):
-    title = "Add a MultiLingual Page"
-    subTitle = "You can add as many language versions as you need."
-    factory = Multilingual
-    schemaName = "MultilingualSchema"
-
-    def newName(self,data):
-        newName =  self.requestJsonDict[0]['title']
-        return newName
-        
-    def dataModel(self):   
-        contextJsonDict =  self.template['newMultilingualJson'].getAsDict()
-        result = json.dumps(contextJsonDict)
-        return result
+@implementer(IMultilingual)
+class Multilingual(Base,PageVeryBase,Ancestors):
+    webClass = "Multilingual"    
     
+    @property
+    def description(self):
+        json = self.json
+        if 'en' in json:
+          return json['en']['description']
+        else:
+          return "No English Description available"
+      
+
+    def getDescriptionForDomain(self,view):
+        return self.getDescriptionFor(view)            
+            
+
+
+from zopache.zmi.interfaces import IURLSegment
+import crom
+@crom.adapter
+@crom.sources(IMultilingualLeaf)
+@crom.target(IURLSegment)
+class IMulilingualLeafAdaptor(object):
+    def __init__(self,context):
+        self.context=context
+    def getSegment(self):
+        return 'ckedit'        

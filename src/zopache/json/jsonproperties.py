@@ -34,6 +34,12 @@ class BasicProperties(object):
                  return item1 [arg2]
        return ""     
 
+    def getTitleForDomain(self,view):
+        return self.title
+    
+    def getDescriptionFor(self,view):
+        return self.description
+   
 #NOW THE SOCIAL MEDIA LINKS   
 class SocialProperties(BasicProperties):
     def getTikTokId(self):
