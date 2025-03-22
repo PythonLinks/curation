@@ -4,12 +4,12 @@ import feedparser
 
 from dolmen.forms.base.markers import FAILURE, SUCCESS
 
-from zopache.remote.irss import IRSSBase, IRSS
+from zopache.remote.irss import  IJustRSS
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
 from zopache.remote.rssdownload import fetchAll
-from zopache.pages.interfaces import ISiteRootPage, IPage
+from zopache.pages.interfaces import ISiteRootPage, IPageBase
 from zopache.crud.getimage import createImageInFrom
 from zopache.core.interfaces import ITreeSecurity
 from zopache.remote.rssarticle import IRSSArticle, RSSArticle
@@ -18,7 +18,7 @@ from cromlech.browser.exceptions import HTTPFound
 
 
 @form_component
-@context(IPage)
+@context(IPageBase)
 @crom.target(IView)
 @name("getrssxyz")
 #@permissions('Manage')
@@ -39,17 +39,22 @@ class GetRSS(Form):
             return self.time
         
     def update(self):
+        leaves = self.getSiteRoot().rssFeeds.values()        
+        self.updateCore(leaves)
+        
+    def updateCore(self,leaves):    
         feeds = []
-        leaves = self.context.rssLeaves()
+        print ("Leaves = ",(leaves))
         for item in leaves:
-               if IRSS.providedBy(item):
+               if IJustRSS.providedBy(item):
                   if item.rssApproved:   
                       feeds.append(item)
+        breakpoint()                      
         self.fetchArticles(feeds)
         root = self.getSiteRoot()
         root.lastRSSFetchTime = time.time() 
-        if hasattr(root,'lastFetchTime'):
-            del root.lastFetchTime
+        #if hasattr(root,'lastFetchTime'):
+        #    del root.lastFetchTime
             
         Form.update(self)
         #raise HTTPFound('/categories/newest')
@@ -64,6 +69,16 @@ class GetRSS(Form):
                  self.submissionErrors.append( "ERROR:" + str(item [1:]))
         self.status='RSS Feeds were downloaded.'
 
+@form_component
+@context(IPageBase)
+@crom.target(IView)
+@name("fetch")
+@permissions('Manage')
+@implementer(ITreeSecurity)
+class GetustJRSS(GetRSS):
+    def update(self):
+        leaves = [self.context]
+        self.updateCore(leaves)
 
  
 from cromlech.browser.interfaces import IPublicationRoot
@@ -86,7 +101,7 @@ class SiteRootGetImages(Form):
 
 
 @form_component
-@context(IRSS)
+@context(IJustRSS)
 @crom.target(IView)
 @name("getImages")
 @permissions('Manage')

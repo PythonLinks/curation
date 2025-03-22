@@ -29,13 +29,12 @@ class ICategoryBase(Interface):
         default = '',
     )
 
-    twitterIds = schema.TextLine(
-        title = 'Twitter Ids',
-        description = "Accounts to Notify",
-        required = False,
-        default = '',
-    )
-    
+    #twitterIds = schema.TextLine(
+    #    title = 'Twitter Ids',
+    #    description = "Accounts to Notify",
+    #    required = False,
+    #    default = '',
+    #)
     
     source= schema.Text(
         title = u'Content',

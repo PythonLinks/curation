@@ -101,15 +101,15 @@ class RSS(Link,UniqueName,RSSBase):
        #WHEN CREATING A NEW FEED ARTICLES GO AT THEIR PROPER TIME
        #PREVENTS BUNCHING THEM UP.
        new.setImportTime(new.publishedAt,view.getSiteRoot())
-       
+       new.__parent__ = self
+       new.rssFeed = self          
        newName = slugify (new.title)
        newName = self.uniqueBothName (self,newName)
        self[newName] = new
 
        #LocalList
        self.localArticles[theId] = new
-       new.__parent__ = self
-       new.rssFeed = self          
+
        new.postAddProcess(view = view ,article = article)
        return new
     
@@ -171,6 +171,13 @@ class RSS(Link,UniqueName,RSSBase):
 @implementer(IJustRSS)
 class JustRSS(RSS):
     interface = IJustRSS
+    
+    def postProcess(self,view = None):
+        return
+
+    def postAddProcess(self,view = None):
+        return
+    
     @property
     def title(self):
         return self.parent.title + " RSS Feed"

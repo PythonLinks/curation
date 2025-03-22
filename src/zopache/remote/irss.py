@@ -1,12 +1,8 @@
-from zope.interface import Interface
 from zope import schema
-from zopache.pages.interfaces import IPage, ILinkBase
+from zopache.pages.interfaces import IPageBase, ILinkBase
 from zopache.remote.interfaces import IVoteable
 
-class IRSSBase(Interface):
-    pass
-
-class IJustRSS(IRSSBase):
+class IJustRSS(IPageBase):
     rssURL=schema.URI(
         title = "Primary RSS URI",
         description ="""This is the source of new articles.  
@@ -22,7 +18,7 @@ class IJustRSS(IRSSBase):
         )
     
 
-class IRSS(IRSSBase):
+class IRSS(IJustRSS):
     title=schema.TextLine(
         title = "RSS Feed Name",
         description ="What is the web site called?",
@@ -55,13 +51,6 @@ class IRSS(IRSSBase):
         required = True,
     )
     
-    rssURL=schema.URI(
-        title = "Primary RSS URI",
-        description ="""This is the source of new articles.  
-              Please include "https://" or "http://".""",
-        required = True,
-        )
-
 
     rssApproved=schema.Bool(
         title = "Is this feed approved for downloading",

@@ -352,5 +352,10 @@ class IMap (IPage,IMapBase,IFollow):
 from zopache.pages.interfaces import ICategory
 from zopache.business.interfaces import IRegion
 class IRegionalCategory(IRegion,ICategory):
-    pass
+    tags = schema.TextLine(
+        title = 'Tags',
+        description = 'For this Cateogry.',
+        required = False,
+    )
+
 

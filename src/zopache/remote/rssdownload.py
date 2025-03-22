@@ -7,7 +7,7 @@ import logging
 from inspect import currentframe, getframeinfo
 
 from dolmen.forms.base.markers import FAILURE, SUCCESS
-from zopache.remote.irss import IRSSBase, IRSSArticle
+from zopache.remote.irss import IJustRSS, IRSSArticle
 
 #logging.basicConfig(
 #   filename='/app/data/urls',
@@ -18,7 +18,7 @@ async def fetch(session,node,view):
    startTime = time.time()    
    duration =  0
    className = view.className(node)
-   if className == "RSS":
+   if className in ["RSS","JustRSS"]:
       url = node.rssURL
    elif className == 'Article':
       if not node.title:
@@ -83,6 +83,7 @@ async def fetchCore(nodes,view,allowedTime):
                      ) as session:    
       for node in nodes:
          if view.className(node) not in {'RSS',
+                                         'JustRSS',
                                          'RSSArticle',
                                          'Article',
                                          'Toot'}:

@@ -236,7 +236,6 @@ class Category(Page):
 
 from zopache.pages.interfaces import (IGeographicalCategory,
                                       ILocationCategory,
-                                      IRegionCategory,
                                       IMapCategory)
 
 from zopache.pages.location import LocationContainer, MapBase

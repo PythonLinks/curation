@@ -31,7 +31,7 @@ lexicon = Lexicon(
 from zope.interface import Interface
 from zope.schema.interfaces import IField
 from zope.interface import implementer
-from BTrees.OOBTree import OOBTree, TreeSet
+from BTrees.OOBTree import OOBTree
 from BTrees.IOBTree import IOBTree
 
 from cromlech.browser.interfaces import IPublicationRoot
@@ -137,7 +137,7 @@ class Branch(SimpleBranch):
         return None    
     
     def reInit(self):
-        self.rssFeeds = TreeSet() 
+        self.rssFeeds = OOBTree() 
         self.valuesByToken=OOBTree()
         self.remoteURLs = OOBTree()
         self.pagesByTwitterId = OOBTree()
@@ -257,6 +257,7 @@ class Branch(SimpleBranch):
                   itemType=ICanonical,
                   ancestorNames = [],
                   indexingBranch = False):
+
         if not IPageBase.providedBy(item):
             return
 
@@ -288,8 +289,8 @@ class Branch(SimpleBranch):
         if item.__class__.__name__  in  ["Category","RegionalCategory"]:
            item.reInit()
 
-        elif item.__class__.__name__  == "RSS":
-           self.rssFeeds.add(item) 
+        elif item.__class__.__name__  in  ["RSS","JustRSS"]:
+           self.rssFeeds[item.name] = item 
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds += 1
            #self.categoryCatalog.index_doc(
@@ -370,8 +371,8 @@ class Branch(SimpleBranch):
            #del self.categoryIndex[item.creationTime] 
            #self.categoryCatalog.unindex_doc(creationTime)
        
-        elif item.__class__.__name__  == "RSS":
-           self.rssFeeds.remove(item)
+        elif item.__class__.__name__  in ["RSS","JustRSS"]:
+           del self.rssFeeds[item.name]
            for category in parentsWhichImplement(item,ICategory):
                category.childFeeds -= 1
            #self.categoryCatalog.unindex_doc(item.importTime)           

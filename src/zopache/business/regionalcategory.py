@@ -1,3 +1,4 @@
+from zope.interface import implementer
 
 from zopache.business.region import Region
 from zopache.pages.category import Category

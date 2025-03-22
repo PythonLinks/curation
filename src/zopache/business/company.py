@@ -61,7 +61,7 @@ class Organization  (
                      HasMembers,
                      LocationLeaf,
                      RedundantSocial):
-    
+    schemaName = "OrganizationSchema"    
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"
