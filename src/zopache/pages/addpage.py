@@ -187,7 +187,7 @@ from zopache.pages.interfaces import ICategory,IPageBase
 @target(IView)
 @context(IPageBase)
 @implementer(ITreeSecurity)
-class AddRSSCategory(AddAuthorizedPage):
+class AddCategory(AddAuthorizedPage):
      interface = ICategory
      title = "Add a Category"
      subTitle =""
@@ -212,18 +212,18 @@ class AddMapCategory(AddAuthorizedPage):
     factory = MapCategory  
 
 #REGION CATEGORY
-from zopache.pages.interfaces import IRegionCategory
-from zopache.pages.category import RegionCategory
+from zopache.business.interfaces import IRegionalCategory
+from zopache.business.regionalcategory import RegionalCategory
 @view_component
-@name('addRegionCategory')
+@name('addRegionalCategory')
 @target(IView)
 @context(IPageBase)    
 @implementer(ITreeSecurity)
 class AddRegionCategory(AddAuthorizedPage):
-    title = 'Add a Region Category'
+    title = 'Add a Regional Category'
     subTitle = 'Both a region and a category.  '
-    interface = IRegionCategory
-    factory = RegionCategory  
+    interface = IRegionalCategory
+    factory = RegionalCategory  
 
 #LOCATION CATEGORY
 from zopache.pages.interfaces import ILocationCategory

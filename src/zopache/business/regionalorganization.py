@@ -7,7 +7,8 @@ from zopache.business.interfaces import IRegionalOrganization
 class RegionalOrganization(Organization,RegionBase):
     webClass = 'SmallParty'
     zoom = 3.0
+    schemaName = "OrganizationSchema"    
     def __init__(self):
        self.mapPoints =  OOBTree()
        Organization.__init__(self)
-       Region.__init__(self)
+       RegionBase.__init__(self)

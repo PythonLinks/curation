@@ -48,6 +48,7 @@ class Company  (GeoBase,LocationContainer):
 class OnlineOrganization  (OnlineOrganizationProperties,Base,
                            HasMembers):   
     webClass = "Organization"
+    schemaName = "OrganizationSchema"
     clientClass = "Category"
     webApproved = True
     
@@ -60,7 +61,7 @@ class Organization  (
                      HasMembers,
                      LocationLeaf,
                      RedundantSocial):
-    
+    schemaName = "OrganizationSchema"    
     interface = IOrganization
     webClass = "Organization"
     clientClass = "Category"

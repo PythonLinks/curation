@@ -31,9 +31,3 @@ def getImage(self,imageURL, name = 'Logo'):
         except:
             pass
 
-async def asyncGetImage(self,imageURL, name = 'Logo'):
-        try:
-            response = await requests.get(imageURL)
-            createImageIn(self,response, name)
-        except:
-            pass 

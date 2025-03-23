@@ -1,20 +1,25 @@
 from hypatia.catalog import CatalogQuery
 import hypatia 
 from hypatia.query import Contains
+from itertools import islice
 from more_itertools import take
 
-def searchADictionary(view, aDict, defaultCategory = None):
-    if defaultCategory == None:
-        defaultCategory = view.context.name
+def searchCore(view, aDict,categoryName,limit):
+    context = view.context
+    root = view.getSiteRoot()
+    
+    if context.__class__.__name__ == 'RSS':
+       recommended = aDict.get("recommended","all")        
+    else:
+       recommended = aDict.get("recommended","recommended")        
     searchTerm = aDict.get("query","")
     type = aDict.get("type","both")
-    recommended = aDict.get("recommended","recommended")
-    category = aDict.get("category",defaultCategory)
 
-    root = view.getSiteRoot()
     contentCatalog = root.contentCatalog
     q = CatalogQuery (contentCatalog)
-    fields = [] 
+    fields = []
+    if newCategory := aDict.get("newCategory",False) :
+       fields.append(hypatia.query.NotAny(contentCatalog['ancestorNames'], newCategory))
     
     #NOW FOR RECOMMENDED
     if recommended == 'recommended':
@@ -22,13 +27,11 @@ def searchADictionary(view, aDict, defaultCategory = None):
     elif recommended == 'other':
         recommended = False
         
-    originalType = type    
     #NOW FOR THE TYPE 
     if type == "video":
        type = True
     elif type == 'article':
        type = False
-     
    
     #FIRST FOR THE SEARCH TERM
     if searchTerm != "":
@@ -40,8 +43,8 @@ def searchADictionary(view, aDict, defaultCategory = None):
     if type != 'both': 
            fields.append(hypatia.query.Eq(contentCatalog['isVideo'], (type,type)))
 
-    if category != 'categories':
-           fields.append(hypatia.query.Any(contentCatalog['ancestorNames'], [category]))
+    if categoryName != 'categories':
+           fields.append(hypatia.query.Any(contentCatalog['ancestorNames'], [categoryName]))
 
     #If NO SEARCH TERMS, RETURN ALL
     if len(fields) == 0:
@@ -51,28 +54,52 @@ def searchADictionary(view, aDict, defaultCategory = None):
     for item in fields[1:]:
         myQuery = myQuery & item
 
-    numdocs, docIds = q.query(
+    numDocs, docIds = q.query(
             myQuery,
-            limit = 1000,
+            limit = limit,
             sort_index='importTime'
             )
-    if searchTerm:
-       return numdocs, [], docIds
-   
-    category = root[category]
+    return numDocs, docIds
 
+def searchForRSS(view, aDict, categoryName,limit = 20):
+    numDocs, docIds  = searchCore (view,
+                                   aDict,
+                                   categoryName,
+                                   limit)
+    return  docIds
+
+def searchADictionary(view,
+                      aDict,
+                      defaultCategory = None,
+                      limit = 1000):
+
+    if defaultCategory == None:
+        categoryName = view.context.name
+    numDocs, docIds = searchCore (view,
+                                  aDict,
+                                  categoryName,
+                                  limit)
+    
+    searchTerm = aDict.get("query","")
+    if searchTerm:
+       return numDocs, [], docIds
+   
+    type = aDict.get("type","both")
     #Fixing a naming difference
-    if originalType == 'article':
-       originalType = 'articles'
-    if originalType == 'video':
-       originalType = 'videos'
+    if type == 'article':
+       type = 'articles'
+    if type == 'video':
+       type = 'videos'
+    
+    root = view.getSiteRoot()
+    category = root[categoryName]
     try:
-        content = category.json[originalType]
+        content = category.json[type]
     except:
-        return numdocs, [], docIds
+        return numDocs, [], docIds
    
     if len(content) == 0:
-       return numdocs, [], docIds            
+       return numDocs, [], docIds            
 
     featuredTimes= set()
     featuredItems = []
@@ -92,17 +119,30 @@ def searchADictionary(view, aDict, defaultCategory = None):
            
     #returning list(featuredTimes) incorrectly sorts them by importTime.
     featuredTimes =  [item.importTime for item in featuredItems]           
-    return numdocs, featuredTimes,  notFeaturedIds
-        
+    return numDocs, featuredTimes,  notFeaturedIds
+
 def valuesPlusRemainder(view,docIds, count = 6):
     index = view.getSiteRoot().contentByTime
     values = [index[int(x)] for x in take(count,docIds)]
-    
-    #NOTE DOCIDS IS NOW 6 SMALLER   
-    return values, docIds
+    return values, islice(docIds,count,None)
 
 def justValues(view,docIds):
     index = view.getSiteRoot().contentByTime
-    return  [index[x] for x in docIds]
+    return  [index[int(x)] for x in docIds]
+
+def getResults(view):
+    numDocs, featured, remainder = searchADictionary (view,view.request.form)
+        
+    numFeatured = len(featured)
+    featured= justValues (view,featured)
+    values, remainder = valuesPlusRemainder (
+        view,remainder, count = 6-numFeatured)
+    return numDocs, featured, values, remainder
+
+def lastItem(view):    
+    items = view.getSiteRoot().contentByTime
+    maxKey = items.maxKey()
+    lastItem = items[maxKey]
+
 
 

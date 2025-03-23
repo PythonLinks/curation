@@ -3,25 +3,21 @@ from zope import schema
 from zopache.pages.interfaces import  ILinkBase
 from z3c.schema.email  import RFC822MailAddress as Email
 from zope.schema.vocabulary import SimpleVocabulary,SimpleTerm
+from zopache.ttw.interfaces import IInternalPrincipal
+from zopache.crud.interfaces import ILeaf, IContainer,IDeletable
 
-from zopache.crud.interfaces import IContainer
+from zopache.ttw.interfaces import IInternalPrincipal
+class IAccount(IInternalPrincipal):
+    pass
 
-class IMastodonAccount(ILinkBase):    
-    
-    htmlSummary=schema.Bool(
-        title = "Is the Summary HTML?",
-        description ="""For those sources where the summary
-        contains html tags""",
-        required = False,
-        default = False,
-        )
+class IRemoteAccount(ILinkBase):    
     
     title=schema.TextLine(
         title = "Mastodon Account Name",
         description ="What is the account  called?",
         required = True,
         )
-
+    
     description= schema.Text(
         title = 'Description',
         description = """The Mastodon Account BIo.  """,
@@ -29,17 +25,17 @@ class IMastodonAccount(ILinkBase):
         default = '',
     )    
 
-    twitterId=schema.TextLine(
-        title = "Twitter Id",
-        description ="""For Historic Reasons Without the "@" sign""",
-        required = False,
-        )
-
     mastodonId=schema.TextLine(
         title = "Mastodon Id",
         description ="""@User@Domain""",
         required = False,
         )    
+
+    defaultCategory = schema.TextLine(
+        title = "Whereto place their recommended links",
+        description ="This is the /slug where you can see their recommendedlinks.",
+        required = False,
+        )
     
     rssApproved=schema.Bool(
         title = "Is this feed approved for downloading",
@@ -53,36 +49,33 @@ class IMastodonAccount(ILinkBase):
         description ="Or clear out the old ones to save space?",
         required = False,
         default = True,
-        )    
+    )    
+        
+    domainName = schema.DottedName(
+        title = 'Their Domain Name',
+        description = 'Articles in this domain are listed, not approved.',
+        required = False,
+        missing_value = "",
+    )
+    
+    wordsToAvoid = schema.Text(
+        title = 'Words To Avoid',
+        description = """These words will get the item rejected.  """,
+        required = False,
+        default = '',
+    )
+    
 
-class IAddMastodonAccount(IMastodonAccount):
+class IAddRemoteAccount(IRemoteAccount):
     logoURL=schema.URI(
         title = "Logo URL ",
         description ="An image is important",
         required = False,
         missing_value = '',
         )
-    
-class ITootedArticle(ILinkBase):
 
-    title = schema.TextLine(
-        title = 'Remote Article Name',
-        description = 'What is the title of this link?',
-        required = True,
-    )
 
-    mastodonId=schema.TextLine(
-        title = "Mastodon Id",
-        description ="""@User@Domain""",
-        required = False,
-        )    
-    
-    articleURL= schema.URI(
-        title = 'Article URL',
-        description = 'The url of the remote article',
-        required = False,
-    )
-    
+class IToot(ILeaf,IDeletable):
     description= schema.Text(
         title = u'Description',
         description = """A brief introduction of this page.  

@@ -128,5 +128,3 @@ class MastodonRegisterAction(BaseAction):
         form.postAddProcess()
         self.successPage()
 
-
-

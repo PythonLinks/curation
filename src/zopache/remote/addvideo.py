@@ -9,12 +9,15 @@ from zopache.remote.ivideo import IEmbedVideo , IPrincipalVideo
 from zopache.remote.video import EmbedVideo, PrincipalVideo
 from zopache.pages.interfaces import IPageBase
 from zopache.pages.page import Page
+from zopache.business.exists import Duplicate
+from zopache.pages.htmlvalidator import HTMLValidator
 
 class Base(AddAuthorizedPage):
      interface = IPrincipalVideo
      title = "Add a  Video"
      webClass='Video'
      count = 0
+     dataValidators = [Duplicate, HTMLValidator]     
      def factory(self):
           new = self.factoryClass()
           root = self.getSiteRoot()

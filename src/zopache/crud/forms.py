@@ -10,12 +10,11 @@ from dolmen.container import BTreeContainer, IBTreeContainer
 from dolmen.forms.base import Actions
 
 from .interfaces import IName, IContainer, ILeaf
-from .interfaces import IEditable, IDeletable
+
 from zopache.core.baseform import Form
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.crud import actions as formactions, i18n as _
 from zopache.crud import update as editactions
-from zopache.crud.delete import DeleteAction
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.core.uniquename import UniqueName
 from zopache.crud.actions import AddByName, AddByTitle
@@ -167,29 +166,31 @@ class DisplayForm(Form):
         displayed = self.getContentData().getContent()
         return getAllFields(displayed, '__parent__', '__name__', 'title')
 
+from zopache.pages.interfaces import IPageBase
+from zopache.crud.delete import (DeleteLeaf,
+                                 DeleteChildren,
+                                 DeleteBranch)
+
 @form_component
-@name (u'delete')
-@context(Interface)
-@title("Delete")
+@name ('delete')
+@context(IPageBase)
 @permissions('Manage')    
-@title("Delete")
 class DeleteForm(Form):
     """A confirmation for to delete an object.
     """
-    label =''
-    subTitle='Delete This Object'
-    description = """Are you really sure ? This will also delete all of its 
-children, and reindex the tree.<br><br> 
- If there are video objects (advanced version)
- in this branch of the tree, the links from the conference will not be 
-deleted, and there will be trouble.  """
-    actions = Actions(DeleteAction(_("Delete","Delete")),
-                      formactions.Cancel(_("Cancel","Cancel")))
-
-    @property
-    def label(self):
-        return ''
-        #label = u"Delete This Object?" 
-        #return translate(label)
-
+    subTitle='Delete Something'
+    description = """<p style = "clear:left;"><b>Are you really sure?</b><br><br>
+    Delete Node only works if it is empty.<br>
+    Delete Children, deletes the content, but leaves the logo or
+    banner image. <BR>
+    Delete Branch gets rid of everything.<br>
+    Deleted objects are first unindexed. <br><br>
+    <b>So what would you like to delete?</b></p>
+    
+    """
+    
+    actions = Actions(DeleteLeaf("Leaf","Leaf"),
+                      DeleteChildren("Children","Children"),
+                      DeleteBranch("Branch","Branch"),
+                      formactions.Cancel("Cancel","Cancel"))
 

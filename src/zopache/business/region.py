@@ -106,7 +106,7 @@ class RegionBase(MapBase):
 class Region(Page,RegionBase):
     def __init__(self):
        Page.__init__(self)
-       RegionBase.__init__()
+       RegionBase.__init__(self)
        self.mapPoints =  OOBTree()
 
     def hasFutureEvent(self):

@@ -4,15 +4,17 @@ from dolmen.container import IBTreeContainer
 
 #FROM http://codeaffectionate.blogspot.com/2013/05/tree-iterator-in-python.html
 from zope.interface import Interface
+from zopache.ttw.interfaces import IBTreeImage,IImageBase
+
 class AllChildObjects:
-    interface = IBTreeContainer
-    
+    interface = Interface
+        
     #downTo is only used by one sub class: AllObjectsDownTo
-    def __init__(self, node, interface = None, downTo = 'RSS'):
+    def __init__(self, node, newInterface = None, downTo = 'RSS'):
         self.stack = [node]
         self.downTo = downTo
-        if interface != None:
-           self.interface = interface
+        if newInterface:
+           self.interface = newInterface
     
     def __iter__(self):
         return self
@@ -20,12 +22,13 @@ class AllChildObjects:
     def __next__(self):
         if not self.stack: raise StopIteration
         node = self.stack.pop()
-        if self.interface.providedBy(node):
+        if IBTreeContainer.providedBy(node):
            for item in  node.values():
               if (self.interface.providedBy(item)):                   
                   self.stack.append(item)
         return node
 
+#This one iterates over more than just the children    
 class EveryObject(AllChildObjects):
     def __next__(self):
         if not self.stack: raise StopIteration
@@ -33,11 +36,10 @@ class EveryObject(AllChildObjects):
         if hasattr(node, '__dict__'):
             for item in node.__dict__.values():
                self.stack.append(item)
-        if self.interface.providedBy(node):
+        if IBTreeContainer.providedBy(node):
            for item in  node.values():
               if (self.interface.providedBy(item)):                   
                   self.stack.append(item)
-                  
         return node
 
 class AllWikiObjects(AllChildObjects):
@@ -75,12 +77,9 @@ class AllVideoObjects(AllChildObjects):
 
 class ProcessTree(object):
     def allChildrenOfClass(self,className):
-        result = []
         for item in AllChildObjects(self):
             if item.__class__.__name__ == className:
-               result.append(item)
-        return result
-    
+               yield item    
     def allBlogObjects(self):
         return AllBlogObjects(self)
 

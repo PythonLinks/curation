@@ -6,7 +6,7 @@ from zopache.core.interfaces import ITreeSecurity,IUserSecurity
 from zopache.core.viewdecorators import *
 from zopache.pages.interfaces import IPageBase, IPage
 from zopache.remote.rss import  RSS, JustRSS
-from zopache.remote.irss import IAddRSS,IRSS, IJustRSS, IRSSBase
+from zopache.remote.irss import IAddRSS,IRSS, IJustRSS 
 from zopache.remote.rssarticle import  RSSArticle
 from zopache.core.page import Page
 from zopache.ttw.mail import Notify
@@ -53,7 +53,9 @@ class AddJustRSS(AddByTitleForm,Notify):
      factory = JustRSS
      layoutName = "UserMenu"
      dataValidators = [Duplicate]
-     
+     def newName(self,data):
+         return self.context.name + "-rss-feed"
+    
      def newURL(self,baseURL):
         return baseURL + '/manage'   
 
@@ -79,7 +81,7 @@ class EditRSS(E):
 @form_component
 @name ('aceedit')
 
-@context(IRSSBase)
+@context(IJustRSS)
 @implementer(IUserSecurity)
 class EditRSS2(BaseEditForm):
     pass

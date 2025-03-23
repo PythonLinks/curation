@@ -19,7 +19,7 @@ from zopache.ttw.container import AdminContainer
 
 secondsInADay = 24*60*60
 
-class Base(object):    
+class Base(object):
     @property
     def size(self):
         return len(self.source)
@@ -45,6 +45,7 @@ class Base(object):
 
 @implementer (ICategory)     
 class Category(Page):
+    schemaName = "FeaturedSchema"    
     webClass = "Category"
     title = ""
     description = ""
@@ -235,7 +236,6 @@ class Category(Page):
 
 from zopache.pages.interfaces import (IGeographicalCategory,
                                       ILocationCategory,
-                                      IRegionCategory,
                                       IMapCategory)
 
 from zopache.pages.location import LocationContainer, MapBase
@@ -257,14 +257,6 @@ class MapCategory(Category,MapBase):
                 for grandChild in child.mapPoints():
                     yield grandChild
                 yield child    
-
-@implementer(IRegionCategory)
-class RegionCategory(Category,MapBase):
-    webClass = "RegionCategory"    
-    def mapPoints(self):
-        for child in self.values():
-            if ILocationCategory.providedBy(child):
-                yield child
 
 from zopache.zmi.interfaces import IURLSegment
 import crom
