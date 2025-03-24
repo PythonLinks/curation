@@ -26,14 +26,18 @@ class BaseAction(Action,BaseBot):
     
     def getAccessToken(self,form):
         self.form = form
+        breakpoint()
         try:
            code = form.request.form['code']
            if len(code) == 0:
                raise Exception("Empty access token returned by Masotdon")
            mastodon= form.oauthProxy()
-           userAccessToken = mastodon.log_in(code = code,
-                                             redirect_uri= form.redirectURL(),
-                                          scopes= form.SCOPES)
+           breakpoint()
+           userAccessToken = mastodon.log_in(
+                                    code = code,
+                                    redirect_uri = form.redirectURL(),
+                                    scopes= form.SCOPES)
+           breakpoint()
            return userAccessToken, SUCCESS
        
         except Exception as error:
@@ -65,9 +69,8 @@ class BaseAction(Action,BaseBot):
 class MastodonCallBackAction(BaseAction):
     def __call__(self, form):
         self.form = form
-        
+        breakpoint()
         userAccessToken, result = self.getAccessToken(form)
-
         if result == FAILURE:
             return FAILURE
 
