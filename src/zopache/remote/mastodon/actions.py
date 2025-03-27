@@ -15,87 +15,85 @@ from zopache.pages.interfaces import IPage
 from zopache.remote.mastodon.basebot import BaseBot
 ['write_media', 'write_statuses', 'read:accpimts']
 from zopache.core.breadcrumbs import Breadcrumbs
-
+from zopache.ttw.principalfolder import InternalPrincipal
 class BaseAction(Action,BaseBot):
     def successPage(self):
         form = self.form
         newURL = (Breadcrumbs.secureShortURL (form, form.getPrincipal())
-                  + '/done')
-        
+                  + '/done')        
         raise HTTPFound(newURL)
     
-    def getAccessToken(self,form):
-        self.form = form
-        breakpoint()
+    def getUserProxy(self):
+        form = self.form
+        code = form.request.form['code']
         try:
-           code = form.request.form['code']
            if len(code) == 0:
-               raise Exception("Empty access token returned by Masotdon")
-           mastodon= form.oauthProxy()
-           breakpoint()
-           userAccessToken = mastodon.log_in(
-                                    code = code,
-                                    redirect_uri = form.redirectURL(),
-                                    scopes= form.SCOPES)
-           breakpoint()
-           return userAccessToken, SUCCESS
-       
+               raise Exception("Empty access token returned by Masotdon")       
         except Exception as error:
             msg = "while trying to get the access code "
-            msg +=  "was a problem. "
+            msg +=  "an empty access token was returned. "
             msg += str(error)
             form.submissionError += msg
+            form.submissionErrors.append(msg)            
+            return '', FAILURE
+        
+        try:
+           mastodon = form.loginProxy(code)
+           return mastodon, SUCCESS
+        except Exception as error:
+            msg = "while trying to get the access code "
+            msg +=  "there was a problem. "
+            msg += str(error)
+            form.submissionError += msg
+            form.submissionErrors.append(msg)
             return '', FAILURE
 
-        
-    def getUserInfo(self,form, userAccessToken):
+    def getUserInfo(self, userProxy):
         try:
-            accountProxy = form.userProxy(userAccessToken)
-            userAccount = accountProxy.me()
-            return  userAccount, accountProxy, SUCCESS
+            userInfo = userProxy.me()
+            return  userInfo, SUCCESS
         except Exception as error:
             msg = "while trying to get the User Info"
             msg +=  "was a problem. "
             msg += str(error)
-            form.submissionError += msg
-           
-            return {},{}, FAILURE
+            self.form.submissionError += msg
+            print (msg)
+            return {},FAILURE
         
-    def updateAccount(self,accountProxy,userAccount,person):
-                person.accountProxy = accountProxy
-                person.userAccountDict = userAccount
-                userAccount["mastodonDomain"] = self.form.context.mastodonDomain
     
 class MastodonCallBackAction(BaseAction):
     def __call__(self, form):
         self.form = form
-        breakpoint()
-        userAccessToken, result = self.getAccessToken(form)
+        view = form
+        userProxy, result = self.getUserProxy()
         if result == FAILURE:
             return FAILURE
-
-        userAccount, accountProxy, result = self.getUserInfo(form,userAccessToken)
-
+        userAccount, result = self.getUserInfo(userProxy)
+                                        
         if result == FAILURE:
+            print ("\n\n")
+            print ("FIRST FAILURE")            
+            print ("\n\n")
             return FAILURE
-
-        people = form.getPrincipalFolder()
-        email = userAccount["username"] + '@' + form.context.mastodonDomain.lower()
-                
-        if email in people.idByEmail:
-            personId = people.idByEmail[email]
-            person = people [personId]
-            self.updateAccount(accountProxy,userAccount,person)
-            people.loginUser(person,form)
+        principalFolder = view.getPrincipalFolder()
+        handle = userAccount["username"]         
+        email = handle + '@' + form.context.mastodonDomainName()
+        if email in principalFolder.idByEmail:
+            personId = principalFolder.idByEmail[email]
+            person = principalFolder [personId]
+            person.updateAccount(userProxy,userAccount)
+            principalFolder.loginUser(person,form)
             self.successPage()
         else:
-            values = {}
-            values["form.field.userName"] = userAccount["username"] 
-            values["form.field.displayName"] = userAccount["display_name"]
-            values["form.field.mastodonDomain"] = form.context.mastodonDomain.lower()
-            values["form.field.accessToken"] = userAccessToken
-            values = form.urllibParseURLEncode(values)
-            url = form.registerURL() + values
+            person = principalFolder.newPerson(self.form)
+            self.form.new = person
+            person.email = email
+            person.handle = handle
+            person.updateAccount(userProxy,userAccount)
+            principalFolder [person.__name__] = person
+            principalFolder.loginUser(person,form)            
+            person.postAddProcess(view = form)
+            url = form.secureShortURL(person)
             raise HTTPFound(url)
 
 class MastodonRegisterAction(BaseAction):            
@@ -120,9 +118,7 @@ class MastodonRegisterAction(BaseAction):
         siteRoot = form.getSiteRoot()        
         newName = siteRoot.getUniqueNumberString()
         new.name = newName
-
-        self.updateAccount(accountProxy,userAccount,person)        
-        
+        person.updateAccount(accountProxy,userAccount)        
         people[newName]=new
         people.loginUser(person,form)
         new.name = newName

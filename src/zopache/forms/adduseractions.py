@@ -21,16 +21,8 @@ class RegisterAction(Action):
 
         #SUCCESS, SO GO CREATE THE PERSON
         context = form.context
-        newPerson= form.factory()
-        newPerson.__parent__ = context
+        newPerson= context.newPerson(form)
         form.new = newPerson
-        
-        #You have to set the name before setting the email.
-        #Because it updates the email->name index.        
-        root = getSiteRoot(context,form)
-        newName = root.getUniqueNumberString()
-        newPerson.__name__= newName
-        root.addItem(newPerson)
 
         #Subscribers only give en email address. 
         self.possiblyExtend(data)

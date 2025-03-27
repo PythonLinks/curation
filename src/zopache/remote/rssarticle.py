@@ -137,7 +137,6 @@ class RSSArticle(BaseArticle):
         try:
             result += self.rssFeed.title
         except:
-            breakpoint()
             pass
                   
         return result

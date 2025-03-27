@@ -4,6 +4,14 @@ from cromlech.security import unauthenticated_principal as anonymous
 
 class BaseBot (object):
     SCOPES = ['read:accounts','write:media','write:statuses']
+
+    def loginProxy(self,code):
+        context = self.context
+        mastodon  = self.createMastodon()
+        result = mastodon.log_in( code = code ,
+                               #scopes = self.SCOPES,
+                               redirect_uri= self.redirectURL())
+        return mastodon
     
     def proxyForUser(self):
         principal = self.request.principal
@@ -14,42 +22,39 @@ class BaseBot (object):
             self.oauth()
         return proxy
 
-    def userProxy(self,accessToken):
-        context = self.context
-        mastodonDomain = context.__NAME__
-        mastodon =   Mastodon(
-            access_token = accessToken.strip(),
-            scopes = form.SCOPES,
-            #debug_requests = True,
-            api_base_url = "https://" + mastodonDomain)
-        return mastodon 
-    
-    def baseURL(self):
-        result =self.getSecureLongURL(context = self.context)             
-        print ("\n\n"+result + "\n\n")
-        return result
+    #Not Needed until we start caching credentials in the ZODB.
+    #Right now they are stored on the file system. 
+    #def baseURL(self):
+    #    result =self.getSecureLongURL(context = self.context)             
+    #    return result
     
     def redirectURL(self):
-        result =   self.baseURL() + '/callback'
+        domain = self.getDomain()
+        result = ("https://"+
+                  domain +
+                  '/oauth/' +
+                  domain +
+                  '/'  +
+                  self.context.mastodonDomainName()+
+                  '/callback')
         return result
-    
-    def registerURL(self):
-        return self.baseURL() + '/register?'
-        
-    def oauthProxy(self):
-        context = self.context
-        return  Mastodon(
-            access_token = context.accessToken.strip(),
-            client_id = context.clientKey.strip(),
-            client_secret = context.clientSecret.strip(),
-            api_base_url = "https://" + context.__name__)
 
+    def createMastodon(self):
+        context = self.context
+        apiServer = context.mastodonDomainName()
+        fileName =  ("/app/data/oauth/" +
+                    self.getDomain() +
+                    "/" +
+                    apiServer + 
+                    ".secret")
+        mastodon = Mastodon(client_id = fileName,)
+        return mastodon
+    
     def oauth(self):
-        breakpoint()
-        proxy = self.oauthProxy()
-        url = proxy.auth_request_url(
-            redirect_uris= self.redirectURL(),
-            scopes=self.SCOPES,
+        mastodon= self.createMastodon()
+        url = mastodon.auth_request_url(
+            redirect_uris = self.redirectURL(),
+            #scopes=self.SCOPES,
             force_login=False)
         raise HTTPFound(url)
 

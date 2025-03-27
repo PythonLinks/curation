@@ -49,7 +49,6 @@ class GetRSS(Form):
                if IJustRSS.providedBy(item):
                   if item.rssApproved:   
                       feeds.append(item)
-        breakpoint()                      
         self.fetchArticles(feeds)
         root = self.getSiteRoot()
         root.lastRSSFetchTime = time.time() 

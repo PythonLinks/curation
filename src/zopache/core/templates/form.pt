@@ -12,6 +12,7 @@
 
   <div class="text-danger"
        tal:condition="view.errors" style = "color:red">
+       ${structure: view.submissionError}
     <ul tal:condition="view.formErrors"
         tal:repeat="error view.formErrors">
       <li> <span tal:replace="error.title" /> </li>

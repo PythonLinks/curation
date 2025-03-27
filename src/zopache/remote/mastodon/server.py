@@ -12,4 +12,6 @@ from zopache.core.transactionnote import TransactionNote
 from zopache.remote.mastodon.interfaces import IServer    
 @implementer(IServer)
 class Server(Container):
-    pass
+    webClass = "OauthServer"
+    def mastodonDomainName(self):
+        return self.__name__.lower()
