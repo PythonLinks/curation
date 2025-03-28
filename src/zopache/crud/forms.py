@@ -8,13 +8,14 @@ from zopache.core.viewdecorators import *
 
 from dolmen.container import BTreeContainer, IBTreeContainer
 from dolmen.forms.base import Actions
+from cromlech.security import Unauthorized
 
 from .interfaces import IName, IContainer, ILeaf
 
 from zopache.core.baseform import Form
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.crud import actions as formactions, i18n as _
-from zopache.crud import update as editactions
+from zopache.crud import update as editActions
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.core.uniquename import UniqueName
 from zopache.crud.actions import AddByName, AddByTitle
@@ -119,10 +120,9 @@ class BaseEditForm(Form,Breadcrumbs):
         self.actions = Actions()
 
     def addAuthorizedActions(self):
-
-        self.actions = Actions(editactions.Edit(_("Save","Save")),
-                    editactions.SaveAndView(_("SaveAndView","Save And View")),
-                    editactions.Cancel(_("Cancel","Cancel")))
+        self.actions = Actions(editActions.Edit(_("Save","Save")),
+                    editActions.SaveAndView(_("SaveAndView","Save And View")),
+                    editActions.Cancel(_("Cancel","Cancel")))
 
     @property
     def label(self):
@@ -132,7 +132,15 @@ class BaseEditForm(Form,Breadcrumbs):
     def fields(self):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
-    
+
+class EditGDPR(BaseEditForm):
+    def update(self):
+        if self.request.principal != self.context:
+            raise Unauthorized()            
+        self.actions = Actions(
+            editActions.Edit(_("Save","Save")),
+        )
+
 class EditDemoForm(BaseEditForm):
     pass
 

@@ -102,11 +102,11 @@ class IServer(IContainer):
         required = True,
     )
     
-    mastodonDomain = schema.DottedName(
-        title = u'Host Name',
-        description = u'Which Server is this?',
-        required = True,
-    )
+#    mastodonDomain = schema.DottedName(
+#        title = u'Host Name',
+#        description = u'Which Server is this?',
+#        required = True,
+#    )
     
     clientKey= schema.TextLine(
         title = "Mastodon Client Key",

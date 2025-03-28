@@ -55,8 +55,5 @@ class IPermissions(Interface):
 to process my personal information for the following  
 purposes:</p>"""
 
-class IRegister(IHandle, IEmail, IPassword,  IPermissions):
-    pass   
-
 class ISubscribe(IEmail, IPermissions):
     pass

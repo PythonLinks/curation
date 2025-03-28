@@ -203,9 +203,12 @@ class InternalPrincipal(FileBase,Page):
             except ValueError:
                 self._handle = oldHandle
                 raise
+    def updateAccount(self,accountProxy,userAccount):
+        self.accountProxy = accountProxy
+        self.userAccountDict = userAccount
 
     def postAddProcess (self, view =None):
-        view.notifyUserNewUser()
+        #view.notifyUserNewUser()
         view.notifyAdminsNewUser()
         self.editors = {self.__name__}
         # Before Googel Login, the first user would get permissions
@@ -242,6 +245,19 @@ class PrincipalFolder(Container):
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()
 
+
+    def newPerson(self,view):
+        newPerson = InternalPrincipal()
+        newPerson.__parent__ = self
+
+        #You have to set the name before setting the email.
+        #Because it updates the email->name index.        
+        root = view.getSiteRoot()
+        newName = root.getUniqueNumberString()
+        newPerson.__name__= newName
+        root.addItem(newPerson)
+        return newPerson
+        
     def getTitleForDomain(self,view):
         return self.title
     
