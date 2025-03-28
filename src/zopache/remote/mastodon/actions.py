@@ -16,12 +16,25 @@ from zopache.remote.mastodon.basebot import BaseBot
 ['write_media', 'write_statuses', 'read:accpimts']
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.ttw.principalfolder import InternalPrincipal
+
 class BaseAction(Action,BaseBot):
-    def successPage(self):
+    def nextPage(self):
+        if person.chatPermission:
+            self.goHome()
+        else:
+            self.goToGDPR()
+    
+    def goToGDPR(self):
         form = self.form
-        newURL = (Breadcrumbs.secureShortURL (form, form.getPrincipal())
-                  + '/done')        
+        newURL = (self.form.secureShortURL (form.getPrincipal())
+                  + '/gdpr')        
         raise HTTPFound(newURL)
+
+    def goHome(self):
+        form = self.form
+        breakpoint()
+        newURL = self.form.getSiteRoot().homePage
+        raise HTTPFound(newURL)    
     
     def getUserProxy(self):
         form = self.form
@@ -83,7 +96,7 @@ class MastodonCallBackAction(BaseAction):
             person = principalFolder [personId]
             person.updateAccount(userProxy,userAccount)
             principalFolder.loginUser(person,form)
-            self.successPage()
+            self.nextPage()
         else:
             person = principalFolder.newPerson(self.form)
             self.form.new = person
@@ -93,8 +106,7 @@ class MastodonCallBackAction(BaseAction):
             principalFolder [person.__name__] = person
             principalFolder.loginUser(person,form)            
             person.postAddProcess(view = form)
-            url = form.secureShortURL(person)
-            raise HTTPFound(url)
+            self.goToGDPR()            
 
 class MastodonRegisterAction(BaseAction):            
     def __call__(self,form):
