@@ -258,7 +258,7 @@ class ISocialMedia(Interface):
 
     youTubeChannelURL = schema.URI(
         title = u'YouTube Channel URL  (Optional)',
-        description = """Copy and paste the YouTube Chanel  URL. """,
+        description = """Copy and paste the YouTube Channel  URL. """,
         missing_value="",
         required = False,
     )    

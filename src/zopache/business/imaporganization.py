@@ -65,7 +65,7 @@ class IMapOrganizationBase (IPageBase):
                            'Unrecognized']),
         title="Ballot Status?",
 
-        description= "One of four.",
+        description= "One of six.",
         default = "On-Ballot",
         required = False,)
 #    addTo=TreeField(
