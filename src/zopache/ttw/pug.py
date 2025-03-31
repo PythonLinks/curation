@@ -16,7 +16,7 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.core.getroot import getProducts
 from zopache.core.viewdecorators import *
 from dolmen.container import IBTreeContainer,BTreeContainer
-from zopache.core import Leaf
+from zopache.core import Leaf, Container
 from zopache.ttw.acescripts import  AceScriptPug
 from .interfaces import ISourceContainer
 from .interfaces import IJavascript
@@ -28,9 +28,6 @@ from cromlech.webob.response import Response
 from .javascript import JavascriptBase
 from dolmen.view import View, make_view_response
 from .html import TrustedHTML
-
-class IPugBase(ISourceLeaf,IJavascript):
-    pass
 
 defaultPug = """
 html
@@ -52,7 +49,7 @@ Hello World
 
 """
 
-class IPug(IPugBase,ITemplate):    
+class IPugBase(ISourceLeaf,IJavascript):
     "Basic Pug Form"
 
     title = schema.TextLine(
@@ -129,11 +126,14 @@ class IPug(IPugBase,ITemplate):
         default = True,
     )    
 
+class IPug(ISourceLeaf, IPugBase):
+    pass
 
-
-from .javascript import JavascriptBase    
-@implementer(IPug)      
-class Pug(TrustedHTML,JavascriptBase,Leaf):
+class IPugContainer(ISourceContainer,IPugBase):    
+    pass
+    
+from .javascript import JavascriptBase              
+class PugBase(TrustedHTML,JavascriptBase):
     icon="ttwicons/Pug.svg"    
     source =defaultPug
     html = defaultHTML
@@ -143,7 +143,7 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
     showJavascript = False
     showIFrame = False
     showHTML = False
-    
+
     def postProcess(self,view=None):
         TrustedHTML.postProcess(self,view)
         JavascriptBase.postProcess(self,view = view)
@@ -159,8 +159,15 @@ class Pug(TrustedHTML,JavascriptBase,Leaf):
 
     def getSource(self):
         return self.source
+        
+@implementer(IPug)
+class Pug(PugBase,Leaf):
+    pass
 
-            
+@implementer(IPugContainer)
+class PugContainer(PugBase, Container):
+    pass
+               
 class BasePugForm(AceScriptPug):
     label=''
     def breadcrumbs(self):
@@ -177,7 +184,7 @@ class AddPug(AceScriptPug,AceAddForm):
     subTitle='Add a Pug Object'
     interface = Interface
     ignoreContent = True
-    factory=Pug
+    factory=PugContainer
     def update(self):
         self.template = self.getTemplates()['TranspilerTemplate']
         AceAddForm.update(self)
@@ -223,3 +230,16 @@ class PugJavascipt(Page):
         
     def render(self ):
         return self.context.javascript
+
+      
+import crom
+from zopache.zmi.interfaces import IURLSegment
+@crom.adapter
+@crom.sources(IPugContainer)
+@crom.target(IURLSegment)
+class IPugContainerAdaptor(object):
+    def __init__(self,context):
+        self.context=context   
+
+    def getSegment(self):
+        return 'manage'
