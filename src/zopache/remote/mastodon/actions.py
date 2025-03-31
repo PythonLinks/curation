@@ -19,7 +19,7 @@ from zopache.ttw.principalfolder import InternalPrincipal
 
 class BaseAction(Action,BaseBot):
     def nextPage(self):
-        if person.chatPermission:
+        if self.form.request.principal.chatPermission:
             self.goHome()
         else:
             self.goToGDPR()
@@ -32,7 +32,6 @@ class BaseAction(Action,BaseBot):
 
     def goHome(self):
         form = self.form
-        breakpoint()
         newURL = self.form.getSiteRoot().homePage
         raise HTTPFound(newURL)    
     

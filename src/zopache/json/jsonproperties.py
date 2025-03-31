@@ -63,7 +63,7 @@ class SocialProperties(BasicProperties):
     @property
     def instagramId(self):
         return self.getConnect("instagramId")
-    
+
     @property
     def phone(self):
         return self.getConnect("phone")
@@ -73,8 +73,8 @@ class SocialProperties(BasicProperties):
         return self.getConnect("email")        
 
     @property
-    def mastadonURL(self):
-        return self.getConnect("mastadonURL")
+    def mastodonURL(self):
+        return self.getConnect("mastodonURL")
     
     @property
     def youTubeChannelURL(self):

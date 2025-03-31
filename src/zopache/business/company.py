@@ -94,6 +94,7 @@ class MapOrganization(ImaginaryPage,
     tiktokId = ""
     interface = IMapOrganization
     webClass = 'SmallParty'
+    youTubeChannelURL = ""
     #LocationBase inherits from Page
     def __init__(self):
         Map.__init__(self)

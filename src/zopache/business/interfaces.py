@@ -261,7 +261,21 @@ class ISocialMedia(Interface):
         description = """Copy and paste the YouTube Channel  URL. """,
         missing_value="",
         required = False,
-    )    
+    )
+
+    mastodonId= schema.TextLine(
+        title = u'MastodonId (Optional)',
+        description = u'@YourName@YourServer.com.',
+        required = False,
+        default = '',
+    )
+    
+    mastodonURL = schema.URI(
+        title = u'Mastodon URL  (Optional)',
+        description = """Copy and paste the URL of your Mastodon account. """,
+        missing_value="",
+        required = False,
+    )        
 
     email= Email(
         title = u'Email Address (Optional)',
