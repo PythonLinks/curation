@@ -191,7 +191,7 @@ class AddPug(AceScriptPug,AceAddForm):
         
 #HERE WE HAVE THE ACE EDIT FORM               
 @form_component
-@context(IPug)
+@context(IPugBase)
 @target(IView)
 @name("aceedit")
 @implementer(ITreeSecurity)
@@ -205,7 +205,7 @@ class AceEditPug(BasePugForm,PugEditForm):
 #RENDER HTML
 @view_component
 @name('index')
-@context(IPug)
+@context(IPugBase)
 @title("View Pug  HTML")
 class PugIndexHTML(View,Breadcrumbs):
     count=0    
@@ -216,7 +216,7 @@ class PugIndexHTML(View,Breadcrumbs):
          self.zopacheTemplate=item
 
     def render(self):
-               return self.context(self)
+        return self.context(self)
 
 from .javascript import makeJavascriptResponse, JavascriptBase
 

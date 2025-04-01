@@ -88,8 +88,9 @@ class MastodonCallBackAction(BaseAction):
             print ("\n\n")
             return FAILURE
         principalFolder = view.getPrincipalFolder()
-        handle = userAccount["username"]         
-        email = handle + '@' + form.context.mastodonDomainName()
+        userName = userAccount["username"]         
+        email = userName + '@' + form.context.mastodonDomainName()
+        handle = "@" + email
         if email in principalFolder.idByEmail:
             personId = principalFolder.idByEmail[email]
             person = principalFolder [personId]

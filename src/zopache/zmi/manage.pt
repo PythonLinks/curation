@@ -32,9 +32,9 @@ table-hover table-condensed" summary="Content listing"
       <span tal:case = "False">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</span>
 </th>
       <th>Icon</th>
-      <th> Name->Manage </th>
-      <th> Title->Edit </th>
-      <th> Class->View </th>
+      <th> Click to Manage </th>
+      <th> Click to Edit </th>
+      <th> Click to View </th>
       <th> Size </th>
       <th> Age </th>
      </tr>

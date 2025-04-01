@@ -97,6 +97,16 @@ class Tests(object):
         return False
 
 
+    def hasRootPermission(self):
+        principal = self.request.principal
+        if principal.__class__  == UnauthenticatedPrincipal:
+            return False
+        principalName = principal.__name__
+        root = self.getZodbRoot()
+        if principalName in root.editors:
+            return True
+        return False         
+     
     
         
     

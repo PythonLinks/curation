@@ -60,7 +60,7 @@
   </div>
 </form>
 
- <div tal:condition="not view.allowAnonymous and not view.treeSecurity()">
+ <div tal:condition="False">
   <p> Since you do not have permission to edit this page, the buttons
   below will not do anything.  
   </p>

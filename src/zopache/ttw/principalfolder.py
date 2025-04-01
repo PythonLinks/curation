@@ -210,7 +210,7 @@ class InternalPrincipal(FileBase,Page):
     def postAddProcess (self, view =None):
         #view.notifyUserNewUser()
         view.notifyAdminsNewUser()
-        self.editors = {self.__name__}
+        #self.editors = {self.__name__}
         # Before Googel Login, the first user would get permissions
         #if len(self.__parent__)==1:
         #   self.permissions = ['AddContent','EditContent',
