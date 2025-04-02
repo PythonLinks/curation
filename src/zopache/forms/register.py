@@ -20,7 +20,7 @@ from zopache.crud.forms import EditForm
 @context(Interface)
 class Register(EditGDPR):
     dataValidators = [GDPRValidator]
-    layoutName = "UserMenu"
+    layoutName = "GDPRLayout"
     fields = Fields(IPermissions)
     title='GDPR Permissions'
     subTitle='Please edit your GDPR permissions.'
