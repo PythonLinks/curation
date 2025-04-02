@@ -5,7 +5,7 @@ from pydoc import locate
 from zopache.pages.interfaces import IImaginaryBTree
 from zopache.remote.ivideo import IVideo
 from zopache.ttw.interfaces import  ICanonical
-
+from zopache.remote.ivideo import IVideo
     
 class Tests(object):
     def isCanonical (self,view):
@@ -105,8 +105,13 @@ class Tests(object):
         root = self.getZodbRoot()
         if principalName in root.editors:
             return True
-        return False         
-     
+        return False
+    
+    def getResizeCommand(self):
+        if IVideo.providedBy(self.context):
+           return "resize()"
+        else:
+           return None
     
         
     
