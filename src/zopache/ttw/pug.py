@@ -145,6 +145,10 @@ class PugBase(TrustedHTML,JavascriptBase):
     showHTML = False
 
     def postProcess(self,view=None):
+        parent = self.__parent__
+        if (IPugContainer.providedBy(parent)):
+            parent.mergeChildren()
+            
         TrustedHTML.postProcess(self,view)
         JavascriptBase.postProcess(self,view = view)
 
@@ -164,9 +168,36 @@ class PugBase(TrustedHTML,JavascriptBase):
 class Pug(PugBase,Leaf):
     pass
 
+import re
+# r"" ignores python \ commands
+# \s*  Any white space characters
+# {}()$ are special characters, they get escaped
+# \w* any number of  [a-zA-Z0-9_].
+# The original string
+#| ${structure: pug['about'](view=view)}
+# [$]matches $  
+
+expression = r"([$]\{\s*structure:\s*pug\[\s*'(\w*)'\s*\]\s*\(\s*view\s*=\s*view\s*\)\s*\})"
+
 @implementer(IPugContainer)
 class PugContainer(PugBase, Container):
-    pass
+    """Has child PUG objects."""
+    
+    def getHTML(self):
+        return self.mergedHTML
+    
+    def postProcess(self,view=None):
+        self.mergeChildren()
+        PugBase.postProcess(self,view=view)
+            
+    def mergeChildren(self):
+        query = re.compile(expression)
+        html = self.html
+        result = query.findall(html)
+        for (string,arg) in result:
+            new = self[arg].html
+            html = html.replace(string,new,1)
+        self.mergedHTML = html
                
 class BasePugForm(AceScriptPug):
     label=''
@@ -207,7 +238,7 @@ class AceEditPug(BasePugForm,PugEditForm):
 @name('index')
 @context(IPugBase)
 @title("View Pug  HTML")
-class PugIndexHTML(View,Breadcrumbs):
+class PugIndex(View,Breadcrumbs):
     count=0    
     responseFactory = Response
     make_response = make_view_response
@@ -217,6 +248,13 @@ class PugIndexHTML(View,Breadcrumbs):
 
     def render(self):
         return self.context(self)
+    
+@view_component
+@name('template')
+@context(IPugBase)
+class ViewTemplate(PugIndex):
+    def render(self):
+            return self.context.getHTML()
 
 from .javascript import makeJavascriptResponse, JavascriptBase
 
