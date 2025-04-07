@@ -15,5 +15,5 @@ class NotFound(View):
     responseFactory = Response
     make_response = make_view_response    
     def update(self):
-           raise HTTPFound("/categories")
+           raise HTTPFound("/not-found")
 
