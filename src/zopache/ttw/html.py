@@ -1,5 +1,4 @@
 
-from zope.interface import implements
 from dolmen.container import IBTreeContainer, BTreeContainer
 from chameleon import PageTemplate
 from zopache.core import Leaf

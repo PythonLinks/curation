@@ -18,7 +18,7 @@ from zopache.application.interfaces import IRootContainer
 
 from zopache.core.page  import  Page
 
-from dolmen.breadcrumbs import BreadcrumbsRenderer
+
 from . import tal_template
 from cromlech.security import unauthenticated_principal as anonymous
     

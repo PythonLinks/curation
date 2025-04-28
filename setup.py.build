@@ -14,43 +14,15 @@ from os.path import join
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
 
-from Cython.Distutils import build_ext
-from Cython.Build import cythonize
-
-extensions =[
-    Extension("zopache.application/*",
-                           ["src/zopache/application/*.py"]),
-    Extension("zopache.application/browser/*",
-                           ["src/zopache/application/browser/*.py"]),    
-    Extension("zopache.business/*", ["src/zopache/business/*.py"]),
-    Extension("zopache.crud/*", ["src/zopache/crud/*.py"]),
-    Extension("zopache.pages/*", ["src/zopache/pages/*.py"]),
-    Extension("zopache.ttw/*", ["src/zopache/ttw/*.py"]),
-    Extension("zopache.teaching/*", ["src/zopache/teaching/*.py"]),
-    Extension("zopache.remote/*", ["src/zopache/remote/*.py"]),
-    
-    Extension("zopache.remote/mastodon/*",
-              ["src/zopache/remote/mastodon/*.py"]),
-    
-    Extension("zopache.remote/youtube/*",
-              ["src/zopache/remote/youtube/*.py"]),
-    
-    Extension("zopache.forms/*",
-                 ["src/zopache/forms/*.py"]),
-    #Extension("zopache.ttw/html", ["src/zopache/ttw/html.pyx"]),
-    Extension("zopache.zmi/*", ["src/zopache/zmi/*.py"]),
-    Extension("zopache.python/*", ["src/zopache/python/*.py"]),    
-    Extension("zopache.core/*", ["src/zopache/core/*.py"])
-                 ]
-class build_py(build_py_orig):
-    def build_packages(self):
-        pass
-                                                                                                                                                                                                                                                                      
+extensions = []
 name = 'zopache'
 version = '0.1'
 readme = open('README.md').read()
 history = open(join('docs', 'HISTORY.txt')).read()
 
+class build_py(build_py_orig):
+    def build_packages(self):
+        pass
 
 install_requires = [
     'biscuits',
@@ -70,7 +42,6 @@ install_requires = [
     'cromlech.webob',
     'cromlech.zodb',
     'dolmen.container',
-    'dolmen.breadcrumbs',
     'dolmen.forms.base',
     'dolmen.forms.ztk',
     'dolmen.message',
@@ -115,20 +86,8 @@ tests_require = [
 
 setup(
       name=name,
-      setup_requires=[
-                 'cython>=0.x',
-             ],
-
-      ext_modules=cythonize(
-                extensions,
-                build_dir='build/c-files',          
-                compiler_directives=dict(
-                    language_level = "3",
-                    always_allow_keywords=True)
-                ),
       cmdclass={
             'build_py' : build_py,
-            'build_ext':build_ext
         },
 
       version=version,
