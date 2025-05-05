@@ -42,16 +42,16 @@ class AddOrganization(AddJson):
         #result = json.dumps(contextJsonDict)
         #return result
 
-from zopache.business.regionalorganization import RegionalOrganization
+from zopache.json.jsonmaporganization import JSONMapOrganization
 
 @view_component
-@name('addRegionalOrganization')
+@name('addJSONMapOrganization')
 @target(IView)
 @context(IPageBase)
-class AddRegionalOrganization(AddOrganization):
-    title = "Add a Regional Organization"
+class AddJSONMapOrganization(AddOrganization):
+    title = "Add a JSON Map Organization"
     subTitle = ""
-    factory = RegionalOrganization
+    factory = JSONMapOrganization
     schemaName = "OrganizationSchema"
     
 class OnlineSchema(object):

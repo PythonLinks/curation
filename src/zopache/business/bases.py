@@ -1,5 +1,5 @@
 from zopache.business.company import MapOrganization
-from zopache.business.regionalorganization import RegionalOrganization
+from zopache.json.jsonmaporganization import JSONMapOrganization
 
 def bases(aClass,indent):
     for item in aClass.__bases__:
@@ -7,7 +7,7 @@ def bases(aClass,indent):
         bases(item,indent + 2)
 
 def test():        
-    print ('RegionalOrganization')        
+    print ('JSONMapOrganization')        
     bases(RegionalOrganization,2)
     print()
     print()

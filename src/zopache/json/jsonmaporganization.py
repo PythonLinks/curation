@@ -2,9 +2,9 @@ from BTrees.OOBTree import OOBTree
 from zope.interface import implementer
 from zopache.business.region import RegionBase
 from zopache.business.company import Organization
-from zopache.business.interfaces import IRegionalOrganization
+from zopache.business.interfaces import IJSONMapOrganization
 
-class RegionalOrganization(Organization,RegionBase):
+class JSONMapOrganization(Organization,RegionBase):
     webClass = 'SmallParty'
     zoom = 3.0
     schemaName = "OrganizationSchema"    

@@ -297,7 +297,7 @@ class IOrganization(IOrganizationBase,
                     ):
      pass
  
-class IRegionalOrganization(IOrganization,ILocationContainer):
+class IJSONMapOrganization(IOrganization,ILocationContainer):
     pass
 
 class IMeetup (IPage,IFollow):
