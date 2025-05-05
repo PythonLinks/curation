@@ -11,8 +11,7 @@
   <grok:grok package="dolmen.forms.base" />
   <grok:grok package="dolmen.forms.ztk" />
   <grok:grok package="dolmen.widget.file" />
-  <grok:grok package="cromlech.file" />
-  
+  <grok:grok package="cromlech.file" />  
   <grok:grok package="zopache.crud" />
   <grok:grok package="zopache.ttw" />
   <grok:grok package="zopache.zmi" />

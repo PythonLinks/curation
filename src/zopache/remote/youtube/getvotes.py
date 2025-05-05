@@ -5,8 +5,8 @@
 import time
 import datetime
 
-from apiclient.discovery import build
-from apiclient.errors import HttpError
+#from apiclient.discovery import build
+#from apiclient.errors import HttpError
 from zopache.remote.ivideo import IVideo
 from zopache.core.getroot import getPublicationRoot
 
@@ -17,9 +17,10 @@ YOUTUBE_API_VERSION = "v3"
 def getYouTubeObject(context):
     siteRoot= getPublicationRoot(context)
     DEVELOPER_KEY = siteRoot.youTubeKey
-    youTubeObject = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
-    return youTubeObject
-  
+#    youTubeObject = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
+    #return youTubeObject
+    raise Exception("You need to enable youtube build objects api.")
+
 def getVotes(id,youTubeObject):
   search_response = youTubeObject.videos().list(
     part='snippet,statistics',      

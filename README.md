@@ -1,8 +1,11 @@
 Setup.py.local was the version when I came back to this in fall 2022
 after almost a year away.
 
-Setup.py.build is what I am now trying out.
+Setup.py.build is what I am now using.
+It is a little behind setup.py
 
+When doing cythonizing, which I am no longer doing
+the following holds true. 
 BuildWheel, builds a wheel, so the .c and .cython files are not cluttering these directories.  Very nice.
 
 buldInPlace, builds the files in place, easier for develoment. 

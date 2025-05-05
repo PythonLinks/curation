@@ -3,8 +3,8 @@
 from slugify import slugify
 import transaction
 
-from apiclient.discovery import build
-from apiclient.errors import HttpError
+
+#from apiclient.errors import HttpError
 from .downloadvideolist import core
 from zopache.remote.youtube.parsechannel import parseChannel
 from zopache.remote.youtube.parseplaylist import parsePlayList
