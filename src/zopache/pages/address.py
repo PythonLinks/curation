@@ -6,8 +6,7 @@ from zope.schema import ValidationError
 class GeoCodingError(ValidationError):
         __doc__ ="""That address is invalid."""
 
-class Base(object):
-
+class Address (Text):
     def setLatLong(self):
         lat,lng = self.getLatLong (self.address)        
         self.setMarkerLatLng(lat,lng)
@@ -25,10 +24,8 @@ class Base(object):
         lat = float(result [u'lat'])
         lng = float(result [u'lng'])
         return lat, lng
-
-    
-class Address (Text,Base):
-     def _validate (self,data):
+            
+    def _validate (self,data):
          Text._validate(self,data)
          try:
              self.getLatLong(data)

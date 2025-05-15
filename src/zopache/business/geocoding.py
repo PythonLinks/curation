@@ -1,4 +1,4 @@
-from zopache.pages.address import Base
+from zopache.pages.address import Address
 from cromlech.security import Unauthorized
 from zopache.pages.location import LocationContainer
 
@@ -11,7 +11,7 @@ class GeoCodeForm(object):
             convert the address into a lattitude and longitude.  That   
             takes a few seconds. """
     
-class GeoCodeObject(Base):
+class GeoCodeObject(Address):
     address = ''
     
 #    def postProcess(self,view=None):
