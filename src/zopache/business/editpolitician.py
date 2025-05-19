@@ -6,7 +6,7 @@ from zopache.json.editjsonschema import AddJson, EditJson
 from zopache.business.politician import Politician    
 from zopache.business.interfaces import IPolitician
 from zopache.core.interfaces import ITreeSecurity
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPageBase
 
 class PoliticianBase(object):
 
@@ -95,7 +95,7 @@ class AceEditPolitician (EditPolitician):
 @view_component
 @name('addCandidate')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 class AddCandidate(AddPolitician):
 
     title = "Add a Candidate"
@@ -110,7 +110,7 @@ class AddCandidate(AddPolitician):
 @view_component
 @name('addElectedOfficial')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 class AddElectedOfficial(AddPolitician):
     title = "Add an Elected Official"
     def dataModel(self):   
@@ -122,7 +122,7 @@ class AddElectedOfficial(AddPolitician):
 @view_component
 @name('addPartyOfficer')
 @target(IView)
-@context(IPage)    
+@context(IPageBase)    
 class AddPartyOfficer(AddPolitician):
     title = "Add a Party Officer"
     def dataModel(self):   
