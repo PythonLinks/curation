@@ -16,7 +16,6 @@ from zopache.pages.interfaces import IPage,IPageBase
 from zopache.business.exists import Duplicate
 from zopache.business.geocoding import GeoCodeForm
 from zopache.core.interfaces import ITreeSecurity
-from zopache.business.driver import IAddDriver, Driver
 from zopache.business.map import City
 
 
@@ -81,19 +80,6 @@ class AddCity(AddAuthorizedPage, GeoCodeForm):
     def update(self):
         AddAuthorizedPage.update(self)
         GeoCodeForm.update(self)         
-
-@view_component
-@name('addDriver')
-@target(IView)
-@context(IPageBase)    
-class AddDriver(AddAnonymousPage,GeoCodeForm):
-    interface = IAddDriver
-    factory = Driver
-    title = "Offer to be a driver."
-
-    def update(self):
-        AddAnonymousPage.update(self)
-        GeocodeForm.update(self) 
 
         
 @view_component
