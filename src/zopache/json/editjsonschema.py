@@ -83,7 +83,8 @@ class Base(object):
         return self.dataModel()
     
 class AddJson (Base, AddAnonymousPage):
-    dataValidators = [JSONSchemaValidator, Duplicate,
+    dataValidators = [JSONSchemaValidator,
+                      Duplicate,
                       DuplicateURLValidator]
 
     def getSchemaName(self):

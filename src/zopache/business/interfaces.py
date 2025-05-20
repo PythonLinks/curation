@@ -1,6 +1,7 @@
 from zope import schema
 
 from zope.interface import Interface
+from zopache.ttw.interfaces import IIndexHTML
 from zopache.pages.interfaces import IMap as IMapBase
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
@@ -16,7 +17,7 @@ from z3c.schema.email import RFC822MailAddress as Email
 
 from zopache.pages.interfaces import IPage, IPageBase, ITime
 from zopache.business.ifollow import IFollow
-from zopache.pages.interfaces import IPageBase
+from zopache.pages.interfaces import ILayoutView
 from zopache.json.interfaces import IClass
 
 class IPolitician(IClass,IPageBase):
@@ -297,7 +298,7 @@ class IOrganization(IOrganizationBase,
                     ):
      pass
  
-class IJSONMapOrganization(IClass,ILocationContainer):
+class IJSONMapOrganization(IClass,ILayoutView,ILocationContainer,IPageBase):
     pass
 
 class IMeetup (IPage,IFollow):
