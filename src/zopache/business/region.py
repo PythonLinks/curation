@@ -101,13 +101,14 @@ class RegionBase(MapBase):
             result.append(item)
         return result
 
+    def hasFutureEvent(self):
+        return False
+
+    
 #I Think this is not needed    
 @implementer(IRegion)
 class Region(Page,RegionBase):
     def __init__(self):
        Page.__init__(self)
        RegionBase.__init__(self)
-       self.mapPoints =  OOBTree()
 
-    def hasFutureEvent(self):
-        return False

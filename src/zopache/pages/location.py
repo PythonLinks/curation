@@ -93,7 +93,10 @@ class MapBase(LocationContainer):
     webClass = 'OpenStreetMap'
     #clientClass = 'Category'
     icon="ttwicons/Map.svg"
-    
+
+    def __init__(self):
+       self.mapPoints =  OOBTree()
+        
     def filter(self,mapPoints,view):
         request = view.request
         if not hasattr(request,'form'):
@@ -129,8 +132,8 @@ class MapBase(LocationContainer):
 class SimpleMap(Page,MapBase):        
     webClass = "SimpleMap"
     def __init__(self):
-       Page.__init__(self) 
-       self.mapPoints =  OOBTree()
+       Page.__init__(self)
+       MapBase.__init__(self)
     
 @implementer(IPin)
 class Pin(LocationContainer):

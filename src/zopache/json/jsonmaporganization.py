@@ -12,7 +12,5 @@ class JSONMapOrganization(LocalOrganizationProperties,RegionBase):
     zoom = 3.0
     schemaName = "OrganizationSchema"    
     def __init__(self):
-       self.mapPoints =  OOBTree()
        RegionBase.__init__(self)
-       #LocationContainer.__init__(self)
-       #GeoCodeObject.__init__(self)
+
