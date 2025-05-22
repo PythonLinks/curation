@@ -97,12 +97,16 @@ class Publisher (DawnlightPublisher):
             view.publisher = publisher
             factory = IResponseFactory(view)
             response = factory()
+
             if  'image' in response.headers['content-type']:
                 response.headers['cache-control'] = "public, max-age=86400"
-            elif request.principal == anonymous:
-                response.headers['cache-control'] = "public, max-age=3600"
-            else:
+            elif request.principal != anonymous:
                 response.headers['cache-control'] = "no-store"
+            elif  'javascript' in response.headers['content-type']:
+                response.headers['cache-control'] = "public, max-age=86400"
+            elif  'json' in response.headers['content-type']:
+                response.headers['cache-control'] = "public, max-age=86400" 
+
             return response
 
         raise PublicationError('%r can not be rendered.' % context)                

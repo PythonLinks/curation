@@ -115,6 +115,17 @@ class Index(View):
     def render(self):
         return self.context.source
 
+@view_component
+@name('loadJSON')
+@context(IJSON)
+class Index(View):
+    responseFactory = Response
+    make_response = makeJsonResponse
+        
+    def render(self):
+        begin = "var " + self.context.__name__ + "= "
+        return begin + self.context.source    
+
 
 from zopache.business.imaporganization import IMapOrganization
 from zopache.business.getjson import getStateJson
