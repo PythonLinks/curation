@@ -98,14 +98,17 @@ class Publisher (DawnlightPublisher):
             factory = IResponseFactory(view)
             response = factory()
 
-            if  'image' in response.headers['content-type']:
-                response.headers['cache-control'] = "public, max-age=86400"
+            if  'image' in response.headers['content-type']: #A Month
+                response.headers['cache-control'] = "public, max-age=2592000"
             elif request.principal != anonymous:
                 response.headers['cache-control'] = "no-store"
             elif  'javascript' in response.headers['content-type']:
                 response.headers['cache-control'] = "public, max-age=86400"
             elif  'json' in response.headers['content-type']:
-                response.headers['cache-control'] = "public, max-age=86400" 
+                response.headers['cache-control'] = "public, max-age=86400"
+            else:
+                response.headers['cache-control'] = "public, max-age=3600"
+                
 
             return response
 
