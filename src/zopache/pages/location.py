@@ -140,4 +140,4 @@ class Pin(LocationContainer):
     showChildren = False
     remoteURL = ""
     def hasFutureEvent(self):
-        return False
+        return 0

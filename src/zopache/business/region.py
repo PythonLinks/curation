@@ -102,7 +102,7 @@ class RegionBase(MapBase):
         return result
 
     def hasFutureEvent(self):
-        return False
+        return 0
 
     
 #I Think this is not needed    
