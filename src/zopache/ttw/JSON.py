@@ -118,7 +118,7 @@ class Index(View):
 @view_component
 @name('loadJSON')
 @context(IJSON)
-class Index(View):
+class Load (View):
     responseFactory = Response
     make_response = makeJsonResponse
         
@@ -133,12 +133,23 @@ from zopache.business.getjson import getStateJson
 @view_component
 @name('geojson')
 @context(ILocationContainer)
-class GEOIndex(View):
+class loadGeoJSON(View):
     responseFactory = Response
     make_response = makeJsonResponse
         
     def render(self):
-        return getStateJson(self.context)
+        begin = "var geojson = "
+        return begin + getStateJson(self.context)
+
+#A second name for the json data used for creating an outline.
+@view_component
+@name('outline')
+@context(ILocationContainer)
+class Outline(loadGeoJSON):
+    def render(self):
+        begin = "var outline = "
+        return begin + getStateJson(self.context)    
+
     
 @view_component
 @name('index')

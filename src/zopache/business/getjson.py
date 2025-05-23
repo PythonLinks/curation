@@ -17,16 +17,13 @@ def loadSource():
         stateName = slugify (stateName)
         states[stateName] = item
 
-
 def getStateJson(state):    
    stateName = state.name
-   return getJson(stateName)
-
-def getJson(stateName):
    if inner == None:
        loadSource()
    outer = {"type":"FeatureCollection","features":[]}
-   outer['features'].append(states[stateName])
+   if stateName in states:
+      outer['features'].append(states[stateName])
    outer = json.dumps(outer)
    return outer
 
