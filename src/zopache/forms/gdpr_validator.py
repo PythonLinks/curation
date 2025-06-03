@@ -15,6 +15,7 @@ class GDPRValidator(object):
 
         if not chat:
            msg = "GDPR Permission is required."
+           identifier = "gdpr.permission.required"
            error = Error(msg,identifier)
            error.args = [msg]           
            errors.append(error)

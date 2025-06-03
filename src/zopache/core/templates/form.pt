@@ -36,11 +36,12 @@
     <div tal:attributes="class widget.required and 'form-group required' or 'form-group'"
 	 tal:repeat="widget view.bootstrap_widgets()">
       <span tal:content="structure view.before(widget)"></span>
-      
+      <nobr>
       <tal:widget  tal:condition= "view.isBool(widget)"  tal:content="structure widget.render()" />&nbsp;<label for="#"
              tal:attributes="for widget.htmlId()"
              tal:content="widget.title"
              tal:condition="widget.visible" />
+	     </nobr>
       <p tal:condition="widget.description and widget.visible"
 	 tal:content="widget.description"
 	 class="field-description" />

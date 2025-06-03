@@ -133,14 +133,6 @@ class BaseEditForm(Form,Breadcrumbs):
         edited = self.getContentData().getContent()
         return getAllFields(edited, '__parent__', '__name__')
 
-class EditGDPR(BaseEditForm):
-    def update(self):
-        if self.request.principal != self.context:
-            raise Unauthorized()            
-        self.actions = Actions(
-            editActions.Edit(_("Save","Save")),
-        )
-
 class EditDemoForm(BaseEditForm):
     pass
 

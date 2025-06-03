@@ -38,7 +38,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 from dolmen.container import BTreeContainer, OrderedBTreeContainer
 from dolmen.container import IBTreeContainer
 
-from zopache.pages.interfaces import IPage, IPageBase
+from zopache.pages.interfaces import IPage, IPageBase, ILocation
 from zopache.ttw.interfaces import ICanonical
 from zopache.ttw.interfaces import (IBranch,
                                     IWebClass,
@@ -319,17 +319,16 @@ class Branch(SimpleBranch):
             self.contentByTime[ int(item.importTime)] = item
             self.catalogContent(item,ancestorNames)            
                     
-        elif item.__class__.__name__ =='Politician':
-            if (hasattr(item, 'candidateInfo') or
+        elif ILocation.providedBy(item):
+            if item.__class__.__name__ =='Politician':
+               if not (hasattr(item, 'candidateInfo') or
                     hasattr(item, 'electedOfficial')):
-               for organization in (
+                    return
+            for organization in (
                        parentsWhichImplement(item,ILocationContainer)):
-                   organization.mapPoints[item.name] = item
-                   
-        elif IOrganization.providedBy(item):
-            if (item.__class__.__name__ != 'OnlineOrganization'):
-               for organization in (
-                       parentsWhichImplement(item,ILocationContainer)):
+                #This is a hack.  For some unknown reason
+                #IlocationContainer is providedBy PostalCodes. 
+                if organization.__class__.__name__ != "PostalCode":
                    organization.mapPoints[item.name] = item
                    
     def catalogContent(self,item,ancestorNames):
@@ -408,18 +407,18 @@ class Branch(SimpleBranch):
             del self.contentByTime[int(item.importTime)]
             self.unCatalogContent(item)
                         
-        elif item.__class__.__name__=='Politician':
-            if (hasattr(item, 'candidateInfo') or
-                    hasattr(item, 'electedOfficial')):
-               for organization in (
-                       parentsWhichImplement(item,ILocationContainer)):
-                   del organization.mapPoints[item.name]
-                   
         elif IOrganization.providedBy(item):
+            if item.__class__.__name__=='Politician':
+              if not (hasattr(item, 'candidateInfo') or
+                    hasattr(item, 'electedOfficial')):
+                 return
+             
             if (item.__class__.__name__ != 'OnlineOrganization'):
                for organization in (
                        parentsWhichImplement(item,ILocationContainer)):
-                   del organization.mapPoints[item.name]                                      
+                   # A Hack, described above. 
+                   if organization.__class__.__name__ != "PostalCode":                   
+                       del organization.mapPoints[item.name]                                      
     def checkName(self, name, object):
         """See zope.container.interfaces.INameChooser
         """

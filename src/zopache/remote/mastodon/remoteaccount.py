@@ -11,7 +11,7 @@ from zopache.remote.rssdownload import fetchAll
 from zopache.crud.getimage import getImage
 from zopache.remote.news.article import Article
 from zopache.core.transactionnote import TransactionNote
-
+from zopache.remote.mastodon.parseid import ParseMastodonId
 
 secondsInaDay = 3600 *24
 crawlBackSeconds = secondsInaDay * 5 # Days
@@ -21,9 +21,10 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(
     logging.FileHandler('/app/data/crawl', mode = "w"))
 
-
 @implementer (IRemoteAccount)
-class RemoteAccount(Source,TransactionNote):
+class RemoteAccount(Source,
+                    TransactionNote,
+                    ParseMastodonId):
     
     webClass = "RemoteAccount"
     htmlSummary = True
@@ -297,20 +298,6 @@ class RemoteAccount(Source,TransactionNote):
          self.minId = None 
          self.maxId = None
         
-    @property
-    def remoteURL(self):
-        blank,user, server = self.parts()
-        return 'https://' + server + '/@' + user
-
-    def parts(self):
-        id = self.mastodonId
-        if id[0]!='@':
-            id = '@' + id
-        return id.split('@')
-
-    def userName(self):
-        return "@" + self.parts()[1]
-    
     def postAddProcess(self,view = None):
         if self.logoURL:
             getImage(self,self.logoURL)

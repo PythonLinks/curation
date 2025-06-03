@@ -6,7 +6,7 @@ from zopache.pages.interfaces import IMap as IMapBase
 from dolmen.container import IBTreeContainer
 from cromlech.container.interfaces import IOrdered
 
-from zopache.pages.interfaces import IGeography
+from zopache.pages.interfaces import  ILocation
 from zopache.crud.interfaces import IContainer
 from zopache.ttw.interfaces import IUntrustedHTML, IBranch, ICanonical
 from zopache.core.interfaces import ICountable
@@ -20,7 +20,7 @@ from zopache.business.ifollow import IFollow
 from zopache.pages.interfaces import ILayoutView
 from zopache.json.interfaces import IClass
 
-class IPolitician(IClass,IPageBase):
+class IPolitician(IClass,IPageBase,ILocation):
     pass
 
 class ICity (ILocationContainer):
@@ -294,7 +294,8 @@ class IOnlineOrganization(IPageBase,IClass,IOrganizationBase,IFollow):
 class IOrganization(IOrganizationBase,
                     IClass,
                     IPageBase,
-                    IFollow        
+                    IFollow,
+                    ILocation
                     ):
      pass
  

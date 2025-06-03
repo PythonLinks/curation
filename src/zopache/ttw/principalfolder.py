@@ -47,25 +47,21 @@ class InternalPrincipal(FileBase,Page):
     _handle  = ''
     _email = ''
     _password = ''
-    title = "Your Profile"
-    talkURL =""
-    title = ""
-    source = ""
-    description = ""
-    permissions = ['Vote']
+    branchSize = 1    
     chatPermission = False
-    newsPermission = False
-    lastAuthenticationTime = 0
-    #pugPermission = False
-    #pyodidePermission = False
-    #helpPermission = False
-    #hirePermission = False
-    #recruitPermission = False
-    
     contentType = "text/plain"
-    webClass = 'Person'
-    branchSize = 1
+    description = ""
+    lastAuthenticationTime = 0
     lastNotificationTime = 0
+    newsPermission = False
+    permissions = ['Vote']
+    postalCode =""
+    source = ""
+    talkURL =""
+    title = "Your Profile"
+    voter = None
+    webClass = 'Person'
+
     
     def secureParent(self):
         raise SecurityError('''You are not allowed to access attribute "secureParent" on %r %r ''' % (self.name,self.__class__.__name__))
@@ -107,14 +103,6 @@ class InternalPrincipal(FileBase,Page):
     def postProcessCore(self,view=None):
         pass
     
-    def logout(self,session=None, view = None):
-        if session is None:
-            session = getSession()
-        if 'user' in session:
-            session.clear()
-            return True
-        return False
-
     def logout(self,session=None, view = None):
         if session is None:
             session = getSession()

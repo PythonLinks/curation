@@ -72,18 +72,15 @@ class IContent(ICanonical):
 
 class IJSONInclude(Interface):
     pass
-
-class IPageTop(Interface):
     
+
+class IPageBase(ILayoutView,ICanonical,IContent):
     title = schema.TextLine(
         title = u'Page Name',
         description = u'Describe this page.',
         required = True,
     )
-
-class IPageBase(ILayoutView,ICanonical,IContent):
-    pass
-    
+        
 class ILinkBase(IPageBase,IBTreeContainer):
     pass
 
@@ -143,11 +140,10 @@ class IActionNetwork(ILinkTop,
     )       
 
 
-class IPage(IPageTop,IPageBottom,IPageBase,
+class IPage(IPageBase,IPageBottom,
             IContent, IOrderedContainer,
             IJSONInclude, IUntrustedHTML,IAceHTML):
     pass
-
 
 class IProxyPage(IPage):
     pass

@@ -111,7 +111,9 @@ class Add(Action, UniqueName, TransactionNote):
         name =  data['__name__']        
         return self.uniqueContainerName(self.form.context,name)
 
-                     
+class AddAction(Add):
+    pass
+    
 class AddByName(Add):
     pass
 
@@ -176,7 +178,8 @@ class AddByTitleToTreeAndView(AddByTitle):
 class AddAndView(AddByName):
     def newURL(self,baseURL):
         return baseURL + '/index'        
-    
+
+        
 from zopache.business.interfaces import IOrganization
 from bs4 import BeautifulSoup
 class AddByCrawl(Add):

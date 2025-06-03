@@ -34,7 +34,7 @@ class MapOrLocation (PageBase):
     def getOneMarker(self):
                   lat,lng = self.getMarkerLatLng()
                   aClass = self.__class__.__name__[0]                  
-                  hasFutureEvent =  str(self.hasFutureEvent())
+                  hasFutureEvent =  self.hasFutureEvent()
                   result = [
                       self.__name__,
                       self.title,
@@ -72,6 +72,11 @@ class MapOrLocation (PageBase):
         return result
 
 
+#At least used by events. 
+@implementer (ILocation)
+class Location (MapOrLocation):
+    icon="ttwicons/Location.svg"
+    
 #At least used by events. 
 @implementer (ILocationLeaf)
 class LocationLeaf (MapOrLocation):

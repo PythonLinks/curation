@@ -17,16 +17,51 @@ from zopache.remote.mastodon.basebot import BaseBot
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.ttw.principalfolder import InternalPrincipal
 
-class BaseAction(Action,BaseBot):
-    def nextPage(self):
-        if self.form.request.principal.chatPermission:
-            self.goHome()
+class MastodonCallBackAction(Action,BaseBot):
+    def __call__(self, form):
+        self.form = form
+        view = form
+        userProxy, result = self.getUserProxy()
+        if result == FAILURE:
+            return FAILURE
+        userAccount, result = self.getUserInfo(userProxy)
+                                        
+        if result == FAILURE:
+            return FAILURE
+        
+        principalFolder = view.getPrincipalFolder()
+        userName = userAccount["username"]         
+        email = userName + '@' + form.context.mastodonDomainName()
+        handle = "@" + email
+        if email in principalFolder.idByEmail:
+            personId = principalFolder.idByEmail[email]
+            person = principalFolder [personId]
+            person.updateAccount(userProxy,userAccount)
+            principalFolder.loginUser(person,form)
+            self.nextPage()
         else:
+            person = principalFolder.newPerson(self.form)
+            self.form.new = person
+            person.email = email
+            person.handle = handle
+            person.updateAccount(userProxy,userAccount)
+            principalFolder [person.__name__] = person
+            principalFolder.loginUser(person,form)            
+            person.postAddProcess(view = form)
+            self.goToGDPR()            
+
+    def nextPage(self):
+       principal = self.form.request.principal
+       if ( principal.chatPermission and
+            principal.postalCode):
+            self.goHome()
+       else:
             self.goToGDPR()
     
     def goToGDPR(self):
         form = self.form
-        newURL = (self.form.secureShortURL (form.getPrincipal())
+        newURL = (self.form.getSecureLongURL (
+                   context = form.getPrincipal())
                   + '/gdpr')        
         raise HTTPFound(newURL)
 
@@ -73,69 +108,3 @@ class BaseAction(Action,BaseBot):
             return {},FAILURE
         
     
-class MastodonCallBackAction(BaseAction):
-    def __call__(self, form):
-        self.form = form
-        view = form
-        userProxy, result = self.getUserProxy()
-        if result == FAILURE:
-            return FAILURE
-        userAccount, result = self.getUserInfo(userProxy)
-                                        
-        if result == FAILURE:
-            print ("\n\n")
-            print ("FIRST FAILURE")            
-            print ("\n\n")
-            return FAILURE
-        principalFolder = view.getPrincipalFolder()
-        userName = userAccount["username"]         
-        email = userName + '@' + form.context.mastodonDomainName()
-        handle = "@" + email
-        if email in principalFolder.idByEmail:
-            personId = principalFolder.idByEmail[email]
-            person = principalFolder [personId]
-            person.updateAccount(userProxy,userAccount)
-            principalFolder.loginUser(person,form)
-            self.nextPage()
-        else:
-            person = principalFolder.newPerson(self.form)
-            self.form.new = person
-            person.email = email
-            person.handle = handle
-            person.updateAccount(userProxy,userAccount)
-            principalFolder [person.__name__] = person
-            principalFolder.loginUser(person,form)            
-            person.postAddProcess(view = form)
-            self.goToGDPR()            
-
-class MastodonRegisterAction(BaseAction):            
-    def __call__(self,form):
-        self.form = form
-
-        #First do the usual validation
-        data, errors = self.form.extractData()
-        if errors:
-            form.submissionError = errors
-            return FAILURE
-
-        #Now the custom stuff.
-        userAccessToken = data['accessToken']
-        userAccount, accountProxy, result = self.getUserInfo(form,userAccessToken)
-        if result == FAILURE:
-            return FAILURE
-
-        new = form.factory()
-        person = form.new=new
-        people = form.getPrincipalFolder()
-        siteRoot = form.getSiteRoot()        
-        newName = siteRoot.getUniqueNumberString()
-        new.name = newName
-        person.updateAccount(accountProxy,userAccount)        
-        people[newName]=new
-        people.loginUser(person,form)
-        new.name = newName
-        siteRoot.addItem(new)
-        #send("You are Registered")
-        form.postAddProcess()
-        self.successPage()
-

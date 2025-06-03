@@ -25,7 +25,7 @@ class EventBase(Page,HasMembers):
                return self.latitude, self.longitude           
         
     def hasFutureEvents(self):
-        return True
+        return 1
     
     def listFutureEvents(self):
         return [self]
