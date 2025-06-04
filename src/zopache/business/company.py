@@ -95,6 +95,8 @@ class MapOrganization(ImaginaryPage,
     interface = IMapOrganization
     webClass = 'SmallParty'
     youTubeChannelURL = ""
+    latitude = 0.0
+    longitude = 0.0
     #LocationBase inherits from Page
     def __init__(self):
         Map.__init__(self)

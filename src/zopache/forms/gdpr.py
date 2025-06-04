@@ -74,7 +74,7 @@ class GDPR(BaseEditForm):
            principal.voter = None
 
         # A new postalCode, create the voter        
-        elif postalCode and not voter:
+        elif postalCode and (voter == None):
             voter = Voter(principal)
             newName = root.getUniqueNumberString()
             voter.__parent__ = postalContainer
