@@ -40,7 +40,7 @@ class Base(Page, RedundantSocial):
 
     
 @implementer (ICompany)
-class Company  (GeoBase,LocationContainer):
+class Company  (LocationContainer):
     webClass = "Company"
     clientClass = "category"
 
@@ -57,7 +57,7 @@ from zopache.business.region import RegionBase
 @implementer (IOrganization)
 class Organization  (
                      LocalOrganizationProperties,
-                     GeoBase,
+                     
                      HasMembers,
                      LocationLeaf,
                      RedundantSocial):
