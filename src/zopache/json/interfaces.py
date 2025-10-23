@@ -10,6 +10,9 @@ from zopache.crud.interfaces import ILeaf
 class IMultilingual(IPageBase,IContent,IOrderedContainer):
     pass
 
+class IMarkdown(IPageBase,IContent,IOrderedContainer):
+    pass
+
 class IMultilingualLeaf(ILeaf):
     pass
 
