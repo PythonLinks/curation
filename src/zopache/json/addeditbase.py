@@ -33,5 +33,6 @@ class AddBase(AddJson):
 
     def newName(self,data):
         newName =  self.requestJsonDict['title']
+        newName = self.uniqueBothName(self.form.context, newName)        
         return newName
         

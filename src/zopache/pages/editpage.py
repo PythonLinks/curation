@@ -22,7 +22,7 @@ class AceEditPage(AceEditForm):
 #HERE IS THE CKEDIT FORM
 @form_component
 @context(IPage)
-@name('ckedit')
+@name('edit')
 class CkEditPage(CkEditForm):
     dataValidators = [HTMLValidator,DuplicateURLValidator]    
 

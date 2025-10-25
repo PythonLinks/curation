@@ -1,4 +1,5 @@
 import json
+import mistune
 from zope.interface import implementer
 
 from dolmen.forms.base.errors import Error, Errors
@@ -7,28 +8,35 @@ from zopache.core import Leaf
 from zopache.pages.page import PageVeryBase
 from zopache.json.interfaces import IMarkdown
 from zopache.core.ancestors import Ancestors
-from zopache.json.jsonproperties import JSONProperties
+from zopache.json.jsonproperties import BasicProperties
 
 @implementer(IMarkdown)
-class JSONMarkdown(JSONProperties, Base,PageVeryBase,Ancestors):
-    webClass = "Multilingual"    
+class JSONMarkdown(BasicProperties, PageVeryBase,Ancestors):
+    webClass = "JSONMarkdown"
+    schemaName = "JSONMarkdownSchema"    
     @property
     def title(self):
         json = self.json
-          return json['title']
+        return json['title']
 
     @property
     def source(self):
         json = self.json
-        json['en']['content']
+        return json['content']
     
     @property
     def description(self):
         json = self.json
         return json['description']
 
-    def postAddProcess(self, view = None):
-        pass
+    def postProcess(self, view = None):        
+        self._html = mistune.markdown(self.json["content"])
+
+    def postAddProcess(self, view = None):                
+        self.postProcess(view = view)
+        
+    def html(self):
+        return self._html
 
     def partialPostProcess(self, view=None):
         pass
@@ -58,10 +66,10 @@ class JSONMarkdown(JSONProperties, Base,PageVeryBase,Ancestors):
 from zopache.zmi.interfaces import IURLSegment
 import crom
 @crom.adapter
-@crom.sources(IMultilingualLeaf)
+@crom.sources(IMarkdown)
 @crom.target(IURLSegment)
 class IMarkdownAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'ckedit'        
+        return 'edit'        
