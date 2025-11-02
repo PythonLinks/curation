@@ -30,7 +30,7 @@ class AddMarkdown(AddJson):
     schemaName = "JSONMarkdownSchema"
 
     def newName(self,data):
-        newName = self.requestJsonDict['title']
+        newName = self.requestJsonDict['data']['title']
         newName = self.uniqueBothName(self.context, newName)        
         return newName
     

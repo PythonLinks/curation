@@ -10,28 +10,38 @@ from zopache.json.interfaces import IMarkdown
 from zopache.core.ancestors import Ancestors
 from zopache.json.jsonproperties import BasicProperties
 
+#This should have been IJSONMarkdown. Oh well. 
 @implementer(IMarkdown)
 class JSONMarkdown(BasicProperties, PageVeryBase,Ancestors):
     webClass = "JSONMarkdown"
     schemaName = "JSONMarkdownSchema"    
-    @property
-    def title(self):
-        json = self.json
-        return json['title']
 
+    def getTitle(self):
+        json = self.json
+        if 'title' in json:
+            return json['title']
+        return json['data']['title']
+    
+    def setTitle(self,title):
+        json = self.json
+        json['data']['title'] = title
+        self._p_changed = True
+    title = property(getTitle,setTitle)
+    
     @property
     def source(self):
         json = self.json
-        return json['content']
+        return json['data']['content']
     
     @property
     def description(self):
         json = self.json
-        return json['description']
+        return json['data']['description']
 
     def postProcess(self, view = None):        
-        self._html = mistune.markdown(self.json["content"])
-
+        self._html = mistune.markdown(self.source)
+        PageVeryBase.postProcess(self, view = view)
+        
     def postAddProcess(self, view = None):                
         self.postProcess(view = view)
         
@@ -72,4 +82,4 @@ class IMarkdownAdaptor(object):
     def __init__(self,context):
         self.context=context
     def getSegment(self):
-        return 'edit'        
+        return 'manage'        
