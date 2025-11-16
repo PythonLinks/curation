@@ -38,6 +38,13 @@ class JSONMarkdown(BasicProperties, PageVeryBase,Ancestors):
         json = self.json
         return json['data']['description']
 
+    @property
+    def youTube(self):
+        json = self.json
+        if 'youtube' in json:
+            return json['youtube']['embed']
+        return ""
+    
     def postProcess(self, view = None):        
         self._html = mistune.markdown(self.source)
         PageVeryBase.postProcess(self, view = view)

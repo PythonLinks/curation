@@ -197,7 +197,7 @@ class PageVeryBase(Used,AllObjects,OrderedBTreeContainer,UntrustedHTMLBase,Conta
 
     def wikiPageChildren(self):
         for item in self.values():
-            if IPage.providedBy(item):
+            if IPageBase.providedBy(item):
                 yield item                   
 
     def __delitem__(self,key):
