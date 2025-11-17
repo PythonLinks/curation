@@ -20,7 +20,7 @@ from . import tal_template
 from zopache.core.interfaces import ITreeSecurity
 
 from zopache.zmi.interfaces import IObjectRetitler
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import IPage, IPageBase
 
 from zopache.core.viewdecorators import *
 from zopache.zmi.interfaces import IURLSegment
@@ -82,7 +82,7 @@ class ManageBase(Form,Contents):
      """
     
     def isOrderedContainer(self):
-        return IPage.providedBy(self.context)
+        return IPageBase.providedBy(self.context)
     
     def getManageURL(self,item):
         try:

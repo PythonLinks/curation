@@ -24,7 +24,9 @@ from zopache.crud import update as editActions
 @name ('gdpr')
 @context(Interface)
 class GDPR(BaseEditForm):
-    dataValidators = [GDPRValidator,PostalValidator]
+    dataValidators = [GDPRValidator]
+#    The following is needed if we are mapping people. 
+#    dataValidators = [GDPRValidator,PostalValidator]    
     layoutName = "GDPRLayout"
     fields = Fields(IPermissions)
     title='GDPR Permissions'
@@ -36,13 +38,13 @@ class GDPR(BaseEditForm):
 
     def newURL(self,new):
         root = self.getSiteRoot()
-        postalCode = self.context.postalCode
-        if postalCode:
-            postalContainer = getPostalContainer(root,
-                                             postalCode)            
-            newURL = "/" + postalContainer.name
-        else:
-            newURL =   root.homePage
+ #       postalCode = self.context.postalCode
+ #       if postalCode:
+ #           postalContainer = getPostalContainer(root,
+ #                                            postalCode)            
+ #           newURL = "/" + postalContainer.name
+ #       else:
+        newURL =   root.homePage
         return newURL
 
     def addUnAuthorizedActions(self):

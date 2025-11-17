@@ -46,14 +46,14 @@ class IPermissions(Interface):
         required = True,
         default = False)
 
-    postalPermission = schema.Bool(
-        title = """To add a link to my Mastodon or Fediverse account from the page for my zip code.""",
-        required = False,
-        default = False)
+#    postalPermission = schema.Bool(
+#        title = """To add a link to my Mastodon or Fediverse account from the page for my zip code.""",
+#        required = False,
+#        default = False)
 
-    postalCode  = schema.TextLine(
-        title='Your US Zip Code', required=False,
-        default = "")    
+#    postalCode  = schema.TextLine(
+#        title='Your US Zip Code', required=False,
+#        default = "")    
 
     chatPermission.text = """ <p> I give permission 
 to process my personal information for the following  
