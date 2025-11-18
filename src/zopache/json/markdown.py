@@ -9,13 +9,14 @@ from zopache.pages.page import PageVeryBase
 from zopache.json.interfaces import IMarkdown
 from zopache.core.ancestors import Ancestors
 from zopache.json.jsonproperties import BasicProperties
+from zopache.remote.mastodon.tootable import Tootable
 
 #This should have been IJSONMarkdown. Oh well. 
 @implementer(IMarkdown)
-class JSONMarkdown(BasicProperties, PageVeryBase,Ancestors):
+class JSONMarkdown(BasicProperties, Tootable, PageVeryBase, Ancestors):
     webClass = "JSONMarkdown"
     schemaName = "JSONMarkdownSchema"    
-
+    
     def getTitle(self):
         json = self.json
         if 'title' in json:
@@ -32,7 +33,31 @@ class JSONMarkdown(BasicProperties, PageVeryBase,Ancestors):
     def source(self):
         json = self.json
         return json['data']['content']
-    
+
+    @property
+    def mentions(self):
+        json = self.json    
+        if toot := json.get('toot'):
+             if mentions := toot.get('mentions'):
+              return mentions
+        return ""
+
+    @property
+    def tags(self):
+        json = self.json
+        if toot := json.get('toot'):
+            if tags := toot.get('tags'):
+                return tags
+        return {}
+   
+    #@property
+    #def spoilerText(self):
+    #    json = self.json
+    #    if toot := json.get('toot'):
+    #        if spoilerText := toot.get('spoilerText'):
+    #            return spoilerText
+    #    return ""
+
     @property
     def description(self):
         json = self.json

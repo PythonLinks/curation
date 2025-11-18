@@ -43,7 +43,8 @@ class OnlyTootAndView(Toot):
          
 class Reset(Action):
     def __call__(self, form):
-        form.context._toot = ""
+        context = form.context
+        context._toot = context.defaultToot(view = form)
 
 class OnlyReset(Action):
     def __call__(self, form):
@@ -157,27 +158,25 @@ class TootForm (EditForm,BaseBot):
            if hasattr(rssFeed,'twitterId'):
               self.twitterId = twitterId = rssFeed.twitterId
               self.link = ("https://twitter.com/" + twitterId) if twitterId else ''
-
         self.canToot =  getattr (self.request.principal,'accountProxy',False)
         
         self.template = self.getTemplates()['toot']
+        #if self._toot == "":
+        #   context = form.context
+        #   context._toot = context.defaultToot(view = form)            
         self.updateLocalActions()
         EditForm.update(self)
     
     def nowToot(self):
          context = self.context
-         if context._toot == "":
-            self.submissionError = """You submitted an empty toot,
+         tootText = self.request.form["form.field.toot"]
+         if tootText== "":
+            self.submissionError += """You submitted an empty toot,
                                so nothing 
-                               was posted. <br><br> The toot was reset to 
-                               the defult toot."""
+                               was posted."""
             return ''
          mediaList = self.mediaIdAsList()
          spoilerText = context.spoilerText
-         if spoilerText == "":
-            del context.spoilerText
-            spoilerText = None
-           
          minDelay = 0.03 #(hours)
          delay = self.context.delay
          if delay == None:
@@ -191,7 +190,7 @@ class TootForm (EditForm,BaseBot):
                         if self.className(context)=='Toot'
                         else None)
          try:
-            tootDict = self.proxyForUser().status_post(self.context.toot,
+            tootDict = self.proxyForUser().status_post(tootText,
                                             in_reply_to_id=inReplyToId,
                                             spoiler_text = spoilerText,
                                             media_ids=mediaList,
@@ -217,7 +216,11 @@ class TootForm (EditForm,BaseBot):
             
             if tootDict.get('url',False):
                 target.tootURL = tootDict.url
-                   
+
+            breakpoint()
+            if self.treeSecurity():
+               self.context.getEmbed(self)
+               
             if tootDict.get('id',False):
                 target.tootId = tootDict['id']
 
@@ -265,7 +268,6 @@ class TootForm (EditForm,BaseBot):
     def addUnAuthorizedActions(self):
         actionList = [OnlyToot("Toot","toot"),
                       OnlyTootAndView("Toot And View","tootView"),
-                      Reset("Reset",'reset'),
                       Cancel("Cancel","Cancel")                      
                       ]
         actionList = tuple(actionList)                  

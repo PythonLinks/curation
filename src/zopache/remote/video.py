@@ -9,8 +9,9 @@ from zopache.remote.ivideo import (IBasicVideo,
 from zopache.remote.voteable import Voteable
 from zopache.remote.interfaces import IVoteable
 from zopache.remote.voteable import Voteable
+from zopache.remote.mastodon.tootable import Tootable
 
-class VideoBase(Voteable):
+class VideoBase(Voteable, Tootable):
     webClass='Video'
     startTime = ''
     publishedAt = 0
@@ -18,39 +19,20 @@ class VideoBase(Voteable):
     minutes = 0
     hours = 0
     tags = ''
-    _toot = ''
     importTime = 0
-    lastTootTime = 0
     publicationApproved = True
     
-    def lastTooted(self, view = None):
-        if self.lastTootTime == 0:
-           lastTooted = "My first toot of this video. "
-        elif view == None:
-           lastTooted = "ERROR CANNOT DISPLAY LAST TOOT TIME "           
-        else:
-            lastTooted = "Last Tooted " + view.ago(self.lastTootTime)
-        return lastTooted
+    def isVideo(self):
+        return True
+    
+    def setImportTime(self,importTime,root):
+        importTime = int(importTime)
+        while (True):
+           if not root.hasAnythingAt(importTime):
+                break;
+                importTime += 1
+        self.importTime = importTime
 
-    def timeFreeToot(self):
-         content = self._toot
-         content = content.splitlines()
-         
-         for i, line in enumerate(content):
-               if "Last tooted" in line:
-                     content[i] = "" 
-         
-         separator = '\n'
-         content = separator.join(content)        
-         self._toot = content
-         return content
-     
-    def getToot(self, view = None):
-        if self._toot:
-           return self._toot
-        else:
-            return self.defaultToot(view = view)
-              
     def defaultToot(self,view = None):
         result =  self.title +"\n\n" 
         result += self.description
@@ -69,18 +51,7 @@ class VideoBase(Voteable):
                " #videos "
                    )
         return result
-    
-    def isVideo(self):
-        return True
-    
-    def setImportTime(self,importTime,root):
-        importTime = int(importTime)
-        while (True):
-           if not root.hasAnythingAt(importTime):
-                break;
-                importTime += 1
-        self.importTime = importTime
-    
+
     def isLightingTalk(self):  
         if self.__class__.__name__ == 'LightningTalk':
            return True
@@ -92,7 +63,6 @@ class VideoBase(Voteable):
     #For Legacy compatibility. 
     def getVideoURL(self):
         return  "https://youtube.com/embed/" + self.videoId
-
     
     def getDefaultThumbNailURL(self):
         try:

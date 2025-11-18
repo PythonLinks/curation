@@ -5,26 +5,12 @@ from zopache.pages.interfaces import ICategory,IContent
 from zopache.crud.getimage import getImage
 
 class Used(object):
-    lastTootTime = 0
-    _toot = ""
-    
     def isVideo(self):
         return False
 
     def creationDateForHumans(self):
          return time.strftime("%Y-%m-%d",time.localtime(self.creationTime))
 
-    def getToot(self, view = None):
-        if self._toot != "":
-            return self._toot
-        else:
-            return self.defaultToot(view = view)
-
-    def setToot(self,value):
-        self._toot = value
-
-    toot = property (getToot, setToot)    
-    
     def className(self):
         return self.__class__.__name__
     
@@ -56,15 +42,6 @@ class Used(object):
 
         return self.title + " " + self.description + " " + self.parent.title
     
-    def defaultToot(self,view=None):
-        return( self.title +
-                "\n\n" + 
-                self.description +
-                "\n\n" +
-                self.parentalTags() +
-                "\n\n"          
-        )    
-
     def recalculateRootJSON(self):
          jsonRoot = self.getPublicationRoot()
          if jsonRoot:
