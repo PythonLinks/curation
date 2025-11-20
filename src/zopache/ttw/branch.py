@@ -273,10 +273,10 @@ class Branch(SimpleBranch):
         if getattr(item,'articleURL',None):
             self.addRemoteURL(item,item.articleURL)
             
-        if hasattr(item,'twitterId'):
-            twitterId = item.twitterId
-            if twitterId != "":
-                self.pagesByTwitterId[twitterId] = item
+        #if hasattr(item,'twitterId'):
+        #    twitterId = item.twitterId
+        #    if twitterId != "":
+        #        self.pagesByTwitterId[twitterId] = item
 
         if ancestorNames == []:
            if item.parent:
@@ -296,7 +296,13 @@ class Branch(SimpleBranch):
            #self.categoryCatalog.index_doc(
            #        self.recordCategory(item),
            #        item)               
-           
+
+        elif item.__class__.__name__  == "JSONMarkdown":
+            importTime = int(item.creationTime)
+            self.contentByTime[importTime] = item
+            proxy = MarkdownProxy(item)
+            self.contentCatalog.index_doc(importTime,proxy)
+            
         elif item.__class__.__name__  == "RSSArticle":
             importTime = int(item.importTime)
             self.addTootedArticle(item)
@@ -376,7 +382,13 @@ class Branch(SimpleBranch):
                category.childFeeds -= 1
            #self.categoryCatalog.unindex_doc(item.importTime)           
            #ERROR
-           
+
+        elif item.__class__.__name__  == "JSONMarkdpwm":
+            importTime = int(item.creationTime)
+            if importTime in self.contentByTime:
+               del self.contentByTime[importTime]
+            self.unCatalogContent(item)
+            
         elif item.__class__.__name__  == "RSSArticle":
             globalArticles = self.globalArticles
             importTime = int(item.importTime)             
@@ -506,7 +518,27 @@ class Proxy(object):
         if getattr(self.target,'toots',[]):
            result += 'Via: ' + self.target.getVia()
         return result
+
+class MarkdownProxy(object):
+    isArticle = False
+    isVideo = False
+    recommended = True
+    
+    def __init__(self,target):
+        self.target = target
+
+    @property
+    def importTime(self):
+        creationTime = self.target.creationTime
+        return - int(creationTime)        
         
+    @property            
+    def titlePlusDescription(self):
+        result = self.target.titlePlusDescription()
+        result += ""
+        result += self.target.source
+        return result
+
 @implementer(IPublicationRoot)       
 class Root (Branch):
    pass

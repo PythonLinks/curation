@@ -217,7 +217,6 @@ class TootForm (EditForm,BaseBot):
             if tootDict.get('url',False):
                 target.tootURL = tootDict.url
 
-            breakpoint()
             if self.treeSecurity():
                self.context.getEmbed(self)
                

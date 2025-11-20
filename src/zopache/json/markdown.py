@@ -35,6 +35,10 @@ class JSONMarkdown(BasicProperties, Tootable, PageVeryBase, Ancestors):
         return json['data']['content']
 
     @property
+    def importTime(self):
+        return self.creationTime
+    
+    @property
     def mentions(self):
         json = self.json    
         if toot := json.get('toot'):
