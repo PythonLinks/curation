@@ -15,5 +15,7 @@ class NotFound(View):
     responseFactory = Response
     make_response = make_view_response    
     def update(self):
-           raise HTTPFound("/not-found")
+           page = "/not-found?page=" + self.request.url 
+           raise HTTPFound(page)
+
 

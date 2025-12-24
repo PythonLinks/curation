@@ -139,6 +139,9 @@ class SimpleMap(Page,MapBase):
     def __init__(self):
        Page.__init__(self)
        MapBase.__init__(self)
+
+    def redundantRemoteURL(self):
+        return  ""
     
 @implementer(IPin)
 class Pin(LocationContainer):

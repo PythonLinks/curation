@@ -76,7 +76,7 @@ class AddPolitician (PoliticianBase,AddJson):
         return newName
     
 @form_component
-@name ('ckedit')
+@name ('edit')
 @context(IPolitician)
 @implementer(ITreeSecurity)
 class EditPolitician (PoliticianBase,EditJson):

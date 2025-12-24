@@ -33,8 +33,7 @@ class Politician (RedundantSocial, ImaginaryPage,
         LocationLeaf.postAddProcess(self,view = view)
         imageURL = view.requestJsonDict['introduction']['logoURL']
         getImage(self, imageURL)
-        
-    
+            
         
     #BECAUSE WE DO NOT USE THE JSON FOR POLITICIANS.     
     def recalculateRootJSON(self):
@@ -109,7 +108,11 @@ class Politician (RedundantSocial, ImaginaryPage,
         return self.getConnect("facebookPage")
     
     def getDonationsPageURL(self):
-        return self.getCandidateInfo("donationsPageURL")    
+        return self.getCandidateInfo("donationsPageURL")
+
+    @property
+    def candidateStatement(self):
+        return self.getCandidateInfo("candidateStatement")        
 
     def getRemoteURL(self):
         return self.getConnect("remoteURL")

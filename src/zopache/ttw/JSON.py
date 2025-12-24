@@ -139,16 +139,20 @@ class loadGeoJSON(View):
         
     def render(self):
         begin = "var geojson = "
-        return begin + getStateJson(self.context)
+        return begin + getStateJson(self.context.__name__)
 
 #A second name for the json data used for creating an outline.
+#On the left Unity Slate the contact page has the Califonia map outline.
 @view_component
 @name('outline')
 @context(ILocationContainer)
 class Outline(loadGeoJSON):
     def render(self):
         begin = "var outline = "
-        return begin + getStateJson(self.context)    
+        contextName = self.context.__name__
+        if (contextName == 'contact'):
+            contextName = "california"
+        return begin + getStateJson(contextName)
 
     
 @view_component

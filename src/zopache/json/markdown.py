@@ -14,7 +14,8 @@ from zopache.remote.mastodon.tootable import Tootable
 #This should have been IJSONMarkdown. Oh well. 
 @implementer(IMarkdown)
 class JSONMarkdown(BasicProperties, Tootable, PageVeryBase, Ancestors):
-    webClass = "JSONMarkdown"
+    _html      = ""
+    webClass   = "JSONMarkdown"
     schemaName = "JSONMarkdownSchema"    
     
     def getTitle(self):

@@ -69,12 +69,10 @@ class ZMIAdapter(object):
           className =  context.__class__.__name__
           if className in edits:
               return "/" + edits [className]
-          if className == "JSONMarkdown":
-              return "/edit"
           if IPageBase.providedBy(context):
-            return "/ckedit"
+              return "/edit"
           if IAceHTML.providedBy(self.context):
-            return "/aceedit"
+              return "/aceedit"
           if "Folder" in className:
               return "/search"
           return "/aceedit"

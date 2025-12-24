@@ -17,8 +17,7 @@ def loadSource():
         stateName = slugify (stateName)
         states[stateName] = item
 
-def getStateJson(state):    
-   stateName = state.name
+def getStateJson(stateName):    
    if inner == None:
        loadSource()
    outer = {"type":"FeatureCollection","features":[]}

@@ -39,6 +39,6 @@ class EditMailHost(EditForm):
 @context(IMailHost)
 @name("index")
 @implementer(ITreeSecurity)
-class EditMailHost(EditForm):
+class ViewMailHost(EditForm):
     def render(self):
         return "This is a Mail Host object."
