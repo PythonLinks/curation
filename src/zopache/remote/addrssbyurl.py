@@ -64,6 +64,4 @@ class AddRssByURLForm(AddByURLForm):
             connect = {}
             SocialMediaExtractor().addSocialMedia(
                               connect,remoteResponse)
-            if 'twitterId' in connect:
-                response['form.field.twitterId'] = connect ['twitterId']
         return errors, response

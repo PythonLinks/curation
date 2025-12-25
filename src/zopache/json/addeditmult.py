@@ -50,6 +50,7 @@ class AddMultilingual(AddJson):
 
     def newName(self,data):
         newName =  self.requestJsonDict['en']['title']
+        newName = self.uniqueBothName(self.context, newName)
         return newName
         
     def dataModel(self):   

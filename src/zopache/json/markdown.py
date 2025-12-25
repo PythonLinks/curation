@@ -10,6 +10,7 @@ from zopache.json.interfaces import IMarkdown
 from zopache.core.ancestors import Ancestors
 from zopache.json.jsonproperties import BasicProperties
 from zopache.remote.mastodon.tootable import Tootable
+from zopache.crud.getimage import getImage
 
 #This should have been IJSONMarkdown. Oh well. 
 @implementer(IMarkdown)
@@ -81,6 +82,9 @@ class JSONMarkdown(BasicProperties, Tootable, PageVeryBase, Ancestors):
         
     def postAddProcess(self, view = None):                
         self.postProcess(view = view)
+        imageURL = view.requestJsonDict['data']['logoURL']
+        if imageURL:
+            getImage(self, imageURL)
         
     def html(self):
         return self._html

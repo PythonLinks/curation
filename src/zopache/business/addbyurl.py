@@ -1,3 +1,14 @@
+# Enter a URL, this fetches the data and populates a form.
+# If you have the old style forms (without JSON), it is quite easy
+# to understand
+#
+# If the class is using the new style JSON forms it is a bit trickier
+# to understand.  getMyDict create the right dictionary structure
+# Often it is a tree. And save data copies the data into that dict.
+# Maybe it could be one subroutine
+# And of course every class has some text for the form headers. 
+
+
 import json
 import requests
 from webpreview import web_preview
@@ -15,7 +26,7 @@ from zopache.crud.socialmedia import SocialMediaExtractor
 from zopache.remote.rss import RSS
 from zopache.business.company import Organization
 from zopache.pages.page import Link
-from zopache.pages.interfaces import IPage
+from zopache.pages.interfaces import  IPageBase
 
 class ProcessURL(object):
     def fetchURL(self,remoteURL,errors):
@@ -34,7 +45,7 @@ class ProcessURL(object):
 @view_component
 @name('addByURL')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 @implementer(ITreeSecurity)
 class AddLinkByURL(AddByURLForm, ProcessURL):
     title = "Add a Link By URL"
@@ -80,9 +91,9 @@ class ProcessJSON(AddByURLForm,SocialMediaExtractor, ProcessURL):
         errors,myDict = self.processPage(response,errors,remoteURL,myDict)
         if errors:
            return errors, {}
-       
-        connect = myDict["connect"]
-        self.addSocialMedia(connect,response)
+        if 'connect' in myDict:
+           connect = myDict["connect"]
+           self.addSocialMedia(connect,response)
         response = json.dumps(myDict)
         return errors, {'json': response}
 
@@ -100,7 +111,7 @@ class ProcessJSON(AddByURLForm,SocialMediaExtractor, ProcessURL):
 @view_component
 @name('addOrganizationByURL')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class AddOrganizationByURL(ProcessJSON):
     allowAnonymous = True
     title = "Add an Organization By URL"
@@ -108,9 +119,9 @@ class AddOrganizationByURL(ProcessJSON):
 
     def getMyDict(self):
         return {"introduction": {},
-                    "content":[{}],
-                    "connect": {},
-                    "organization":{}
+                "content":[{}],
+                "connect": {},
+                "organization":{}
         }
     
     def saveData(self,remoteURL, title,description,image,myDict):           
@@ -125,7 +136,7 @@ class AddOrganizationByURL(ProcessJSON):
 @view_component
 @name('addOnlineOrganizationByURL')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class AddOnlineOrganizationByURL(AddOrganizationByURL):
     allowAnonymous = True
     title = "Add an Online Organization By URL"
@@ -136,7 +147,7 @@ class AddOnlineOrganizationByURL(AddOrganizationByURL):
 @view_component
 @name('addCandidateByURL')
 @target(IView)
-@context(IPage)
+@context(IPageBase)
 class AddCandidateByURL(ProcessJSON ):
     allowAnonymous = True
     title = "Add a Candidate By URL "
@@ -145,10 +156,10 @@ class AddCandidateByURL(ProcessJSON ):
 
     def getMyDict(self):
         return {"introduction": {}, 
-                    "content":{"english":{}},
-                    "connect": {},
-                    "organization":{},
-                    "candidateInfo":{}
+                "content":{"english":{}},
+                "connect": {},
+                "organization":{},
+                "candidateInfo":{}
         }
     
     def saveData(self,remoteURL, title,description,image,myDict):
@@ -163,4 +174,39 @@ class AddCandidateByURL(ProcessJSON ):
             
         if image:
             myDict ['introduction']['logoURL'] = image
+        breakpoint()    
+        return myDict
+
+
+# NOW ADD A MARKDOWN PAGE BY URL
+@view_component
+@name('addPageByURL')
+@target(IView)
+@context(IPageBase)
+class AddMarkdownByURL(ProcessJSON ):
+    allowAnonymous = True
+    title = "Add a Markdown Page  By URL "
+    subTitle = "Just submit the URL for the page you wish to add. "
+    addSlug = 'addJSONMarkdown'        
+
+    def getMyDict(self):
+        return {"data": {}, 
+                "toots":[],
+                "content":{},                
+                "youtube":{}
+        }
+    
+    def saveData(self,remoteURL, title,description,image,myDict):
+
+        myDict ['data']['remoteURL'] = remoteURL
+
+        if title:
+            myDict ['data']['title']= title
+        
+        if description:
+            myDict['data']['description']= description
+            
+        if image:
+            myDict ['data']['logoURL'] = image
+            
         return myDict

@@ -1,5 +1,3 @@
-from slugify import slugify
-
 from zopache.core.viewdecorators import *
 from zopache.json.editjsonschema import AddJson, EditJson
 from zopache.core.interfaces import ITreeSecurity
@@ -36,7 +34,7 @@ class AddOrganization(AddJson):
     
     def newName(self,data):
         newName =  self.requestJsonDict["content"][0]['title']
-        newName = slugify(newName)
+        newName = self.uniqueBothName(self.context, newName)
         return newName
         
     def dataModel(self):

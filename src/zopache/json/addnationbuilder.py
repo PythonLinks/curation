@@ -30,7 +30,8 @@ class AddToNationBuilder(AddBase):
     schemaName = "NBPageSchema"
 
     def newName(self,data):
-        newName =  self.requestJsonDict["content"][0]['title']
+        newName = self.requestJsonDict["content"][0]['title']
+        newName = self.uniqueBothName(self.context, newName)
         return newName
         
     def dataModel(self):

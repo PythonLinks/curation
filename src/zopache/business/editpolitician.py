@@ -73,6 +73,7 @@ class AddPolitician (PoliticianBase,AddJson):
     
     def newName(self,data):
         newName =  self.requestJsonDict["introduction"]['title']
+        newName = self.uniqueBothName(self.context, newName)
         return newName
     
 @form_component

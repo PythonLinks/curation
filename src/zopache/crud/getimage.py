@@ -25,6 +25,8 @@ def createImageInFrom(self,content,contentType,name):
             zodbImage.__parent__ = self
 
 def getImage(self,imageURL, name = 'Logo'):
+        if not imageURL:
+           return         
         try:
             response = requests.get(imageURL)
             createImageIn(self,response, name)
