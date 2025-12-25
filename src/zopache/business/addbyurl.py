@@ -174,7 +174,6 @@ class AddCandidateByURL(ProcessJSON ):
             
         if image:
             myDict ['introduction']['logoURL'] = image
-        breakpoint()    
         return myDict
 
 
