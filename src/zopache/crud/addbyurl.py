@@ -22,8 +22,8 @@ class AddByURLAction(Action):
             return FAILURE
         errors, myDict  = form.processData(data)
         if errors:
-            for item in errors.keys():
-                form.submissionError += str(errors.get(item))[6: -1] + ' '
+            for item in errors:
+                form.submissionError += str(item)[6: -1] + ' '
             return FAILURE
         return self.newURL(myDict)
     

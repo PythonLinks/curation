@@ -39,7 +39,7 @@ class ProcessURL(object):
             error = Error("Failed to Fetch URL" + str(err))
             errors.append(error)
             response = {}                        
-        return [],response
+        return errors,response
 
         
 @view_component
