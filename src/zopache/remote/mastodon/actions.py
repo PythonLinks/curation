@@ -1,3 +1,11 @@
+# What this does is first is first get the oauth code
+# Then it creates a userLogin proxy
+# Then it creates a user proxy
+# Then it gets the user info.
+# Then it logs the person in, or creates the account and logs them in. 
+# Then redirects them to gdpr or to home.
+# All a bit tricky.
+
 # -*- coding: utf-8 -*-
 
 import sys
@@ -12,31 +20,36 @@ from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.getroot import getPrincipalFolder
 from zopache.pages.interfaces import IPage
-from zopache.remote.mastodon.basebot import BaseBot
-['write_media', 'write_statuses', 'read:accpimts']
+from zopache.remote.mastodon.basebot import BaseBot as MastodonBot
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.ttw.principalfolder import InternalPrincipal
 
-class MastodonCallBackAction(Action,BaseBot):
+class BaseAction(Action):
     def __call__(self, form):
         self.form = form
         view = form
-        userProxy, result = self.getUserProxy()
+        
+        code, result = self.getOauthCode()
         if result == FAILURE:
             return FAILURE
-        userAccount, result = self.getUserInfo(userProxy)
+        
+        userLoginProxy , result = self.getUserLoginProxy(code)
+        if result == FAILURE:
+            return FAILURE
+        
+        userInfo, result = self.getUserInfo(userLoginProxy)
                                         
         if result == FAILURE:
             return FAILURE
         
         principalFolder = view.getPrincipalFolder()
-        userName = userAccount["username"]         
+        userName = userInfo["username"]         
         email = userName + '@' + form.context.mastodonDomainName()
         handle = "@" + email
         if email in principalFolder.idByEmail:
             personId = principalFolder.idByEmail[email]
             person = principalFolder [personId]
-            person.updateAccount(userProxy,userAccount)
+            person.updateAccount(userLoginProxy,userInfo)
             principalFolder.loginUser(person,form)
             self.nextPage()
         else:
@@ -44,7 +57,7 @@ class MastodonCallBackAction(Action,BaseBot):
             self.form.new = person
             person.email = email
             person.handle = handle
-            person.updateAccount(userProxy,userAccount)
+            person.updateAccount(userLoginProxy,userInfo)
             principalFolder [person.__name__] = person
             principalFolder.loginUser(person,form)            
             person.postAddProcess(view = form)
@@ -60,32 +73,34 @@ class MastodonCallBackAction(Action,BaseBot):
     
     def goToGDPR(self):
         form = self.form
-        newURL = (self.form.getSecureLongURL (
+        newURL = (form.getSecureLongURL (
                    context = form.getPrincipal())
                   + '/gdpr')        
         raise HTTPFound(newURL)
 
     def goHome(self):
-        form = self.form
         newURL = self.form.getSiteRoot().homePage
         raise HTTPFound(newURL)    
     
-    def getUserProxy(self):
-        form = self.form
-        code = form.request.form['code']
+    def getOauthCode(self):
+        code = self.form.request.form['code']
         try:
            if len(code) == 0:
-               raise Exception("Empty access token returned by Masotdon")       
+               raise Exception("Empty access token returned by Masotdon")
         except Exception as error:
             msg = "while trying to get the access code "
             msg +=  "an empty access token was returned. "
             msg += str(error)
-            form.submissionError += msg
-            form.submissionErrors.append(msg)            
+            self.form.submissionError += msg
+            self.form.submissionErrors.append(msg)            
             return '', FAILURE
-        
+        return code, SUCCESS
+
+class MastodonCallBackAction(BaseAction,MastodonBot):
+    def getUserLoginProxy(self,code):
+        form = self.form
         try:
-           mastodon = form.loginProxy(code)
+           mastodon = form.userLoginProxy(code)
            return mastodon, SUCCESS
         except Exception as error:
             msg = "while trying to get the access code "
@@ -95,16 +110,18 @@ class MastodonCallBackAction(Action,BaseBot):
             form.submissionErrors.append(msg)
             return '', FAILURE
 
-    def getUserInfo(self, userProxy):
+    def getUserInfo(self, userLoginProxy):
+        form = self.form
         try:
-            userInfo = userProxy.me()
+            userInfo = userLoginProxy.me()
             return  userInfo, SUCCESS
         except Exception as error:
             msg = "while trying to get the User Info"
             msg +=  "was a problem. "
             msg += str(error)
-            self.form.submissionError += msg
+            form.submissionError += msg
             print (msg)
             return {},FAILURE
-        
-    
+
+#class DiscordCallBackAction(BaseAction,DisordBot):
+#    pass

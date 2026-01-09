@@ -5,7 +5,7 @@ from cromlech.security import unauthenticated_principal as anonymous
 class BaseBot (object):
     SCOPES = ['read:accounts','write:media','write:statuses']
 
-    def loginProxy(self,code):
+    def userLoginProxy(self,code):
         context = self.context
         mastodon  = self.createMastodon()
         result = mastodon.log_in( code = code ,
