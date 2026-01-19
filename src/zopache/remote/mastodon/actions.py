@@ -20,7 +20,7 @@ from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.getroot import getPrincipalFolder
 from zopache.pages.interfaces import IPage
-from zopache.remote.mastodon.basebot import BaseBot as MastodonBot
+from zopache.remote.mastodon.basebot import MastodonBot
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.ttw.principalfolder import InternalPrincipal
 

@@ -2,14 +2,14 @@ from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
 from zopache.remote.mastodon.interfaces import IServer
 from zopache.remote.mastodon.actions import MastodonCallBackAction
-from zopache.remote.mastodon.basebot import BaseBot
+from zopache.remote.mastodon.basebot import MastodonBot
 from zopache.ttw.mail import Notify
 
 @form_component
 @context(IServer)
 @target(IView)
 @name("callback")
-class MastodonOauth(Form, BaseBot,Notify):
+class MastodonOauth(Form, MastodonBot,Notify):
     title = "Respond to the Oauth Callback "
     subTitle = """If you see this, it means the Mastodon server
     is overloaded, please try again. """

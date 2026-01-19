@@ -3,16 +3,7 @@ from mastodon import Mastodon
 from cromlech.security import unauthenticated_principal as anonymous
 
 class BaseBot (object):
-    SCOPES = ['read:accounts','write:media','write:statuses']
 
-    def userLoginProxy(self,code):
-        context = self.context
-        mastodon  = self.createMastodon()
-        result = mastodon.log_in( code = code ,
-                               #scopes = self.SCOPES,
-                               redirect_uri= self.redirectURL())
-        return mastodon
-    
     def proxyForUser(self):
         principal = self.request.principal
         if principal == anonymous:
@@ -22,14 +13,9 @@ class BaseBot (object):
             self.oauth()
         return proxy
 
-    #Not Needed until we start caching credentials in the ZODB.
-    #Right now they are stored on the file system. 
-    #def baseURL(self):
-    #    result =self.getSecureLongURL(context = self.context)             
-    #    return result
-    
-    def redirectURL(self):
+    def redirectURLFromURL(self):
         domain = self.getDomain()
+        breakpoint()
         result = ("https://"+
                   domain +
                   '/oauth/' +
@@ -39,9 +25,13 @@ class BaseBot (object):
                   '/callback')
         return result
 
+
+class MastodonBot(BaseBot):
+    SCOPES = ['read:accounts','write:media','write:statuses']
+
     def createMastodon(self):
         context = self.context
-        apiServer = context.mastodonDomainName()
+        apiServer = context.mastodonDomainName()        
         fileName =  ("/app/data/oauth/" +
                     self.getDomain() +
                     "/" +
@@ -58,6 +48,17 @@ class BaseBot (object):
             force_login=False)
         raise HTTPFound(url)
 
+
+    def userLoginProxy(self,code):
+        context = self.context
+        mastodon  = self.createMastodon()
+        result = mastodon.log_in( code = code ,
+                               #scopes = self.SCOPES,
+                               redirect_uri= self.redirectURL())
+        return mastodon
+    
+class DiscordBot(BaseBot):    
+   pass
 
 #    def myAccount(self):
 #        with open('/app/data/accessToken') as file:

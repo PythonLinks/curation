@@ -1,6 +1,6 @@
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
-from zopache.remote.mastodon.basebot import BaseBot
+from zopache.remote.mastodon.basebot import MastodonBot
 from cromlech.browser.exceptions import HTTPFound
 from zopache.remote.mastodon.interfaces import IServer
 
@@ -8,7 +8,7 @@ from zopache.remote.mastodon.interfaces import IServer
 @context(IServer)
 @target(IView)
 @name("moauth")
-class MastodonOauth(Form,BaseBot):
+class MastodonOauth(Form,MastodonBot):
     title = "Authenticate with Mastodon.Social"
     subTitle = """Should you see this, it means their server is overloaded,
     plese try logging in again.. """

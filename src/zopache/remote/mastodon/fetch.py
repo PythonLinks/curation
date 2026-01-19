@@ -3,7 +3,7 @@ import re
 import time
 
 from zopache.core.viewdecorators import *
-from zopache.remote.mastodon.basebot import BaseBot
+from zopache.remote.mastodon.basebot import MastodonBot
 from zopache.remote.mastodon.interfaces import IRemoteAccount
 from zopache.remote.rss import RSSBase
 from zopache.remote.news.mastodonarticles import MastodonArticles
@@ -54,7 +54,7 @@ class Reset2(Form):
 @target(IView)
 @name("fetchxyz")
 #@permissions('Manage')
-class CrawlMastodon(Form,BaseBot,RSSBase):
+class CrawlMastodon(Form,MastodonBot,RSSBase):
 
     #First the title
     @property

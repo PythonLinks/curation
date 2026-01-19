@@ -15,7 +15,7 @@ from zopache.pages.interfaces import IPageBase
 from zopache.remote.irss import IRSSArticle
 from zopache.crud.update import Cancel, Edit
 from zopache.crud.update import Edit
-from zopache.remote.mastodon.basebot import BaseBot
+from zopache.remote.mastodon.basebot import MastodonBot
 
 
 class Toot(Edit):
@@ -111,7 +111,7 @@ class IClass(Interface):
 @form_component
 @name ('toot')
 @context(IPageBase)
-class TootForm (EditForm,BaseBot):
+class TootForm (EditForm,MastodonBot):
     title = 'Toot'
     subTitle = 'Limit 500 characters'
     interface = IClass

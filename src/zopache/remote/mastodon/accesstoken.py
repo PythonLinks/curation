@@ -10,7 +10,7 @@ from cromlech.browser.interfaces import IPublicationRoot
 from zopache.core.viewdecorators import *
 from zopache.crud.forms import EditForm
 from zopache.ttw.interfaces import IInternalPrincipal
-from zopache.remote.mastodon.basebot import BaseBot
+from zopache.remote.mastodon.basebot import MastodonBot
 
 class IForm(Interface):
 
@@ -25,7 +25,7 @@ class IForm(Interface):
 @name ('mastodon')
 @context(IInternalPrincipal)
 @permissions('Manage')
-class Configure (EditForm,BaseBot):
+class Configure (EditForm,MastodonBot):
     title = 'Mastodon Configurtion'
     subTitle = "Various Parameters"
     interface = IForm
