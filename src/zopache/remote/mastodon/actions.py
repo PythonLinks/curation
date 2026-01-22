@@ -9,6 +9,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import requests
+from requests.models import urlencode
+from urllib.parse import parse_qs
 
 from mastodon import Mastodon
 
@@ -20,7 +23,7 @@ from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.getroot import getPrincipalFolder
 from zopache.pages.interfaces import IPage
-from zopache.remote.mastodon.basebot import MastodonBot
+#from zopache.remote.mastodon.basebot import MastodonBot, GithubBot
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.ttw.principalfolder import InternalPrincipal
 
@@ -32,11 +35,8 @@ class BaseAction(Action):
         code, result = self.getOauthCode()
         if result == FAILURE:
             return FAILURE
-        
         userLoginProxy , result = self.getUserLoginProxy(code)
-        if result == FAILURE:
-            return FAILURE
-        
+
         userInfo, result = self.getUserInfo(userLoginProxy)
                                         
         if result == FAILURE:
@@ -44,7 +44,7 @@ class BaseAction(Action):
         
         principalFolder = view.getPrincipalFolder()
         userName = userInfo["username"]         
-        email = userName + '@' + form.context.mastodonDomainName()
+        email = userName + '@' + self.form.getOauthServer()
         handle = "@" + email
         if email in principalFolder.idByEmail:
             personId = principalFolder.idByEmail[email]
@@ -57,6 +57,8 @@ class BaseAction(Action):
             self.form.new = person
             person.email = email
             person.handle = handle
+            if 'name' in userInfo:
+                person.realName = userInfo['name']
             person.updateAccount(userLoginProxy,userInfo)
             principalFolder [person.__name__] = person
             principalFolder.loginUser(person,form)            
@@ -96,7 +98,7 @@ class BaseAction(Action):
             return '', FAILURE
         return code, SUCCESS
 
-class MastodonCallBackAction(BaseAction,MastodonBot):
+class MastodonCallBackAction(BaseAction):
     def getUserLoginProxy(self,code):
         form = self.form
         try:
@@ -123,5 +125,48 @@ class MastodonCallBackAction(BaseAction,MastodonBot):
             print (msg)
             return {},FAILURE
 
-#class DiscordCallBackAction(BaseAction,DisordBot):
-#    pass
+class GithubCallBackAction(BaseAction):
+        
+    def getUserLoginProxy(self,code):
+        url = "https://github.com/login/oauth/access_token"
+        params = self.form.getParams()
+        params['code'] = code
+        response = requests.post(url,data=params)
+
+        status = response.status_code
+        if status == 200:
+            parsedValue = parse_qs(response.text)
+            if not 'access_token' in parsedValue:
+               return {}, FAILURE
+
+            return parsedValue, SUCCESS
+        else:
+            msg = "while trying to get the access code "
+            msg +=  "there was a problem. "
+            form = self.form
+            form.submissionError += msg
+            form.submissionErrors.append(msg)
+            return {}, FAILURE
+
+    def getUserInfo(self,userLoginProxy):
+        # In the case of github, it is not really a long proxy.
+        endPoint = "https://api.github.com/user"
+        accessToken = userLoginProxy [ 'access_token'][0]
+        if not accessToken:
+            return {}, FAILURE
+        
+        headers = {'Authorization': 'token ' + accessToken}
+        response = requests.get(endPoint, headers=headers)
+        status = response.status_code
+        if status == 200:
+            result = response.json()
+            result['username'] = result['login']
+            return  result, SUCCESS
+        else:
+            msg = "while trying to get the user info "
+            msg +=  "there was a problem. "
+            form = self.form
+            form.submissionError += msg
+            form.submissionErrors.append(msg)
+            return {}, FAILURE
+

@@ -1,15 +1,16 @@
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
-from zopache.remote.mastodon.interfaces import IServer
+from zopache.ttw.interfaces import IPrincipalFolder
 from zopache.remote.mastodon.actions import MastodonCallBackAction
+from zopache.remote.mastodon.actions import GithubCallBackAction
 from zopache.remote.mastodon.basebot import MastodonBot
 from zopache.ttw.mail import Notify
 
 @form_component
-@context(IServer)
+@context(IPrincipalFolder)
 @target(IView)
 @name("callback")
-class MastodonOauth(Form, MastodonBot,Notify):
+class CallBack(Form, MastodonBot,Notify):
     title = "Respond to the Oauth Callback "
     subTitle = """If you see this, it means the Mastodon server
     is overloaded, please try again. """
@@ -18,5 +19,9 @@ class MastodonOauth(Form, MastodonBot,Notify):
         Notify.__init__(self)
         
     def update(self):
-        MastodonCallBackAction("Redirect","redirect")(self)
+        if "github.com" in self.request.url:
+           GithubCallBackAction("Redirect","redirect")(self)
+        else:   
+           MastodonCallBackAction("Redirect","redirect")(self)
+
         
