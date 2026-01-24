@@ -20,9 +20,10 @@ class Connect(MemberForms):
             return
         
          principalId = principal.__name__
-         theMember = self.context.getOneMember(principalId)
+         context = self.context
+         theMember = context.getOneMember(principalId)
          self.updateMember(theMember)
-         self.setMember(theMember)         
+         context.setMember(theMember)         
          principal.addGroup (self.context.__name__)
          self.notifyAdminsMembershipEvent(self.subject)
          raise HTTPFound(location=".")

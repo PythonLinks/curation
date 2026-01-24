@@ -1,6 +1,7 @@
 
 # -*- coding: utf-8 valida-*-
 
+
 #This software is subject to the CV and Zope Public Licenses.
 from dolmen.forms.base import Actions
 from dolmen.forms.base import Fields
@@ -12,6 +13,7 @@ from zopache.forms.validators.gdpr import GDPRValidator
 from zopache.crud import update as editActions
 from zopache.forms.interfaces import IGDPRForm
 from zopache.ttw.interfaces import IInternalPrincipal
+from cromlech.browser.exceptions import HTTPFound
 
 @form_component
 @name ('gdpr')
@@ -28,15 +30,16 @@ class GDPR(BaseEditForm):
 
     def newURL(self,new):
         root = self.getSiteRoot()
-        newURL =   root.homePage
-        return newURL
-
+        newURL =   root.homePage + self.randomIndex() 
+        raise HTTPFound(newURL)
+    
     def addUnAuthorizedActions(self):
         self.addAuthorizedActions()
 
     def addAuthorizedActions(self):
         self.actions = Actions(editActions.Edit("Save","Save"),
                     editActions.Cancel("Cancel","Cancel"))
+        
     def renderMenuBar(self,layout):
         return ""
         

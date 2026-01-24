@@ -26,7 +26,6 @@ from zopache.pages.interfaces import IPage
 #from zopache.remote.mastodon.basebot import MastodonBot, GithubBot
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.ttw.principalfolder import InternalPrincipal
-import transaction
 
 class BaseAction(Action):
     def __call__(self, form):
@@ -52,7 +51,6 @@ class BaseAction(Action):
             person = principalFolder [personId]
             person.updateAccount(userLoginProxy,userInfo)
             principalFolder.loginUser(person,form)
-            transaction.commit()
             self.nextPage()
         else:
             person = principalFolder.newPerson(self.form)
@@ -65,7 +63,6 @@ class BaseAction(Action):
             principalFolder [person.__name__] = person
             principalFolder.loginUser(person,form)            
             person.postAddProcess(view = form)
-            transaction.commit()
             self.goToGDPR()            
 
     def nextPage(self):
@@ -83,7 +80,7 @@ class BaseAction(Action):
         raise HTTPFound(newURL)
 
     def goHome(self):
-        newURL = self.form.getSiteRoot().homePage
+        newURL = self.form.getSiteRoot().homePage + '/index'
         raise HTTPFound(newURL)    
     
     def getOauthCode(self):

@@ -1,6 +1,7 @@
 import urllib
 import json
 import arrow
+import random
 
 from pydoc import locate
 import hashlib
@@ -12,11 +13,15 @@ from dolmen.message import SessionSource, MessageReceiver
 from zopache.core.getroot import getSiteRoot
 from zopache.application.everyobject import EveryObject
 
-
 def sortFunction(item):
   return item.__name__
 
 class Utilities (object):
+
+    def randomIndex(self):
+        return  ('/index/' + str(random.randint(0,2**32 -1)) 
+                 
+  
     def urlEscape(self,text):
         return urllib.parse.quote(text)
 

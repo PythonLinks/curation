@@ -10,7 +10,9 @@ from zopache.json.markdown import JSONMarkdown
 from zopache.business.member import Member
 
 class MembersBase(object):
-
+    def setMember(self,theMember):
+        self.members[theMember.__name__] = theMember
+        
     def isMemberA(self,view,attribute):
          principal = view.request.principal
          if principal == anonymous:
