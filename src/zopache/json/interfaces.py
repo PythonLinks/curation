@@ -13,6 +13,9 @@ class IMultilingual(IPageBase,IContent,IOrderedContainer):
 class IMarkdown(IPageBase,IContent,IOrderedContainer):
     pass
 
+class IJSONEvent(IMarkdown):
+    pass
+
 class IMultilingualLeaf(ILeaf):
     pass
 

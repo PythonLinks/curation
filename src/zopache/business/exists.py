@@ -26,7 +26,7 @@ class Duplicate(BaseValidator):
             errorMessage += """ 
             If you still want to add this page,
             just give it a slightly different title and a different
-            unique pdurl will be generated.
+            unique url slug will be generated.
             """
             error = ArgsError(title=errorMessage, identifier ="In Duplicat")
             errors.append(error)

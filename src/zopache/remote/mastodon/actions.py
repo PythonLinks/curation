@@ -58,7 +58,7 @@ class BaseAction(Action):
             person.email = email
             person.handle = handle
             if 'name' in userInfo:
-                person.realName = userInfo['name']
+                person.yourName = userInfo['name']
             person.updateAccount(userLoginProxy,userInfo)
             principalFolder [person.__name__] = person
             principalFolder.loginUser(person,form)            

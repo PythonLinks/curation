@@ -19,7 +19,6 @@ class ILogin(Interface):
         title='Password', required=True)
 
 
-
 class IHandle(Interface):
 
     handle = schema.DottedName(
@@ -39,13 +38,31 @@ class IPassword(Interface):
         description = "Be Strong",
         required = True)
     
-class IPermissions(Interface):            
+class IGDPRForm(Interface):
+    yourName = schema.TextLine(
+        title="Your name",
+        default = '' ,
+        required = True)
 
-    chatPermission = schema.Bool(
-        title = """To register me, manage logins using cookies, and to send me email notifications(not news) as required.""",
+    mastodonId = schema.TextLine(
+        title="Mastodon or Discord Id (@me@discord.com)",
+        default = '' ,
+        required = False)
+
+    emailAddress = schema.TextLine(
+        title="Or your Email Address",
+        required = False)
+        
+    gdprPermission = schema.Bool(
+        title = """To manage events and run this web site, including cookie-based logins.""",
         required = True,
         default = False)
 
+    newsPermission = schema.Bool(
+        title = "To send me ASIC and FPGA technology news.",
+        required = False,
+        default = False)
+    
 #    postalPermission = schema.Bool(
 #        title = """To add a link to my Mastodon or Fediverse account from the page for my zip code.""",
 #        required = False,
@@ -55,9 +72,8 @@ class IPermissions(Interface):
 #        title='Your US Zip Code', required=False,
 #        default = "")    
 
-    chatPermission.text = """ <p> I give permission 
+    gdprPermission.text = """ <p> I give permission 
 to process my personal information for the following  
 purposes:</p>"""
 
-class ISubscribe(IEmail, IPermissions):
-    pass
+

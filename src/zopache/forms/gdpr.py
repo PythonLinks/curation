@@ -1,6 +1,5 @@
 
 # -*- coding: utf-8 valida-*-
-from zope.interface import Interface
 
 #This software is subject to the CV and Zope Public Licenses.
 from dolmen.forms.base import Actions
@@ -9,41 +8,26 @@ from dolmen.forms.base import action, name, context, form_component
 
 from zopache.crud.forms import BaseEditForm
 from zopache.crud.actions import Cancel
-from zopache.forms.adduseractions  import RegisterAction, SubscribeAction
-from zopache.crud.utils import getFactoryFields, getAllFields
-
-from zopache.forms.interfaces import IPermissions, ISubscribe
-from zopache.forms.gdpr_validator import GDPRValidator
-from zopache.crud.forms import EditForm
-from zopache.forms.validators.postal import PostalValidator
-from zopache.remote.postalcodes.postalcode import getPostalContainer
-from zopache.remote.postalcodes.voter import Voter
+from zopache.forms.validators.gdpr import GDPRValidator
 from zopache.crud import update as editActions
+from zopache.forms.interfaces import IGDPRForm
+from zopache.ttw.interfaces import IInternalPrincipal
 
 @form_component
 @name ('gdpr')
-@context(Interface)
+@context(IInternalPrincipal)
 class GDPR(BaseEditForm):
     dataValidators = [GDPRValidator]
-#    The following is needed if we are mapping people. 
-#    dataValidators = [GDPRValidator,PostalValidator]    
-    layoutName = "GDPRLayout"
-    fields = Fields(IPermissions)
-    title='GDPR Permissions'
-    subTitle='Please edit your GDPR permissions.'
+    layoutName = "UserMenu"    
+    fields = Fields(IGDPRForm)
+    subTitle='For the ASIC and FPGA Meetup'
     allowAnonymous = False
         
     def acquireTitle(self):
-       return 'Permissions Page'
+       return 'Register'
 
     def newURL(self,new):
         root = self.getSiteRoot()
- #       postalCode = self.context.postalCode
- #       if postalCode:
- #           postalContainer = getPostalContainer(root,
- #                                            postalCode)            
- #           newURL = "/" + postalContainer.name
- #       else:
         newURL =   root.homePage
         return newURL
 
@@ -53,11 +37,37 @@ class GDPR(BaseEditForm):
     def addAuthorizedActions(self):
         self.actions = Actions(editActions.Edit("Save","Save"),
                     editActions.Cancel("Cancel","Cancel"))
+    def renderMenuBar(self,layout):
+        return ""
         
+"""
+from zopache.forms.validators.postal import PostalValidator
+from zopache.remote.postalcodes.postalcode import getPostalContainer
+from zopache.remote.postalcodes.voter import Voter
+from zopache.forms.adduseractions  import SubscribeAction
+from zopache.forms.adduseractions  import RegisterAction
+
+from zopache.crud.utils import getFactoryFields, getAllFields
+
+from zopache.forms.interfaces import ISubscribe
+   
+From newURL()   
+ #       postalCode = self.context.postalCode
+ #       if postalCode:
+ #           postalContainer = getPostalContainer(root,
+ #                                            postalCode)            
+ #           newURL = "/" + postalContainer.name
+ #       else:
+
+   #    The following is needed if we are mapping people. 
+#    dataValidators = [GDPRValidator,PostalValidator]    
+
+   
     def postProcess(self, view = None):
         #The self variables are needed later for newURL.
         principal = self.context
         self.principal = principal
+
         postalCode = principal.postalCode
         self.postalCode = postalCode
         voter = principal.voter
@@ -89,21 +99,5 @@ class GDPR(BaseEditForm):
             del voter.parent [name]
             voter.__parent__ = postalContainer
             postalContainer[name] = voter    
-            
+"""            
          
-@form_component
-@name ('subscribe')
-@context(Interface)
-class Subscribe (GDPR):
-    fields = Fields(ISubscribe)
-    title = 'Subscribe'
-    subTitle = 'To the uncensored newsletter'
-
-    def acquireTitle(self):
-       return 'Subscribe'
-   
-    @property
-    def actions(self):
-        return Actions(SubscribeAction("Sign Me Up!",self),
-               Cancel("Cancel","Cancel")
-        )

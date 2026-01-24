@@ -9,6 +9,7 @@ from zopache.json.editjsonschema import AddJson, EditJson
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.jsonschemavalidator import JSONSchemaValidator
 from zopache.json.markdown import JSONMarkdown
+from zopache.json.event import JSONEvent
 
 @form_component
 @name ('edit')
@@ -23,7 +24,7 @@ class EditMarkdown (EditJson):
 @name('addJSONMarkdown')
 @target(IView)
 @context(IPageBase)
-class AddMarkdown(AddJson):
+class AddJSONMarkdown(AddJson):
     title = "Add a Markdown Page"
     subTitle = ""
     factory = JSONMarkdown
@@ -39,4 +40,14 @@ class AddMarkdown(AddJson):
         result = json.dumps(contextJsonDict)
         return result
 
+
+@view_component
+@name('addJSONEvent')
+@target(IView)
+@context(IPageBase)
+class AddJSONEvent(AddJSONMarkdown):
+    title = "Add an Event"
+    subTitle = ""
+    factory = JSONEvent
+    schemaName = "JSONMarkdownSchema"    
 

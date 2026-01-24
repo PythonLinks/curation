@@ -29,7 +29,7 @@
      
     <a name="content"></a>
      <a name="manage"></a>
-    <div id="wrapper">
+    <div id="wrapper" style= "clear:left">
       <div class="container" id="page-content-wrapper">
 	<div id="main">
 	  <div id="content">
@@ -40,7 +40,7 @@
             </center>
 	    <div tal:condition="hasattr(view,'error')"
 		 style="color:red;">${view.error} </div>
-	  <div tal:replace="structure content" />
+	  <div tal:replace="structure content" style = "clear:left">
 	  </div>
 	</div>
       </div>
