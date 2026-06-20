@@ -170,10 +170,9 @@ class Utilities (object):
         if logo != None:
             return logo
 
-        image = self.parentalAcquire('SocialMediaImage', context = context)
-        if image != None:
-
-           return image
+        #image = self.parentalAcquire('SocialMediaImage', context = context)
+        #if image != None:
+        #   return image
        
         return  self.parentalAcquire('Logo', context = context)
 
