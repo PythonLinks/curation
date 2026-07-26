@@ -61,7 +61,7 @@ class InternalPrincipal(FileBase,Page):
     title = "Your Profile"
     voter = None
     webClass = 'Person'
-
+    gdprPermission = False
     
     def secureParent(self):
         raise SecurityError('''You are not allowed to access attribute "secureParent" on %r %r ''' % (self.name,self.__class__.__name__))
