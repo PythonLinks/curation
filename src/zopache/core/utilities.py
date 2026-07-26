@@ -19,8 +19,7 @@ def sortFunction(item):
 class Utilities (object):
 
     def randomIndex(self):
-        return  ('/index/' + str(random.randint(0,2**32 -1)) 
-                 
+        return  ('/index/' + str(random.randint(0,2**32 -1))) 
   
     def urlEscape(self,text):
         return urllib.parse.quote(text)
