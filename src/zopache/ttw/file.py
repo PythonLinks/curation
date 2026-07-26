@@ -155,8 +155,18 @@ class BTreeImage(ImageBase,Container):
         if name in self:
            return self[name]
 
-        if name in {'16W','50W','100W','150W','200W','400W','600W',
-                     '25H','100H','200H','300H'}:
+        if name in {'16W',
+                    '50W',
+                    '75W',
+                    '100W',
+                    '150W',
+                    '200W',
+                    '400W',
+                    '600W',
+                     '25H',
+                    '100H',
+                    '200H',
+                    '300H'}:
               return self.shrink(name) 
         return default
 
