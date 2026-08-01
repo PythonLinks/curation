@@ -63,7 +63,6 @@ install_requires = [
     'beautifulsoup4',    
     'jsmin',
     'DateTime',
-    'dm.historical',
     'dolmen.forms.base >= 2.0',
     'fanstatic',
     'pillow',

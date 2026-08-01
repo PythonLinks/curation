@@ -14,21 +14,26 @@ from zopache.ttw.interfaces import IHistoricDetails
 from cromlech import browser
 from cromlech.browser.exceptions import HTTPFound
 from zopache.ttw.interfaces import IHistoryItem
-from dm.historical import getHistory
+from DateTime import DateTime
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core.interfaces import ITreeSecurity
 
-"""
-#Maybe this is a much simpler versin for more recent zodb. 
-def getHistory(item, size=40):
-         db=item._p_jar.db()
-         oid=item.__data._p_oid
-         for version in db.history(oid,size):
-             tid=version['tid']   #tid=the Transaction ID
-             historicConnection= Connection(db,before=tid)
-             historicObject=historicConnection.get(oid)
-             yield historicObject
-"""
+
+def getHistory(obj, first=0, last=20):
+    '''return history records for *obj* between *first* and *last* (indexes).
+
+    Each record is a dict with "speaking" keys (see 'IStorage.history'),
+    plus 'time' (a 'DateTime') and 'obj' (the state of *obj* as of that
+    revision).
+    '''
+    jar = obj._p_jar
+    oid = obj._p_oid
+    db = jar.db()
+    history = db.history(oid, last)[first:]
+    for d in history:
+        d['time'] = DateTime(d['time'])
+        d['obj'] = db.open(at=d['tid']).get(oid)
+    return history
 @view_component
 @name('history')
 @context(ISource)

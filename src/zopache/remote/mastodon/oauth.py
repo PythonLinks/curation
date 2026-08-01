@@ -42,7 +42,7 @@ class MastodonOauth(Form,MastodonBot):
         raise HTTPFound(url)
 
     
-    def mastodonOuth(self):
+    def mastodonOauth(self):
         mastodon= self.createMastodon()
         url = mastodon.auth_request_url(
             redirect_uris = self.redirectURL(),

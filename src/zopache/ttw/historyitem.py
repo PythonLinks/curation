@@ -4,7 +4,7 @@ from cromlech.browser import ITraverser, IRequest
 from zopache.ttw.interfaces import IHistoryItem
 from zope.interface import implementer
 from zope.interface import Interface
-from dm.historical import getHistory
+from zopache.ttw.history import getHistory
 
 @implementer(IHistoryItem)
 class HistoryItem(Location):
