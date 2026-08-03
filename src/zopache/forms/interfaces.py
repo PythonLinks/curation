@@ -39,27 +39,27 @@ class IPassword(Interface):
         required = True)
     
 class IGDPRForm(Interface):
-    yourName = schema.TextLine(
-        title="Your name",
-        default = '' ,
-        required = True)
+#    yourName = schema.TextLine(
+#        title="Your name",
+#        default = '' ,
+#        required = True)
 
-    mastodonId = schema.TextLine(
-        title="Mastodon or Discord Id (@me@discord.com)",
-        default = '' ,
-        required = False)
+#    mastodonId = schema.TextLine(
+#        title="Mastodon or Discord Id (@me@discord.com)",
+#        default = '' ,
+#        required = False)
 
-    emailAddress = schema.TextLine(
-        title="Or your Email Address",
-        required = False)
+#    emailAddress = schema.TextLine(
+#        title="Or your Email Address",
+#        required = False)
         
     gdprPermission = schema.Bool(
-        title = """To manage events and run this web site, including cookie-based logins.""",
+        title = """To run this web site, including cookie-based logins.""",
         required = True,
         default = False)
 
     newsPermission = schema.Bool(
-        title = "To send me ASIC and FPGA technology news.",
+        title = "To send me  news.",
         required = False,
         default = False)
     

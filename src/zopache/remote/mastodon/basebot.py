@@ -14,7 +14,10 @@ class BaseBot (object):
 
     def getOauthServer(self):
         return self.request.form['oauth-server']
-    
+
+    def redirectURL(self):
+         return self.callbackURL()
+     
     def callbackURL(self):
         domain = self.getDomain()
         oauthServer = self.getOauthServer()
@@ -25,10 +28,6 @@ class BaseBot (object):
                   )
         return result
 
-    def getOauthServer(self):
-        oauthServer = self.request.url.split('/')[-1]
-        oauthServer = oauthServer.split('?')[0]
-        return oauthServer
     
     def createMastodon(self):
         context = self.context

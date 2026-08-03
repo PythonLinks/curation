@@ -24,4 +24,10 @@ class CallBack(Form, MastodonBot,Notify):
         else:   
            MastodonCallBackAction("Redirect","redirect")(self)
 
+    def getOauthServer(self):
+        callbackServer = self.request.url.split('/')[-1]
+        callbackServer = callbackServer.split('?')[0]
+        return callbackServer
+
+           
         

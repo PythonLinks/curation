@@ -7,18 +7,22 @@ from zopache.core.baseform import Form
 from zopache.remote.mastodon.basebot import MastodonBot
 from cromlech.browser.exceptions import HTTPFound
 #from zopache.remote.mastodon.interfaces import IServer
-from zopache.ttw.interfaces import IPrincipalFolder
+from zopache.remote.mastodon.interfaces import IServer
 
 @form_component
-@context(IPrincipalFolder)
+@context(IServer)
 @target(IView)
-@name("oauth3")
+@name("moauth")
 class MastodonOauth(Form,MastodonBot):
     title = "Authenticate with Mastodon.Social"
     subTitle = """Should you see this, it means their server is overloaded,
     plese try logging in again.. """
     #actions = Actions()
-           
+
+    def getOauthServer(self):
+        oauthServer = self.request.url.split('/')[-2]
+        return oauthServer
+    
     def update(self):
         oauthServer = self.getOauthServer()
         if oauthServer == "github.com":

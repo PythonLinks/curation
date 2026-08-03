@@ -19,14 +19,14 @@ from cromlech.browser.exceptions import HTTPFound
 @name ('gdpr')
 @context(IInternalPrincipal)
 class GDPR(BaseEditForm):
-    dataValidators = [GDPRValidator]
+    #dataValidators = [GDPRValidator]
     layoutName = "UserMenu"    
     fields = Fields(IGDPRForm)
-    subTitle='For the ASIC and FPGA Meetup'
+    subTitle = ""
     allowAnonymous = False
         
     def acquireTitle(self):
-       return 'Register'
+       return 'GDPR Permissions'
 
     def newURL(self,new):
         root = self.getSiteRoot()
