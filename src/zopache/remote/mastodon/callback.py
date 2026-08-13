@@ -10,7 +10,7 @@ from zopache.ttw.mail import Notify
 @context(IPrincipalFolder)
 @target(IView)
 @name("callback")
-class CallBack(Form, MastodonBot,Notify):
+class CallBack(Form, MastodonBot, Notify):
     title = "Respond to the Oauth Callback "
     subTitle = """If you see this, it means the Mastodon server
     is overloaded, please try again. """
@@ -19,15 +19,8 @@ class CallBack(Form, MastodonBot,Notify):
         Notify.__init__(self)
         
     def update(self):
-        if "github.com" in self.request.url:
+        if self.getOauthServer() == "github.com":
            GithubCallBackAction("Redirect","redirect")(self)
-        else:   
+        else:
            MastodonCallBackAction("Redirect","redirect")(self)
 
-    def getOauthServer(self):
-        callbackServer = self.request.url.split('/')[-1]
-        callbackServer = callbackServer.split('?')[0]
-        return callbackServer
-
-           
-        

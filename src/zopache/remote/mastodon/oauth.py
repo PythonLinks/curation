@@ -4,13 +4,12 @@ from cromlech.browser.exceptions import HTTPFound
 
 from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
+from zopache.ttw.interfaces import IPrincipalFolder
 from zopache.remote.mastodon.basebot import MastodonBot
-from cromlech.browser.exceptions import HTTPFound
-#from zopache.remote.mastodon.interfaces import IServer
-from zopache.remote.mastodon.interfaces import IServer
+
 
 @form_component
-@context(IServer)
+@context(IPrincipalFolder)
 @target(IView)
 @name("moauth")
 class MastodonOauth(Form,MastodonBot):
@@ -19,10 +18,6 @@ class MastodonOauth(Form,MastodonBot):
     plese try logging in again.. """
     #actions = Actions()
 
-    def getOauthServer(self):
-        oauthServer = self.request.url.split('/')[-2]
-        return oauthServer
-    
     def update(self):
         oauthServer = self.getOauthServer()
         if oauthServer == "github.com":

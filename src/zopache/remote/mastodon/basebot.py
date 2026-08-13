@@ -13,7 +13,8 @@ class BaseBot (object):
         return proxy
 
     def getOauthServer(self):
-        return self.request.form['oauth-server']
+        path = self.request.url.split('?')[0]
+        return path.rstrip('/').split('/')[-1]
 
     def redirectURL(self):
          return self.callbackURL()
