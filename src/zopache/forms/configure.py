@@ -27,20 +27,6 @@ class IForm(Interface):
         missing_value = "",
     )    
 
-    mqttServer= TextLine(
-        title = "MQTT Server URL",
-        description = "For real time notifications.",
-        required = False,
-        default = '',
-    )
-    
-    googleClientId= TextLine(
-        title = "Google Oauth Client Id",
-        description = "For Logins",
-        required = False,
-        default = '',
-    )
-
     subscribeSlug= TextLine(
         title = "Nefault Subscribe Page Name",
         description = "The Organization they shoudl subscribe to by default. ",

@@ -8,26 +8,32 @@ Modified:  ${structure: view.results()[0]['time'].hour()} :
     ${structure: view.results()[0]['time'].minute()} :
   ${structure: int(view.results()[0]['time'].second())}   
 </p>
+<form method="get" tal:attributes="action view.contextURL('jsondiff')">
 <table>
 <tr>
   <th></th>
+  <th></th>  
   <th>View</th>
   <th>Restore</th>
   <th>Titile</th>
   <th>Age</th>
 </tr>
 <tr  tal:repeat="result view.results()" >
-    <td tal:content=" repeat.result.length-repeat.result.index" >0, 1, 2 </td>
-<td>
-<a tal:attributes="href python: view.absoluteURL(context) + 
-'/++history++'+str(repeat['result'].index())+
-'/historicindex'">Source</a>
-</td>
-<td>
-<a tal:attributes="href python: view.absoluteURL(context) + 
-'/++history++'+str(repeat['result'].index())+
-'/restore'">Restore</a>
-</td>
+  <td>
+    <input type="checkbox" tal:attributes="name string:selected; value repeat.result.index">
+  </td>
+  <td tal:content="repeat.result.length - repeat.result.index" >0, 1, 2
+  </td>
+  <td>
+    <a tal:attributes="href python: view.absoluteURL(context) + 
+      '/++history++'+str(repeat['result'].index())+
+      '/historicindex'">Source</a>
+  </td>
+  <td>
+    <a tal:attributes="href python: view.absoluteURL(context) + 
+    '/++history++'+str(repeat['result'].index())+
+    '/restore'">Restore</a>
+  </td>
 
     <td>
      ${ result['obj'].title if  hasattr(result['obj'],'title')  else ''   }
@@ -38,3 +44,40 @@ Modified:  ${structure: view.results()[0]['time'].hour()} :
 </td>
      </tr>
    </table>
+
+ <div id="warningMessage" class="text-danger mt-2" style="display:none;">
+    Too many boxes were checked. Please select either one historic version to compare with the current version, or two historic versions to compare with each other. 
+  </div>
+
+ <div id="comparingCurrent" class="text-info mt-2" style="display:none;">
+      Comparing the current version with a historic version.
+  </div>
+
+ <div id="comparingHistoric" class="text-info mt-2" style="display:none;">
+      Comparing two historic versions. 
+  </div>
+
+  <button type="submit" value = "Compare" id = "compare" name = "compare"
+  class="btn btn-primary mt-2" disabled>
+    Compare Two Versions
+  </button>
+</form>
+
+<script>
+const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected"]');
+const submitButton = document.getElementById('compare');
+const warningMessage = document.getElementById('warningMessage');
+const comparingCurrent = document.getElementById('comparingCurrent');
+const comparingHistoric = document.getElementById('comparingHistoric');
+
+function updateState() {
+  const checkedCount = document.querySelectorAll('input[type="checkbox"][name="selected"]:checked').length;
+
+  warningMessage.style.display = checkedCount > 2 ? 'block' : 'none';
+  comparingCurrent.style.display = checkedCount === 1 ? 'block' : 'none';
+  comparingHistoric.style.display = checkedCount === 2 ? 'block' : 'none';
+
+  submitButton.disabled = checkedCount < 1 || checkedCount > 2;}
+
+checkboxes.forEach(cb => cb.addEventListener('change', updateState));
+</script>

@@ -1,3 +1,4 @@
+
 import json
 from zopache.core.breadcrumbs import Breadcrumbs
 from dolmen.container import IBTreeContainer
@@ -6,7 +7,7 @@ from dolmen.view import name, context, view_component
 from cromlech.webob.response import Response
 
 from zopache.core.viewdecorators import *
-from zopache.application.diff import hashTime, hash
+from zopache.application.hash import hashTime, hash
 from zopache.ttw.interfaces import IAceEdit
 from zopache.ttw.interfaces import  IInternalPrincipal
 

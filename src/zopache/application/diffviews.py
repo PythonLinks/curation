@@ -1,3 +1,4 @@
+
 from zope.interface import Interface
 
 from zopache.core.viewdecorators import *
@@ -28,8 +29,8 @@ from zopache.ttw.htmlviews import Index
 @name ('acediff')
 @context(IAceEdit)
 class AceDiff (LayoutView,Breadcrumbs):
-    title = "Merge Two Different Ace Objects."
-    subTitle = "Basically a graphical merge."
+    title = "Remote versions of this object."
+    subTitle = "You can save either version locally."
     
     def update(self):
         self.template = self.getTemplates()['AceDiff']['form']
@@ -39,3 +40,10 @@ class AceDiff (LayoutView,Breadcrumbs):
             item = self.context
         return self.breadcrumbsView(item,viewName='diff',showTitles=False)    
     
+@view_component
+@target(IView)
+@name ('jsondiff')
+@context(IAceEdit)
+class JSONDiff (AceDiff):
+    title = "Historic Versions of this object."
+    subTitle = "You can save either version"
