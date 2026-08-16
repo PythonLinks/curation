@@ -7,10 +7,13 @@ from zopache.pages.interfaces import IPageBase
 from zopache.pages.interfaces import IPageBase, IContent
 from zopache.crud.interfaces import ILeaf
 
-class IMultilingual(IPageBase,IContent,IOrderedContainer):
+class IJSONClass(IPageBase,IContent,IOrderedContainer):
     pass
 
-class IMarkdown(IPageBase,IContent,IOrderedContainer):
+class IMultilingual(IJSONClass):
+    pass
+
+class IMarkdown(IJSONClass):
     pass
 
 class IJSONEvent(IMarkdown):

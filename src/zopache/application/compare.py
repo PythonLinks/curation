@@ -28,7 +28,7 @@ from zopache.ttw.htmlviews import Index
 @target(IView)
 @name ('acediff')
 @context(IAceEdit)
-class AceDiff (LayoutView,Breadcrumbs):
+class RemoteCompare (LayoutView,Breadcrumbs):
     title = "Remote versions of this object."
     subTitle = "You can save either version locally."
     
@@ -42,8 +42,8 @@ class AceDiff (LayoutView,Breadcrumbs):
     
 @view_component
 @target(IView)
-@name ('jsondiff')
+@name ('compare_json')
 @context(IAceEdit)
-class JSONDiff (AceDiff):
-    title = "Historic Versions of this object."
+class LocalJSONCompare (RemoteCompare):
+    title = "Compare 2 Versions"
     subTitle = "You can save either version"

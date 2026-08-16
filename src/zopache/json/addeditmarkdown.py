@@ -1,6 +1,8 @@
 import json
 
 from dolmen.container import IBTreeContainer
+from dolmen.view import View
+from cromlech.webob.response import Response
 
 from zopache.pages.interfaces import IPageBase
 from zopache.json.interfaces import IMarkdown
@@ -10,6 +12,7 @@ from zopache.core.interfaces import ITreeSecurity
 from zopache.business.jsonschemavalidator import JSONSchemaValidator
 from zopache.json.markdown import JSONMarkdown
 from zopache.json.event import JSONEvent
+from zopache.ttw.JSON import makeJsonResponse
 
 @form_component
 @name ('edit')
@@ -40,6 +43,15 @@ class AddJSONMarkdown(AddJson):
         result = json.dumps(contextJsonDict)
         return result
 
+@view_component
+@name('json')
+@context(IMarkdown)
+class ViewMarkdownJSON(View):
+    responseFactory = Response
+    make_response = makeJsonResponse
+        
+    def render(self):
+        return json.dumps(self.context.json)    
 
 @view_component
 @name('addJSONEvent')

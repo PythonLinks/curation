@@ -8,7 +8,7 @@ Modified:  ${structure: view.results()[0]['time'].hour()} :
     ${structure: view.results()[0]['time'].minute()} :
   ${structure: int(view.results()[0]['time'].second())}   
 </p>
-<form method="get" tal:attributes="action view.contextURL('jsondiff')">
+<form method="get" tal:attributes="action view.contextURL('compare_json')">
 <table>
 <tr>
   <th></th>

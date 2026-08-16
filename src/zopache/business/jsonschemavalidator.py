@@ -48,7 +48,6 @@ class JSONSchemaValidator(object):
               error = ArgsError(title=msg, identifier="json.validator")
               errors.append(error)
               return errors
-         
         success, result  = self.validSchema(data)         
         if not success:
               msg = "Your Data is invalid according to the Schema."

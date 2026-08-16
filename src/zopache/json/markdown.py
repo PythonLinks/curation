@@ -17,7 +17,10 @@ from zopache.crud.getimage import getImage
 class JSONMarkdown(BasicProperties, Tootable, PageVeryBase, Ancestors):
     _html      = ""
     webClass   = "JSONMarkdown"
-    schemaName = "JSONMarkdownSchema"    
+    schemaName = "JSONMarkdownSchema"
+    
+    def jsonAsString(self):
+        return json.dumps(self.json)    
     
     def getTitle(self):
         json = self.json

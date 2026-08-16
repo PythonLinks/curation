@@ -16,6 +16,8 @@ from zopache.ttw.addeditforms import AceAddForm, AceEditForm
 from zopache.ttw.acescripts import AceScripts
 
 from zopache.ttw.interfaces import IJSON, IJSONBase, IJSONContainer
+from zopache.ttw.interfaces import IHistoryItem
+
 from zopache.ttw.javascript import JavascriptBase
 from zopache.core.interfaces import ITreeSecurity
 from zopache.core.viewdecorators import *
@@ -115,6 +117,15 @@ class Index(View):
     def render(self):
         return self.context.source
 
+@view_component
+@name('json')
+@context(IHistoryItem)
+class HistoricJSON(View):
+    responseFactory = Response
+    make_response = makeJsonResponse
+    def render(self):
+        return self.context.item['obj'].jsonAsString()
+           
 @view_component
 @name('loadJSON')
 @context(IJSON)
