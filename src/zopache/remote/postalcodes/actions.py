@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 #This software is subject to the CV and Zope Public Licenses.
 
-import sys
 import random
 import string
-from dolmen.forms.base import Action, SuccessMarker
+from dolmen.forms.base import Action
 from dolmen.forms.base.markers import FAILURE
-from dolmen.forms.base.utils import set_fields_data, apply_data_event
+from dolmen.forms.base.utils import set_fields_data
 from cromlech.browser.exceptions import HTTPFound
-from zopache.core.getroot import getPrincipalFolder, getSiteRoot
+from zopache.core.getroot import getPrincipalFolder
 
 class RegisterAction(Action):
 
