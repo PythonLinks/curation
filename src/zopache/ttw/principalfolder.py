@@ -20,8 +20,6 @@ from jinja2.sandbox import SecurityError
 from BTrees.OOBTree import OOBTree
 from zope.schema import ValidationError
 from zope.interface import implementer, Interface
-from zope.password.interfaces import IPasswordManager
-from zope.password.password import SSHAPasswordManager as PasswordManager
 
 from dolmen.container import BTreeContainer
 from cromlech.browser import getSession, setSession
@@ -46,7 +44,6 @@ from zopache.pages.page import Page
 class InternalPrincipal(FileBase,Page):
     _handle  = ''
     _email = ''
-    _password = ''
     branchSize = 1    
     chatPermission = False
     contentType = "text/plain"
@@ -109,9 +106,6 @@ class InternalPrincipal(FileBase,Page):
             
         if 'user' in session:
             session.clear()
-
-
-
         
     """ Pricipals which are stored in the ZODB Principal Folder"""
     def upVote(self,item):
@@ -152,15 +146,6 @@ class InternalPrincipal(FileBase,Page):
     def getId(self):
         return self._email    
     
-    def getPassword(self):
-        return self._password
-
-    def setPassword(self, password):
-        self._password = PasswordManager().encodePassword(password,salt='')
-        
-    def checkPassword(self, password):
-        return PasswordManager().checkPassword(self.password, password)
-
     def getEmail(self):
         return self._email
 
@@ -205,7 +190,6 @@ class InternalPrincipal(FileBase,Page):
         #                       'Manage','Vote','Edit','Add','Python']
 
             
-    password = property(getPassword, setPassword)
     title = property(getTitle)
     email = property(getEmail, setEmail)
     id = property(getId)
@@ -338,26 +322,6 @@ class PrincipalFolder(Container):
         root = getPublicationRoot(self)
         root.deleteItem(principal)
         BTreeContainer.__delitem__(self,name)        
-
-    def authenticate(self, credentials,form):
-        if not ('email' in credentials and 'password' in credentials):
-            return None
-        userName = credentials['email']
-        internal = self.getPrincipalByUserName(userName,default = None)
-        if internal is None:            
-            return None
-        previousAuthenticationTime = internal.lastAuthenticationTime
-        now = time.time()
-        internal.lastAuthenticationTime = now
-        if now  - previousAuthenticationTime < 5:
-            form.submissionErrors += (
-                "You have to wait 5 second before trying again.")
-            return None
-        if not internal.checkPassword(credentials["password"]):
-            return None
-        session = getSession()
-        session['user'] = internal.email
-        return internal
 
     def loginUser(self,user,form):
         session = getSession()
