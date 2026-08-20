@@ -1,5 +1,5 @@
 from zope import schema
-from zope.interface import Interface
+from zope.interface import Interface, invariant, Invalid
 from zopache.pages.interfaces import (ILocation,
                                       IPage,
                                       IPageBase)
@@ -12,7 +12,7 @@ class IGDPRForm(Interface):
         title='Your country', required=False)
 
     postalCode  = schema.TextLine(
-        title='Your PostalCode', required=False,
+        title='Your Postal code', required=False,
         default = "",
         description = "Please enter both Country Name and Postal Code.  To not be listed enter neither one. ")    
 
@@ -29,7 +29,14 @@ class IGDPRForm(Interface):
 
     countryCode  = schema.TextLine(
         title='Your country code', required=False,
-        default = "")    
+        default = "")
+
+    @invariant
+    def checkForBothCountryAndCountryPostalCodeOrNeither(data):
+        if bool(data.countryName) != bool(data.postalCode):
+            raise Invalid(
+                "Please enter both Country Name and Postal Code, "
+                "or leave both blank to not be listed.")
 
     latitude = schema.Float(
         title = u'Lattitude',

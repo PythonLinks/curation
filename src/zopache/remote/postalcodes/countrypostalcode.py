@@ -7,10 +7,11 @@ from zopache.pages.location import Location
 from zopache.remote.postalcodes.interfaces import IPostalCountryCode
 
 @implementer(IPostalCountryCode)
-class PostalCountryCode(Location,Page):
+class CountryPostalCode(Location,Page):
     webClass = "PostalCountryCode"
     webApproved = True
-
+    country = ""
+    countryPostalCode = ""
     def __init__(self, countryCode, postalCode, countryName,latitude, longitude):
         Location.__init__(self)    
         self.__name__ = slugify(countryCode +  '_' + postalCode)

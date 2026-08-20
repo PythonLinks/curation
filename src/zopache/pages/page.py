@@ -259,7 +259,6 @@ class PageBase(PageVeryBase,PageMixIn,Ancestors):
     title = ''
     description = ''
     source = ''
-    
 
     def sortedByTitle(self):
            unsortedList=[]

@@ -14,17 +14,17 @@ from zopache.crud.forms import BaseEditForm
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.remote.postalcodes.actions  import RegisterAction
 from zopache.remote.postalcodes.interfaces import IGDPRForm
-from zopache.forms.validators.gdpr import GDPRValidator
-from zopache.forms.validators.postal import PostalValidator
 from zopache.remote.postalcodes.person import Person
 from zopache.ttw.interfaces import IInternalPrincipal
+from zopache.pages.page  import Page
+from dolmen.forms.ztk import InvariantsValidation
 
 @form_component
 @name ('gdpr')
 @context(IInternalPrincipal)
 class GDPR(BaseEditForm):
-    dataValidators = [GDPRValidator,PostalValidator]        
-    layoutName = "UserMenu"    
+    dataValidators = [InvariantsValidation]
+    layoutName = "UserMenu"
     fields = Fields(IGDPRForm)
     subTitle = ""
     allowAnonymous = False
@@ -51,12 +51,15 @@ class GDPR(BaseEditForm):
 
     def getPostalContainer(self, root, countryCode,
                            postalCode, countryName, latitude, longitude):
-        postalName = countryCode + "_" + postalCode
-        postalName = slugify (postalName)
+        postalContainerName = countryCode + "_" + postalCode
+        postalContainerName = slugify (postalName)
         postalContainer = root.get(postalName)
         if not postalContainer:
             directory = root["world"]
-            postalContainer = PostalCountryCode(countryCode, postalCode,
+            if directory == None:
+               directory = Page()                
+               root["world"] = directory
+            postalContainer = PostalCountryCode(countryCode, countryPostalCode,
                                                 countryName,
                                                 latitude,
                                                 longitude)
@@ -74,24 +77,24 @@ class GDPR(BaseEditForm):
         person = principal.get('person',None)
        
         #No Data
-        if ((countryName == "") and (postalCode == "")): 
+        if ((countryName == "") and (countryPostalCode == "")): 
            if person:
                del person.__parent__[person.__name__]
                principal.person = None
-           view.message = "You did not provide location information and "
-           view.message += "therefore are not listed. "
+           view.submissionError += "You did not provide location information and "
+           view.submissionError += "therefore are not listed. "
            return
            #???? message is the wrong variable name.
 
         #Only 1 data   
-        if (countryCode == "") != (postalCode == ""):
+        if (countryCode == "") != (countryPostalCode == ""):
             raise HTTPBadRequest(self.request.url)
         
 
         # Data looks good, get or create the postal container.
         postalContainer = self.getPostalContainer(root, 
                                                   principal.countryCode,
-                                                  principal.postalCode,
+                                                  principal.countryPostalCode,
                                                   principal.countryName,
                                                   principal.latitude,
                                                   principal.longitude)
