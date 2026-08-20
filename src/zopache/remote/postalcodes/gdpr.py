@@ -2,17 +2,18 @@
 
 from slugify import slugify
 
+from cromlech.security import Unauthorized
 from cromlech.browser.exceptions import HTTPFound
 from dolmen.forms.base import Actions
 from dolmen.forms.base import Fields
 from dolmen.forms.base import action, name, context, form_component
 from cromlech.browser.exceptions import HTTPBadRequest
+
 from zopache.crud import update as editActions
 from zopache.crud.actions import Cancel
 from zopache.crud.forms import BaseEditForm
 from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.remote.postalcodes.interfaces import IGDPRForm
-from zopache.remote.postalcodes.person import Person
 from zopache.remote.postalcodes.countrypostalcode import CountryPostalCode
 from zopache.ttw.interfaces import IInternalPrincipal
 from zopache.pages.page  import Page
@@ -28,6 +29,11 @@ class GDPR(BaseEditForm):
     fields = Fields(IGDPRForm)
     subTitle = ""
     allowAnonymous = False
+
+    def update(self):
+        if not (self.request.principal == self.context):
+            raise Unauthorized ("People can only update their own data.")
+        BaseEditForm.update(self)
         
     def acquireTitle(self):
        return 'GDPR Permissions'
@@ -46,8 +52,6 @@ class GDPR(BaseEditForm):
         
     def renderMenuBar(self,layout):
         return ""
-
-
 
     def getPostalContainer(self, root, countryCode,
                            postalCode, countryName, latitude, longitude):
@@ -72,45 +76,40 @@ class GDPR(BaseEditForm):
         countryCode = principal.countryCode
         countryName  = principal.countryName
         root = self.getSiteRoot()
+        principalFolder = self.getPrincipalFolder()
 
-
-        person = principal.get('person',None)
-       
-        #No Data
-        if ((countryName == "") and (postalCode == "")): 
-           if person:
-               del person.__parent__[person.__name__]
-               principal.person = None
+        #No Data - principal belongs in /root/person
+        if ((countryName == "") and (postalCode == "")):
+           if principal.__parent__ is not principalFolder:
+               name = principal.__name__
+               del principal.__parent__[name]
+               principalFolder[name] = principal
            view.submissionError += "You did not provide location information and "
            view.submissionError += "therefore are not listed. "
            return
 
-
-        #Only 1 data   
+        #Only 1 data
         if (countryCode == "") != (postalCode == ""):
             raise HTTPBadRequest(self.request.url)
-        
+
 
         # Data looks good, get or create the postal container.
-        postalContainer = self.getPostalContainer(root, 
+        postalContainer = self.getPostalContainer(root,
                                                   principal.countryCode,
                                                   principal.postalCode,
                                                   principal.countryName,
                                                   principal.latitude,
                                                   principal.longitude)
-        
-        # Address exists, create the person. 
-        if person == None:
-            person = Person(principal)
-            principal.person = person
-            postalContainer[person.__name__] = person
-            
-        #Postalcode was changed.                
-        elif person.__parent__!= postalContainer:
-            name = person.__name__    
-            del person.__parent__ [name]
-            postalContainer[person.__name__] = person
-            
+
+        # Move the principal itself into the postal container.
+        if principal.__parent__ is not postalContainer:
+            name = principal.__name__
+            if principal.__parent__ is principalFolder:
+                principalFolder.removeItem(principal)
+            else:
+                del principal.__parent__[name]
+            postalContainer[name] = principal
+
         del principal.countryCode
         del principal.latitude
         del principal.longitude

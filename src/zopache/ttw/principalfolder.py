@@ -194,6 +194,24 @@ class InternalPrincipal(FileBase,Page):
     email = property(getEmail, setEmail)
     id = property(getId)
     handle = property(getHandle, setHandle)    
+    @property
+    def mastodonId(self):
+        return self.handle
+
+    @property
+
+    def mastodonURL (self):
+        handle = self.handle.lstrip('@')
+        try:
+            username, domain = handle.split('@', 1)
+        except ValueError:
+            raise ValueError(
+                f"Invalid Mastodon ID format: {self.handle!r}. "
+                "Expected '@username@domain' or 'username@domain'."
+            )
+        
+        return f"https://{domain}/@{username}"
+
 
 
 
@@ -275,7 +293,8 @@ class PrincipalFolder(Container):
             return default
         
     def getPrincipalById(self,id):
-        return self.get(id)
+        root = getPublicationRoot(self)
+        return root.get(id)
 
     
     def notifyEmailChanged(self, oldEmail,  principal):
@@ -313,15 +332,22 @@ class PrincipalFolder(Container):
         root.addItem(principal)
         BTreeContainer.__setitem__(self,key,principal)
 
+
+    def unindexPrincipal(self,principal):
+        del self.idByEmail[principal.email]
+        del self.idBySlugifiedHandle[principal.slugifiedHandle()]
+
     #REALLY THIS IS DELETE USER    
     def __delitem__(self,name):
         principal = self[name]
         if IInternalPrincipal.providedBy(principal):
-            del self.idByEmail[principal.email]
-            del self.idBySlugifiedHandle[principal.slugifiedHandle()]
+            self.unindexPrincipal(principal)
         root = getPublicationRoot(self)
         root.deleteItem(principal)
         BTreeContainer.__delitem__(self,name)        
+
+    def removeItem(self,principal):
+        BTreeContainer.__delitem__(self,principal.__name__)
 
     def loginUser(self,user,form):
         session = getSession()

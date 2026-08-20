@@ -48,7 +48,7 @@ class BaseAction(Action):
         handle = "@" + email
         if email in principalFolder.idByEmail:
             personId = principalFolder.idByEmail[email]
-            person = principalFolder [personId]
+            person = principalFolder.getPrincipalById(personId)
             person.updateAccount(userLoginProxy,userInfo)
             principalFolder.loginUser(person,form)
             self.nextPage()

@@ -56,7 +56,7 @@ class GoogleLoginAction(Action,AccessGoogle):
     def innerCall(self,email,people):
         if email in people.idByEmail:
             personId = people.idByEmail[email]
-            person = people [personId]
+            person = people.getPrincipalById(personId)
 
             people.loginUser(person,self.form)   
             self.form.loggedIn = True

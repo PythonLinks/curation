@@ -36,6 +36,8 @@ class PrincipalDeleter(Deleter):
         container=contained.__parent__
         name=contained.__name__
         principalFolder = getPrincipalFolderNoView(container)
+        if container is not principalFolder:
+            principalFolder.unindexPrincipal(contained)
         self.describeTransaction("Deleted a principal",contained)
         del container[name]
 

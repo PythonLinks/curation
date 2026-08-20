@@ -239,6 +239,7 @@ class Branch(SimpleBranch):
             return
 
         for item in branch.values():
+
             if itemType.providedBy(item):
                 self.indexItem(item,
                                itemType = itemType,
@@ -258,7 +259,7 @@ class Branch(SimpleBranch):
                   ancestorNames = [],
                   indexingBranch = False):
 
-        if not IPageBase.providedBy(item):
+        if not ICanonical.providedBy(item):
             return
 
         self.valuesByToken[item.__name__] = item
@@ -333,8 +334,8 @@ class Branch(SimpleBranch):
             for organization in (
                        parentsWhichImplement(item,ILocationContainer)):
                 #This is a hack.  For some unknown reason
-                #IlocationContainer is providedBy PostalCodes. 
-                if organization.__class__.__name__ != "PostalCode":
+                #IlocationContainer is providedBy CountryPostalCodes. 
+                if organization.__class__.__name__ != "CountryPostalCode":
                    organization.mapPoints[item.name] = item
                    
     def catalogContent(self,item,ancestorNames):

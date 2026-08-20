@@ -61,6 +61,6 @@ purposes:</p>"""
 
 class ICountryPostalCode(ILocation, IPage):
     pass
+class IPostalCode(ILocation, IPage):
+    pass
     
-class IPerson (IPageBase):
-    pass    

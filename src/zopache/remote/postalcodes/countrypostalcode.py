@@ -10,7 +10,7 @@ from zopache.remote.postalcodes.interfaces import ICountryPostalCode
 class CountryPostalCode(Location,Page):
     webClass = "CountryPostalCode"
     webApproved = True
-    country = ""
+    countryName = ""
     postalCode = ""
     def __init__(self, countryCode, postalCode, countryName,latitude, longitude):
         Location.__init__(self)    
@@ -23,7 +23,7 @@ class CountryPostalCode(Location,Page):
 
     @property
     def title(self):
-            return self.country + " " + self.postalCode
+            return self.countryName + " " + self.postalCode
     
     def getMarkerLatLng (self):
         return self.latitude, self.longitude
