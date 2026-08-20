@@ -24,7 +24,7 @@ class PrincipalCopier(Copier):
 class PrincipalRenamer(Renamer):
     # YOU NEVER WANT TO RENMAE Principals
     def allowed(self,item):
-        return True
+        return False
 
 @crom.adapter
 @crom.sources(IInternalPrincipal)

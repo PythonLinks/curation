@@ -59,7 +59,7 @@ class IGDPRForm(Interface):
 to process my personal information for the following  
 purposes:</p>"""
 
-class IPostalCountryCode(ILocation, IPage):
+class ICountryPostalCode(ILocation, IPage):
     pass
     
 class IPerson (IPageBase):

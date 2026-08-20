@@ -383,7 +383,7 @@ class Branch(SimpleBranch):
            #self.categoryCatalog.unindex_doc(item.importTime)           
            #ERROR
 
-        elif item.__class__.__name__  == "JSONMarkdpwm":
+        elif item.__class__.__name__  == "JSONMarkdown":
             importTime = int(item.creationTime)
             if importTime in self.contentByTime:
                del self.contentByTime[importTime]
