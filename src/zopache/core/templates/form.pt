@@ -33,25 +33,31 @@
   <p>${structure: view.preamble}</p><br></span>  
 
   <tal:fields condition="view.fieldWidgets">
-    <div tal:attributes="class widget.required and 'form-group required' or 'form-group'"
-	 tal:repeat="widget view.bootstrap_widgets()">
-      <span tal:content="structure view.before(widget)"></span>
-      <nobr>
-      <tal:widget  tal:condition= "view.isBool(widget)"  tal:content="structure widget.render()" />&nbsp;<label for="#"
-             tal:attributes="for widget.htmlId()"
-             tal:content="widget.title"
-             tal:condition="widget.visible" />
-	     </nobr>
-      <p tal:condition="widget.description and widget.visible"
-	 tal:content="widget.description"
-	 class="field-description" />
-      <p class="text-danger"
-	 tal:define="error widget.error"
-	 tal:condition="error"
-	 tal:content="error.title" />
+    <tal:widgetloop tal:repeat="widget view.bootstrap_widgets()">
 
-      <tal:widget  tal:condition= " not view.isBool(widget)"  tal:content="structure widget.render()" />
-    </div>
+      <!-- hidden widgets: emit just the input, no wrapper/label/space -->
+      <tal:hidden tal:condition="not widget.visible"
+                  tal:content="structure widget.render()" />
+
+      <div tal:condition="widget.visible"
+           tal:attributes="class widget.required and 'form-group required' or 'form-group'">
+        <span tal:content="structure view.before(widget)"></span>
+        <nobr>
+        <tal:widget  tal:condition="view.isBool(widget)"  tal:content="structure widget.render()" />&nbsp;<label for="#"
+               tal:attributes="for widget.htmlId()"
+               tal:content="widget.title" />
+	       </nobr>
+        <p tal:condition="widget.description"
+	   tal:content="widget.description"
+	   class="field-description" />
+        <p class="text-danger"
+	   tal:define="error widget.error"
+	   tal:condition="error"
+	   tal:content="error.title" />
+
+        <tal:widget  tal:condition="not view.isBool(widget)"  tal:content="structure widget.render()" />
+      </div>
+    </tal:widgetloop>
   </tal:fields>
   <div>
   <tal:actions tal:condition="view.actionWidgets">

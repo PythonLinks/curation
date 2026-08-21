@@ -7,6 +7,7 @@ from cromlech.browser.exceptions import HTTPFound
 from dolmen.forms.base import Actions
 from dolmen.forms.base import Fields
 from dolmen.forms.base import action, name, context, form_component
+from dolmen.forms.base.markers import HIDDEN
 from cromlech.browser.exceptions import HTTPBadRequest
 
 from zopache.crud import update as editActions
@@ -27,12 +28,17 @@ class GDPR(BaseEditForm):
     dataValidators = [InvariantsValidation]
     layoutName = "UserMenu"
     fields = Fields(IGDPRForm)
+    fields["countryCode"].mode = HIDDEN
+    fields["city"].mode = HIDDEN
+    fields["province"].mode = HIDDEN
+    fields["latitude"].mode = HIDDEN
+    fields["longitude"].mode = HIDDEN
     subTitle = ""
     allowAnonymous = False
 
     def update(self):
-        if not (self.request.principal == self.context):
-            raise Unauthorized ("People can only update their own data.")
+        #if not (self.request.principal == self.context):
+        #    raise Unauthorized ("People can only update their own data.")
         BaseEditForm.update(self)
         
     def acquireTitle(self):
@@ -40,7 +46,7 @@ class GDPR(BaseEditForm):
 
     def newURL(self,new):
         root = self.getSiteRoot()
-        newURL =   root.homePage + self.randomIndex() 
+        newURL =   root.homePage #+ self.randomIndex() 
         raise HTTPFound(newURL)
     
     def addUnAuthorizedActions(self):
@@ -53,17 +59,94 @@ class GDPR(BaseEditForm):
     def renderMenuBar(self,layout):
         return ""
 
+    def headerScripts(self):
+        result = BaseEditForm.headerScripts(self)
+        accessToken = self.getSiteRoot().mapBoxKey
+        result += f"""
+<script src="https://api.mapbox.com/search-js/v1.6.0/web.js"></script>
+<script>
+var mapboxAccessToken = "{accessToken}";
+
+function createCountrySearchBox(fieldName) {{
+    var countryField = document.getElementById(fieldName);
+    countryField.style.display = 'none';
+    var searchBox = new mapboxsearch.MapboxSearchBox();
+    searchBox.accessToken = mapboxAccessToken;
+    searchBox.options = {{types: 'country'}};
+    searchBox.addEventListener('retrieve', onCountrySelected);
+    countryField.after(searchBox);
+}}
+
+function onCountrySelected(event) {{
+    var country = event.detail.features[0].properties.context.country;
+    document.getElementById('form-field-countryName').value = country.name;
+    document.getElementById('form-field-countryCode').value = country.country_code;
+    lookupPostalCode();
+}}
+
+function showPostalCodeError(message) {{
+    var oldError = document.getElementById('postalcode-error');
+    if (oldError) {{ oldError.remove(); }}
+    var postalField = document.getElementById('form-field-postalCode');
+    var errorSpan = document.createElement('span');
+    errorSpan.id = 'postalcode-error';
+    errorSpan.className = 'text-danger';
+    errorSpan.textContent = message;
+    postalField.after(errorSpan);
+}}
+
+function lookupPostalCode() {{
+    var postalCode = document.getElementById('form-field-postalCode').value;
+    var countryCode = document.getElementById('form-field-countryCode').value;
+    if (!postalCode || !countryCode) {{ return; }}
+    var url = "https://api.mapbox.com/search/geocode/v6/forward"
+        + "?q=" + encodeURIComponent(postalCode)
+        + "&country=" + countryCode
+        + "&types=postcode"
+        + "&access_token=" + mapboxAccessToken;
+    fetch(url)
+        .then(function(response) {{ return response.json(); }})
+        .then(function(data) {{
+            if (!data.features || data.features.length === 0) {{
+                showPostalCodeError("Could not find that postal code for the selected country.");
+                return;
+            }}
+            var coordinates = data.features[0].geometry.coordinates;
+            document.getElementById('form-field-longitude').value = coordinates[0];
+            document.getElementById('form-field-latitude').value = coordinates[1];
+        }})
+        .catch(function() {{
+            showPostalCodeError("Could not reach the postal code lookup service.");
+        }});
+}}
+</script>
+"""
+        return result
+
+    def footerScripts(self):
+        result = BaseEditForm.footerScripts(self)
+        result += """
+<script>
+createCountrySearchBox('form-field-countryName');
+document.getElementById('form-field-postalCode').addEventListener('blur', lookupPostalCode);
+</script>
+"""
+        return result
+
     def getPostalContainer(self, root, countryCode,
-                           postalCode, countryName, latitude, longitude):
+                           postalCode, city, province,
+                           countryName, latitude, longitude):
         postalContainerName = countryCode + "_" + postalCode
         postalContainerName = slugify (postalContainerName)
-        postalContainer = root.get(postalContainerName)
+        postalContainer = root.get(postalContainerName,city,)
         if not postalContainer:
             directory = root["world"]
             if directory == None:
                directory = Page()                
                root["world"] = directory
             postalContainer = CountryPostalCode(countryCode, postalCode,
+                                                city,
+                                                province,
                                                 countryName,
                                                 latitude,
                                                 longitude)
@@ -110,8 +193,7 @@ class GDPR(BaseEditForm):
                 del principal.__parent__[name]
             postalContainer[name] = principal
 
-        del principal.countryCode
         del principal.latitude
         del principal.longitude
-        newURL = view.secureShortURL(context= postalContainer)
+        newURL = "/world"
         raise HTTPFound(newURL)

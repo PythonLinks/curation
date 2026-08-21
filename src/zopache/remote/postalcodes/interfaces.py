@@ -13,8 +13,7 @@ class IGDPRForm(Interface):
 
     postalCode  = schema.TextLine(
         title='Your Postal code', required=False,
-        default = "",
-        description = "Please enter both Country Name and Postal Code.  To not be listed enter neither one. ")    
+        default = "")
 
     gdprPermission = schema.Bool(
         title = """To run this web site, including cookie-based logins.""",
@@ -30,6 +29,14 @@ class IGDPRForm(Interface):
     countryCode  = schema.TextLine(
         title='Your country code', required=False,
         default = "")
+
+    city  = schema.TextLine(
+        title='Your country code', required=False,
+        default = "")
+
+    province  = schema.TextLine(
+        title='Your country code', required=False,
+        default = "")        
 
     @invariant
     def checkForBothCountryAndCountryPostalCodeOrNeither(data):
@@ -55,12 +62,13 @@ class IGDPRForm(Interface):
         default = 0.,
         required = True,
     )
-    gdprPermission.text = """ <p> I give permission 
+    gdprPermission.text = """
+    <p> Please enter both Country Name and Postal Code.  To not be listed enter neither one. </p>
+    <p> I give permission 
 to process my personal information for the following  
 purposes:</p>"""
 
 class ICountryPostalCode(ILocation, IPage):
     pass
-class IPostalCode(ILocation, IPage):
-    pass
+
     
