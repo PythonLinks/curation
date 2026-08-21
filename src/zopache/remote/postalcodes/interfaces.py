@@ -16,14 +16,9 @@ class IGDPRForm(Interface):
         default = "")
 
     gdprPermission = schema.Bool(
-        title = """To run this web site, including cookie-based logins.""",
+        title = ("To run this web site, including cookie-based "
+                 "authentication.",
         required = True,
-        default = False)
-
-    linkPermission = schema.Bool(
-        title = ("To add a link to my Mastodon or Fediverse account from " +
-                "the page for my postal code."),
-        required = False,
         default = False)
 
     countryCode  = schema.TextLine(
@@ -41,16 +36,9 @@ class IGDPRForm(Interface):
     @invariant
     def checkForBothCountryAndCountryPostalCodeOrNeither(data):
         if bool(data.countryCode) != bool(data.postalCode):
-            if (data.countryCode):
-                message = ("You entered a country name, the country code "
-                           "was correctly calculated, but there "
-                           "was no postal code provided. Please enter a "
-                           "postal code or delete the country name. "
-                           "Not providing both country and postal code will "
-                           "hide the link to your fediverse account.")
-            else:
-                message = ("You entered a postal code, but the mapbox api "
-                          "was not able to calculate the country code.")
+            message = ("Please enter a valid country name and postal "
+                       "code pair.  It is also okay to leave both blank, "
+                       "then your fediverse account will not be displayed.")
             raise Invalid(message)
 
     latitude = schema.Float(

@@ -66,6 +66,7 @@ class GDPR(BaseEditForm):
 <script src="https://api.mapbox.com/search-js/v1.6.0/web.js"></script>
 <script>
 var mapboxAccessToken = "{accessToken}";
+var postalCodeDebounceTimer;
 
 function createCountrySearchBox(fieldName) {{
     var countryField = document.getElementById(fieldName);
@@ -85,9 +86,13 @@ function onCountrySelected(event) {{
     lookupPostalCode();
 }}
 
-function showPostalCodeError(message) {{
+function clearPostalCodeError() {{
     var oldError = document.getElementById('postalcode-error');
     if (oldError) {{ oldError.remove(); }}
+}}
+
+function showPostalCodeError(message) {{
+    clearPostalCodeError();
     var postalField = document.getElementById('form-field-postalCode');
     var errorSpan = document.createElement('span');
     errorSpan.id = 'postalcode-error';
@@ -109,12 +114,19 @@ function lookupPostalCode() {{
         .then(function(response) {{ return response.json(); }})
         .then(function(data) {{
             if (!data.features || data.features.length === 0) {{
-                showPostalCodeError("Could not find that postal code for the selected country.");
+                document.getElementById('form-field-countryCode').value = '';
+                showPostalCodeError("Please enter a valid country name and postal "
+                    + "code pair.  It is also okay to leave both blank, "
+                    + "then your fediverse account will not be displayed.");
                 return;
             }}
+            clearPostalCodeError();
             var coordinates = data.features[0].geometry.coordinates;
             document.getElementById('form-field-longitude').value = coordinates[0];
             document.getElementById('form-field-latitude').value = coordinates[1];
+            var context = data.features[0].properties.context;
+            document.getElementById('form-field-city').value = context.place ? context.place.name : '';
+            document.getElementById('form-field-region').value = context.region ? context.region.name : '';
         }})
         .catch(function() {{
             showPostalCodeError("Could not reach the postal code lookup service.");
@@ -130,6 +142,10 @@ function lookupPostalCode() {{
 <script>
 createCountrySearchBox('form-field-countryName');
 document.getElementById('form-field-postalCode').addEventListener('blur', lookupPostalCode);
+document.getElementById('form-field-postalCode').addEventListener('input', function() {
+    clearTimeout(postalCodeDebounceTimer);
+    postalCodeDebounceTimer = setTimeout(lookupPostalCode, 400);
+});
 </script>
 """
         return result
