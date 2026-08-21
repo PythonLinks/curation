@@ -31,19 +31,27 @@ class IGDPRForm(Interface):
         default = "")
 
     city  = schema.TextLine(
-        title='Your country code', required=False,
+        title='Your city', required=False,
         default = "")
 
-    province  = schema.TextLine(
-        title='Your country code', required=False,
+    region  = schema.TextLine(
+        title='Your state or province', required=False,
         default = "")        
 
     @invariant
     def checkForBothCountryAndCountryPostalCodeOrNeither(data):
-        if bool(data.countryName) != bool(data.postalCode):
-            raise Invalid(
-                "Please enter both Country Name and Postal Code, "
-                "or leave both blank to not be listed.")
+        if bool(data.countryCode) != bool(data.postalCode):
+            if (data.countryCode):
+                message = ("You entered a country name, the country code "
+                           "was correctly calculated, but there "
+                           "was no postal code provided. Please enter a "
+                           "postal code or delete the country name. "
+                           "Not providing both country and postal code will "
+                           "hide the link to your fediverse account.")
+            else:
+                message = ("You entered a postal code, but the mapbox api "
+                          "was not able to calculate the country code.")
+            raise Invalid(message)
 
     latitude = schema.Float(
         title = u'Lattitude',

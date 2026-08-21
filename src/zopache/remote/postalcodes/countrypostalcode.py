@@ -12,12 +12,12 @@ class CountryPostalCode(Location,Page):
     webApproved = True
     countryName = ""
     postalCode = ""
-    def __init__(self, countryCode, postalCode, city, province,countryName,latitude, longitude):
+    def __init__(self, countryCode, postalCode, city, region,countryName,latitude, longitude):
         Location.__init__(self)    
         self.__name__    = slugify(countryCode +  '_' + postalCode)
         self.postalCode  = postalCode
         self.city = city
-        self.province = province
+        self.region = region
         self.latitude    = latitude
         self.longitude   = longitude
         self.countryCode = countryCode

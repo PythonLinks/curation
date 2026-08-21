@@ -30,7 +30,7 @@ class GDPR(BaseEditForm):
     fields = Fields(IGDPRForm)
     fields["countryCode"].mode = HIDDEN
     fields["city"].mode = HIDDEN
-    fields["province"].mode = HIDDEN
+    fields["region"].mode = HIDDEN
     fields["latitude"].mode = HIDDEN
     fields["longitude"].mode = HIDDEN
     subTitle = ""
@@ -75,6 +75,7 @@ function createCountrySearchBox(fieldName) {{
     searchBox.options = {{types: 'country'}};
     searchBox.addEventListener('retrieve', onCountrySelected);
     countryField.after(searchBox);
+    searchBox.value = countryField.value;
 }}
 
 function onCountrySelected(event) {{
@@ -134,11 +135,11 @@ document.getElementById('form-field-postalCode').addEventListener('blur', lookup
         return result
 
     def getPostalContainer(self, root, countryCode,
-                           postalCode, city, province,
+                           postalCode, city, region,
                            countryName, latitude, longitude):
         postalContainerName = countryCode + "_" + postalCode
         postalContainerName = slugify (postalContainerName)
-        postalContainer = root.get(postalContainerName,city,)
+        postalContainer = root.get(postalContainerName,None)
         if not postalContainer:
             directory = root["world"]
             if directory == None:
@@ -146,7 +147,7 @@ document.getElementById('form-field-postalCode').addEventListener('blur', lookup
                root["world"] = directory
             postalContainer = CountryPostalCode(countryCode, postalCode,
                                                 city,
-                                                province,
+                                                region,
                                                 countryName,
                                                 latitude,
                                                 longitude)
@@ -180,7 +181,9 @@ document.getElementById('form-field-postalCode').addEventListener('blur', lookup
         postalContainer = self.getPostalContainer(root,
                                                   principal.countryCode,
                                                   principal.postalCode,
-                                                  principal.countryName,
+                                                  principal.city,
+                                                  principal.region,
+                                                  principal.countryName, 
                                                   principal.latitude,
                                                   principal.longitude)
 
