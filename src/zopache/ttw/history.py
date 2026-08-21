@@ -17,6 +17,7 @@ from zopache.ttw.interfaces import IHistoryItem
 from DateTime import DateTime
 from zopache.core.breadcrumbs import Breadcrumbs
 from zopache.core.interfaces import ITreeSecurity
+from ZODB.POSException import POSKeyError
 
 
 def getHistory(obj, first=0, last=20):
@@ -24,7 +25,7 @@ def getHistory(obj, first=0, last=20):
 
     Each record is a dict with "speaking" keys (see 'IStorage.history'),
     plus 'time' (a 'DateTime') and 'obj' (the state of *obj* as of that
-    revision).
+    revision, or None if that revision has since been packed out of storage).
     '''
     jar = obj._p_jar
     oid = obj._p_oid
@@ -32,7 +33,12 @@ def getHistory(obj, first=0, last=20):
     history = db.history(oid, last)[first:]
     for d in history:
         d['time'] = DateTime(d['time'])
-        d['obj'] = db.open(at=d['tid']).get(oid)
+        try:
+            historicObj = db.open(at=d['tid']).get(oid)
+            historicObj._p_activate()
+            d['obj'] = historicObj
+        except POSKeyError:
+            d['obj'] = None
     return history
 @view_component
 @name('history')
@@ -65,8 +71,11 @@ class History(Page, Breadcrumbs):
 @implementer (IHistoricDetails)
 class HistoricIndex(Page):
        def render(self ):
+           item = self.context.item['obj']
+           if item is None:
+              return "<html><body>This revision is no longer available (its data has been packed away).</body></html>"
            before = '<html><body></body><textarea rows="20" cols="80" margin: 20px; padding: 20px;>'
-           content = self.context.item['obj'].source
+           content = item.source
            after = "</textarea></body></html>"
            return  before + content + after
 
@@ -78,7 +87,9 @@ class HistoricIndex(Page):
 @implementer (IHistoricDetails)
 class HistoricView (Page):
        def render(self ):
-           item=self.context.item['obj']           
+           item=self.context.item['obj']
+           if item is None:
+              return "This revision is no longer available (its data has been packed away)."
            return item(self)
 
 @view_component
@@ -90,6 +101,9 @@ class Restore(Page):
            context=self.context
            contextParent=context.__parent__
            item=context.item['obj']
+           if item is None:
+              newURL=self.absoluteURL(self.context.__parent__)+'/history'
+              raise HTTPFound(newURL)
            if hasattr(item,'title'):
               contextParent.title=item.title
            if hasattr(item,'source'):
