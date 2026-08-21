@@ -8,7 +8,7 @@ class GeoCodeForm(object):
     
     postAmble = """ When you submit the form, please be patient, 
             the server has to contact Google GeoCoding to 
-            convert the address into a lattitude and longitude.  That   
+            convert the address into a latitude and longitude.  That   
             takes a few seconds. """
     
 class GeoCodeObject(Address):

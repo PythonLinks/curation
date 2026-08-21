@@ -139,7 +139,7 @@ class OnlineOrganizationProperties(SocialProperties):
     def getHasEvents(self):
         return self.getOrganiztion("hasEvents")    
 
-#LOCATION BASED ORGANIZATIONS HAVE LATTITUDE AND LONGITUDE    
+#LOCATION BASED ORGANIZATIONS HAVE LATITUDE AND LONGITUDE    
 class LocalOrganizationProperties(OnlineOrganizationProperties):
     @property
     def latitude(self):

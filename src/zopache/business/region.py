@@ -14,7 +14,7 @@ class RegionBase(MapBase):
     specialization = ''
     showChildren = True
     webClass = "Region"
-    
+    remoteURL = ""    
     def redundantRemoteURL(self):
         return ""
 

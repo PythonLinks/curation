@@ -17,7 +17,7 @@ class IGDPRForm(Interface):
 
     gdprPermission = schema.Bool(
         title = ("To run this web site, including cookie-based "
-                 "authentication.",
+                 "authentication."),
         required = True,
         default = False)
 
@@ -42,8 +42,8 @@ class IGDPRForm(Interface):
             raise Invalid(message)
 
     latitude = schema.Float(
-        title = u'Lattitude',
-        description = u'Lattitude',
+        title = u'Latitude',
+        description = u'Latitude',
         min=-90.,
         max=90.,
         default = 51.509865,

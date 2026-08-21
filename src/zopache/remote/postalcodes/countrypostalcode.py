@@ -60,7 +60,7 @@ class CountryPostalCode(Location,Page):
         Page.__delitem__(self,key)
         if len (self) == 0:
            root = self.getPublicationRoot()
-           root.unIndexItem(self)
            parent = self.__parent__
            name = self.__name__
+           root.unIndexItem(self)
            del parent [name]

@@ -235,14 +235,25 @@ class IGeography(Interface):
     pass
 
 class ILatLng(Interface):
+    #Misspelled attribute is left here to not break thigns.
+    # It is slowly being eliminated. 
     lattitude = schema.Float(
-        title = u'Lattitude',
-        description = u'Lattitude',
+        title = u'Latitude',
+        description = u'Latitude',
         min=-90.,
         max=90.,
         default = 51.509865,
         required = True,
         )
+
+    latitude = schema.Float(
+        title = u'Latitude',
+        description = u'Latitude',
+        min=-90.,
+        max=90.,
+        default = 51.509865,
+        required = True,
+        )    
 
     longitude = schema.Float(
         title = u'Longitude',

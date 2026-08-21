@@ -113,8 +113,8 @@ class IMapOrganizationBase (IPageBase):
 
 
     lattitude = schema.Float(
-        title = u'Lattitude',
-        description = u'Lattitude',
+        title = u'Latitude',
+        description = u'Latitude',
         min=-90.,
         max=90.,
         default = 51.509865,

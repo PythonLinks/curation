@@ -82,7 +82,7 @@ class Organization  (
         imageURL = view.requestJsonDict['introduction']['logoURL']
         getImage(self, imageURL)
     
-#SO maps have Lattitude and Longitude.
+#SO maps have Latitude and Longitude.
 #Companies now use getMarketLngLtd
 from zopache.business.imaporganization import IMapOrganization, IEndorsingOrganization
 @implementer (IMapOrganization)
