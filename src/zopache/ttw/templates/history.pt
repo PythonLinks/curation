@@ -20,9 +20,7 @@ Modified:  ${structure: view.results()[0]['time'].hour()} :
 </tr>
 <tal:block tal:repeat="result view.results()">
 <tr tal:condition="result['obj'] is None">
-  <td>
-    <input type="checkbox" tal:attributes="name string:selected; value repeat.result.index">
-  </td>
+  <td></td>
   <td tal:content="repeat.result.length - repeat.result.index" >0, 1, 2
   </td>
   <td></td>

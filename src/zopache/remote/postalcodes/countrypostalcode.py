@@ -25,7 +25,9 @@ class CountryPostalCode(Location,Page):
 
     @property
     def title(self):
-            return self.countryName + " " + self.postalCode
+            return ( self.city + " " +
+                     self.countryName + " " +
+                     self.postalCode)
     
     def getMarkerLatLng (self):
         return self.latitude, self.longitude
