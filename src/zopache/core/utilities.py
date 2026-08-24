@@ -46,11 +46,11 @@ class Utilities (object):
         except UnboundLocalError:
             pass
 
-    def receiveMessage(self):
+    def receiveMessage(self,type = None):
         result = ""
         receiver = MessageReceiver (SessionSource())
         result += "<ul>"
-        for item in receiver.receive():
+        for item in receiver.receive(type = type):
             result += "<li>"
             result += item["body"]
             result += "</li>"

@@ -10,6 +10,10 @@
      tal:condition="view.status">
      ${structure: view.status}</p>
 
+    <div class="text-danger">
+       ${view.receiveMessage(type="Error")}
+    </div>
+    
   <div class="text-danger"
        tal:condition="view.errors" style = "color:red">
        ${structure: view.submissionError}

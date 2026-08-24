@@ -1,6 +1,8 @@
 from mastodon import Mastodon
 from cromlech.security import unauthenticated_principal as anonymous
 
+TIMEOUT = 7
+
 class BaseBot (object):
 
     def proxyForUser(self):
@@ -30,21 +32,28 @@ class BaseBot (object):
         return result
 
     
-    def createMastodon(self):
+    def createMastodon(self, timeout):
         context = self.context
         fileName =  ("/app/data/oauth/" +
                     self.getDomain() +
                     "/" +
-                    self.getOauthServer() + 
+                    self.getOauthServer() +
                     ".secret")
-        mastodon = Mastodon(client_id = fileName,)
+        mastodon = Mastodon(client_id = fileName, request_timeout = timeout)
         return mastodon
 
     def getParams(self):
-        mastodon  = self.createMastodon()        
+        fileName =  ("/app/data/oauth/" +
+                    self.getDomain() +
+                    "/" +
+                    self.getOauthServer() +
+                    ".secret")
+        with open(fileName) as secretFile:
+            clientID = secretFile.readline().rstrip()
+            clientSecret = secretFile.readline().rstrip()
         params = dict()
-        params['client_id'] = mastodon.client_id
-        params['client_secret'] = mastodon.client_secret
+        params['client_id'] = clientID
+        params['client_secret'] = clientSecret
         return params
     
 class MastodonBot(BaseBot):
@@ -52,7 +61,7 @@ class MastodonBot(BaseBot):
 
     def userLoginProxy(self,code):
         context = self.context
-        mastodon  = self.createMastodon()
+        mastodon  = self.createMastodon(TIMEOUT)
         result = mastodon.log_in( code = code ,
                                #scopes = self.SCOPES,
                                redirect_uri= self.callbackURL())

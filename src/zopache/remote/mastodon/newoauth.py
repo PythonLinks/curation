@@ -1,0 +1,53 @@
+"""
+This form just checks if the user entered a valid domain name,
+and if so, redirects them to /person/moauth/<mastodon_server>
+which does the real work of the mastodon oauth process flow.
+"""
+
+from zope.interface import Interface
+from zope.schema import DottedName
+
+from zopache.core.viewdecorators import *
+from zopache.core.baseform import Form
+from zopache.ttw.interfaces import IPrincipalFolder
+from dolmen.forms.base import Actions, Action, SuccessMarker
+from dolmen.forms.base.markers import FAILURE
+
+
+class IDomain(Interface):
+
+    domain = DottedName(
+        title = u'Domain Name',
+        description = ("the domain name of your "
+                       " Mastodon/Fediverse oauth "
+                       "server which you wish to use to login here."),
+        required = True,
+    )
+
+class CreateAndUse(Action):
+
+    def __call__(self, form): 
+        data, errors = form.extractData()
+        if errors:
+            form.submissionError = errors
+            return FAILURE
+
+        domain = data['domain']
+        newURL = "/person/moauth/" + domain
+        return SuccessMarker('Logging In', True, url=newURL)
+
+@form_component
+@name ('oauth')
+@context(IPrincipalFolder)
+class OtherServer (Form):
+    title = "Mastodon or Fediverse Oauth Login"
+    subTitle = 'Please enter the domain name of your home server.'
+    allowAnonymous = True
+    interface = IDomain
+    fields = Fields(IDomain)
+    actions = Actions(CreateAndUse("Login"))
+    fields["domain"].htmlAttributes = {"placeholder":
+               "e.g. example.social"}
+    def acquireTitle(self):
+        return "Oauth Login"
+
