@@ -29,7 +29,14 @@ class MastodonOauth(Form,MastodonBot):
             self.mastodonOauth()
 
     def githubOauth(self):
-        params = self.getParams()
+        # credential file missing -> show error, re-render this page
+        try:
+            params = self.getParams()
+        except FileNotFoundError:
+            self.submissionErrors.append(
+                "Github oauth credential file does not exist.")
+            return
+
         params['redirect_uri'] = self.callbackURL()
         params['scope'] = ["read:user", "read:email"]
 
@@ -40,12 +47,12 @@ class MastodonOauth(Form,MastodonBot):
     
     def mastodonOauth(self):
         domain = self.getOauthServer()
-        wikiDomain = self.getDomain()        
+        wikiDomain = self.getDomain().lower()        
         appDirectory = Path("/app/data/oauth") / wikiDomain
         secretFile = appDirectory / (domain + '.secret')
-        errorURL = "/person/oauth?form.fields.domain=" + domain
+        errorURL = "/person/oauth?form.field.domain=" + domain
         if not secretFile.exists():
-            appName = self.getSiteRoot().title or (wikiDomain + "Oauth")
+            appName = (self.getSiteRoot().title or (wikiDomain + "Oauth")).strip()
             try:
                 subprocess.run(
                     ["python3", "/app/data/oauth/make_app.py",
@@ -65,11 +72,14 @@ class MastodonOauth(Form,MastodonBot):
                  redirect_uris = self.redirectURL(),
                  #   scopes=self.SCOPES,
                  force_login=False)
-           raise HTTPFound(url)
         except Exception as e:
             message = str(e)
-            self.sendMessage(message, type = "Error")                        
-            raise HTTPFound(errorURL)           
+            self.sendMessage(message, type = "Error")
+            raise HTTPFound(errorURL)
+        # No error, all is good - redirect outside the try so this
+        # HTTPFound (itself an Exception, used for control flow) is
+        # not caught by the except block above.
+        raise HTTPFound(url)
             
     
 

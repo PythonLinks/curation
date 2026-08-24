@@ -34,9 +34,9 @@ class Utilities (object):
     def ago (self,time):
         return arrow.get(time).humanize()
       
-    def sendMessage(self,message):
+    def sendMessage(self,message, type = None):
         source = SessionSource()
-        source.send(message)
+        source.send(message, type = type)
         try:
             len1 = len(source)
             if len1 > 2:

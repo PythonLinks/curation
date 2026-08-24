@@ -26,7 +26,7 @@ class IDomain(Interface):
 
 class CreateAndUse(Action):
 
-    def __call__(self, form): 
+    def __call__(self, form):
         data, errors = form.extractData()
         if errors:
             form.submissionError = errors

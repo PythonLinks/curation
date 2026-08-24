@@ -16,13 +16,13 @@ class BaseBot (object):
 
     def getOauthServer(self):
         path = self.request.url.split('?')[0]
-        return path.rstrip('/').split('/')[-1]
+        return path.rstrip('/').split('/')[-1].lower()
 
     def redirectURL(self):
          return self.callbackURL()
      
     def callbackURL(self):
-        domain = self.getDomain()
+        domain = self.getDomain().lower()
         oauthServer = self.getOauthServer()
         result = ("https://"+
                   domain +
@@ -35,7 +35,7 @@ class BaseBot (object):
     def createMastodon(self, timeout):
         context = self.context
         fileName =  ("/app/data/oauth/" +
-                    self.getDomain() +
+                    self.getDomain().lower() +
                     "/" +
                     self.getOauthServer() +
                     ".secret")
@@ -44,7 +44,7 @@ class BaseBot (object):
 
     def getParams(self):
         fileName =  ("/app/data/oauth/" +
-                    self.getDomain() +
+                    self.getDomain().lower() +
                     "/" +
                     self.getOauthServer() +
                     ".secret")

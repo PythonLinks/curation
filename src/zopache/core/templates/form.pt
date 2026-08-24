@@ -11,7 +11,7 @@
      ${structure: view.status}</p>
 
     <div class="text-danger">
-       ${view.receiveMessage(type="Error")}
+       ${structure: view.receiveMessage(type="Error")}
     </div>
     
   <div class="text-danger"

@@ -1,20 +1,22 @@
 # OUTH FLOW
 
-First of all go to /app/data/oauth
-and read the README for how to get credentials. 
+Oauth credentials used be created on the files system.  
+You can go to /app/data/oauth
+and read the README for how that worked. . 
 
-The menu URL takes the users to 
-/oauth/wiki.pythonlinks.info/mastodon.social/moauth
+The new system is tht the user goes to
+/person/oauth
+And enters the mastodon domain name.
 
-That looks up the secrets and sends him to Mastodon which sends him
-back with a callback to /person/callback
+The server checks if it is a valide DottedName.
+If so, it redirects to
+/person/moauth/<mastodon_domain>
 
-That then logs him in.
+That checks if there is a valid credential, and if not creates it.  It
+then reads the credentials and sends the user to the
+Mastodon/Fediverse server which has the user login, and approve the
+oauth process flow. It then sends him back with a callback to
+/person/callback/<Mastodon_domain>
+That then gets his details, if needed creates the account, and then
+logs him in.  If he is new, it sends him to the gdpr page. 
 
-
-Then do the Oauth flow.  Create the URL, and go to it.  The user logs in, 
-redirects to the ..../callback and now you have the access token for that 
-individual.  You can now get information about that individual.  And then 
-either send the to the registration page, or log them in. 
-
-Quite tricky because thare are two access tokens, the apps and the users. 
