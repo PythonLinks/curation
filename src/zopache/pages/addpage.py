@@ -17,10 +17,9 @@ from zopache.pages.interfaces import (
                                       IPageBase,
                                       ISiteRootPage,
                                       IProxyPage,
-                                      IActionNetwork,
                                       ILocationCategory,
                                       IMapCategory )
-from zopache.pages.page import Page, Link, SiteRootPage, ActionNetwork
+from zopache.pages.page import Page, Link, SiteRootPage
 from zopache.pages.location import SimpleMap, Location, Pin
 from zopache.core.interfaces import ITreeSecurity
 from zopache.business.exists import Duplicate
@@ -113,19 +112,6 @@ class AddProxyPage(AddAuthorizedPage):
     subTitle = "This displays content from another page."
     factory = ProxyPage    
     
-
-@view_component
-@name('addAction')
-@target(IView)
-@context(IPageBase)
-@implementer(ITreeSecurity)
-class AddAction(AddAuthorizedPage):
-    interface = IActionNetwork
-    title = "Add a Remote Action"
-    factory = ActionNetwork
-
-
-
 #LOCAION
 @view_component
 @name('addLocation')

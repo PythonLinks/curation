@@ -1,5 +1,6 @@
-import subprocess
 from pathlib import Path
+
+from mastodon import Mastodon
 
 from requests.models import urlencode
 
@@ -9,7 +10,6 @@ from zopache.core.viewdecorators import *
 from zopache.core.baseform import Form
 from zopache.ttw.interfaces import IPrincipalFolder
 from zopache.remote.mastodon.basebot import MastodonBot, TIMEOUT
-
 
 @form_component
 @context(IPrincipalFolder)
@@ -46,20 +46,25 @@ class MastodonOauth(Form,MastodonBot):
 
     
     def mastodonOauth(self):
-        domain = self.getOauthServer()
+        mastodonDomain = self.getOauthServer()
         wikiDomain = self.getDomain().lower()        
         appDirectory = Path("/app/data/oauth") / wikiDomain
-        secretFile = appDirectory / (domain + '.secret')
-        errorURL = "/person/oauth?form.field.domain=" + domain
+        secretFile = appDirectory / (mastodonDomain + '.secret')
+        errorURL = "/person/oauth?form.field.domain=" + mastodonDomain
         if not secretFile.exists():
-            appName = (self.getSiteRoot().title or (wikiDomain + "Oauth")).strip()
+            appName = (self.getSiteRoot().appName or (wikiDomain + " Oauth")).strip()
             try:
-                subprocess.run(
-                    ["python3", "/app/data/oauth/make_app.py",
-                     wikiDomain, domain, appName],
-                    timeout=TIMEOUT)
-            except subprocess.TimeoutExpired:
-                pass
+                app = Mastodon.create_app(
+                    appName,
+                    api_base_url = wikiDomain,
+                    redirect_uris = self.callbackURL(),
+                    request_timeout = TIMEOUT,
+                    to_file = str(secretFile)
+                    )
+            except Exception as e:
+                message = str(e)
+                self.sendMessage(message, type = "Error")
+                raise HTTPFound(errorURL)
 
         if not secretFile.exists():
             message = "Failed to create oauth appication. "

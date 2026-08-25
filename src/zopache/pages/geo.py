@@ -14,7 +14,7 @@ class GeoCode(object):
           return self.lat, self.long 
         self.lastAddress = address        
         gmaps = googlemaps.Client(
-              key='AIzaSyDDaUjNtOIKx8B0WaXFypAWZo1x7m2avPQ')
+              key='YOUR KEY HERE')
 
         geocode_result = gmaps.geocode(self.address)
         result=geocode_result[0][u'geometry'] [u'location']

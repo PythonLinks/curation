@@ -13,12 +13,19 @@ from zopache.crud.forms import EditForm
 
 class IForm(Interface):
 
+    appName= TextLinea(
+        title = u'Domain.',
+        description = "Name shown on Mastodon Oauth",
+        required = False,
+        missing_value = "",
+    )
+
     domain= DottedName(
         title = u'Domain.',
         description = "Domain of this server",
         required = False,
         missing_value = "",
-    )
+    )    
 
     diffDomain= DottedName(
         title = u'Diff Server',

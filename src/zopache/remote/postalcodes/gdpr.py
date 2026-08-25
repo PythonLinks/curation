@@ -104,33 +104,62 @@ function showPostalCodeError(message) {{
 function lookupPostalCode() {{
     var postalCode = document.getElementById('form-field-postalCode').value;
     var countryCode = document.getElementById('form-field-countryCode').value;
-    if (!postalCode || !countryCode) {{ return; }}
+    if (!postalCode || !countryCode) {{
+        clearPostalCodeError();
+        return;
+    }}
     var url = "https://api.mapbox.com/search/geocode/v6/forward"
-        + "?q=" + encodeURIComponent(postalCode)
+        + "?postcode=" + encodeURIComponent(postalCode)
         + "&country=" + countryCode
-        + "&types=postcode"
+        + "&autocomplete=false"
         + "&access_token=" + mapboxAccessToken;
     fetch(url)
         .then(function(response) {{ return response.json(); }})
         .then(function(data) {{
-            if (!data.features || data.features.length === 0) {{
-                document.getElementById('form-field-countryCode').value = '';
+            var feature = data.features && data.features[0];
+            var matchedContext = feature ? feature.properties.context : null;
+            var postcodeReturned = matchedContext && matchedContext.postcode;
+            var countryReturned = matchedContext && matchedContext.country
+                && matchedContext.country.country_code === countryCode;
+            if (!postcodeReturned || !countryReturned) {{
                 showPostalCodeError("Please enter a valid country name and postal "
                     + "code pair.  It is also okay to leave both blank, "
                     + "then your fediverse account will not be displayed.");
                 return;
             }}
             clearPostalCodeError();
-            var coordinates = data.features[0].geometry.coordinates;
+            var coordinates = feature.geometry.coordinates;
             document.getElementById('form-field-longitude').value = coordinates[0];
             document.getElementById('form-field-latitude').value = coordinates[1];
-            var context = data.features[0].properties.context;
-            document.getElementById('form-field-city').value = context.place ? context.place.name : '';
-            document.getElementById('form-field-region').value = context.region ? context.region.name : '';
+            document.getElementById('form-field-city').value = matchedContext.place ? matchedContext.place.name : '';
+            document.getElementById('form-field-region').value = matchedContext.region ? matchedContext.region.name : '';
         }})
         .catch(function() {{
             showPostalCodeError("Could not reach the postal code lookup service.");
         }});
+}}
+
+function checkSubmittable(event) {{
+    var postalCode = document.getElementById('form-field-postalCode').value;
+    var countryCode = document.getElementById('form-field-countryCode').value;
+    var bothBlank = !postalCode && !countryCode;
+    var bothSet = postalCode && countryCode;
+    if (bothBlank) {{
+        return;
+    }}
+    if (bothSet && !document.getElementById('postalcode-error')) {{
+        return;
+    }}
+    event.preventDefault();
+    if (!bothSet) {{
+        if (!countryCode) {{
+            showPostalCodeError("Please select a country to validate this postal "
+                + "code, or clear it to skip location sharing.");
+        }} else {{
+            showPostalCodeError("Please enter a postal code, or clear the selected "
+                + "country to skip location sharing.");
+        }}
+    }}
 }}
 </script>
 """
@@ -146,6 +175,7 @@ document.getElementById('form-field-postalCode').addEventListener('input', funct
     clearTimeout(postalCodeDebounceTimer);
     postalCodeDebounceTimer = setTimeout(lookupPostalCode, 400);
 });
+document.getElementById('form-action-Save').form.addEventListener('submit', checkSubmittable);
 </script>
 """
         return result

@@ -30,7 +30,7 @@ from zopache.application.allblogobjects import ProcessTree, AllBlogObjects
 from collections import defaultdict
 from zopache.core.interfaces import ICountable
 from cromlech.security import unauthenticated_principal as Anonymous
-from zopache.pages.interfaces import ILink,IActionNetwork
+from zopache.pages.interfaces import ILink
 from zopache.ttw.branch import Branch
 from zopache.core.relatives import parentsWhichImplement
 from zopache.core.relatives import Parents
@@ -291,10 +291,6 @@ class PageBase(PageVeryBase,PageMixIn,Ancestors):
         imageURL = topicURL + "/Logo"
         return topicName,topicURL, imageURL
     
-@implementer (IActionNetwork)
-class ActionNetwork(PageBase, PageMixIn):
-    webClass='Action'
-    icon="ttwicons/WikiPage.png"
     
 @implementer (IPage)     
 class Page(PageBase, PageMixIn):
@@ -336,6 +332,7 @@ from zopache.pages.cache import Cache
 @implementer(ISiteRoot)
 class SiteRoot(Branch,PageBase,PageMixIn):
     webClass = 'HomePage'
+    appName = "A New Forest Wiki Application"
     homePage = ''
     localLogin = True
     googleClientId = ""

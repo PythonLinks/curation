@@ -126,20 +126,6 @@ class IPageBottom(Interface):
         default = u'',
     )
     
-
-class IActionNetwork(ILinkTop,
-                     ILeaf,
-                     IJSONInclude,
-                     IOrderedContainer,
-                     ICountable):
-    description= schema.Text(
-        title = 'Description',
-        description = "A brief introduction to this Action.",
-        required = True,
-        default = u'',
-    )       
-
-
 class IPage(IPageBase,IPageBottom,
             IContent, IOrderedContainer,
             IJSONInclude, IUntrustedHTML,IAceHTML):

@@ -12,7 +12,7 @@ class Address (Text):
         self.setMarkerLatLng(lat,lng)
 
     def getLatLong(self,data):
-        key='AIzaSyDcxk6rq4CA3dFsUzIwYde5K3fIfCMq8y4' 
+        key='AN API KEY' # READ THIS FROM A FILE. 
         #siteRoot = getSiteRoot(self)
         #if hasattr(siteRoot,'googleClientId'):
         #   if siteRoot.googleClientId:
