@@ -235,6 +235,10 @@ class PrincipalFolder(Container):
         self.idByEmail = OOBTree()
         self.idBySlugifiedHandle = OOBTree()
 
+    def getEveryone(self):
+       siteRoot = self.__parent__
+       people = [siteRoot.get(id) for id in self.idByEmail.values()]
+       return people
 
     def newPerson(self,view):
         newPerson = InternalPrincipal()

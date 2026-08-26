@@ -11,12 +11,13 @@ from zopache.core.getroot import getPrincipalFolderNoView
 from zopache.core.interfaces import ITreeSecurity
 
 def possibleEditors(context):
-    people = getPrincipalFolderNoView(context)
+    people = getPrincipalFolderNoView(context).getEveryone()
     terms = []
     term = SimpleVocabulary.createTerm('None','None','None')
     terms.append(term)    
-    for key, principal  in people.items():
+    for principal in  people:
         title =  principal.title
+        key = principal.__name__
         term = SimpleVocabulary.createTerm(key, key, title)
         terms.append(term)
     return SimpleVocabulary(terms)

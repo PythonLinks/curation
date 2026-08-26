@@ -13,7 +13,7 @@ from zopache.crud.forms import EditForm
 
 class IForm(Interface):
 
-    appName= TextLinea(
+    appName= TextLine(
         title = u'Domain.',
         description = "Name shown on Mastodon Oauth",
         required = False,

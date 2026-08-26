@@ -17,7 +17,7 @@ from zopache.crud.utils import getFactoryFields, getAllFields
 from zopache.remote.postalcodes.interfaces import IGDPRForm
 from zopache.remote.postalcodes.countrypostalcode import CountryPostalCode
 from zopache.ttw.interfaces import IInternalPrincipal
-from zopache.pages.page  import Page
+from zopache.business.region  import Region
 from dolmen.forms.ztk import InvariantsValidation
 
 
@@ -187,10 +187,13 @@ document.getElementById('form-action-Save').form.addEventListener('submit', chec
         postalContainerName = slugify (postalContainerName)
         postalContainer = root.get(postalContainerName,None)
         if not postalContainer:
-            directory = root["world"]
+            mapName = "world"
+            if (self.getDomain().lower()=="greenmaps.us"):
+               mapName = "usa" 
+            directory = root[mapName]
             if directory == None:
-               directory = Page()                
-               root["world"] = directory
+               directory = Region()                
+               root[mapName] = directory
             postalContainer = CountryPostalCode(countryCode, postalCode,
                                                 city,
                                                 region,
