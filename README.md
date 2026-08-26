@@ -1,25 +1,16 @@
-Setup.py.local was the version when I came back to this in fall 2022
-after almost a year away.
+Here is the Python source code fo
+GreenMaps.US
+wiki.PythonLinks.info
+UncensoredNews.us
+Forth.PythonLinks.info
+LeftUnitySlate.PythonLinks.info
+ForestWiki.com
 
-Setup.py.build is what I am now using.
-It is a little behind setup.py
+The easy way to ues it is to install a Bastille BSD Jail with
+everything already configured.  Sometime before the BerlinFedi.Day
+conference on September 11th, I will be posting a link to the
+downloadable container.
 
-When doing cythonizing, which I am no longer doing
-the following holds true. 
-BuildWheel, builds a wheel, so the .c and .cython files are not cluttering these directories.  Very nice.
+Eventually I will write up detailed documentation on how to use it from here.
 
-buldInPlace, builds the files in place, easier for develoment. 
-
-There is a problem with ttw/html.py
-When cythonizing it gets confuseed.
-cython -e html.py
-then move it to html.pyx.
-
-Then all is maybe well.
-It gets confused with some other html.py file.
-
-setup.py.local setes extensions = []
-Meaning nothing gets cythonized.
-
-The inplace command just builds the extensions in place.
-Then they have to be copied.  I guess that is old stuff.
+If you post an issue, I would be most grateful. 
