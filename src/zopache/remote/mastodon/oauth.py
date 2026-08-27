@@ -24,6 +24,17 @@ class IDomain(Interface):
         required = True,
     )
 
+    gdprPermission = schema.Bool(
+        title = ("To run this web site, including cookie-based "
+                 "authentication."),
+        required = True,
+        default = False)
+
+    gdprPermission.text = """
+    <p> I give permission 
+to process my personal information for the following  
+purposes:</p>"""
+    
 class CreateAndUse(Action):
 
     def __call__(self, form):
@@ -34,6 +45,17 @@ class CreateAndUse(Action):
 
         domain = data['domain']
         newURL = "/person/moauth/" + domain
+        cookieValue = str(data["gdprPermission"])
+        form.request.response.set_cookie(
+            "gdprPermission",
+            cookieValue,
+            max_age=(3600),     #one hour
+            path="/",
+            domain=None,
+            secure=True,        # only send over HTTPS
+            httponly=True,      # not accessible via JS
+            samesite="Strict",  # "Strict", "Lax", or "None"
+            )
         return SuccessMarker('Logging In', True, url=newURL)
 
 @form_component

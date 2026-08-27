@@ -6,7 +6,7 @@ from zopache.pages.interfaces import (ILocation,
 
 from zopache.json.interfaces import IClass
 
-class IGDPRForm(Interface):
+class IAddressForm(Interface):
         
     countryName  = schema.TextLine(
         title='Your country', required=False)
@@ -14,12 +14,6 @@ class IGDPRForm(Interface):
     postalCode  = schema.TextLine(
         title='Your Postal code', required=False,
         default = "")
-
-    gdprPermission = schema.Bool(
-        title = ("To run this web site, including cookie-based "
-                 "authentication."),
-        required = True,
-        default = False)
 
     countryCode  = schema.TextLine(
         title='Your country code', required=False,
@@ -58,11 +52,6 @@ class IGDPRForm(Interface):
         default = 0.,
         required = True,
     )
-    gdprPermission.text = """
-    <p> Please enter both Country Name and Postal Code.  To not be listed enter neither one. </p>
-    <p> I give permission 
-to process my personal information for the following  
-purposes:</p>"""
 
 class ICountryPostalCode(ILocation, IPage):
     pass

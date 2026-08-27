@@ -30,8 +30,6 @@ from zopache.ttw.principalfolder import InternalPrincipal
 class BaseAction(Action):
     def __call__(self, form):
         self.form = form
-        view = form
-        
         code, result = self.getOauthCode()
         if result == FAILURE:
             return FAILURE
@@ -42,7 +40,7 @@ class BaseAction(Action):
         if result == FAILURE:
             return FAILURE
         
-        principalFolder = view.getPrincipalFolder()
+        principalFolder = form.getPrincipalFolder()
         userName = userInfo["username"]         
         email = userName + '@' + self.form.getOauthServer()
         handle = "@" + email
@@ -51,8 +49,14 @@ class BaseAction(Action):
             person = principalFolder.getPrincipalById(personId)
             person.updateAccount(userLoginProxy,userInfo)
             principalFolder.loginUser(person,form)
-            self.nextPage()
-        else:
+            newURL = self.form.getSiteRoot().homePage + '/index'
+            raise HTTPFound(newURL)    
+        else: 
+            gdpr = form.request.cookies.get("gdprPermission")
+            if not (gdpr== "True"):
+                sendMessage("GDPR Permission is required.",type = "ERROR")
+                newURL = "/person/oauth?domain= " + form.getDomain()
+                raise HTTPFound(newURL)                
             person = principalFolder.newPerson(self.form)
             self.form.new = person
             person.email = email
@@ -63,25 +67,10 @@ class BaseAction(Action):
             principalFolder [person.__name__] = person
             principalFolder.loginUser(person,form)            
             person.postAddProcess(view = form)
-            self.goToGDPR()            
-
-    def nextPage(self):
-       principal = self.form.request.principal
-       if ( principal.gdprPermission):
-            self.goHome()
-       else:
-            self.goToGDPR()
-    
-    def goToGDPR(self):
-        form = self.form
-        newURL = (form.getSecureLongURL (
+            newURL = (form.getSecureLongURL (
                    context = form.getPrincipal())
-                  + '/gdpr')        
-        raise HTTPFound(newURL)
-
-    def goHome(self):
-        newURL = self.form.getSiteRoot().homePage + '/index'
-        raise HTTPFound(newURL)    
+                  + '/address')        
+            raise HTTPFound(newURL)
     
     def getOauthCode(self):
         code = self.form.request.form['code']

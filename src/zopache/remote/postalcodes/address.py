@@ -14,7 +14,7 @@ from zopache.crud import update as editActions
 from zopache.crud.actions import Cancel
 from zopache.crud.forms import BaseEditForm
 from zopache.crud.utils import getFactoryFields, getAllFields
-from zopache.remote.postalcodes.interfaces import IGDPRForm
+from zopache.remote.postalcodes.interfaces import IAddressForm
 from zopache.remote.postalcodes.countrypostalcode import CountryPostalCode
 from zopache.ttw.interfaces import IInternalPrincipal
 from zopache.business.region  import Region
